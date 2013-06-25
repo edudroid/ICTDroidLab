@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">ICTDroid</string>
+    <string name="core_service_name">ICTDroid Core Service</string>
     
     <!-- Plugins -->
     <string name="no_plugins">You have not installed any plugins yet.</string>
