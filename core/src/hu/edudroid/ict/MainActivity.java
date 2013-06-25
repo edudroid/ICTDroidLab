@@ -5,7 +5,6 @@ import hu.edudroid.ict.plugins.Plugin;
 import hu.edudroid.ict.plugins.PluginAdapter;
 import hu.edudroid.ict.plugins.PluginMethod;
 import hu.edudroid.ict.plugins.PluginPollingBroadcast;
-import hu.edudroid.module.ModulExample;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -69,8 +68,6 @@ public class MainActivity extends Activity implements PluginListener,
 											pCount,
 											(pCount > 1 ? "s" : ""));
 		((TextView) findViewById(R.id.plugin_count_text)).setText(countStr);
-		
-		new ModulExample(this).run();
 	}
 
 	@Override
