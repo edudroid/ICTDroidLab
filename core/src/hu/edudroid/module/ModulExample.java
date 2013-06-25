@@ -18,9 +18,8 @@ public class ModulExample extends ModuleBase implements ModuleRunnable{
 		Plugin plugin1  = PluginCollection.getInstance().getPluginByName("Test Plugin 1");
 		addPluginEventListener(plugin1, "showToast", new Object[]{"param1", "param2", "param3"});
 		
-		Plugin plugin2  = PluginCollection.getInstance().getPluginByName("Test Plugin 2");
-		addPluginEventListener(plugin2, "showHelloWorld", new Object[]{"noName"});
-		addPluginEventListener(plugin2, "showHelloWorldWithName", new Object[]{"ThisIsMyName!"});
+		Plugin plugin2  = PluginCollection.getInstance().getPluginByName("WiFi Plugin");
+		addPluginEventListener(plugin2, "showIPAddress", new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"});
 	}
 
 	@Override
@@ -29,14 +28,14 @@ public class ModulExample extends ModuleBase implements ModuleRunnable{
 	}
 
 	@Override
-	public void onResult(String plugin, String pluginVersion,
-			String methodName, String result, String meta) {
-		Log.e("Event report ", plugin + " " + methodName + " " + result);
+	protected void eventHandleReport(String plugin, String method, String msg){
+		Log.e("Event report ", plugin + " " + method + " " + msg);
+		
 	}
 
 	@Override
-	public void onError(String plugin, String pluginVersion, String methodName,
-			String errorMessage, String meta) {
-		Log.e("Event error ", plugin + " " + methodName + " " + errorMessage);
+	protected void eventHandleError(String plugin, String method, String msg){
+		Log.e("Event error ", plugin + " " + method + " " + msg);
+		
 	}
 }
