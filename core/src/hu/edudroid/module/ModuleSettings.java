@@ -4,7 +4,6 @@ import hu.edudroid.ict.R;
 import hu.edudroid.ict.RegisterActivity;
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RadioGroup;
@@ -22,7 +21,7 @@ public class ModuleSettings extends Activity implements OnSeekBarChangeListener,
 	private RadioGroup mGroup;
 	private SeekBar mSeekBar;
 	private TextView mProgressText;
-	private SharedPreferences mPrefs;
+	private Preferences mPrefs;
 	
 	
 	@Override
@@ -32,7 +31,7 @@ public class ModuleSettings extends Activity implements OnSeekBarChangeListener,
 		mGroup = (RadioGroup)findViewById(R.id.radiog_network_type);
 		mSeekBar = (SeekBar)findViewById(R.id.seek_file_size);
 		mProgressText = (TextView) findViewById(R.id.txt_progress);
-		mPrefs = getSharedPreferences(RegisterActivity.PREFS_NAME, Context.MODE_PRIVATE);
+		mPrefs = new SharedPrefs(getSharedPreferences(RegisterActivity.PREFS_NAME, Context.MODE_PRIVATE));
 	}
 	
 	@Override

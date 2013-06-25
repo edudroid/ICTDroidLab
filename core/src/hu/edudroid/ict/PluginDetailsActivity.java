@@ -6,7 +6,6 @@ import hu.edudroid.ict.plugins.PluginCollection;
 import hu.edudroid.ict.plugins.PluginListener;
 import hu.edudroid.ict.plugins.PluginMethod;
 import hu.edudroid.ict.plugins.PluginPollingBroadcast;
-import hu.edudroid.ict.plugins.PluginQuota;
 import java.util.ArrayList;
 import java.util.Collections;
 import android.app.Activity;
