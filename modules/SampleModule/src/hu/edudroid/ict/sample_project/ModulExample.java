@@ -1,16 +1,17 @@
-package hu.edudroid.module;
+package hu.edudroid.ict.sample_project;
 
 import hu.edudroid.ict.plugins.Plugin;
 import hu.edudroid.ict.plugins.PluginCollection;
-import android.content.Context;
-import android.util.Log;
-
+import hu.edudroid.module.Logger;
+import hu.edudroid.module.ModuleBase;
+import hu.edudroid.module.ModuleRunnable;
+import hu.edudroid.module.Preferences;
 
 public class ModulExample extends ModuleBase implements ModuleRunnable{
 
 	
-	public ModulExample(Context context) {
-		super(context);
+	public ModulExample(Preferences preferences, Logger logger) {
+		super(preferences, logger);
 	}
 	
 	public void run(){
@@ -31,12 +32,12 @@ public class ModulExample extends ModuleBase implements ModuleRunnable{
 	@Override
 	public void onResult(String plugin, String pluginVersion,
 			String methodName, String result, String meta) {
-		Log.e("Event report ", plugin + " " + methodName + " " + result);
+		mLogger.e("Event report ", plugin + " " + methodName + " " + result);
 	}
 
 	@Override
 	public void onError(String plugin, String pluginVersion, String methodName,
 			String errorMessage, String meta) {
-		Log.e("Event error ", plugin + " " + methodName + " " + errorMessage);
+		mLogger.e("Event error ", plugin + " " + methodName + " " + errorMessage);
 	}
 }

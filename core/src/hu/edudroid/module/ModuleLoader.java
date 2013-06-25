@@ -10,7 +10,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import android.content.Context;
-import android.os.AsyncTask;
 import dalvik.system.DexClassLoader;
 
 public class ModuleLoader {
@@ -30,6 +29,7 @@ public class ModuleLoader {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	private ModuleRunnable loadModule(File file){
 		final File optimizedDexOutputPath = mContext.getDir("outdex",
 															Context.MODE_PRIVATE);

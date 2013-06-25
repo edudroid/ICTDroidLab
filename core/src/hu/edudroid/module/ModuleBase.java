@@ -8,10 +8,7 @@ import hu.edudroid.ict.plugins.PluginResultListener;
 import hu.edudroid.module.ModuleFileUploader.UploaderResultHandler;
 import hu.edudroid.module.ModuleFileWriter.FileWriterResultHandler;
 import java.io.File;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Environment;
-import android.util.Log;
 
 
 public abstract class ModuleBase implements PluginResultListener {
@@ -22,15 +19,17 @@ public abstract class ModuleBase implements PluginResultListener {
 	private final static String			PREFS_KEY_MINIMUM_BATTERY		= "minimumBattery";
 	public final static String			PREFS_NAME						= "modulePrefs";
 
-	private SharedPreferences			mPrefs;
+	protected Preferences				mPrefs;
 	private PluginPollingBroadcast      mPluginBroadcast;
 	private FileWriterResultHandler     mFileWriterResult;
 	private UploaderResultHandler       mUploadResultHandler;
+	protected Logger 					mLogger;
 	
 
 
-	public ModuleBase(Context context) {
-		mPrefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+	public ModuleBase(Preferences preferences, Logger logger) {
+		mPrefs = preferences;
+		mLogger = logger;
 		mPluginBroadcast = PluginPollingBroadcast.getInstance();
 		setupFileWriterListener();
 		setupUploadListener();
@@ -82,7 +81,7 @@ public abstract class ModuleBase implements PluginResultListener {
 		try{
 			plugin.callMethod(call);
 		} catch(NullPointerException e){
-			Log.e("MODULE::ModulBase:addPluginEventListener","HIBA");
+			mLogger.e("MODULE::ModulBase:addPluginEventListener","HIBA");
 			e.printStackTrace();
 		}
 	}
@@ -101,35 +100,31 @@ public abstract class ModuleBase implements PluginResultListener {
 
 	// Settings
 
-	public static long getMaximumCacheSize(SharedPreferences prefs){
-		return prefs.getLong(PREFS_KEY_MAXIMUM_CACHE_SIZE, 307200);
+	public static long getMaximumCacheSize(Preferences preferences){
+		return preferences.getLong(PREFS_KEY_MAXIMUM_CACHE_SIZE, 307200);
 	}
 
-	public static boolean isOnlyWifiUpload(SharedPreferences prefs){
-		return prefs.getBoolean(PREFS_KEY_CACHE_UPLOAD_TYPE, true);
+	public static boolean isOnlyWifiUpload(Preferences preferences){
+		return preferences.getBoolean(PREFS_KEY_CACHE_UPLOAD_TYPE, true);
 	}
 
-	public static int getMinimumBatteryForUpload(SharedPreferences prefs){
-		return prefs.getInt(PREFS_KEY_MINIMUM_BATTERY, 20);
+	public static int getMinimumBatteryForUpload(Preferences preferences){
+		return preferences.getInt(PREFS_KEY_MINIMUM_BATTERY, 20);
 	}
 
-	public static void setMaximumCacheSize(	SharedPreferences prefs,
+	public static void setMaximumCacheSize(	Preferences preferences,
 											long maximumCache){
-		prefs.edit()
-				.putLong(PREFS_KEY_MAXIMUM_CACHE_SIZE, maximumCache)
-				.commit();
+		preferences.putLong(PREFS_KEY_MAXIMUM_CACHE_SIZE, maximumCache);
 	}
 
-	public static void setUploadWithoutWifi(SharedPreferences prefs,
+	public static void setUploadWithoutWifi(Preferences preferences,
 											boolean withoutWifi){
-		prefs.edit()
-				.putBoolean(PREFS_KEY_CACHE_UPLOAD_TYPE, withoutWifi)
-				.commit();
+		preferences.putBoolean(PREFS_KEY_CACHE_UPLOAD_TYPE, withoutWifi);
 	}
 
-	public static void setMinBatteryForUpload(	SharedPreferences prefs,
+	public static void setMinBatteryForUpload(	Preferences preferences,
 												int minBattery){
-		prefs.edit().putInt(PREFS_KEY_MINIMUM_BATTERY, minBattery).commit();
+		preferences.putInt(PREFS_KEY_MINIMUM_BATTERY, minBattery);
 	}
 
 	protected abstract String getModulName();

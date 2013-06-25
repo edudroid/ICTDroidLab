@@ -172,8 +172,8 @@
       <operations public="false" package="false" protected="false" private="false" static="false"/>    
     </display>  
   </interface>  
-  <class id="20" language="java" name="hu.edudroid.module.ModulExample" project="ICTDroid" 
-    file="/ICTDroid/src/hu/edudroid/module/ModulExample.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="20" language="java" name="hu.edudroid.ict.sample_project.ModulExample" project="SampleModule" 
+    file="/SampleModule/src/hu/edudroid/ict/sample_project/ModulExample.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="753" y="795"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
