@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.net.URLConnection;
 import android.content.Context;
 import android.util.Log;
@@ -32,16 +33,32 @@ public class ModuleLoader {
 
 	@SuppressWarnings("rawtypes")
 	private ModuleRunnable loadModule(File file){
+		
 		final File optimizedDexOutputPath = mContext.getDir("outdex",
 															Context.MODE_PRIVATE);
+		
 		DexClassLoader cl = new DexClassLoader(	file.getAbsolutePath(),
 												optimizedDexOutputPath.getAbsolutePath(),
 												null,
 												mContext.getClassLoader());
+		
 		Class moduleRunnerClass = null;
 		try{
-			moduleRunnerClass = cl.loadClass("hu.tmit.ictdroid.module.ModuleRunnable");
+			/*
+			URL url = file.toURL();  
+			URL[] urls = new URL[]{url};
+			ClassLoader cl = new URLClassLoader(urls);
+			
+			moduleRunnerClass = cl.loadClass("hu.edudroid.ict.sample_project.ModuleExample");
 			ModuleRunnable module = (ModuleRunnable) moduleRunnerClass.newInstance();
+			*/
+			
+			moduleRunnerClass = cl.loadClass("hu.edudroid.ict.sample_project.ModuleExample");
+			ModuleRunnable module = (ModuleRunnable) moduleRunnerClass.newInstance();
+			
+			
+			Log.e("Modul","Modul has been loaded succesfully");
+			
 			return module;
 		}
 		catch (Exception exception){
@@ -74,7 +91,7 @@ public class ModuleLoader {
 			ModuleRunnable module = loadModule(new File(outFile.getAbsolutePath()));
 			module.run();
 			
-			Log.e("ModuleLoader","Modul has been loaded!");
+			Log.e("ModuleLoader","Modul is running");
 			
 		} catch (NullPointerException e) {
 			

@@ -33,7 +33,7 @@ public class MainActivity extends Activity implements PluginListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		AssetReader.copyAssetToInternalStorage("ModuleExample.jar", this);
+		AssetReader.copyAssetToInternalStorage("samplemodule.jar", this);
 		
 		mAdapter = new PluginAdapter(this);
 		((ListView) findViewById(R.id.plugin_list)).setAdapter(mAdapter);
@@ -49,7 +49,7 @@ public class MainActivity extends Activity implements PluginListener,
 		super.onResume();
 		mBroadcast.registerPluginDetailsListener(this);
 		
-		ModuleLoader.getInstance(this).runModule("none", "ModuleExample.jar");
+		ModuleLoader.getInstance(this).runModule("none", "samplemodule.jar");
 		
 	}
 
