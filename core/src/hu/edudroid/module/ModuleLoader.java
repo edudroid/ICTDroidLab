@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import android.content.Context;
+import android.util.Log;
 import dalvik.system.DexClassLoader;
 
 public class ModuleLoader {
@@ -51,6 +52,7 @@ public class ModuleLoader {
 	
 	public void runModule(String urlString, String fileUrl){
 		try {
+			/*
 			URL url = new URL(urlString);
 			URLConnection connection = url.openConnection();
 			connection.connect();
@@ -67,16 +69,15 @@ public class ModuleLoader {
 			output.flush();
 			output.close();
 			input.close();
-			ModuleRunnable module = loadModule(new File(fileUrl));
+			*/
+			File outFile = new File(this.mContext.getFilesDir(),fileUrl);
+			ModuleRunnable module = loadModule(new File(outFile.getAbsolutePath()));
 			module.run();
+			
+			Log.e("ModuleLoader","Modul has been loaded!");
+			
 		} catch (NullPointerException e) {
 			
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 }

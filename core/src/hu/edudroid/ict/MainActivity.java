@@ -1,11 +1,14 @@
 package hu.edudroid.ict;
 
+import java.io.File;
+
 import hu.edudroid.ict.plugins.PluginListener;
 import hu.edudroid.ict.plugins.Plugin;
 import hu.edudroid.ict.plugins.PluginAdapter;
 import hu.edudroid.ict.plugins.PluginMethod;
 import hu.edudroid.ict.plugins.PluginPollingBroadcast;
 import hu.edudroid.module.AssetReader;
+import hu.edudroid.module.ModuleLoader;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -45,6 +48,9 @@ public class MainActivity extends Activity implements PluginListener,
 	protected void onResume(){
 		super.onResume();
 		mBroadcast.registerPluginDetailsListener(this);
+		
+		ModuleLoader.getInstance(this).runModule("none", "samplemodul.jar");
+		
 	}
 
 	private void refreshPluginlist(){
