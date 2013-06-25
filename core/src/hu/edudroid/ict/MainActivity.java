@@ -5,6 +5,7 @@ import hu.edudroid.ict.plugins.Plugin;
 import hu.edudroid.ict.plugins.PluginAdapter;
 import hu.edudroid.ict.plugins.PluginMethod;
 import hu.edudroid.ict.plugins.PluginPollingBroadcast;
+import hu.edudroid.module.AssetReader;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -29,6 +30,8 @@ public class MainActivity extends Activity implements PluginListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		AssetReader.copyAssetToInternalStorage("samplemodul.jar", this);
+		
 		mAdapter = new PluginAdapter(this);
 		((ListView) findViewById(R.id.plugin_list)).setAdapter(mAdapter);
 		mBroadcast = PluginPollingBroadcast.getInstance();
