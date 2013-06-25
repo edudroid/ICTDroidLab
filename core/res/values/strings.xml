@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ICTDroid</string>
+    
+    <!-- Plugins -->
+    <string name="no_plugins">You have not installed any plugins yet.</string>
+    <string name="plugins_count">%1$s plugin%2$s found.</string>
+    <string name="created_by">Created by %1$s.</string>
+    <string name="refresh">Refresh</string>
+    
+    <!-- PluginDetails -->
+    <string name="methods_defined">Methods defined for this plugin</string>
+
+</resources>

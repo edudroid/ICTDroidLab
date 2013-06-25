@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:layout_gravity="center"	
+	android:orientation="vertical" >
+
+    <RadioGroup
+    	android:id="@+id/serviceGroup"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content" >
+
+    	<RadioButton
+    		android:id="@+id/radio0"
+    		android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+    		android:checked="true"
+    		android:text="T-Mobile" />
+
+    	<RadioButton
+    		android:id="@+id/radio1"
+    		android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+    		android:text="Telenor" />
+
+    	<RadioButton
+    		android:id="@+id/radio2"
+    		android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+    		android:layout_marginBottom="20dip"
+    		android:text="Vodafone" />
+
+    </RadioGroup>
+
+    <TextView
+    	android:id="@+id/phone_number"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:text="Telefonszám: " />
+
+    <EditText
+    	android:id="@+id/phoneNumberEditText"
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+		android:visibility="gone"
+    	android:ems="10"
+    	android:inputType="phone" >
+
+    	<requestFocus />
+    </EditText>
+
+    <TextView
+    	android:id="@+id/telephone_type"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:text="Eszköz rézsletek: " />
+    
+    <TextView
+    	android:id="@+id/android_version"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:text="Android verzió: " />
+    
+    
+
+	<Button
+		android:id="@+id/registerButton"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:layout_marginTop="50dip"
+		android:text="Regisztráció" />
+
+</LinearLayout>
