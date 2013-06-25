@@ -69,12 +69,22 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 	private void refreshMethodList(){
 		Intent intent = new Intent(FILTER_PLUGIN_POLL);
 		intent.putExtra("action", "reportMethods");
+		intent.putExtra("pluginName", mPlugin.getName());
 		sendBroadcast(intent);
-		Log.d("CORE::PluginDetailsActivity:refreshMethodList","Broadcast sent...");
+		Log.d("CORE::PluginDetailsActivity:refreshMethodList","Broadcast sent... PluginName: " + mPlugin.getName());
 	}
 
 	private void addMethod(PluginMethod method){
-		mMethods.add(method);
+		boolean foundMethodInList=false;
+		for(int i=0;i<mMethods.size();i++){
+			if(mMethods.get(i).mName.equals(method.mName)){
+				Log.e("CORE:PluginDetailsActivity:addMethod","Method already exists in list.");
+				foundMethodInList=true;
+			}
+		}
+		if(!foundMethodInList){
+			mMethods.add(method);
+		}
 		Collections.sort(mMethods);
 		mObserver.onChanged();
 	}
