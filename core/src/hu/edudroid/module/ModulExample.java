@@ -29,14 +29,14 @@ public class ModulExample extends ModuleBase implements ModuleRunnable{
 	}
 
 	@Override
-	protected void eventHandleReport(String plugin, String method, String msg){
-		Log.e("Event report ", plugin + " " + method + " " + msg);
-		
+	public void onResult(String plugin, String pluginVersion,
+			String methodName, String result, String meta) {
+		Log.e("Event report ", plugin + " " + methodName + " " + result);
 	}
 
 	@Override
-	protected void eventHandleError(String plugin, String method, String msg){
-		Log.e("Event error ", plugin + " " + method + " " + msg);
-		
+	public void onError(String plugin, String pluginVersion, String methodName,
+			String errorMessage, String meta) {
+		Log.e("Event error ", plugin + " " + methodName + " " + errorMessage);
 	}
 }

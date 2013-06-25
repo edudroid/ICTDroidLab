@@ -13,7 +13,8 @@ import android.content.SharedPreferences;
 import android.os.Environment;
 import android.util.Log;
 
-public abstract class ModuleBase {
+
+public abstract class ModuleBase implements PluginResultListener {
 
 	// Prefs keys
 	private final static String			PREFS_KEY_MAXIMUM_CACHE_SIZE	= "maxChacheSize";
@@ -23,7 +24,6 @@ public abstract class ModuleBase {
 
 	private SharedPreferences			mPrefs;
 	private PluginPollingBroadcast      mPluginBroadcast;
-	private PluginResultListener 		mPluginResultListener;
 	private FileWriterResultHandler     mFileWriterResult;
 	private UploaderResultHandler       mUploadResultHandler;
 	
@@ -34,29 +34,7 @@ public abstract class ModuleBase {
 		mPluginBroadcast = PluginPollingBroadcast.getInstance();
 		setupFileWriterListener();
 		setupUploadListener();
-		mPluginResultListener = new PluginResultListener() {
-			
-			@Override
-			public void onResult(	String plugin,
-									String pluginVersion,
-									String methodName,
-									String result,
-									String meta){
-				eventHandleReport(plugin, methodName, result);
-				
-			}
-			
-			@Override
-			public void onError(String plugin,
-								String pluginVersion,
-								String methodName,
-								String errorMessage,
-								String meta){
-				eventHandleError(plugin, methodName, errorMessage);
-				
-			}
-		};
-		mPluginBroadcast.registerResultListener(mPluginResultListener);
+		mPluginBroadcast.registerResultListener(this);
 	}
 	
 	private void setupUploadListener() {
@@ -108,9 +86,6 @@ public abstract class ModuleBase {
 			e.printStackTrace();
 		}
 	}
-
-	protected abstract void eventHandleReport(String plugin, String method, String msg);
-	protected abstract void eventHandleError(String plugin, String method, String msg);
 
 	private final void schedule(){
 		File root = Environment.getExternalStorageDirectory();
