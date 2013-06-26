@@ -4,6 +4,7 @@ import java.io.File;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 import dalvik.system.DexClassLoader;
 
 public class ModuleLoader {
@@ -26,41 +27,26 @@ public class ModuleLoader {
 	@SuppressWarnings("rawtypes")
 	private ModuleRunnable loadModule(File file){
 		
-		final File optimizedDexOutputPath = mContext.getDir("outdex",
-															
-
-Context.MODE_PRIVATE);
+		File dexedJavaFile = AssetReader.copyAssetToInternalStorage("ModuleExample.jar", this.mContext);
 		
-		DexClassLoader cl = new DexClassLoader(	file.getAbsolutePath(),
-												
-
-optimizedDexOutputPath.getAbsolutePath(),
-												null,
-												
-
-mContext.getClassLoader());
+		DexClassLoader dexLoader = new DexClassLoader(dexedJavaFile.getAbsolutePath(), 
+														file.getAbsolutePath(), 
+														null, 
+														getClass().getClassLoader());
 		
-		Class moduleRunnerClass = null;
-		try{
-			/*
-			URL url = file.toURL();  
-			URL[] urls = new URL[]{url};
-			ClassLoader cl = new URLClassLoader(urls);
-			
-			moduleRunnerClass = cl.loadClass("hu.edudroid.ict.sample_project.ModuleExample");
-			ModuleRunnable module = (ModuleRunnable) moduleRunnerClass.newInstance();
-			*/
-			
-			moduleRunnerClass = cl.loadClass("hu.edudroid.ict.sample_project.ModuleExample");
-			ModuleRunnable module = (ModuleRunnable) moduleRunnerClass.newInstance();
-			
-			
-			Log.e("Modul","Modul has been loaded succesfully");
-			
-			return module;
-		}
-		catch (Exception exception){
-			exception.printStackTrace();
+		Log.e("ModuleLoader","DexedPath: "+dexedJavaFile.getAbsolutePath());
+		Log.e("ModuleLoader","FilesDir: "+this.mContext.getFilesDir().getAbsolutePath());
+		
+		try {
+			Class<?> dexLoadedClass = dexLoader.loadClass("hu.edudroid.ict.sample_project.ModulExample");
+			ModuleRunnable urlContent = (ModuleRunnable)dexLoadedClass.newInstance();
+			return urlContent;
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -85,11 +71,9 @@ mContext.getClassLoader());
 			output.close();
 			input.close();
 			*/
-			File outFile = new File(this.mContext.getFilesDir(),fileUrl);
-			ModuleRunnable module = loadModule(new File(outFile.getAbsolutePath()));
+			File outFile = new File(this.mContext.getFilesDir().getAbsolutePath());
+			ModuleRunnable module = loadModule(outFile);
 			module.run();
-			
-			Log.e("ModuleLoader","Modul is running");
 			
 		} catch (NullPointerException e) {
 			
