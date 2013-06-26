@@ -39,6 +39,8 @@ public class ModuleLoader {
 		
 		try {
 			Class<?> dexLoadedClass = dexLoader.loadClass("hu.edudroid.ict.sample_project.ModulExample");
+			Log.e("ModuleLoader SimpleName",String.valueOf(dexLoadedClass.getConstructors().length));
+
 			ModuleRunnable urlContent = (ModuleRunnable)dexLoadedClass.newInstance();
 			return urlContent;
 		} catch (ClassNotFoundException e) {
