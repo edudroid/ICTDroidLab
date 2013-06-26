@@ -18,6 +18,12 @@ public class CoreService extends Service {
 	@Override
     public void onStart(Intent intent, int startId) {
         Log.e("CoreService","STARTED!");
+        Log.e("ModuleLoading","Starting...");
+        // TODO Loading module
+        
+        Log.e("ModuleLoading","Module has been loaded succesfully!");
+        
+        
     }
 
 }
