@@ -1,29 +1,32 @@
 package hu.edudroid.ict.plugins;
 
+import hu.edudroid.interfaces.Plugin;
+import hu.edudroid.interfaces.PluginCollection;
+
 import java.util.ArrayList;
 import android.util.Log;
 
-public class PluginCollection {
+public class AndroidPluginCollection implements PluginCollection{
 
-	private static PluginCollection	mInstance	= null;
-	public ArrayList<Plugin>		mPlugins	= null;
+	private static AndroidPluginCollection	mInstance	= null;
+	public ArrayList<PluginBase>		mPlugins	= null;
 
-	private PluginCollection() {
-		mPlugins = new ArrayList<Plugin>();
+	private AndroidPluginCollection() {
+		mPlugins = new ArrayList<PluginBase>();
 	}
 
-	public static PluginCollection getInstance(){
+	public static AndroidPluginCollection getInstance(){
 		if (mInstance == null){
-			synchronized (PluginCollection.class){
+			synchronized (AndroidPluginCollection.class){
 				if (mInstance == null)
-					mInstance = new PluginCollection();
+					mInstance = new AndroidPluginCollection();
 			}
 		}
 
 		return mInstance;
 	}
 	
-	public Plugin getPluginByHashcode(final int hash){
+	public PluginBase getPluginByHashcode(final int hash){
 		Log.e("PLUGIN", "# of plugins = " + mPlugins.size());
 		for (int i = 0; i < mPlugins.size(); i++){
 			Log.e("PLUGIN", "(" + i + ") hash: " + mPlugins.get(i).hashCode());

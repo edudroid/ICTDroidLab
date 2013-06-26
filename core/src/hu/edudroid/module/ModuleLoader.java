@@ -1,5 +1,8 @@
 package hu.edudroid.module;
 
+import hu.edudroid.ict.plugins.AndroidPluginCollection;
+import hu.edudroid.interfaces.Module;
+
 import java.io.File;
 
 import android.content.Context;
@@ -10,7 +13,7 @@ public class ModuleLoader {
 
 	private static final String MODULE_SHARED_PREFS = "ModulePrefs";
 
-	private static ModuleBase loadModule(File file, String jarName, Context context){
+	private static Module loadModule(File file, String jarName, Context context){
 		File dexedJavaFile = AssetReader.copyAssetToInternalStorage(jarName, context);
 		DexClassLoader dexLoader = new DexClassLoader(dexedJavaFile.getAbsolutePath(), 
 														file.getAbsolutePath(), 
@@ -18,8 +21,11 @@ public class ModuleLoader {
 														context.getClassLoader());
 		try {
 			Class<?> dexLoadedClass = dexLoader.loadClass("hu.edudroid.ict.sample_project.ModulExample");
-			ModuleBase dexContent = (ModuleBase)dexLoadedClass.newInstance();
-			dexContent.init(new SharedPrefs(context.getSharedPreferences(MODULE_SHARED_PREFS, Context.MODE_PRIVATE)), new AndroidLogger());
+			Module dexContent = (Module)dexLoadedClass.newInstance();
+			dexContent.init(
+					new SharedPrefs(context.getSharedPreferences(MODULE_SHARED_PREFS, Context.MODE_PRIVATE)),
+					new AndroidLogger(),
+					AndroidPluginCollection.getInstance());
 			return dexContent;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -34,7 +40,7 @@ public class ModuleLoader {
 	public static void runModule(String urlString, String jarName, Context context){
 		try {
 			File outFile = new File(context.getFilesDir().getAbsolutePath());
-			ModuleBase module = loadModule(outFile, jarName, context);
+			Module module = loadModule(outFile, jarName, context);
 			Log.e("ModuleLoader","Modul has been loaded succesfully. Start running!");
 			module.run();
 			Log.e("ModuleLoader","Modul created and running: " + module.getModuleName());

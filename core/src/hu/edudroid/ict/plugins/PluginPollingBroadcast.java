@@ -1,5 +1,7 @@
 package hu.edudroid.ict.plugins;
 
+import hu.edudroid.interfaces.PluginResultListener;
+
 import java.util.ArrayList;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -54,7 +56,7 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 		final String action = extras.getString("action");
 
 		if (action.equals("reportSelf"))
-			mListener.newPlugin(new Plugin(	extras.getString("title"),
+			mListener.newPlugin(new PluginBase(	extras.getString("title"),
 											extras.getString("author"),
 											extras.getString("description"),
 											extras.getString("version"),

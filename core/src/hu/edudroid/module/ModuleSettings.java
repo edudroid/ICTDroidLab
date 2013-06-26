@@ -2,6 +2,8 @@ package hu.edudroid.module;
 
 import hu.edudroid.ict.R;
 import hu.edudroid.ict.RegisterActivity;
+import hu.edudroid.interfaces.ModuleBase;
+import hu.edudroid.interfaces.Preferences;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;

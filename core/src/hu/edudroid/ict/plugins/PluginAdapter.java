@@ -12,14 +12,14 @@ import android.widget.ListAdapter;
 
 public class PluginAdapter implements ListAdapter {
 
-	private ArrayList<Plugin>	mPlugins;
+	private ArrayList<PluginBase>	mPlugins;
 	
 	private Context				mContext	= null;
 	private LayoutInflater		mInflater	= null;
 	private DataSetObserver		mObserver	= null;
 
 	public PluginAdapter(Activity activity) {
-		mPlugins = PluginCollection.getInstance().mPlugins;
+		mPlugins = AndroidPluginCollection.getInstance().mPlugins;
 		mContext = activity.getApplicationContext();
 		mInflater = activity.getLayoutInflater();
 	}
@@ -28,10 +28,10 @@ public class PluginAdapter implements ListAdapter {
 		mPlugins.clear();
 	}
 
-	public void addPlugin(final Plugin plugin){
+	public void addPlugin(final PluginBase plugin){
 		addPlugin(plugin, false);
 	}
-	public void addPlugin(final Plugin plugin, final boolean notifyChange){
+	public void addPlugin(final PluginBase plugin, final boolean notifyChange){
 		mPlugins.add(plugin);
 		if (notifyChange)
 			onChanged();
@@ -50,7 +50,7 @@ public class PluginAdapter implements ListAdapter {
 	}
 
 	@Override
-	public Plugin getItem(int position){
+	public PluginBase getItem(int position){
 		if (mPlugins == null)
 			return null;
 		return (mPlugins.get(position));

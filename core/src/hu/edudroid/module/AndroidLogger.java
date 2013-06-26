@@ -1,5 +1,6 @@
 package hu.edudroid.module;
 
+import hu.edudroid.interfaces.Logger;
 import android.util.Log;
 
 public class AndroidLogger implements Logger {

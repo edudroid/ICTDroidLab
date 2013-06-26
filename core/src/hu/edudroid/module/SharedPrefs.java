@@ -1,5 +1,6 @@
 package hu.edudroid.module;
 
+import hu.edudroid.interfaces.Preferences;
 import android.content.SharedPreferences;
 
 public class SharedPrefs implements Preferences {

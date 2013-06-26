@@ -1,7 +1,7 @@
 package hu.edudroid.ict;
 
 import hu.edudroid.ict.plugins.PluginListener;
-import hu.edudroid.ict.plugins.Plugin;
+import hu.edudroid.ict.plugins.PluginBase;
 import hu.edudroid.ict.plugins.PluginAdapter;
 import hu.edudroid.ict.plugins.PluginMethod;
 import hu.edudroid.ict.plugins.PluginPollingBroadcast;
@@ -61,7 +61,7 @@ public class MainActivity extends Activity implements PluginListener,
 	}
 
 	@Override
-	public void newPlugin(Plugin plugin){
+	public void newPlugin(PluginBase plugin){
 		mAdapter.addPlugin(plugin);
 
 		findViewById(R.id.no_plugins).setVisibility(View.GONE);
