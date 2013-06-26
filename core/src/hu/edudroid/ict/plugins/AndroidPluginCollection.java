@@ -9,7 +9,7 @@ import android.util.Log;
 public class AndroidPluginCollection implements PluginCollection{
 
 	private static AndroidPluginCollection	mInstance	= null;
-	public ArrayList<PluginBase>		mPlugins	= null;
+	private ArrayList<PluginBase>		mPlugins	= null;
 
 	private AndroidPluginCollection() {
 		mPlugins = new ArrayList<PluginBase>();
@@ -36,11 +36,16 @@ public class AndroidPluginCollection implements PluginCollection{
 		return null;
 	}
 	
+	@Override
 	public Plugin getPluginByName(final String name) {
 		for (int i=0; i< mPlugins.size(); i++) {
 			if (mPlugins.get(i).getName().equals(name))
 				return mPlugins.get(i);
 		}
 		return null;
+	}
+
+	public ArrayList<PluginBase> getPlugins() {
+		return new ArrayList<PluginBase>(mPlugins);
 	}
 }
