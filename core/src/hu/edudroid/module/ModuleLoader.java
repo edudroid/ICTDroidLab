@@ -2,6 +2,7 @@ package hu.edudroid.module;
 
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.interfaces.Module;
+import hu.edudroid.interfaces.PluginCollection;
 
 import java.io.File;
 
@@ -22,10 +23,11 @@ public class ModuleLoader {
 		try {
 			Class<?> dexLoadedClass = dexLoader.loadClass("hu.edudroid.ict.sample_project.ModulExample");
 			Module dexContent = (Module)dexLoadedClass.newInstance();
+			PluginCollection pluginCollection = AndroidPluginCollection.getInstance();
 			dexContent.init(
 					new SharedPrefs(context.getSharedPreferences(MODULE_SHARED_PREFS, Context.MODE_PRIVATE)),
 					new AndroidLogger(),
-					AndroidPluginCollection.getInstance());
+					pluginCollection);
 			return dexContent;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();

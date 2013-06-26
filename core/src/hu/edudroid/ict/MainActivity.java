@@ -2,7 +2,6 @@ package hu.edudroid.ict;
 
 import hu.edudroid.ict.plugins.PluginListener;
 import hu.edudroid.ict.plugins.PluginBase;
-import hu.edudroid.ict.plugins.PluginAdapter;
 import hu.edudroid.ict.plugins.PluginMethod;
 import hu.edudroid.ict.plugins.PluginPollingBroadcast;
 import hu.edudroid.module.ModuleLoader;
@@ -44,7 +43,7 @@ public class MainActivity extends Activity implements PluginListener,
 		super.onResume();
 		mBroadcast.registerPluginDetailsListener(this);
 		
-		ModuleLoader.runModule("none", "ModuleExample.jar", this);
+		ModuleLoader.runModule("none", "SampleModule.jar", this);
 		
 	}
 

@@ -12,7 +12,6 @@ public class CoreService extends Service {
 	
 	@Override
 	public IBinder onBind(Intent arg0) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
@@ -21,7 +20,7 @@ public class CoreService extends Service {
         Log.e("CoreService","STARTED!");
         Log.e("ModuleLoading","Starting...");
                 
-        ModuleLoader.runModule("none", "ModuleExample.jar", this);
+        ModuleLoader.runModule("none", "SampleModule.jar", this);
         
         Log.e("ModuleLoading","Module has been loaded succesfully!");
         
