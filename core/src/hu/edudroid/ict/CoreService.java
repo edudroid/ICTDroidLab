@@ -8,7 +8,7 @@ import android.util.Log;
 
 public class CoreService extends Service {
 
-	private static final String TAG = "CoreService";
+	public static final String TAG = "CoreService";
 	
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -21,7 +21,7 @@ public class CoreService extends Service {
         Log.e("CoreService","STARTED!");
         Log.e("ModuleLoading","Starting...");
                 
-        ModuleLoader.getInstance(this).runModule("none", "ModuleExample.jar");
+        ModuleLoader.runModule("none", "ModuleExample.jar", this);
         
         Log.e("ModuleLoading","Module has been loaded succesfully!");
         
