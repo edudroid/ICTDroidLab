@@ -4,6 +4,6 @@ public interface Logger {
 
 	void e(String tag, String message);
 
-	void d(String string, String log);
+	void d(String tag, String message);
 
 }
