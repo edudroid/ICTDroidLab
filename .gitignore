@@ -3,6 +3,9 @@
 #################
 
 core/assets/*.jar
+modules/SampleModule/classes.dex
+modules/SampleModule/createdex.bat
+modules/SampleModule/dextojar.bat
 
 #################
 ## Eclipse
