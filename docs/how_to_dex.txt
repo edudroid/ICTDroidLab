@@ -1,0 +1,11 @@
+To create a jar file with classes.dex inside, create dex file:
+
+dx.bat --dex --output=c:\classes.dex c:\Content.jar
+
+Full path is required even if files are local and dx.bat is added to path.
+
+Add dex file to jar:
+
+aapt Content.jar classes.dex
+
+Full path is not necessary here.
