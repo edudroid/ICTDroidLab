@@ -9,6 +9,7 @@ import hu.edudroid.module.ModuleFileUploader.UploaderResultHandler;
 import hu.edudroid.module.ModuleFileWriter.FileWriterResultHandler;
 import java.io.File;
 import android.os.Environment;
+import android.util.Log;
 
 
 public abstract class ModuleBase implements PluginResultListener {
@@ -25,15 +26,17 @@ public abstract class ModuleBase implements PluginResultListener {
 	private UploaderResultHandler       mUploadResultHandler;
 	protected Logger 					mLogger;
 	
-
-
-	public ModuleBase(Preferences preferences, Logger logger) {
+	public ModuleBase() {
+		super();
+		Log.e("ModulBase","Created");
+		/*
 		mPrefs = preferences;
 		mLogger = logger;
 		mPluginBroadcast = PluginPollingBroadcast.getInstance();
 		setupFileWriterListener();
 		setupUploadListener();
 		mPluginBroadcast.registerResultListener(this);
+		*/
 	}
 	
 	private void setupUploadListener() {
