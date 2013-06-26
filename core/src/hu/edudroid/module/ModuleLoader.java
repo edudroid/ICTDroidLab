@@ -1,15 +1,10 @@
 package hu.edudroid.module;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+
 import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
 import dalvik.system.DexClassLoader;
 
 public class ModuleLoader {
@@ -31,26 +26,34 @@ public class ModuleLoader {
 
 	@SuppressWarnings("rawtypes")
 	private ModuleRunnable loadModule(File file){
-		final File optimizedDexOutputPath = mContext.getDir("outdex",
-															Context.MODE_PRIVATE);
-		DexClassLoader cl = new DexClassLoader(	file.getAbsolutePath(),
-												optimizedDexOutputPath.getAbsolutePath(),
-												null,
-												mContext.getClassLoader());
-		Class moduleRunnerClass = null;
-		try{
-			moduleRunnerClass = cl.loadClass("hu.tmit.ictdroid.module.ModuleRunnable");
-			ModuleRunnable module = (ModuleRunnable) moduleRunnerClass.newInstance();
-			return module;
-		}
-		catch (Exception exception){
-			exception.printStackTrace();
+		
+		File dexedJavaFile = AssetReader.copyAssetToInternalStorage("ModuleExample.jar", this.mContext);
+		
+		DexClassLoader dexLoader = new DexClassLoader(dexedJavaFile.getAbsolutePath(), 
+														file.getAbsolutePath(), 
+														null, 
+														getClass().getClassLoader());
+		
+		Log.e("ModuleLoader","DexedPath: "+dexedJavaFile.getAbsolutePath());
+		Log.e("ModuleLoader","FilesDir: "+this.mContext.getFilesDir().getAbsolutePath());
+		
+		try {
+			Class<?> dexLoadedClass = dexLoader.loadClass("hu.edudroid.ict.sample_project.ModulExample");
+			ModuleRunnable urlContent = (ModuleRunnable)dexLoadedClass.newInstance();
+			return urlContent;
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
 	
 	public void runModule(String urlString, String fileUrl){
 		try {
+			/*
 			URL url = new URL(urlString);
 			URLConnection connection = url.openConnection();
 			connection.connect();
@@ -67,16 +70,13 @@ public class ModuleLoader {
 			output.flush();
 			output.close();
 			input.close();
-			ModuleRunnable module = loadModule(new File(fileUrl));
+			*/
+			File outFile = new File(this.mContext.getFilesDir().getAbsolutePath());
+			ModuleRunnable module = loadModule(outFile);
 			module.run();
+			
 		} catch (NullPointerException e) {
 			
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 }
