@@ -1,16 +1,8 @@
 package hu.edudroid.module;
 
-import hu.edudroid.ict.RegisterActivity;
 import hu.edudroid.ict.plugins.Plugin;
 import hu.edudroid.ict.plugins.PluginCall;
-import hu.edudroid.ict.plugins.PluginPollingBroadcast;
 import hu.edudroid.ict.plugins.PluginResultListener;
-import hu.edudroid.module.ModuleFileUploader.UploaderResultHandler;
-import hu.edudroid.module.ModuleFileWriter.FileWriterResultHandler;
-import java.io.File;
-import android.os.Environment;
-import android.util.Log;
-
 
 public abstract class ModuleBase implements PluginResultListener {
 
@@ -21,60 +13,17 @@ public abstract class ModuleBase implements PluginResultListener {
 	public final static String			PREFS_NAME						= "modulePrefs";
 
 	protected Preferences				mPrefs;
-	private PluginPollingBroadcast      mPluginBroadcast;
-	private FileWriterResultHandler     mFileWriterResult;
-	private UploaderResultHandler       mUploadResultHandler;
 	protected Logger 					mLogger;
 	
 	public ModuleBase() {
 		super();
-		Log.e("ModulBase","Created");
-		/*
-		mPrefs = preferences;
+	}
+	
+	public final void init(Preferences prefs, Logger logger) {
+		mPrefs = prefs;
 		mLogger = logger;
-		mPluginBroadcast = PluginPollingBroadcast.getInstance();
-		setupFileWriterListener();
-		setupUploadListener();
-		mPluginBroadcast.registerResultListener(this);
-		*/
 	}
 	
-	private void setupUploadListener() {
-		mUploadResultHandler = new UploaderResultHandler() {
-			
-			@Override
-			public void uploadError(String fileName){
-				
-			}
-			
-			@Override
-			public void successUpload(String fileName){
-				
-			}
-		};
-	}
-	
-	private void setupFileWriterListener() {
-		mFileWriterResult = new FileWriterResultHandler() {
-			
-			@Override
-			public void successFileWrite(){
-				
-			}
-			
-			@Override
-			public void fileWriteError(String newData){
-				
-			}
-		};
-	}
-
-	protected synchronized final void log(String log){
-		Log.e("MODUL LOGGER",log);
-		schedule();
-		new ModuleFileWriter(getModuleName(), mFileWriterResult).execute(log);
-	}
-
 	protected final void addPluginEventListener(Plugin plugin,
 												String functionName,
 												Object[] params){
@@ -85,20 +34,8 @@ public abstract class ModuleBase implements PluginResultListener {
 		try{
 			plugin.callMethod(call);
 		} catch(NullPointerException e){
-			mLogger.e("MODULE::ModulBase:addPluginEventListener","HIBA");
+			mLogger.e("MODULE::ModulBase:addPluginEventListener","ERROR");
 			e.printStackTrace();
-		}
-	}
-
-	private final void schedule(){
-		File root = Environment.getExternalStorageDirectory();
-		File logFile = new File(root, getModuleName());
-		if (logFile.exists()
-			&& logFile.length() > mPrefs.getLong(	PREFS_KEY_MAXIMUM_CACHE_SIZE,
-													20000)){
-			new ModuleFileUploader(mUploadResultHandler).execute(	logFile.getName(),
-															mPrefs.getString(	RegisterActivity.GCM_KEY,
-																				null));
 		}
 	}
 
@@ -131,6 +68,6 @@ public abstract class ModuleBase implements PluginResultListener {
 		preferences.putInt(PREFS_KEY_MINIMUM_BATTERY, minBattery);
 	}
 
+	public abstract void run();
 	public abstract String getModuleName();
-
 }
