@@ -25,9 +25,9 @@ public class ModuleLoader {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private ModuleRunnable loadModule(File file){
+	private ModuleRunnable loadModule(File file, String jarName){
 		
-		File dexedJavaFile = AssetReader.copyAssetToInternalStorage("ModuleExample.jar", this.mContext);
+		File dexedJavaFile = AssetReader.copyAssetToInternalStorage(jarName, this.mContext);
 		
 		DexClassLoader dexLoader = new DexClassLoader(dexedJavaFile.getAbsolutePath(), 
 														file.getAbsolutePath(), 
@@ -51,7 +51,7 @@ public class ModuleLoader {
 		return null;
 	}
 	
-	public void runModule(String urlString, String fileUrl){
+	public void runModule(String urlString, String jarName){
 		try {
 			/*
 			URL url = new URL(urlString);
@@ -72,7 +72,7 @@ public class ModuleLoader {
 			input.close();
 			*/
 			File outFile = new File(this.mContext.getFilesDir().getAbsolutePath());
-			ModuleRunnable module = loadModule(outFile);
+			ModuleRunnable module = loadModule(outFile,jarName);
 			module.run();
 			
 		} catch (NullPointerException e) {
