@@ -1,5 +1,6 @@
 package hu.edudroid.ict;
 
+import hu.edudroid.module.ModuleLoader;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -19,10 +20,10 @@ public class CoreService extends Service {
     public void onStart(Intent intent, int startId) {
         Log.e("CoreService","STARTED!");
         Log.e("ModuleLoading","Starting...");
-        // TODO Loading module
+                
+        ModuleLoader.getInstance(this).runModule("none", "ModuleExample.jar");
         
         Log.e("ModuleLoading","Module has been loaded succesfully!");
-        
         
     }
 
