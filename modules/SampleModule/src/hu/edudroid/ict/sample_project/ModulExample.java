@@ -8,10 +8,10 @@ import hu.edudroid.module.ModuleRunnable;
 import hu.edudroid.module.Preferences;
 
 public class ModulExample extends ModuleBase implements ModuleRunnable{
-
 	
-	public ModulExample(Preferences preferences, Logger logger) {
-		super(preferences, logger);
+	public ModulExample() {
+		super();
+		System.out.println("Hello world!");
 	}
 	
 	public void run(){
@@ -21,10 +21,11 @@ public class ModulExample extends ModuleBase implements ModuleRunnable{
 		
 		Plugin plugin2  = PluginCollection.getInstance().getPluginByName("WiFi Plugin");
 		addPluginEventListener(plugin2, "showIPAddress", new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"});
+		log("Modul run ended");
 	}
 
 	@Override
-	protected String getModulName(){
+	public String getModuleName(){
 		return "TestModule";
 	}
 
