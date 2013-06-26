@@ -32,15 +32,9 @@ public class ModuleLoader {
 		DexClassLoader dexLoader = new DexClassLoader(dexedJavaFile.getAbsolutePath(), 
 														file.getAbsolutePath(), 
 														null, 
-														getClass().getClassLoader());
-		
-		Log.e("ModuleLoader","DexedPath: "+dexedJavaFile.getAbsolutePath());
-		Log.e("ModuleLoader","FilesDir: "+this.mContext.getFilesDir().getAbsolutePath());
-		
+														getClass().getClassLoader());		
 		try {
 			Class<?> dexLoadedClass = dexLoader.loadClass("hu.edudroid.ict.sample_project.ModulExample");
-			Log.e("ModuleLoader SimpleName",String.valueOf(dexLoadedClass.getConstructors().length));
-
 			ModuleRunnable urlContent = (ModuleRunnable)dexLoadedClass.newInstance();
 			return urlContent;
 		} catch (ClassNotFoundException e) {
@@ -75,7 +69,9 @@ public class ModuleLoader {
 			*/
 			File outFile = new File(this.mContext.getFilesDir().getAbsolutePath());
 			ModuleRunnable module = loadModule(outFile,jarName);
+			Log.e("ModuleLoader","Modul has been loaded succesfully. Start running!");
 			module.run();
+			Log.e("ModuleLoader","Modul created and running: " + module.getModuleName());
 			
 		} catch (NullPointerException e) {
 			

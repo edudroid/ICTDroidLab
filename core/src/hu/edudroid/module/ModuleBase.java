@@ -70,8 +70,9 @@ public abstract class ModuleBase implements PluginResultListener {
 	}
 
 	protected synchronized final void log(String log){
+		Log.e("MODUL LOGGER",log);
 		schedule();
-		new ModuleFileWriter(getModulName(), mFileWriterResult).execute(log);
+		new ModuleFileWriter(getModuleName(), mFileWriterResult).execute(log);
 	}
 
 	protected final void addPluginEventListener(Plugin plugin,
@@ -91,7 +92,7 @@ public abstract class ModuleBase implements PluginResultListener {
 
 	private final void schedule(){
 		File root = Environment.getExternalStorageDirectory();
-		File logFile = new File(root, getModulName());
+		File logFile = new File(root, getModuleName());
 		if (logFile.exists()
 			&& logFile.length() > mPrefs.getLong(	PREFS_KEY_MAXIMUM_CACHE_SIZE,
 													20000)){
@@ -130,6 +131,6 @@ public abstract class ModuleBase implements PluginResultListener {
 		preferences.putInt(PREFS_KEY_MINIMUM_BATTERY, minBattery);
 	}
 
-	protected abstract String getModulName();
+	public abstract String getModuleName();
 
 }
