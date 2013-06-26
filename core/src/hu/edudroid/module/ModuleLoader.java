@@ -25,18 +25,14 @@ public class ModuleLoader {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private ModuleRunnable loadModule(File file){
+	private ModuleRunnable loadModule(File file, String jarName){
 		
-		File dexedJavaFile = AssetReader.copyAssetToInternalStorage("ModuleExample.jar", this.mContext);
+		File dexedJavaFile = AssetReader.copyAssetToInternalStorage(jarName, this.mContext);
 		
 		DexClassLoader dexLoader = new DexClassLoader(dexedJavaFile.getAbsolutePath(), 
 														file.getAbsolutePath(), 
 														null, 
-														getClass().getClassLoader());
-		
-		Log.e("ModuleLoader","DexedPath: "+dexedJavaFile.getAbsolutePath());
-		Log.e("ModuleLoader","FilesDir: "+this.mContext.getFilesDir().getAbsolutePath());
-		
+														getClass().getClassLoader());		
 		try {
 			Class<?> dexLoadedClass = dexLoader.loadClass("hu.edudroid.ict.sample_project.ModulExample");
 			ModuleRunnable urlContent = (ModuleRunnable)dexLoadedClass.newInstance();
@@ -51,7 +47,7 @@ public class ModuleLoader {
 		return null;
 	}
 	
-	public void runModule(String urlString, String fileUrl){
+	public void runModule(String urlString, String jarName){
 		try {
 			/*
 			URL url = new URL(urlString);
@@ -72,8 +68,10 @@ public class ModuleLoader {
 			input.close();
 			*/
 			File outFile = new File(this.mContext.getFilesDir().getAbsolutePath());
-			ModuleRunnable module = loadModule(outFile);
+			ModuleRunnable module = loadModule(outFile,jarName);
+			Log.e("ModuleLoader","Modul has been loaded succesfully. Start running!");
 			module.run();
+			Log.e("ModuleLoader","Modul created and running: " + module.getModuleName());
 			
 		} catch (NullPointerException e) {
 			
