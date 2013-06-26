@@ -6,6 +6,6 @@ Full path is required even if files are local and dx.bat is added to path.
 
 Add dex file to jar:
 
-aapt Content.jar classes.dex
+aapt add Content.jar classes.dex
 
 Full path is not necessary here.
