@@ -48,10 +48,12 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 		mMethods = new ArrayList<PluginMethod>();
 		ListView listview=((ListView) findViewById(R.id.details_list));
 		listview.setAdapter(this);
+		TextView textview=((TextView)findViewById(R.id.method_title));
 		
 		mPlugin = AndroidPluginCollection.getInstance()
 									.getPluginByName((getIntent().getExtras()
 																	.getString("pluginName")));
+		textview.setText("Methods defined for "+mPlugin.getName());
 		mBroadcast=PluginPollingBroadcast.getInstance();
 		mBroadcast.registerPluginDetailsListener(this);
 		refreshMethodList();
