@@ -52,7 +52,6 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 		mPlugin = AndroidPluginCollection.getInstance()
 									.getPluginByName((getIntent().getExtras()
 																	.getString("pluginName")));
-		Log.e("Plugin info",mPlugin.getName());
 		mBroadcast=PluginPollingBroadcast.getInstance();
 		mBroadcast.registerPluginDetailsListener(this);
 		refreshMethodList();
@@ -73,9 +72,14 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 				foundMethodInList=true;
 			}
 		}
-		if(!foundMethodInList){
-			mMethods.add(method);
+		for(int i=0;i<mPlugin.getMethodsName().size();i++){
+			if(mPlugin.getMethodsName().get(i).equals(method.mName)){
+				if(!foundMethodInList){
+					mMethods.add(method);
+				}
+			}
 		}
+		
 		Collections.sort(mMethods);
 		mObserver.onChanged();
 	}
