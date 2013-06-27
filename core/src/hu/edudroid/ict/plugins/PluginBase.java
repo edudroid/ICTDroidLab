@@ -3,13 +3,14 @@ package hu.edudroid.ict.plugins;
 import hu.edudroid.ict.PluginDetailsActivity;
 import hu.edudroid.ict.R;
 import hu.edudroid.interfaces.Plugin;
-import hu.edudroid.interfaces.PluginCall;
 import hu.edudroid.interfaces.PluginQuota;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -48,40 +49,6 @@ public class PluginBase implements OnClickListener, Plugin {
 		mQuotas.add(quota);
 	}
 
-	public void callMethod(final PluginCall pluginCall){
-		// validate quotas
-		final String method = pluginCall.getMethodName();
-		for (int i = 0; i < mQuotas.size(); i++)
-			if (!mQuotas.get(i).validateQuota(method, pluginCall.getQuotaType()))
-				// TODO log failed method call
-				return;
-
-		callMethod(method, pluginCall.getParameters());
-	}
-
-	private void callMethod(final String method, ArrayList<Object> params){
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		ObjectOutputStream stream = null;
-		try{
-			stream = new ObjectOutputStream(bytes);
-			stream.writeObject(Integer.valueOf(params.size()));
-			for (int i = 0; i < params.size(); i++)
-				stream.writeObject(params.get(i));
-			byte[] parameters = bytes.toByteArray();
-
-			Intent intent = new Intent(INTENT_CALL_PLUGIN_METHOD);
-			intent.putExtra(INTENT_EXTRA_METHOD_NAME, method);
-			intent.putExtra(INTENT_EXTRA_METHOD_PARAMETERS, parameters);
-			mContext.sendBroadcast(intent);
-
-			bytes.close();
-			stream.close();
-		}
-		catch (IOException e){
-			e.printStackTrace();
-		}
-	}
-
 	public View generateView(final View root, final Context context){
 		try{
 			final String author = context.getString(R.string.created_by,
@@ -111,4 +78,27 @@ public class PluginBase implements OnClickListener, Plugin {
 																	mContext));
 	}
 
+	@Override
+	public void callMethod(String method, List<Object> params){
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		ObjectOutputStream stream = null;
+		try{
+			stream = new ObjectOutputStream(bytes);
+			stream.writeObject(Integer.valueOf(params.size()));
+			for (int i = 0; i < params.size(); i++)
+				stream.writeObject(params.get(i));
+			byte[] parameters = bytes.toByteArray();
+
+			Intent intent = new Intent(INTENT_CALL_PLUGIN_METHOD);
+			intent.putExtra(INTENT_EXTRA_METHOD_NAME, method);
+			intent.putExtra(INTENT_EXTRA_METHOD_PARAMETERS, parameters);
+			mContext.sendBroadcast(intent);
+
+			bytes.close();
+			stream.close();
+		}
+		catch (IOException e){
+			e.printStackTrace();
+		}
+	}
 }

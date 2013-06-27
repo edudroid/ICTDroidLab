@@ -23,21 +23,6 @@ public abstract class ModuleBase implements PluginResultListener, Module {
 		mLogger = logger;
 		mPluginCollection = pluginCollection;
 	}
-	
-	protected final void addPluginEventListener(Plugin plugin,
-												String functionName,
-												Object[] params){
-		PluginCall call = new PluginCall(functionName);
-		for (int i = 0; i < params.length; i++){
-			call.addParameter(params[i]);
-		}
-		try{
-			plugin.callMethod(call);
-		} catch(NullPointerException e){
-			mLogger.e("MODULE::ModulBase:addPluginEventListener","ERROR");
-			e.printStackTrace();
-		}
-	}
 
 	// Settings
 
