@@ -14,10 +14,18 @@ public class ModulExample extends ModuleBase {
 	public void run(){
 		mLogger.d(TAG, "Modul created");
 		Plugin plugin1  = mPluginCollection.getPluginByName("Test Plugin 1");
-		addPluginEventListener(plugin1, "showToast", new Object[]{"param1", "param2", "param3"});
+		if (plugin1 != null) {
+			addPluginEventListener(plugin1, "showToast", new Object[]{"param1", "param2", "param3"});
+		} else {
+			mLogger.e(TAG, "Couldn't find Test Plugin 1");
+		}
 		
 		Plugin plugin2  = mPluginCollection.getPluginByName("WiFi Plugin");
-		addPluginEventListener(plugin2, "showIPAddress", new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"});
+		if (plugin2 != null) {
+			addPluginEventListener(plugin2, "showIPAddress", new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"});
+		} else {
+			mLogger.e(TAG, "Couldn't find WiFi Plugin");
+		}
 		mLogger.d(TAG,"Modul run ended");
 	}
 
@@ -38,4 +46,4 @@ public class ModulExample extends ModuleBase {
 			String errorMessage, String meta) {
 		mLogger.e("Event error ", plugin + " " + methodName + " " + errorMessage);
 	}
-}
+} 
