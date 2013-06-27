@@ -8,5 +8,6 @@ public interface Plugin {
 	String getName();
 	String getDescription();
 	String getVersionCode();
+	List<String> getMethodsName();
 	void callMethod(String method, List<Object> parameters);
 }

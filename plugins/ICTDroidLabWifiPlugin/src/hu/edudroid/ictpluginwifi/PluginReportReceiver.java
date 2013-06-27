@@ -25,30 +25,13 @@ public class PluginReportReceiver extends BroadcastReceiver {
 		
 		try{
 			final String action = extras.getString("action");
-			if(action.equals("reportMethods")){
-				final String pluginName = extras.getString("pluginName");
-			
-				Log.e("pluginName:",pluginName);
-						
-				if(pluginName.equals("WiFi Plugin")){
-					final Method[] methods = this.getClass().getMethods();
-					boolean methodCalled = false;
-					for (int i = 0; (i < methods.length && !methodCalled); i++)
-						if (methods[i].getName().equals(action)){
-							answer = (Intent[]) methods[i].invoke(this, plugin);
-							methodCalled = true;
-						}
-				}	
-			}
-			else {
-				final Method[] methods = this.getClass().getMethods();
-				boolean methodCalled = false;
-				for (int i = 0; (i < methods.length && !methodCalled); i++)
-					if (methods[i].getName().equals(action)){
-						answer = (Intent[]) methods[i].invoke(this, plugin);
-						methodCalled = true;
-					}
-			}
+			final Method[] methods = this.getClass().getMethods();
+			boolean methodCalled = false;
+			for (int i = 0; (i < methods.length && !methodCalled); i++)
+				if (methods[i].getName().equals(action)){
+					answer = (Intent[]) methods[i].invoke(this, plugin);
+					methodCalled = true;
+				}
 		}
 		catch (Exception ex){
 			ex.printStackTrace();
@@ -71,6 +54,7 @@ public class PluginReportReceiver extends BroadcastReceiver {
 		answer[0].putExtra("author", plugin.mAuthor);
 		answer[0].putExtra("description", plugin.mDescription);
 		answer[0].putExtra("version", plugin.mVersionCode);
+		answer[0].putStringArrayListExtra("pluginMethods", plugin.getMethodsName());
 		
 		return answer;
 	}

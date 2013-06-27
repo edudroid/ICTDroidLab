@@ -30,17 +30,20 @@ public class PluginBase implements OnClickListener, Plugin {
 	private final ArrayList<PluginQuota>	mQuotas;
 
 	private Context							mContext;
+	private List<String>					mPluginMethods;
 
 	public PluginBase(	final String name,
 					final String author,
 					final String description,
 					final String versionCode,
+					final List<String> pluginMethods,
 					final Context context) {
 		mName = name;
 		mAuthor = author;
 		mDescription = description;
 		mVersionCode = versionCode;
 		mQuotas = new ArrayList<PluginQuota>();
+		mPluginMethods=pluginMethods;
 		
 		mContext = context;
 	}
@@ -97,5 +100,10 @@ public class PluginBase implements OnClickListener, Plugin {
 		catch (IOException e){
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public List<String> getMethodsName() {
+		return mPluginMethods;
 	}
 }

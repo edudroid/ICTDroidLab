@@ -42,6 +42,14 @@ public class PluginLogic {
 	public ArrayList<PluginMethod> getMethods(){
 		return mMethods;
 	}
+	
+	public ArrayList<String> getMethodsName(){
+		ArrayList<String> methods=new ArrayList<String>();
+		for(int i=0;i<mMethods.size();i++){
+			methods.add(mMethods.get(i).mName);
+		}
+		return methods;
+	}
 
 	public final void callMethod(final String methodName, final Object[] params){
 		// final Method[] methods = getClass().getMethods();

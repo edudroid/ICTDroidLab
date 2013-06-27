@@ -111,9 +111,14 @@ public class MainActivity extends Activity implements PluginListener,
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		for(int i=0;i<mAdapter.getItem(arg2).getMethodsName().size();i++){
+			Log.e("Methods for this plugin:",mAdapter.getItem(arg2).getMethodsName().get(i));
+		}
+		
 		Toast.makeText(this,"PluginName:"+mAdapter.getItem(arg2).getName(), Toast.LENGTH_SHORT).show();
 		Intent mIntent=new Intent(this,PluginDetailsActivity.class);
 		mIntent.putExtra("pluginName", mAdapter.getItem(arg2).getName());
 		startActivity(mIntent);
+		
 	}
 }

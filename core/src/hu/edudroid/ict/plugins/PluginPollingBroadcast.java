@@ -61,6 +61,7 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 											extras.getString("author"),
 											extras.getString("description"),
 											extras.getString("version"),
+											extras.getStringArrayList("pluginMethods"),
 											context));
 		if (action.equals("reportMethods")){
 			Log.d("CORE::PluginPollingBroadcast:onReceive","ReportMethods broadcast received - " + extras.getString("name"));

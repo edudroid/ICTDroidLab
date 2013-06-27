@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 public class PluginMethod {
 
 	private Method			mMethod;
-	private PluginLogic	mPlugin;
+	public final PluginLogic	mPlugin;
 
 	public final String		mName;
 	public final String		mDescription;

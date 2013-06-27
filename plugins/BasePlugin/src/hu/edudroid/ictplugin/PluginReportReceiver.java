@@ -52,6 +52,7 @@ public class PluginReportReceiver extends BroadcastReceiver {
 		answer[0].putExtra("author", plugin.mAuthor);
 		answer[0].putExtra("description", plugin.mDescription);
 		answer[0].putExtra("version", plugin.mVersionCode);
+		answer[0].putStringArrayListExtra("pluginMethods", plugin.getMethodsName());
 		
 		return answer;
 	}

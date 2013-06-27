@@ -21,6 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -44,34 +46,21 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 
 		mInflater = getLayoutInflater();
 		mMethods = new ArrayList<PluginMethod>();
-		((ListView) findViewById(R.id.details_list)).setAdapter(this);
+		ListView listview=((ListView) findViewById(R.id.details_list));
+		listview.setAdapter(this);
 		
 		mPlugin = AndroidPluginCollection.getInstance()
-									.getPluginByHashcode(getIntent().getExtras()
-																	.getInt("pluginHash"));
-
-		//mBroadcast = PluginPollingBroadcast.getInstance();
-		//registerReceiver(mBroadcast, new IntentFilter(FILTER_NEW_PLUGIN));
-		//refreshMethodList();
-	}
-	
-	@Override
-	protected void onResume(){
-		super.onResume();
-		registerReceiver(mBroadcast, new IntentFilter(FILTER_NEW_PLUGIN));
+									.getPluginByName((getIntent().getExtras()
+																	.getString("pluginName")));
+		Log.e("Plugin info",mPlugin.getName());
+		mBroadcast=PluginPollingBroadcast.getInstance();
 		mBroadcast.registerPluginDetailsListener(this);
-	}
-
-	@Override
-	protected void onStop(){
-		unregisterReceiver(mBroadcast);
-		super.onStop();
+		refreshMethodList();
 	}
 
 	private void refreshMethodList(){
 		Intent intent = new Intent(FILTER_PLUGIN_POLL);
 		intent.putExtra("action", "reportMethods");
-		intent.putExtra("pluginName", mPlugin.getName());
 		sendBroadcast(intent);
 		Log.d("CORE::PluginDetailsActivity:refreshMethodList","Broadcast sent... PluginName: " + mPlugin.getName());
 	}
