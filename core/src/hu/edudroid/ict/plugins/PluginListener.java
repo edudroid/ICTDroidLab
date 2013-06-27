@@ -1,6 +1,8 @@
 package hu.edudroid.ict.plugins;
 
+import hu.edudroid.interfaces.Plugin;
+
 public interface PluginListener {
-	public void newPlugin(PluginBase plugin);
-	public void newPluginMethod(PluginMethod method);
+	public boolean newPlugin(Plugin plugin);
+	public boolean newPluginMethod(PluginMethod method);
 }

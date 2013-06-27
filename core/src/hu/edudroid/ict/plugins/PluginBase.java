@@ -82,33 +82,30 @@ public class PluginBase implements OnClickListener, Plugin {
 		}
 	}
 
-	public View generateView(final View root, final Context context){
-		try{
-			final String author = context.getString(R.string.created_by,
-													mAuthor);
-			((TextView) root.findViewById(R.id.plugin_title)).setText(mName
-																		+ " (version "
-																		+ mVersionCode
-																		+ ")");
-			((TextView) root.findViewById(R.id.plugin_author)).setText(author);
-			((TextView) root.findViewById(R.id.plugin_description)).setText(mDescription);
-
-			root.setOnClickListener(this);
-			return root;
-		}
-		catch (Exception ex){
-			throw new IllegalArgumentException();
-		}
+	@Override
+	public void onClick(View view){
+		mContext.startActivity(PluginDetailsActivity.generateIntent(hashCode(),
+																	mContext));
 	}
 	
+	@Override
 	public String getName() {
 		return mName;
 	}
 
 	@Override
-	public void onClick(View view){
-		mContext.startActivity(PluginDetailsActivity.generateIntent(hashCode(),
-																	mContext));
+	public String getAuthor() {
+		return mAuthor;
+	}
+
+	@Override
+	public String getDescription() {
+		return mDescription;
+	}
+
+	@Override
+	public String getVersionCode() {
+		return mVersionCode;
 	}
 
 }

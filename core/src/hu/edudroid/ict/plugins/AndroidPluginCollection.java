@@ -1,18 +1,31 @@
 package hu.edudroid.ict.plugins;
 
+import hu.edudroid.ict.R;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginCollection;
+import hu.edudroid.module.ModuleLoader;
 
 import java.util.ArrayList;
-import android.util.Log;
+import java.util.List;
 
-public class AndroidPluginCollection implements PluginCollection{
+import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.IBinder;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+
+public class AndroidPluginCollection implements PluginCollection, PluginListener{
 
 	private static AndroidPluginCollection	mInstance	= null;
-	private ArrayList<PluginBase>		mPlugins	= null;
+	private PluginPollingBroadcast			mBroadcast	= null;
+	private ArrayList<Plugin>			mPlugins	= null;
 
 	private AndroidPluginCollection() {
-		mPlugins = new ArrayList<PluginBase>();
+		mPlugins = new ArrayList<Plugin>();		
 	}
 
 	public static AndroidPluginCollection getInstance(){
@@ -22,11 +35,10 @@ public class AndroidPluginCollection implements PluginCollection{
 					mInstance = new AndroidPluginCollection();
 			}
 		}
-
 		return mInstance;
 	}
 	
-	public PluginBase getPluginByHashcode(final int hash){
+	public Plugin getPluginByHashcode(final int hash){
 		Log.e("PLUGIN", "# of plugins = " + mPlugins.size());
 		for (int i = 0; i < mPlugins.size(); i++){
 			Log.e("PLUGIN", "(" + i + ") hash: " + mPlugins.get(i).hashCode());
@@ -44,8 +56,33 @@ public class AndroidPluginCollection implements PluginCollection{
 		}
 		return null;
 	}
+	
+	@Override
+	public ArrayList<Plugin> getAllPlugins() {
+		return mPlugins;
+	}
 
-	public ArrayList<PluginBase> getPlugins() {
-		return new ArrayList<PluginBase>(mPlugins);
+	@Override
+	public boolean newPlugin(Plugin plugin) {
+		boolean isAlreadyInList=false;
+		for(int i=0;i<mPlugins.size();i++){
+			if(mPlugins.get(i).getName().equals(plugin.getName())){
+				isAlreadyInList=true;
+			}
+		}
+		if(!isAlreadyInList){
+			mPlugins.add(plugin);
+			Log.e("New Plugin added to PluginCollection!",plugin.getName());
+			return true;			
+		}		
+		else{
+			Log.e("Plugin is already in PluginCollection!",plugin.getName());
+			return false;
+		}
+	}
+
+	@Override
+	public boolean newPluginMethod(PluginMethod method) {
+		return true;
 	}
 }

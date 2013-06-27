@@ -23,8 +23,9 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 	public static PluginPollingBroadcast getInstance(){
 		if (mInstance == null){
 			synchronized (PluginPollingBroadcast.class){
-				if (mInstance == null)
+				if (mInstance == null){
 					mInstance = new PluginPollingBroadcast();
+				}
 			}
 		}
 		return mInstance;
