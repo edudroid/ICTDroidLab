@@ -6,9 +6,9 @@ import hu.edudroid.ict.plugins.PluginListener;
 import hu.edudroid.ict.plugins.PluginMethod;
 import hu.edudroid.ict.plugins.PluginPollingBroadcast;
 import hu.edudroid.interfaces.Plugin;
-import hu.edudroid.interfaces.PluginCall;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import android.app.Activity;
 import android.content.Context;
@@ -174,11 +174,7 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 
 	@Override
 	public void onClick(View view){
-		final PluginCall pluginCall = new PluginCall("showToast");
-		pluginCall.addParameter(new String("Hello "));
-		pluginCall.addParameter(new String("Working "));
-		pluginCall.addParameter(new String("Plugin!"));
-		mPlugin.callMethod(pluginCall);
+		mPlugin.callMethod("showToast", Arrays.asList(new Object[]{"Hello", "Working", "Plugin!"}) );
 	}
 
 	public static Intent generateIntent(final int pluginHash,
