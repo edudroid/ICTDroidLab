@@ -20,7 +20,9 @@
 
     <target name="jar" depends="clean,compile">
         <mkdir dir="${jar.dir}"/>
-        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+        <jar destfile="${jar.dir}/${ant.project.name}.jar"
+            basedir="${classes.dir}"
+            excludes="**/interfaces/*,**/interfaces/,**/interfaces">
         </jar>
     </target>
 

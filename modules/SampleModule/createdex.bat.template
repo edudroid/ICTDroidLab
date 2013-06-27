@@ -1,1 +1,0 @@
-dx.bat --dex --output=e:\git_local\ICTDroidLab\modules\SampleModule\classes.dex e:\git_local\ICTDroidLab\modules\SampleModule\build\jar\SampleModule.jar
