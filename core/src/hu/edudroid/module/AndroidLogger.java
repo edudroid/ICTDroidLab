@@ -15,4 +15,9 @@ public class AndroidLogger implements Logger {
 		Log.e(tag, message);
 	}
 
+	@Override
+	public void i(String tag, String message) {
+		Log.i(tag, message);
+	}
+
 }

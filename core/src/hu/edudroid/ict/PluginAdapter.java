@@ -3,41 +3,51 @@ package hu.edudroid.ict;
 import hu.edudroid.ict.R;
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginBase;
+import hu.edudroid.interfaces.Plugin;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
+import android.widget.TextView;
 
 public class PluginAdapter implements ListAdapter {
 
-	private ArrayList<PluginBase>	mPlugins;
+	private ArrayList<Plugin>	mPlugins;
 	
-	private Context				mContext	= null;
-	private LayoutInflater		mInflater	= null;
-	private DataSetObserver		mObserver	= null;
+	private Context					mContext			= null;
+	private LayoutInflater			mInflater			= null;
+	private DataSetObserver			mObserver			= null;
 
 	public PluginAdapter(Activity activity) {
-		mPlugins = AndroidPluginCollection.getInstance().getPlugins();
+		mPlugins = new ArrayList<Plugin>();
 		mContext = activity.getApplicationContext();
 		mInflater = activity.getLayoutInflater();
 	}
 
 	public void clearPlugins(){
 		mPlugins.clear();
+		onChanged();
 	}
-
-	public void addPlugin(final PluginBase plugin){
-		addPlugin(plugin, false);
-	}
-	public void addPlugin(final PluginBase plugin, final boolean notifyChange){
-		mPlugins.add(plugin);
-		if (notifyChange)
+	
+	public boolean addPlugin(final Plugin plugin){
+		if(!mPlugins.contains(plugin)){
+			mPlugins.add(plugin);
+			Log.e("New Plugin added to PluginAdapter!",plugin.getName());
 			onChanged();
+			return true;
+		}
+		else{
+			Log.e("Plugin is already in PluginAdapter",plugin.getName());
+			return false;
+		}
 	}
 
 	public void onChanged(){
@@ -53,7 +63,7 @@ public class PluginAdapter implements ListAdapter {
 	}
 
 	@Override
-	public PluginBase getItem(int position){
+	public Plugin getItem(int position){
 		if (mPlugins == null)
 			return null;
 		return (mPlugins.get(position));
@@ -76,9 +86,27 @@ public class PluginAdapter implements ListAdapter {
 											parent,
 											false);
 
-		getItem(position).generateView(convertView, mContext);
+		generateView(convertView, mContext,getItem(position));
 
 		return convertView;
+	}
+	
+	public View generateView(final View root, final Context context,Plugin plugin){
+		try{
+			final String author = context.getString(R.string.created_by,
+													plugin.getAuthor());
+			((TextView) root.findViewById(R.id.plugin_title)).setText(plugin.getName()
+																		+ " (version "
+																		+ plugin.getVersionCode()
+																		+ ")");
+			((TextView) root.findViewById(R.id.plugin_author)).setText(author);
+			((TextView) root.findViewById(R.id.plugin_description)).setText(plugin.getDescription());
+
+			return root;
+		}
+		catch (Exception ex){
+			throw new IllegalArgumentException();
+		}
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginListener;
 import hu.edudroid.ict.plugins.PluginMethod;
 import hu.edudroid.ict.plugins.PluginPollingBroadcast;
+import hu.edudroid.interfaces.Plugin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +31,7 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 	private final String			FILTER_PLUGIN_POLL	= "hu.edudroid.ict.plugin_polling_question";
 	private final String			FILTER_NEW_PLUGIN	= "hu.edudroid.ict.plugin_polling_answer";
 
-	private PluginBase					mPlugin;
+	private Plugin					mPlugin;
 	private ArrayList<PluginMethod>	mMethods;
 	private LayoutInflater			mInflater;
 	private DataSetObserver			mObserver;
@@ -49,9 +50,9 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 									.getPluginByHashcode(getIntent().getExtras()
 																	.getInt("pluginHash"));
 
-		mBroadcast = PluginPollingBroadcast.getInstance();
+		//mBroadcast = PluginPollingBroadcast.getInstance();
 		//registerReceiver(mBroadcast, new IntentFilter(FILTER_NEW_PLUGIN));
-		refreshMethodList();
+		//refreshMethodList();
 	}
 	
 	@Override
@@ -161,11 +162,14 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 	}
 
 	@Override
-	public void newPlugin(PluginBase plugin){}
+	public boolean newPlugin(Plugin plugin){
+		return true;
+	}
 
 	@Override
-	public void newPluginMethod(PluginMethod method){
+	public boolean newPluginMethod(PluginMethod method){
 		addMethod(method);
+		return true;
 	}
 
 	@Override
