@@ -36,6 +36,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	private List<String>					mEvents;
 	
 	private Map<Integer,PluginResultListener> mCallBackIdentification;
+	private static int mCallMethodID=0;
 
 	public PluginAdapter(final String name,
 					final String author,
@@ -105,9 +106,8 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	}
 	
 	@Override
-	public void callMethodAsync(int id, String method, List<Object> params, PluginResultListener listener){
-		
-		mCallBackIdentification.put(id, listener);
+	public long callMethodAsync(String method, List<Object> params, PluginResultListener listener){		
+		mCallBackIdentification.put(mCallMethodID, listener);
 		
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		ObjectOutputStream stream = null;
@@ -125,10 +125,12 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 
 			bytes.close();
 			stream.close();
+			return mCallMethodID++;
 		}
 		catch (IOException e){
 			e.printStackTrace();
 		}
+		return -1;
 	}
 
 	@Override
