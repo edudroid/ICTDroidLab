@@ -55,6 +55,7 @@ public class PluginReportReceiver extends BroadcastReceiver {
 		answer[0].putExtra("description", plugin.mDescription);
 		answer[0].putExtra("version", plugin.mVersionCode);
 		answer[0].putStringArrayListExtra("pluginMethods", plugin.getMethodsName());
+		answer[0].putStringArrayListExtra("pluginEvents", plugin.getEventsName());
 		
 		return answer;
 	}

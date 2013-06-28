@@ -17,6 +17,7 @@ public class PluginLogic {
 	public final String						mVersionCode			= "1.0";
 
 	private final ArrayList<PluginMethod>	mMethods;
+	private final ArrayList<PluginMethod>	mEvents;
 	private final Context					mContext;
 
 	private PluginLogic(Context context) {
@@ -35,6 +36,8 @@ public class PluginLogic {
 		mMethods.add(new PluginMethod(	"showNetworkSpeed",
 										"Shows the device's Network Speed",
 										this));
+		
+		mEvents.add(new PluginEvent());
 	}
 
 	public static PluginLogic getInstance(Context context){
@@ -58,6 +61,14 @@ public class PluginLogic {
 			methods.add(mMethods.get(i).mName);
 		}
 		return methods;
+	}
+	
+	public ArrayList<String> getEventsName(){
+		ArrayList<String> events=new ArrayList<String>();
+		for(int i=0;i<mEvents.size();i++){
+			events.add(mEvents.get(i).mName);
+		}
+		return events;
 	}
 
 	public final void callMethodSync(int id, final String methodName, final Object[] params){
