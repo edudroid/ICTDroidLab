@@ -73,5 +73,19 @@ public class PluginReportReceiver extends BroadcastReceiver {
 		
 		return answer;
 	}
+	
+	public Intent[] onEvent(PluginLogic plugin){
+		final ArrayList<PluginMethod> methods = plugin.getMethods();
+		
+		Intent answer[] = new Intent[methods.size()];
+		for (int i = 0; i < answer.length; i++){
+			answer[i] = new Intent(FILTER_NEW_PLUGIN);
+			answer[i].putExtra("action", "onEvent");
+			answer[i].putExtra("eventName", "EVENT NAME");
+			answer[i].putStringArrayListExtra("eventParams", null);
+		}
+		
+		return answer;
+	}
 
 }

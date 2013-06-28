@@ -2,6 +2,7 @@ package hu.edudroid.ict.plugins;
 
 import hu.edudroid.ict.PluginDetailsActivity;
 import hu.edudroid.interfaces.Plugin;
+import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginQuota;
 
 import java.io.ByteArrayOutputStream;
@@ -29,12 +30,14 @@ public class PluginAdapter implements OnClickListener, Plugin {
 
 	private Context							mContext;
 	private List<String>					mPluginMethods;
+	private List<String>					mEvents;
 
 	public PluginAdapter(final String name,
 					final String author,
 					final String description,
 					final String versionCode,
 					final List<String> pluginMethods,
+					final List<String> events,
 					final Context context) {
 		mName = name;
 		mAuthor = author;
@@ -42,6 +45,7 @@ public class PluginAdapter implements OnClickListener, Plugin {
 		mVersionCode = versionCode;
 		mQuotas = new ArrayList<PluginQuota>();
 		mPluginMethods = pluginMethods;
+		mEvents = events;
 		
 		mContext = context;
 	}
@@ -77,7 +81,25 @@ public class PluginAdapter implements OnClickListener, Plugin {
 	}
 
 	@Override
-	public void callMethod(String method, List<Object> params){
+	public List<String> getMethodNames() {
+		return mPluginMethods;
+	}
+
+	@Override
+	public void registerEventListener(String eventName,
+			PluginEventListener listener) {
+		// TODO Auto-generated method stub
+		// Egyes eventekhez tárolja a feliratkozást.
+		
+	}
+
+	@Override
+	public List<String> getAllEvents() {
+		return mEvents;
+	}
+	
+	@Override
+	public void callMethodAsync(String method, List<Object> params){
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		ObjectOutputStream stream = null;
 		try{
@@ -101,7 +123,8 @@ public class PluginAdapter implements OnClickListener, Plugin {
 	}
 
 	@Override
-	public List<String> getMethodNames() {
-		return mPluginMethods;
+	public List<String> callMethodSync(String method, List<Object> parameters) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

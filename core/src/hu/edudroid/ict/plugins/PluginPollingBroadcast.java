@@ -1,8 +1,11 @@
 package hu.edudroid.ict.plugins;
 
+import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginResultListener;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,12 +15,15 @@ import android.util.Log;
 public class PluginPollingBroadcast extends BroadcastReceiver {
 
 	private final ArrayList<PluginResultListener>	mResultListeners;
+	private final ArrayList<PluginEventListener>	mPluginEventListeners;
 
 	private PluginListener							mListener;
+	private PluginEventListener						mEventListener;
 	private static PluginPollingBroadcast			mInstance;
 
 	private PluginPollingBroadcast() {
 		mResultListeners = new ArrayList<PluginResultListener>();
+		mPluginEventListeners = new ArrayList<PluginEventListener>();
 	}
 
 	public static PluginPollingBroadcast getInstance(){
@@ -62,6 +68,7 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 											extras.getString("description"),
 											extras.getString("version"),
 											extras.getStringArrayList("pluginMethods"),
+											null,
 											context));
 		if (action.equals("reportMethods")){
 			Log.d("CORE::PluginPollingBroadcast:onReceive","ReportMethods broadcast received - " + extras.getString("name"));
@@ -97,6 +104,12 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 											error,
 											metadata);
 		}
+		if (action.equals("onEvent")){
+			final String eventName = extras.getString("eventName");
+			final List<String> eventParams = extras.getStringArrayList("eventParams");
+			notifyEventListener(eventName,eventParams);
+		}
+		
 	}
 
 	public void nofityResultListenersAboutError(final String plugin,
@@ -110,6 +123,11 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 											method,
 											error,
 											metadata);
+	}
+	
+	public void notifyEventListener(String eventName, List<String> eventParams){
+		for (int i = 0; i < mPluginEventListeners.size(); i++)
+			mPluginEventListeners.get(i).onEvent(eventParams);
 	}
 
 }
