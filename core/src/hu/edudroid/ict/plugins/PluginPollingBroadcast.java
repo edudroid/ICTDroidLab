@@ -57,7 +57,7 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 		final String action = extras.getString("action");
 
 		if (action.equals("reportSelf"))
-			mListener.newPlugin(new PluginBase(	extras.getString("title"),
+			mListener.newPlugin(new PluginAdapter(	extras.getString("title"),
 											extras.getString("author"),
 											extras.getString("description"),
 											extras.getString("version"),

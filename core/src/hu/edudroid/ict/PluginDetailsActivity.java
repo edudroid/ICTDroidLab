@@ -1,6 +1,5 @@
 package hu.edudroid.ict;
 
-import hu.edudroid.ict.plugins.PluginBase;
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginListener;
 import hu.edudroid.ict.plugins.PluginMethod;
@@ -13,7 +12,6 @@ import java.util.Collections;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,8 +19,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,7 +27,6 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 		PluginListener, OnClickListener {
 
 	private final String			FILTER_PLUGIN_POLL	= "hu.edudroid.ict.plugin_polling_question";
-	private final String			FILTER_NEW_PLUGIN	= "hu.edudroid.ict.plugin_polling_answer";
 
 	private Plugin					mPlugin;
 	private ArrayList<PluginMethod>	mMethods;
@@ -74,8 +69,8 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 				foundMethodInList=true;
 			}
 		}
-		for(int i=0;i<mPlugin.getMethodsName().size();i++){
-			if(mPlugin.getMethodsName().get(i).equals(method.mName)){
+		for(int i=0;i<mPlugin.getMethodNames().size();i++){
+			if(mPlugin.getMethodNames().get(i).equals(method.mName)){
 				if(!foundMethodInList){
 					mMethods.add(method);
 				}

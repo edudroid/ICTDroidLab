@@ -1,27 +1,15 @@
 package hu.edudroid.ict.plugins;
 
-import hu.edudroid.ict.R;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginCollection;
-import hu.edudroid.module.ModuleLoader;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.IBinder;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
 
 public class AndroidPluginCollection implements PluginCollection, PluginListener{
 
 	private static AndroidPluginCollection	mInstance	= null;
-	private PluginPollingBroadcast			mBroadcast	= null;
 	private ArrayList<Plugin>			mPlugins	= null;
 
 	private AndroidPluginCollection() {

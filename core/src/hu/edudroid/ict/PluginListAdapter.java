@@ -1,12 +1,9 @@
 package hu.edudroid.ict;
 
 import hu.edudroid.ict.R;
-import hu.edudroid.ict.plugins.AndroidPluginCollection;
-import hu.edudroid.ict.plugins.PluginBase;
 import hu.edudroid.interfaces.Plugin;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-public class PluginAdapter implements ListAdapter {
+public class PluginListAdapter implements ListAdapter {
 
 	private ArrayList<Plugin>	mPlugins;
 	
@@ -26,7 +23,7 @@ public class PluginAdapter implements ListAdapter {
 	private LayoutInflater			mInflater			= null;
 	private DataSetObserver			mObserver			= null;
 
-	public PluginAdapter(Activity activity) {
+	public PluginListAdapter(Activity activity) {
 		mPlugins = new ArrayList<Plugin>();
 		mContext = activity.getApplicationContext();
 		mInflater = activity.getLayoutInflater();

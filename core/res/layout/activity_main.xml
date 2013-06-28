@@ -6,6 +6,12 @@
     android:padding="4dip"
     tools:context=".MainActivity" >
 
+    <Button
+        android:id="@+id/runAllModulesButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/runAllModules" />
+
     <LinearLayout
         android:id="@+id/plugin_count"
         android:layout_width="fill_parent"

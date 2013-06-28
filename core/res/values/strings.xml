@@ -14,5 +14,6 @@
     
     <!-- PluginDetails -->
     <string name="methods_defined">Methods defined for this plugin</string>
+    <string name="runAllModules">Run all modules</string>
 
 </resources>

@@ -1,7 +1,6 @@
 package hu.edudroid.ict.plugins;
 
 import hu.edudroid.ict.PluginDetailsActivity;
-import hu.edudroid.ict.R;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginQuota;
 
@@ -15,9 +14,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.TextView;
 
-public class PluginBase implements OnClickListener, Plugin {
+public class PluginAdapter implements OnClickListener, Plugin {
 
 	private final String					INTENT_CALL_PLUGIN_METHOD		= "hu.edudroid.ict.plugin.callmethod";
 	private final String					INTENT_EXTRA_METHOD_NAME		= "methodname";
@@ -32,7 +30,7 @@ public class PluginBase implements OnClickListener, Plugin {
 	private Context							mContext;
 	private List<String>					mPluginMethods;
 
-	public PluginBase(	final String name,
+	public PluginAdapter(final String name,
 					final String author,
 					final String description,
 					final String versionCode,
@@ -43,7 +41,7 @@ public class PluginBase implements OnClickListener, Plugin {
 		mDescription = description;
 		mVersionCode = versionCode;
 		mQuotas = new ArrayList<PluginQuota>();
-		mPluginMethods=pluginMethods;
+		mPluginMethods = pluginMethods;
 		
 		mContext = context;
 	}
@@ -103,7 +101,7 @@ public class PluginBase implements OnClickListener, Plugin {
 	}
 
 	@Override
-	public List<String> getMethodsName() {
+	public List<String> getMethodNames() {
 		return mPluginMethods;
 	}
 }

@@ -2,7 +2,6 @@ package hu.edudroid.ict;
 
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginPollingBroadcast;
-import hu.edudroid.module.ModuleLoader;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -25,7 +24,7 @@ public class CoreService extends Service {
 	
 	@Override
     public void onStart(Intent intent, int startId) {
-        Log.e("CORE SERVICE","Service has been started!");
+        Log.e(TAG,"Service has been started!");
         
         //Plugin -> PluginPollingBroadcast
         mBroadcast = PluginPollingBroadcast.getInstance();
@@ -38,10 +37,10 @@ public class CoreService extends Service {
         Intent mIntent = new Intent(FILTER_PLUGIN_POLL);
 		mIntent.putExtra("action", "reportSelf");
 		sendBroadcast(mIntent);
+		//ModuleLoader.runModule("none", "SampleModule.jar", this);
+		Log.e(TAG, "Modules not started");
 		
-		ModuleLoader.runModule("none", "SampleModule.jar", this);
-		
-        Log.e("CORE SERVICE","Ready...");
+        Log.e(TAG, "Ready...");
         
     }
 

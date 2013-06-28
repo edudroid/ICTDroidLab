@@ -5,14 +5,11 @@ import java.util.List;
 
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginListener;
-import hu.edudroid.ict.plugins.PluginBase;
 import hu.edudroid.ict.plugins.PluginMethod;
-import hu.edudroid.ict.plugins.PluginPollingBroadcast;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.module.ModuleLoader;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,11 +23,8 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements PluginListener,
 		OnClickListener, OnItemClickListener {
 
-	private final String			FILTER_PLUGIN_POLL		= "hu.edudroid.ict.plugin_polling_question";
-	private final String			FILTER_PLUGIN_ANSWER	= "hu.edudroid.ict.plugin_polling_answer";
 
-	private PluginAdapter			mAdapter				= null;
-	private PluginPollingBroadcast	mBroadcast				= null;
+	private PluginListAdapter			mAdapter				= null;
 	
 	private AndroidPluginCollection mPluginCollection		= null;
 
@@ -39,7 +33,7 @@ public class MainActivity extends Activity implements PluginListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		mAdapter = new PluginAdapter(this);
+		mAdapter = new PluginListAdapter(this);
 		
 		ListView listview=((ListView) findViewById(R.id.plugin_list));
 		listview.setAdapter(mAdapter);
@@ -52,6 +46,7 @@ public class MainActivity extends Activity implements PluginListener,
 		
 		
 		findViewById(R.id.btn_refresh).setOnClickListener(this);
+		findViewById(R.id.runAllModulesButton).setOnClickListener(this);
 	}
 	
 	@Override
@@ -106,13 +101,17 @@ public class MainActivity extends Activity implements PluginListener,
 			case R.id.btn_refresh:
 				refreshPluginlist();
 				break;
+			case R.id.runAllModulesButton:
+				ModuleLoader.runModule("none", "SampleModule.jar", this);
 		}
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		for(int i=0;i<mAdapter.getItem(arg2).getMethodsName().size();i++){
-			Log.e("Methods for this plugin:",mAdapter.getItem(arg2).getMethodsName().get(i));
+		Plugin plugin = mAdapter.getItem(arg2);
+		List<String> methodNames = plugin.getMethodNames();
+		for(String methodName : methodNames){
+			Log.e("Methods for this plugin:", methodName);
 		}
 		
 		Toast.makeText(this,"PluginName:"+mAdapter.getItem(arg2).getName(), Toast.LENGTH_SHORT).show();
