@@ -10,7 +10,7 @@ public interface Plugin {
 	String getVersionCode();
 	List<String> getAllEvents();
 	List<String> getMethodNames();
-	void callMethodAsync(String method, List<Object> parameters);
+	void callMethodAsync(int id, String method, List<Object> parameters,PluginResultListener listener);
 	List<String> callMethodSync(String method, List<Object> parameters);
 	void registerEventListener(String eventName, PluginEventListener listener);
 	

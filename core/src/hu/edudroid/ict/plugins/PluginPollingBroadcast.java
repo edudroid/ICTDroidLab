@@ -78,6 +78,7 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 		}
 			
 		if (action.equals("reportResult")){
+			final int id = extras.getInt("id");
 			final String plugin = extras.getString("plugin");
 			final String version = extras.getString("version");
 			final String method = extras.getString("sender");
@@ -85,7 +86,8 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 			final String metadata = extras.containsKey("meta") ? extras.getString("meta") : "";
 
 			for (int i = 0; i < mResultListeners.size(); i++)
-				mResultListeners.get(i).onResult(	plugin,
+				mResultListeners.get(i).onResult(	id,
+													plugin,
 													version,
 													method,
 													result,

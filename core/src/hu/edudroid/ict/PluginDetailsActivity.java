@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class PluginDetailsActivity extends Activity implements ListAdapter,
@@ -172,7 +173,7 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		mPlugin.callMethodAsync(mMethods.get(arg2).mName, Arrays.asList(new Object[]{"Hello", "Working", "Plugin!"}) );
+		Toast.makeText(this, mMethods.get(arg2).mName, Toast.LENGTH_SHORT).show();
 	}
 
 }

@@ -4,19 +4,22 @@ import hu.edudroid.ict.PluginDetailsActivity;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginQuota;
+import hu.edudroid.interfaces.PluginResultListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-public class PluginAdapter implements OnClickListener, Plugin {
+public class PluginAdapter implements OnClickListener, Plugin, PluginResultListener {
 
 	private final String					INTENT_CALL_PLUGIN_METHOD		= "hu.edudroid.ict.plugin.callmethod";
 	private final String					INTENT_EXTRA_METHOD_NAME		= "methodname";
@@ -31,6 +34,8 @@ public class PluginAdapter implements OnClickListener, Plugin {
 	private Context							mContext;
 	private List<String>					mPluginMethods;
 	private List<String>					mEvents;
+	
+	private Map<Integer,PluginResultListener> mCallBackIdentification;
 
 	public PluginAdapter(final String name,
 					final String author,
@@ -47,6 +52,7 @@ public class PluginAdapter implements OnClickListener, Plugin {
 		mPluginMethods = pluginMethods;
 		mEvents = events;
 		
+		mCallBackIdentification=new HashMap<Integer, PluginResultListener>();
 		mContext = context;
 	}
 
@@ -99,7 +105,10 @@ public class PluginAdapter implements OnClickListener, Plugin {
 	}
 	
 	@Override
-	public void callMethodAsync(String method, List<Object> params){
+	public void callMethodAsync(int id, String method, List<Object> params, PluginResultListener listener){
+		
+		mCallBackIdentification.put(id, listener);
+		
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		ObjectOutputStream stream = null;
 		try{
@@ -126,5 +135,16 @@ public class PluginAdapter implements OnClickListener, Plugin {
 	public List<String> callMethodSync(String method, List<Object> parameters) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void onResult(int id, String plugin, String pluginVersion,
+			String methodName, String result, String meta) {
+			mCallBackIdentification.get(id).onResult(id, plugin, pluginVersion, methodName, result, meta);	
+	}
+
+	@Override
+	public void onError(String plugin, String pluginVersion, String methodName,
+			String errorMessage, String meta) {
 	}
 }
