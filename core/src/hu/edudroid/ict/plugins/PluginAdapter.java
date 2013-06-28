@@ -36,8 +36,8 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	private List<String>					mPluginMethods;
 	private List<String>					mEvents;
 	
-	private Map<Integer,PluginResultListener> mCallBackIdentification;
-	private static int mCallMethodID=0;
+	private Map<Long, PluginResultListener> mCallBackIdentification;
+	private static long mCallMethodID = 0;
 
 	public PluginAdapter(final String name,
 					final String author,
@@ -54,7 +54,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 		mPluginMethods = pluginMethods;
 		mEvents = events;
 		
-		mCallBackIdentification=new HashMap<Integer, PluginResultListener>();
+		mCallBackIdentification = new HashMap<Long, PluginResultListener>();
 		mContext = context;
 	}
 
@@ -96,8 +96,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	@Override
 	public void registerEventListener(String eventName,
 			PluginEventListener listener) {
-		// TODO Auto-generated method stub
-		// Egyes eventekhez tárolja a feliratkozást.
+		// TODO Register modules to be notified when plugin events arrive
 		
 	}
 
@@ -132,12 +131,6 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 			e.printStackTrace();
 		}
 		return -1;
-	}
-
-	@Override
-	public List<String> callMethodSync(String method, List<Object> parameters) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

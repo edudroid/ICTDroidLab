@@ -2,6 +2,8 @@ package hu.edudroid.ictplugin;
 
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
+import hu.edudroid.interfaces.PluginEventListener;
+import hu.edudroid.interfaces.PluginResultListener;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
@@ -107,8 +109,22 @@ public class PluginCommunicationInterface extends BroadcastReceiver {
 			}
 			
 			@Override
-			public void callMethod(String method, List<Object> parameters) {
+			public List<String> getAllEvents() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public long callMethodAsync(String method, List<Object> parameters,
+					PluginResultListener listener) {
 				throw new UnsupportedOperationException("Don't call plugin in an assync way.");
+			}
+
+			@Override
+			public void registerEventListener(String eventName,
+					PluginEventListener listener) {
+				// TODO Auto-generated method stub
+				
 			}
 		};
 	}

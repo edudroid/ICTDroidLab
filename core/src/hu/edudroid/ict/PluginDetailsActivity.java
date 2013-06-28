@@ -7,7 +7,6 @@ import hu.edudroid.ict.plugins.PluginPollingBroadcast;
 import hu.edudroid.interfaces.Plugin;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import android.app.Activity;
 import android.content.Context;
@@ -17,7 +16,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;

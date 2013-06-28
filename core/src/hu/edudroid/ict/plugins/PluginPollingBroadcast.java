@@ -18,7 +18,6 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 	private final ArrayList<PluginEventListener>	mPluginEventListeners;
 
 	private PluginListener							mListener;
-	private PluginEventListener						mEventListener;
 	private static PluginPollingBroadcast			mInstance;
 
 	private PluginPollingBroadcast() {

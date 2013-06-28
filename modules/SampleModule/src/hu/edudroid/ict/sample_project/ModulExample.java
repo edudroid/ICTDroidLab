@@ -20,17 +20,17 @@ public class ModulExample extends ModuleBase implements PluginEventListener, Plu
 		mLogger.d(TAG, "Modul created");
 		Plugin plugin1  = mPluginCollection.getPluginByName("Test Plugin 1");
 		if (plugin1 != null) {
-			long id1=plugin1.callMethodAsync("showToast", Arrays.asList(new Object[]{"param1", "param2", "param3"}),this);
+			long id1 = plugin1.callMethodAsync("showToast", Arrays.asList(new Object[]{"param1", "param2", "param3"}),this);
 		} else {
 			mLogger.e(TAG, "Couldn't find Test Plugin 1");
 		}
 		
 		Plugin plugin2  = mPluginCollection.getPluginByName("WiFi Plugin");
 		if (plugin2 != null) {
-			long id2=plugin2.callMethodAsync("showIPAddress", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
-			long id3=plugin2.callMethodAsync("showMACAddress", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
-			long id4=plugin2.callMethodAsync("showNetMaskAddress", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
-			long id5=plugin2.callMethodAsync("showNetworkSpeed", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
+			long id2 = plugin2.callMethodAsync("showIPAddress", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
+			long id3 = plugin2.callMethodAsync("showMACAddress", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
+			long id4 = plugin2.callMethodAsync("showNetMaskAddress", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
+			long id5 = plugin2.callMethodAsync("showNetworkSpeed", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
 			
 			plugin2.registerEventListener("WiFi acces", this);
 		} else {
