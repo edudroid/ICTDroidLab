@@ -19,12 +19,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class PluginDetailsActivity extends Activity implements ListAdapter,
-		PluginListener, OnClickListener {
+		PluginListener, OnItemClickListener {
 
 	private final String			FILTER_PLUGIN_POLL	= "hu.edudroid.ict.plugin_polling_question";
 
@@ -112,7 +114,6 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 		((TextView) convertView.findViewById(R.id.method_name)).setText(method.mName);
 		((TextView) convertView.findViewById(R.id.method_details)).setText(method.mDescription);
 
-		convertView.setOnClickListener(this);
 		return convertView;
 	}
 
@@ -162,16 +163,16 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 		return true;
 	}
 
-	@Override
-	public void onClick(View view){
-		mPlugin.callMethod("showToast", Arrays.asList(new Object[]{"Hello", "Working", "Plugin!"}) );
-	}
-
 	public static Intent generateIntent(final int pluginHash,
 										final Context context){
 		Intent intent = new Intent(context, PluginDetailsActivity.class);
 		intent.putExtra("pluginHash", pluginHash);
 		return intent;
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		mPlugin.callMethodAsync(mMethods.get(arg2).mName, Arrays.asList(new Object[]{"Hello", "Working", "Plugin!"}) );
 	}
 
 }
