@@ -73,7 +73,7 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 		if (action.equals("reportResult")){
 			final String plugin = extras.getString("plugin");
 			final String version = extras.getString("version");
-			final String method = extras.getString("sender");
+			final String method = extras.getString("method");
 			final String result = extras.getString("result");
 			final String metadata = extras.containsKey("meta") ? extras.getString("meta") : "";
 

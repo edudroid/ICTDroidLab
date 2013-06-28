@@ -104,4 +104,9 @@ public class PluginAdapter implements OnClickListener, Plugin {
 	public List<String> getMethodNames() {
 		return mPluginMethods;
 	}
+
+	@Override
+	public List<String> callMethodSync(String method, List<Object> parameters) {
+		throw new UnsupportedOperationException("Can't call sync methods on stub.");
+	}
 }

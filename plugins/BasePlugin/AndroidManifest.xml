@@ -28,7 +28,7 @@
 	        android:process=":remote"/>
         
         <receiver
-            android:name="hu.edudroid.ictplugin.PluginReportReceiver"
+            android:name="hu.edudroid.ictplugin.PluginCommunicationInterface"
             android:enabled="true"
             android:exported="true">
             <intent-filter >
@@ -37,7 +37,7 @@
         </receiver>
         
         <receiver
-            android:name="hu.edudroid.ictplugin.PluginCallReceiver"
+            android:name="hu.edudroid.ictplugin.PluginCommunicationInterface"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
