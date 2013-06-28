@@ -16,6 +16,7 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -142,7 +143,12 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	@Override
 	public void onResult(int id, String plugin, String pluginVersion,
 			String methodName, String result, String meta) {
-			mCallBackIdentification.get(id).onResult(id, plugin, pluginVersion, methodName, result, meta);	
+		try{	
+			mCallBackIdentification.remove(id).onResult(id, plugin, pluginVersion, methodName, result, meta);
+		} catch(NullPointerException e){
+			Log.e("No request for this answer.","ID: "+String.valueOf(id)+" "+plugin+" "+methodName+" "+result);
+			e.printStackTrace();
+		}
 	}
 
 	@Override

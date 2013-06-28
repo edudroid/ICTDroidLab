@@ -11,8 +11,6 @@ import java.util.List;
 public class ModulExample extends ModuleBase implements PluginEventListener, PluginResultListener {
 	
 	private static final String 	TAG			 	= "ModuleExample";
-	private static final int 		ID 				= 123456789;
-	private static int				methodCallId 	= 0;
 
 	public ModulExample() {
 		super();
