@@ -23,7 +23,7 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements PluginListener,
 		OnClickListener, OnItemClickListener {
 
-
+	private final String			FILTER_PLUGIN_POLL		= "hu.edudroid.ict.plugin_polling_question";
 	private PluginListAdapter			mAdapter				= null;
 	
 	private AndroidPluginCollection mPluginCollection		= null;
@@ -59,6 +59,10 @@ public class MainActivity extends Activity implements PluginListener,
 		mAdapter.clearPlugins();
 		findViewById(R.id.no_plugins).setVisibility(View.VISIBLE);
 		findViewById(R.id.plugin_count).setVisibility(View.GONE);
+		
+		Intent mIntent = new Intent(FILTER_PLUGIN_POLL);
+		mIntent.putExtra("action", "reportSelf");
+		sendBroadcast(mIntent);
 		
 		ArrayList<Plugin> plugins=mPluginCollection.getAllPlugins();
 		

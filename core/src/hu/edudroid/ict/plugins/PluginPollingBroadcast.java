@@ -1,5 +1,6 @@
 package hu.edudroid.ict.plugins;
 
+import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginResultListener;
 
@@ -62,12 +63,12 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 		final String action = extras.getString("action");
 
 		if (action.equals("reportSelf"))
-			mListener.newPlugin(new PluginAdapter(	extras.getString("title"),
-											extras.getString("author"),
-											extras.getString("description"),
-											extras.getString("version"),
-											extras.getStringArrayList("pluginMethods"),
-											extras.getStringArrayList("pluginEvents"),
+			mListener.newPlugin(new PluginAdapter(	extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_ID),
+											extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_AUTHOR),
+											extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIPTION),
+											extras.getString(Constants.INTENT_EXTRA_KEY_VERSION),
+											extras.getStringArrayList(Constants.INTENT_EXTRA_KEY_PLUGIN_METHODS),
+											extras.getStringArrayList(Constants.INTENT_EXTRA_KEY_PLUGIN_EVENTS),
 											context));
 		if (action.equals("reportMethods")){
 			Log.d("CORE::PluginPollingBroadcast:onReceive","ReportMethods broadcast received - " + extras.getString("name"));

@@ -14,12 +14,14 @@ import java.util.List;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 public class PluginCommunicationInterface extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Plugin plugin = getPlugin();
+		Log.e("Broadcast Received","Base plugin");
 		// Send description
 		if (intent.getAction().equals(Constants.INTENT_ACTION_REQUEST_DESCRIPTION)) {
 			Intent response = new Intent();
@@ -30,6 +32,8 @@ public class PluginCommunicationInterface extends BroadcastReceiver {
 			response.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, plugin.getVersionCode());
 			response.putStringArrayListExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_METHODS,
 					new ArrayList<String>(plugin.getMethodNames()));
+			response.putStringArrayListExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_EVENTS,
+					new ArrayList<String>(plugin.getAllEvents()));
 			context.sendBroadcast(intent);
 		} else if (intent.getAction().equals(Constants.INTENT_ACTION_CALL_METHOD)) {
 			final String callId = intent.getExtras().getString(Constants.INTENT_EXTRA_CALL_ID);
@@ -81,7 +85,7 @@ public class PluginCommunicationInterface extends BroadcastReceiver {
 			
 			@Override
 			public String getName() {
-				return "Dummy Plugin";
+				return "Test Plugin 1";
 			}
 			
 			@Override

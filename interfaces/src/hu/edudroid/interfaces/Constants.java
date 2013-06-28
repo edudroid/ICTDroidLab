@@ -15,6 +15,7 @@ public class Constants {
 	public static final String INTENT_EXTRA_KEY_DESCRIPTION = "description";
 	public static final String INTENT_EXTRA_KEY_VERSION = "version";
 	public static final String INTENT_EXTRA_KEY_PLUGIN_METHODS = "methods";
+	public static final String INTENT_EXTRA_KEY_PLUGIN_EVENTS = "events";
 	public static final String INTENT_EXTRA_VALUE_RESULT = "reoprt result";
 	public static final String INTENT_EXTRA_VALUE_ERROR = "report error";
 }

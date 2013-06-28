@@ -22,13 +22,13 @@
             </intent-filter>
         </activity>
         
-	    <service
+        <service
 	        android:name="hu.edudroid.ictpluginwifi.PluginService"
 	        android:enabled="true"
 	        android:process=":remote"/>
         
         <receiver
-            android:name="hu.edudroid.ictpluginwifi.PluginReportReceiver"
+            android:name="hu.edudroid.ictpluginwifi.PluginCommunicationInterface"
             android:enabled="true"
             android:exported="true">
             <intent-filter >
@@ -37,7 +37,7 @@
         </receiver>
         
         <receiver
-            android:name="hu.edudroid.ictpluginwifi.PluginCallReceiver"
+            android:name="hu.edudroid.ictpluginwifi.PluginCommunicationInterface"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
