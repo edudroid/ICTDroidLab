@@ -17,6 +17,7 @@ public class PluginLogic {
 	public final String						mVersionCode			= "1.0";
 
 	private final ArrayList<PluginMethod>	mMethods;
+	private final ArrayList<PluginMethod>	mEvents;
 	private final Context					mContext;
 
 	private PluginLogic(Context context) {
@@ -35,6 +36,8 @@ public class PluginLogic {
 		mMethods.add(new PluginMethod(	"showNetworkSpeed",
 										"Shows the device's Network Speed",
 										this));
+		
+		mEvents.add(new PluginEvent());
 	}
 
 	public static PluginLogic getInstance(Context context){
@@ -59,8 +62,16 @@ public class PluginLogic {
 		}
 		return methods;
 	}
+	
+	public ArrayList<String> getEventsName(){
+		ArrayList<String> events=new ArrayList<String>();
+		for(int i=0;i<mEvents.size();i++){
+			events.add(mEvents.get(i).mName);
+		}
+		return events;
+	}
 
-	public final void callMethod(final String methodName, final Object[] params){
+	public final void callMethodSync(int id, final String methodName, final Object[] params){
 		// final Method[] methods = getClass().getMethods();
 		for (int i = 0; i < mMethods.size(); i++){
 			if (mMethods.get(i).mName.equals(methodName)){
@@ -69,22 +80,23 @@ public class PluginLogic {
 					return;
 				}
 				catch (IllegalArgumentException e){
-					reportError(methodName, "IllegalArgumentException", e.getMessage());
+					reportError(id, methodName, "IllegalArgumentException", e.getMessage());
 				}
 				catch (InvocationTargetException e){
-					reportError(methodName, "InvocationTargetException", e.getMessage());
+					reportError(id, methodName, "InvocationTargetException", e.getMessage());
 				}
 				catch (IllegalAccessException e){
-					reportError(methodName, "IllegalAccessException", e.getMessage());
+					reportError(id, methodName, "IllegalAccessException", e.getMessage());
 				}
 			}
 					
 		}
 	}
 
-	private void reportResult(final String resultCode, final String sender, final String result, final String metadata){
+	private void reportResult(final String resultCode, final int id, final String sender, final String result, final String metadata){
 		Intent intent = new Intent(INTENT_REPORT_RESULT);
 		intent.putExtra("action", resultCode);
+		intent.putExtra("id", id);
 		intent.putExtra("plugin", mTitle);
 		intent.putExtra("version", mVersionCode);
 		intent.putExtra("meta", metadata);
@@ -93,39 +105,39 @@ public class PluginLogic {
 		mContext.sendBroadcast(intent);
 	}
 	
-	protected final void reportResult(final String sender, final String result, final String metadata){
-		reportResult("reportResult", sender, result, metadata);
+	protected final void reportResult(final int id, final String sender, final String result, final String metadata){
+		reportResult("reportResult", id, sender, result, metadata);
 	}
 	
-	protected final void reportResult(final String sender, final String result){
-		reportResult("reportResult", sender, result, "");
+	protected final void reportResult(final int id, final String sender, final String result){
+		reportResult("reportResult", id, sender, result, "");
 	}
 	
-	protected final void reportError(final String sender, final String result, final String metadata){
-		reportResult("reportError", sender, result, metadata);
+	protected final void reportError(final int id, final String sender, final String result, final String metadata){
+		reportResult("reportError", id, sender, result, metadata);
 	}
 	
-	protected final void reportError(final String sender, final String result){
-		reportResult("reportError", sender, result, "");
+	protected final void reportError(final int id, final String sender, final String result){
+		reportResult("reportError", id, sender, result, "");
 	}
 
-	public void showIPAddress(String msg1, String msg2, String msg3){
+	public void showIPAddress(int id, String msg1, String msg2, String msg3){
 		Toast.makeText(mContext, "showIPAddress: "+msg1 + msg2 + msg3, Toast.LENGTH_LONG).show();
-		reportResult("showIPAddress", msg1 + " " + msg2 + " " + msg3);
+		reportResult(id, "showIPAddress", msg1 + " " + msg2 + " " + msg3);
 	}
 	
-	public void showMACAddress(String msg1, String msg2, String msg3){
+	public void showMACAddress(int id, String msg1, String msg2, String msg3){
 		Toast.makeText(mContext, "showMACAddress: "+msg1 + msg2 + msg3, Toast.LENGTH_LONG).show();
-		reportResult("showMACAddress", msg1 + " " + msg2 + " " + msg3);
+		reportResult(id, "showMACAddress", msg1 + " " + msg2 + " " + msg3);
 	}
 	
-	public void showNetMaskAddress(String msg1, String msg2, String msg3){
+	public void showNetMaskAddress(int id, String msg1, String msg2, String msg3){
 		Toast.makeText(mContext, "showNetMaskAddress: "+msg1 + msg2 + msg3, Toast.LENGTH_LONG).show();
-		reportResult("showNetMaskAddress", msg1 + " " + msg2 + " " + msg3);
+		reportResult(id, "showNetMaskAddress", msg1 + " " + msg2 + " " + msg3);
 	}
 	
-	public void showNetworkSpeed(String msg1, String msg2, String msg3){
+	public void showNetworkSpeed(int id, String msg1, String msg2, String msg3){
 		Toast.makeText(mContext, "showNetworkSpeed: "+msg1 + msg2 + msg3, Toast.LENGTH_LONG).show();
-		reportResult("showNetworkSpeed", msg1 + " " + msg2 + " " + msg3);
+		reportResult(id, "showNetworkSpeed", msg1 + " " + msg2 + " " + msg3);
 	}
 }

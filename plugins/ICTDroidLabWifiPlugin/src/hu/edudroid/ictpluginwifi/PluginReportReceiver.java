@@ -55,6 +55,7 @@ public class PluginReportReceiver extends BroadcastReceiver {
 		answer[0].putExtra("description", plugin.mDescription);
 		answer[0].putExtra("version", plugin.mVersionCode);
 		answer[0].putStringArrayListExtra("pluginMethods", plugin.getMethodsName());
+		answer[0].putStringArrayListExtra("pluginEvents", plugin.getEventsName());
 		
 		return answer;
 	}
@@ -69,6 +70,20 @@ public class PluginReportReceiver extends BroadcastReceiver {
 			answer[i].putExtra("order", i);
 			answer[i].putExtra("name", methods.get(i).mName);
 			answer[i].putExtra("description", methods.get(i).mDescription);
+		}
+		
+		return answer;
+	}
+	
+	public Intent[] onEvent(PluginLogic plugin){
+		final ArrayList<PluginMethod> methods = plugin.getMethods();
+		
+		Intent answer[] = new Intent[methods.size()];
+		for (int i = 0; i < answer.length; i++){
+			answer[i] = new Intent(FILTER_NEW_PLUGIN);
+			answer[i].putExtra("action", "onEvent");
+			answer[i].putExtra("eventName", "EVENT NAME");
+			answer[i].putStringArrayListExtra("eventParams", null);
 		}
 		
 		return answer;

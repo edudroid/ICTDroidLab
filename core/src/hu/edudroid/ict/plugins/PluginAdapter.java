@@ -2,20 +2,25 @@ package hu.edudroid.ict.plugins;
 
 import hu.edudroid.ict.PluginDetailsActivity;
 import hu.edudroid.interfaces.Plugin;
+import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginQuota;
+import hu.edudroid.interfaces.PluginResultListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-public class PluginAdapter implements OnClickListener, Plugin {
+public class PluginAdapter implements OnClickListener, Plugin, PluginResultListener {
 
 	private final String					INTENT_CALL_PLUGIN_METHOD		= "hu.edudroid.ict.plugin.callmethod";
 	private final String					INTENT_EXTRA_METHOD_NAME		= "methodname";
@@ -29,12 +34,17 @@ public class PluginAdapter implements OnClickListener, Plugin {
 
 	private Context							mContext;
 	private List<String>					mPluginMethods;
+	private List<String>					mEvents;
+	
+	private Map<Integer,PluginResultListener> mCallBackIdentification;
+	private static int mCallMethodID=0;
 
 	public PluginAdapter(final String name,
 					final String author,
 					final String description,
 					final String versionCode,
 					final List<String> pluginMethods,
+					final List<String> events,
 					final Context context) {
 		mName = name;
 		mAuthor = author;
@@ -42,7 +52,9 @@ public class PluginAdapter implements OnClickListener, Plugin {
 		mVersionCode = versionCode;
 		mQuotas = new ArrayList<PluginQuota>();
 		mPluginMethods = pluginMethods;
+		mEvents = events;
 		
+		mCallBackIdentification=new HashMap<Integer, PluginResultListener>();
 		mContext = context;
 	}
 
@@ -77,7 +89,27 @@ public class PluginAdapter implements OnClickListener, Plugin {
 	}
 
 	@Override
-	public void callMethod(String method, List<Object> params){
+	public List<String> getMethodNames() {
+		return mPluginMethods;
+	}
+
+	@Override
+	public void registerEventListener(String eventName,
+			PluginEventListener listener) {
+		// TODO Auto-generated method stub
+		// Egyes eventekhez tárolja a feliratkozást.
+		
+	}
+
+	@Override
+	public List<String> getAllEvents() {
+		return mEvents;
+	}
+	
+	@Override
+	public long callMethodAsync(String method, List<Object> params, PluginResultListener listener){		
+		mCallBackIdentification.put(mCallMethodID, listener);
+		
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		ObjectOutputStream stream = null;
 		try{
@@ -94,15 +126,34 @@ public class PluginAdapter implements OnClickListener, Plugin {
 
 			bytes.close();
 			stream.close();
+			return mCallMethodID++;
 		}
 		catch (IOException e){
+			e.printStackTrace();
+		}
+		return -1;
+	}
+
+	@Override
+	public List<String> callMethodSync(String method, List<Object> parameters) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void onResult(int id, String plugin, String pluginVersion,
+			String methodName, String result, String meta) {
+		try{	
+			mCallBackIdentification.remove(id).onResult(id, plugin, pluginVersion, methodName, result, meta);
+		} catch(NullPointerException e){
+			Log.e("No request for this answer.","ID: "+String.valueOf(id)+" "+plugin+" "+methodName+" "+result);
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public List<String> getMethodNames() {
-		return mPluginMethods;
+	public void onError(String plugin, String pluginVersion, String methodName,
+			String errorMessage, String meta) {
 	}
 
 	@Override

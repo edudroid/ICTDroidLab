@@ -2,7 +2,8 @@ package hu.edudroid.interfaces;
 
 public interface PluginResultListener {
 
-	public void onResult(final String plugin,
+	public void onResult(final int id,
+						final String plugin,
 						final String pluginVersion,
 						final String methodName,
 						final String result,

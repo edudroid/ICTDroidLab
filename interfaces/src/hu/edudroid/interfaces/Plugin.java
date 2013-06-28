@@ -8,7 +8,9 @@ public interface Plugin {
 	String getName();
 	String getDescription();
 	String getVersionCode();
+	List<String> getAllEvents();
 	List<String> getMethodNames();
-	void callMethod(String method, List<Object> parameters);
+	long callMethodAsync(String method, List<Object> parameters,PluginResultListener listener);
 	List<String> callMethodSync(String method, List<Object> parameters);
+	void registerEventListener(String eventName, PluginEventListener listener);
 }
