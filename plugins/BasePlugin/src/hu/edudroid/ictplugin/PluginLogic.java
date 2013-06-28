@@ -101,7 +101,7 @@ public class PluginLogic {
 	}
 
 	public void showToast(String msg1, String msg2, String msg3){
-		Toast.makeText(mContext, msg1 + msg2 + msg3, Toast.LENGTH_LONG).show();
+		Toast.makeText(mContext, "showToast: "+msg1 + msg2 + msg3, Toast.LENGTH_LONG).show();
 		reportResult("showToast", msg1 + " " + msg2 + " " + msg3);
 	}
 }

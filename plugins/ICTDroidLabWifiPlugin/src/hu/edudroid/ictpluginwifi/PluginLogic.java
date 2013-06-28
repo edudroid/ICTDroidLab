@@ -110,22 +110,22 @@ public class PluginLogic {
 	}
 
 	public void showIPAddress(String msg1, String msg2, String msg3){
-		Toast.makeText(mContext, msg1 + msg2 + msg3, Toast.LENGTH_LONG).show();
+		Toast.makeText(mContext, "showIPAddress: "+msg1 + msg2 + msg3, Toast.LENGTH_LONG).show();
 		reportResult("showIPAddress", msg1 + " " + msg2 + " " + msg3);
 	}
 	
 	public void showMACAddress(String msg1, String msg2, String msg3){
-		Toast.makeText(mContext, msg1 + msg2 + msg3, Toast.LENGTH_LONG).show();
+		Toast.makeText(mContext, "showMACAddress: "+msg1 + msg2 + msg3, Toast.LENGTH_LONG).show();
 		reportResult("showMACAddress", msg1 + " " + msg2 + " " + msg3);
 	}
 	
 	public void showNetMaskAddress(String msg1, String msg2, String msg3){
-		Toast.makeText(mContext, msg1 + msg2 + msg3, Toast.LENGTH_LONG).show();
+		Toast.makeText(mContext, "showNetMaskAddress: "+msg1 + msg2 + msg3, Toast.LENGTH_LONG).show();
 		reportResult("showNetMaskAddress", msg1 + " " + msg2 + " " + msg3);
 	}
 	
 	public void showNetworkSpeed(String msg1, String msg2, String msg3){
-		Toast.makeText(mContext, msg1 + msg2 + msg3, Toast.LENGTH_LONG).show();
+		Toast.makeText(mContext, "showNetworkSpeed: "+msg1 + msg2 + msg3, Toast.LENGTH_LONG).show();
 		reportResult("showNetworkSpeed", msg1 + " " + msg2 + " " + msg3);
 	}
 }
