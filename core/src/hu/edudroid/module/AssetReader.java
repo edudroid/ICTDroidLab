@@ -13,9 +13,7 @@ public class AssetReader {
 	
 	public static File copyAssetToInternalStorage(String assetPath, Context context) {
 
-		Log.d(TAG, "Copying asset " + assetPath);
     	File outFile = new File(context.getFilesDir(),assetPath);
-		Log.d(TAG, "Output file: " + outFile.getAbsolutePath());
 
 	    try {
 	    	FileOutputStream outStream = context.openFileOutput(assetPath, Context.MODE_PRIVATE);	    	
@@ -27,12 +25,8 @@ public class AssetReader {
 	        }
 	        outStream.close();
 	        in.close();
-
-	        Log.e(TAG,"Asset copied!");
-
 	    } catch (IOException e) {
 	    	e.printStackTrace();
-	       Log.e(TAG, "Couldn't copy asset " + assetPath + " to internal file " + assetPath + " " + e.getMessage());
 	    }
         return outFile;
 	}

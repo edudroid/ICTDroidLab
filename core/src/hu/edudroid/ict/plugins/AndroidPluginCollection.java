@@ -61,11 +61,9 @@ public class AndroidPluginCollection implements PluginCollection, PluginListener
 		}
 		if(!isAlreadyInList){
 			mPlugins.add(plugin);
-			Log.e("New Plugin added to PluginCollection!",plugin.getName());
 			return true;			
 		}		
 		else{
-			Log.e("Plugin is already in PluginCollection!",plugin.getName());
 			return false;
 		}
 	}

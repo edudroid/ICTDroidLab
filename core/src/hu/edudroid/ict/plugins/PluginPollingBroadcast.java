@@ -42,7 +42,9 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 	}
 
 	public void registerResultListener(PluginResultListener listener){
-		mResultListeners.add(listener);
+		if(!mResultListeners.contains(listener)){
+			mResultListeners.add(listener);
+		}
 	}
 
 	public void unregisterResultListener(PluginResultListener listener){
@@ -57,35 +59,28 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent){
 		
-		Log.e("PluginPollingBroadcast","Received answer: "+intent.getAction());
-		
 		final Bundle extras = intent.getExtras();
 
 		if (extras == null)
 			return;
 
 		if(intent.getAction().equals(Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER)){
-			final int id = extras.getInt("id");
-			final String plugin = extras.getString("plugin");
-			final String version = extras.getString("version");
-			final String method = extras.getString("method");
-			final String result = extras.getString("result");
-			final String metadata = extras.containsKey("meta") ? extras.getString("meta") : "";
+			final long id = extras.getLong(Constants.INTENT_EXTRA_CALL_ID);
+			final String plugin = extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_ID);
+			final String version = extras.getString(Constants.INTENT_EXTRA_KEY_VERSION);
+			final String method = extras.getString(Constants.INTENT_EXTRA_METHOD_NAME);
+			final List<String> result = extras.getStringArrayList(Constants.INTENT_EXTRA_VALUE_RESULT);
 
 			for (int i = 0; i < mResultListeners.size(); i++)
 				mResultListeners.get(i).onResult(	id,
 													plugin,
 													version,
 													method,
-													result,
-													metadata);
+													result);
 		}
 		if(intent.getAction().equals(Constants.INTENT_ACTION_DESCRIBE)){
 			if(extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIBE_TYPE).equals(Constants.INTENT_EXTRA_VALUE_REPORT)){
-				Log.e("PluginPollingBroadcast","Answer received from plugin!");
-				try{
-					Log.e("PluginPollingBroadcast",mListener.toString());
-					mListener.newPlugin(new PluginAdapter(
+				mListener.newPlugin(new PluginAdapter(
 							extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_ID),
 							extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_AUTHOR),
 							extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIPTION),
@@ -93,21 +88,18 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 							extras.getStringArrayList(Constants.INTENT_EXTRA_KEY_PLUGIN_METHODS),
 							extras.getStringArrayList(Constants.INTENT_EXTRA_KEY_PLUGIN_EVENTS),
 							context));
-				} catch(Exception e){
-					e.printStackTrace();
-				}
 			}
 			if(extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIBE_TYPE).equals(Constants.INTENT_EXTRA_VALUE_ERROR)){
-				final String plugin = extras.getString("plugin");
-				final String version = extras.getString("version");
-				final String method = extras.getString("sender");
-				final String error = extras.getString("message");
-				final String metadata = extras.getString("meta");
-				nofityResultListenersAboutError(plugin,
+				final long id = extras.getLong(Constants.INTENT_EXTRA_CALL_ID);
+				final String plugin = extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_ID);
+				final String method = extras.getString(Constants.INTENT_EXTRA_METHOD_NAME);
+				final String version = extras.getString(Constants.INTENT_EXTRA_KEY_VERSION);
+				final String error_message = extras.getString(Constants.INTENT_EXTRA_KEY_ERROR_MESSAGE);
+				nofityResultListenersAboutError(id,
+												plugin,
 												version,
 												method,
-												error,
-												metadata);
+												error_message);
 			}
 		}
 		
@@ -119,17 +111,17 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 		
 	}
 
-	public void nofityResultListenersAboutError(final String plugin,
+	public void nofityResultListenersAboutError(final long id,
+												final String plugin,
 												final String version,
 												final String method,
-												final String error,
-												final String metadata){
+												final String error_message){
 		for (int i = 0; i < mResultListeners.size(); i++)
-			mResultListeners.get(i).onError(plugin,
+			mResultListeners.get(i).onError(id,
+											plugin,
 											version,
 											method,
-											error,
-											metadata);
+											error_message);
 	}
 	
 	public void notifyEventListener(String eventName, List<String> eventParams){

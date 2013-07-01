@@ -39,15 +39,15 @@ public class ModulExample extends ModuleBase implements PluginEventListener, Plu
 	}
 
 	@Override
-	public void onResult(int id, String plugin, String pluginVersion,
-			String methodName, String result, String meta) {
+	public void onResult(long id, String plugin, String pluginVersion,
+			String methodName, List<String> result) {
 		mLogger.e("Event report ", plugin + " " + methodName + " " + result);
 	}
 
 
 	@Override
-	public void onError(String plugin, String pluginVersion, String methodName,
-			String errorMessage, String meta) {
+	public void onError(long id, String plugin, String pluginVersion, String methodName,
+			String errorMessage) {
 		mLogger.e("Event error ", plugin + " " + methodName + " " + errorMessage);
 	}
 

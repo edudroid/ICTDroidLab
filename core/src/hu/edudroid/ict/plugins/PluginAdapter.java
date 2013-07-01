@@ -28,10 +28,12 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	private final String					mDescription;
 	private final String					mVersionCode;
 	private final ArrayList<PluginQuota>	mQuotas;
+	private final PluginPollingBroadcast 	mBroadcast = PluginPollingBroadcast.getInstance();
 
 	private Context							mContext;
 	private List<String>					mPluginMethods;
 	private List<String>					mEvents;
+	
 	
 	private Map<Long, PluginResultListener> mCallBackIdentification;
 	private static long mCallMethodID = 0;
@@ -53,8 +55,6 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 		
 		mCallBackIdentification = new HashMap<Long, PluginResultListener>();
 		mContext = context;
-		
-		Log.e("PluginAdapter","Contructor: new plugin has been made...");
 	}
 
 	public void addQuota(PluginQuota quota){
@@ -106,6 +106,9 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	
 	@Override
 	public long callMethodAsync(String method, List<Object> params, PluginResultListener listener){		
+		
+		mBroadcast.registerResultListener(this);
+		
 		mCallBackIdentification.put(mCallMethodID, listener);
 		
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -118,6 +121,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 			byte[] parameters = bytes.toByteArray();
 
 			Intent intent = new Intent(Constants.INTENT_ACTION_CALL_METHOD);
+			intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, mCallMethodID);
 			intent.putExtra(Constants.INTENT_EXTRA_METHOD_NAME, method);
 			intent.putExtra(Constants.INTENT_EXTRA_METHOD_PARAMETERS, parameters);
 			mContext.sendBroadcast(intent);
@@ -133,19 +137,18 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	}
 
 	@Override
-	public void onResult(int id, String plugin, String pluginVersion,
-			String methodName, String result, String meta) {
+	public void onResult(long id, String plugin, String pluginVersion,
+			String methodName, List<String> result) {
 		try{	
-			mCallBackIdentification.remove(id).onResult(id, plugin, pluginVersion, methodName, result, meta);
+			mCallBackIdentification.remove(id).onResult(id, plugin, pluginVersion, methodName, result);
 		} catch(NullPointerException e){
-			Log.e("No request for this answer.","ID: "+String.valueOf(id)+" "+plugin+" "+methodName+" "+result);
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void onError(String plugin, String pluginVersion, String methodName,
-			String errorMessage, String meta) {
+	public void onError(long id, String plugin, String pluginVersion, String methodName,
+			String errorMessage) {
 	}
 
 	@Override

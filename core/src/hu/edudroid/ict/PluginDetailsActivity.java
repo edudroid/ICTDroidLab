@@ -55,10 +55,7 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 	}
 
 	private void refreshMethodList(){
-		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
-		intent.putExtra("action", "reportMethods");
-		sendBroadcast(intent);
-		Log.d("CORE::PluginDetailsActivity:refreshMethodList","Broadcast sent... PluginName: " + mPlugin.getName());
+		Toast.makeText(this, "NOT IMPLEMENTED YET!", Toast.LENGTH_SHORT).show();
 	}
 
 	private void addMethod(PluginMethod method){

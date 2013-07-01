@@ -43,10 +43,7 @@ public class ModuleLoader {
 		try {
 			File outFile = new File(context.getFilesDir().getAbsolutePath());
 			Module module = loadModule(outFile, jarName, context);
-			Log.e("ModuleLoader","Modul has been loaded succesfully. Start running!");
-			module.run();
-			Log.e("ModuleLoader","Modul created and running: " + module.getModuleName());
-			
+			module.run();			
 		} catch (NullPointerException e) {
 			
 		}
