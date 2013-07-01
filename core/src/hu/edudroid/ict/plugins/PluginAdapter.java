@@ -53,6 +53,8 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 		
 		mCallBackIdentification = new HashMap<Long, PluginResultListener>();
 		mContext = context;
+		
+		Log.e("PluginAdapter","Contructor: new plugin has been made...");
 	}
 
 	public void addQuota(PluginQuota quota){

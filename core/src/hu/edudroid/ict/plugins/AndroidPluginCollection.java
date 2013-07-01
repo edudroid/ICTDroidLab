@@ -2,12 +2,13 @@ package hu.edudroid.ict.plugins;
 
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginCollection;
+import hu.edudroid.interfaces.PluginResultListener;
 
 import java.util.ArrayList;
 
 import android.util.Log;
 
-public class AndroidPluginCollection implements PluginCollection, PluginListener{
+public class AndroidPluginCollection implements PluginCollection, PluginListener {
 
 	private static AndroidPluginCollection	mInstance	= null;
 	private ArrayList<Plugin>			mPlugins	= null;

@@ -11,6 +11,7 @@ public class Constants {
 	public static final String INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER	= "hu.edudroid.ict.plugin_callmethod_answer";
 	public static final String INTENT_ACTION_PLUGIN_EVENT				= "hu.edudroid.ict.plugin_event";
 	
+	public static final String INTENT_EXTRA_KEY_DESCRIBE_TYPE = "describe type";
 	public static final String INTENT_EXTRA_KEY_PLUGIN_ID = "plugin";
 	public static final String INTENT_EXTRA_KEY_PLUGIN_AUTHOR = "author";
 	public static final String INTENT_EXTRA_KEY_DESCRIPTION = "description";
@@ -19,4 +20,5 @@ public class Constants {
 	public static final String INTENT_EXTRA_KEY_PLUGIN_EVENTS = "events";
 	public static final String INTENT_EXTRA_VALUE_RESULT = "report result";
 	public static final String INTENT_EXTRA_VALUE_ERROR = "report error";
+	public static final String INTENT_EXTRA_VALUE_REPORT = "report self";
 }

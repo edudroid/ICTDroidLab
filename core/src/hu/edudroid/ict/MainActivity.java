@@ -44,7 +44,6 @@ public class MainActivity extends Activity implements PluginListener,
 		
 		mPluginCollection=AndroidPluginCollection.getInstance();
 		
-		
 		findViewById(R.id.btn_refresh).setOnClickListener(this);
 		findViewById(R.id.runAllModulesButton).setOnClickListener(this);
 	}

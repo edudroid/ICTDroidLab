@@ -26,6 +26,7 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver {
 		if (intent.getAction().equals(Constants.INTENT_ACTION_PLUGIN_POLL)) {
 			Intent response = new Intent();
 			response = new Intent(Constants.INTENT_ACTION_DESCRIBE);
+			response.putExtra(Constants.INTENT_EXTRA_KEY_DESCRIBE_TYPE, Constants.INTENT_EXTRA_VALUE_REPORT);
 			response.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, plugin.getName());
 			response.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_AUTHOR, plugin.getAuthor());
 			response.putExtra(Constants.INTENT_EXTRA_KEY_DESCRIPTION, plugin.getDescription());

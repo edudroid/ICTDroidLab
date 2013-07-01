@@ -57,6 +57,8 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent){
 		
+		Log.e("PluginPollingBroadcast","Received answer: "+intent.getAction());
+		
 		final Bundle extras = intent.getExtras();
 
 		if (extras == null)
@@ -79,17 +81,23 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 													metadata);
 		}
 		if(intent.getAction().equals(Constants.INTENT_ACTION_DESCRIBE)){
-			if(extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIPTION).equals(Constants.INTENT_EXTRA_VALUE_RESULT)){
+			if(extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIBE_TYPE).equals(Constants.INTENT_EXTRA_VALUE_REPORT)){
 				Log.e("PluginPollingBroadcast","Answer received from plugin!");
-				mListener.newPlugin(new PluginAdapter(	extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_ID),
-						extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_AUTHOR),
-						extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIPTION),
-						extras.getString(Constants.INTENT_EXTRA_KEY_VERSION),
-						extras.getStringArrayList(Constants.INTENT_EXTRA_KEY_PLUGIN_METHODS),
-						extras.getStringArrayList(Constants.INTENT_EXTRA_KEY_PLUGIN_EVENTS),
-						context));
+				try{
+					Log.e("PluginPollingBroadcast",mListener.toString());
+					mListener.newPlugin(new PluginAdapter(
+							extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_ID),
+							extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_AUTHOR),
+							extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIPTION),
+							extras.getString(Constants.INTENT_EXTRA_KEY_VERSION),
+							extras.getStringArrayList(Constants.INTENT_EXTRA_KEY_PLUGIN_METHODS),
+							extras.getStringArrayList(Constants.INTENT_EXTRA_KEY_PLUGIN_EVENTS),
+							context));
+				} catch(Exception e){
+					e.printStackTrace();
+				}
 			}
-			if(extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIPTION).equals(Constants.INTENT_EXTRA_VALUE_ERROR)){
+			if(extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIBE_TYPE).equals(Constants.INTENT_EXTRA_VALUE_ERROR)){
 				final String plugin = extras.getString("plugin");
 				final String version = extras.getString("version");
 				final String method = extras.getString("sender");
