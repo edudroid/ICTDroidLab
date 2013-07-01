@@ -62,22 +62,7 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 			return;
 		final String action = extras.getString("action");
 
-		if (action.equals("reportSelf"))
-			mListener.newPlugin(new PluginAdapter(	extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_ID),
-											extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_AUTHOR),
-											extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIPTION),
-											extras.getString(Constants.INTENT_EXTRA_KEY_VERSION),
-											extras.getStringArrayList(Constants.INTENT_EXTRA_KEY_PLUGIN_METHODS),
-											extras.getStringArrayList(Constants.INTENT_EXTRA_KEY_PLUGIN_EVENTS),
-											context));
-		if (action.equals("reportMethods")){
-			Log.d("CORE::PluginPollingBroadcast:onReceive","ReportMethods broadcast received - " + extras.getString("name"));
-			mListener.newPluginMethod(new PluginMethod(	extras.getInt("order"),
-					extras.getString("name"),
-					extras.getString("description")));
-		}
-			
-		if (action.equals("reportResult")){
+		if(intent.getAction().equals(Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER)){
 			final int id = extras.getInt("id");
 			final String plugin = extras.getString("plugin");
 			final String version = extras.getString("version");
@@ -93,20 +78,31 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 													result,
 													metadata);
 		}
-
-		if (action.equals("reportError")){
-			final String plugin = extras.getString("plugin");
-			final String version = extras.getString("version");
-			final String method = extras.getString("sender");
-			final String error = extras.getString("message");
-			final String metadata = extras.getString("meta");
-			nofityResultListenersAboutError(plugin,
-											version,
-											method,
-											error,
-											metadata);
+		if(intent.getAction().equals(Constants.INTENT_ACTION_DESCRIBE)){
+			if(extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIPTION).equals(Constants.INTENT_EXTRA_VALUE_RESULT)){
+				mListener.newPlugin(new PluginAdapter(	extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_ID),
+						extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_AUTHOR),
+						extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIPTION),
+						extras.getString(Constants.INTENT_EXTRA_KEY_VERSION),
+						extras.getStringArrayList(Constants.INTENT_EXTRA_KEY_PLUGIN_METHODS),
+						extras.getStringArrayList(Constants.INTENT_EXTRA_KEY_PLUGIN_EVENTS),
+						context));
+			}
+			if(extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIPTION).equals(Constants.INTENT_EXTRA_VALUE_ERROR)){
+				final String plugin = extras.getString("plugin");
+				final String version = extras.getString("version");
+				final String method = extras.getString("sender");
+				final String error = extras.getString("message");
+				final String metadata = extras.getString("meta");
+				nofityResultListenersAboutError(plugin,
+												version,
+												method,
+												error,
+												metadata);
+			}
 		}
-		if (action.equals("onEvent")){
+		
+		if(intent.getAction().equals(Constants.INTENT_ACTION_PLUGIN_EVENT)){
 			final String eventName = extras.getString("eventName");
 			final List<String> eventParams = extras.getStringArrayList("eventParams");
 			notifyEventListener(eventName,eventParams);

@@ -4,6 +4,7 @@ import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginListener;
 import hu.edudroid.ict.plugins.PluginMethod;
 import hu.edudroid.ict.plugins.PluginPollingBroadcast;
+import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 
 import java.util.ArrayList;
@@ -26,8 +27,6 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class PluginDetailsActivity extends Activity implements ListAdapter,
 		PluginListener, OnItemClickListener {
-
-	private final String			FILTER_PLUGIN_POLL	= "hu.edudroid.ict.plugin_polling_question";
 
 	private Plugin					mPlugin;
 	private ArrayList<PluginMethod>	mMethods;
@@ -56,7 +55,7 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 	}
 
 	private void refreshMethodList(){
-		Intent intent = new Intent(FILTER_PLUGIN_POLL);
+		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
 		intent.putExtra("action", "reportMethods");
 		sendBroadcast(intent);
 		Log.d("CORE::PluginDetailsActivity:refreshMethodList","Broadcast sent... PluginName: " + mPlugin.getName());

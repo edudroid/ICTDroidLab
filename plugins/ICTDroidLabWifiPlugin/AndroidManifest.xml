@@ -22,24 +22,13 @@
             </intent-filter>
         </activity>
         
-        <service
-	        android:name="hu.edudroid.ictpluginwifi.PluginService"
-	        android:enabled="true"
-	        android:process=":remote"/>
-        
         <receiver
-            android:name="hu.edudroid.ictpluginwifi.PluginCommunicationInterface"
+            android:name="hu.edudroid.ictpluginwifi.WiFiPlugin"
             android:enabled="true"
             android:exported="true">
             <intent-filter >
                 <action android:name="hu.edudroid.ict.plugin_polling_question"/>
             </intent-filter>
-        </receiver>
-        
-        <receiver
-            android:name="hu.edudroid.ictpluginwifi.PluginCommunicationInterface"
-            android:enabled="true"
-            android:exported="true">
             <intent-filter>
                 <action android:name="hu.edudroid.ict.plugin.callmethod" />
             </intent-filter>

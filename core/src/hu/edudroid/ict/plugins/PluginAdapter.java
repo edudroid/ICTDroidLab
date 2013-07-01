@@ -1,6 +1,7 @@
 package hu.edudroid.ict.plugins;
 
 import hu.edudroid.ict.PluginDetailsActivity;
+import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginQuota;
@@ -21,10 +22,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 public class PluginAdapter implements OnClickListener, Plugin, PluginResultListener {
-
-	private final String					INTENT_CALL_PLUGIN_METHOD		= "hu.edudroid.ict.plugin.callmethod";
-	private final String					INTENT_EXTRA_METHOD_NAME		= "methodname";
-	private final String					INTENT_EXTRA_METHOD_PARAMETERS	= "methodparams";
 
 	private final String					mName;
 	private final String					mAuthor;
@@ -118,9 +115,9 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 				stream.writeObject(params.get(i));
 			byte[] parameters = bytes.toByteArray();
 
-			Intent intent = new Intent(INTENT_CALL_PLUGIN_METHOD);
-			intent.putExtra(INTENT_EXTRA_METHOD_NAME, method);
-			intent.putExtra(INTENT_EXTRA_METHOD_PARAMETERS, parameters);
+			Intent intent = new Intent(Constants.INTENT_ACTION_CALL_METHOD);
+			intent.putExtra(Constants.INTENT_EXTRA_METHOD_NAME, method);
+			intent.putExtra(Constants.INTENT_EXTRA_METHOD_PARAMETERS, parameters);
 			mContext.sendBroadcast(intent);
 
 			bytes.close();

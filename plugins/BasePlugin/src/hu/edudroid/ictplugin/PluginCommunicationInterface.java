@@ -16,14 +16,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-public class PluginCommunicationInterface extends BroadcastReceiver {
+public  abstract class PluginCommunicationInterface extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Plugin plugin = getPlugin();
 		Log.e("Broadcast Received","Base plugin");
 		// Send description
-		if (intent.getAction().equals(Constants.INTENT_ACTION_REQUEST_DESCRIPTION)) {
+		if (intent.getAction().equals(Constants.INTENT_ACTION_PLUGIN_POLL)) {
 			Intent response = new Intent();
 			response = new Intent(Constants.INTENT_ACTION_DESCRIBE);
 			response.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, plugin.getName());
@@ -63,7 +63,7 @@ public class PluginCommunicationInterface extends BroadcastReceiver {
 	}
 
 	private void reportResult(String id, String resultCode, Plugin plugin, String method, List<String> result, Context context) {
-		Intent intent = new Intent(Constants.INTENT_ACTION_RESULT);
+		Intent intent = new Intent(Constants.INTENT_ACTION_DESCRIBE);
 		intent.putExtra("id", id);
 		intent.putExtra("action", resultCode);
 		intent.putExtra("plugin", plugin.getName());
@@ -73,63 +73,5 @@ public class PluginCommunicationInterface extends BroadcastReceiver {
 		context.sendBroadcast(intent);
 	}
 	
-	protected Plugin getPlugin() {
-		return new Plugin() {
-			
-			private List<String> methods = Arrays.asList(new String[] {"firstMethod", "secondMethod", "thirdMethod"});
-			
-			@Override
-			public String getVersionCode() {
-				return "v0.1";
-			}
-			
-			@Override
-			public String getName() {
-				return "Test Plugin 1";
-			}
-			
-			@Override
-			public List<String> getMethodNames() {
-				return methods;
-			}
-			
-			@Override
-			public String getDescription() {
-				return "Replace the getPlugin() method with your own code!";
-			}
-			
-			@Override
-			public String getAuthor() {
-				return "BME TMIT";
-			}
-			
-			@Override
-			public List<String> callMethodSync(String method, List<Object> parameters) {
-				if (methods.contains(method)){
-					return Arrays.asList(new String[]{"Result", "of", "Sample", "Plugin"});
-				} else {
-					throw new UnsupportedOperationException("Method " + method + " is not part of the plugin.");
-				}
-			}
-			
-			@Override
-			public List<String> getAllEvents() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public long callMethodAsync(String method, List<Object> parameters,
-					PluginResultListener listener) {
-				throw new UnsupportedOperationException("Don't call plugin in an assync way.");
-			}
-
-			@Override
-			public void registerEventListener(String eventName,
-					PluginEventListener listener) {
-				// TODO Auto-generated method stub
-				
-			}
-		};
-	}
+	protected abstract Plugin getPlugin();
 }
