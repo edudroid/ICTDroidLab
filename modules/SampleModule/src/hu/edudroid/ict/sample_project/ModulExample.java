@@ -52,7 +52,7 @@ public class ModulExample extends ModuleBase implements PluginEventListener, Plu
 	}
 
 	@Override
-	public void onEvent(long id, String eventName, List<String> result) {
+	public void onEvent(long id, String plugin, String version, String eventName, List<String> result) {
 		mLogger.e("EVENT in module ", eventName);
 	}
 } 

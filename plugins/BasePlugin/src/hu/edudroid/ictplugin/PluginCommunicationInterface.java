@@ -3,7 +3,6 @@ package hu.edudroid.ictplugin;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;
-import hu.edudroid.interfaces.PluginResultListener;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
@@ -14,10 +13,9 @@ import java.util.List;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 public  abstract class PluginCommunicationInterface extends BroadcastReceiver {
-
+	
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Plugin plugin = getPlugin();

@@ -152,14 +152,14 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	}
 
 	@Override
-	public void onEvent(long id, String eventName, List<String> result) {
-		mEventListeners.get(eventName).onEvent(id, eventName, result);
+	public void onEvent(long id, String plugin, String version, String eventName, List<String> result) {
+		mEventListeners.get(eventName).onEvent(id, plugin, version, eventName, result);
 	}
 
 	@Override
 	public void registerEventListener(String eventName,
 			PluginEventListener listener) {
 		mEventListeners.put(eventName, listener);
-		
+		mBroadcast.registerEventListener(this);
 	}
 }

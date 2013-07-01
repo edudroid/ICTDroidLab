@@ -29,6 +29,7 @@ public class CoreService extends Service {
         mBroadcast = PluginPollingBroadcast.getInstance();
 		registerReceiver(mBroadcast, new IntentFilter(Constants.INTENT_ACTION_DESCRIBE));
 		registerReceiver(mBroadcast, new IntentFilter(Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER));
+		registerReceiver(mBroadcast, new IntentFilter(Constants.INTENT_ACTION_PLUGIN_EVENT));
         
 		//PluginPollingBroadcast -> mPluginCollection
 		mPluginCollection=AndroidPluginCollection.getInstance();

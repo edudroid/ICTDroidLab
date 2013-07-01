@@ -46,6 +46,12 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 			mResultListeners.add(listener);
 		}
 	}
+	
+	public void registerEventListener(PluginEventListener listener){
+		if(!mPluginEventListeners.contains(listener)){
+			mPluginEventListeners.add(listener);
+		}
+	}
 
 	public void unregisterResultListener(PluginResultListener listener){
 		boolean found = false;
@@ -105,9 +111,11 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 		
 		if(intent.getAction().equals(Constants.INTENT_ACTION_PLUGIN_EVENT)){
 			final long id = extras.getLong(Constants.INTENT_EXTRA_CALL_ID);
-			final String eventName = extras.getString("eventName");
-			final List<String> eventResults = extras.getStringArrayList("eventResults");
-			notifyEventListener(id, eventName,eventResults);
+			final String plugin = extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_ID);
+			final String version = extras.getString(Constants.INTENT_EXTRA_KEY_VERSION);
+			final String eventName = extras.getString(Constants.INTENT_EXTRA_KEY_EVENT_NAME);
+			final List<String> eventResults = extras.getStringArrayList(Constants.INTENT_EXTRA_VALUE_RESULT);
+			notifyEventListener(id, plugin, version, eventName,eventResults);
 		}
 		
 	}
@@ -125,9 +133,9 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 											error_message);
 	}
 	
-	public void notifyEventListener(long id, String eventName, List<String> eventResults){
+	public void notifyEventListener(long id, String plugin, String version, String eventName, List<String> eventResults){
 		for (int i = 0; i < mPluginEventListeners.size(); i++)
-			mPluginEventListeners.get(i).onEvent(id, eventName,eventResults);
+			mPluginEventListeners.get(i).onEvent(id, plugin, version, eventName,eventResults);
 	}
 
 }

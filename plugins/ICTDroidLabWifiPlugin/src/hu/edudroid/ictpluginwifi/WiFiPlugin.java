@@ -19,10 +19,19 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 	private static final List<String> mMethods=new ArrayList<String>();
 	private static final List<String> mEvents=new ArrayList<String>();
 	private static Plugin mPlugin;
-	private static long mEventID;
+	private static final Map<String,PluginEventListener> mEventListeners=new HashMap<String,PluginEventListener>();
 	
-	@Override
-	protected Plugin getPlugin() {
+	private static long mEventID=0;
+	
+	public WiFiPlugin(){
+		
+		mMethods.add("showIPAddress");
+		mMethods.add("showMACAddress");
+		mMethods.add("showNetMaskAddress");
+		mMethods.add("showNetworkSpeed");
+		
+		mEvents.add("empty event");
+		
 		mPlugin=new Plugin() {
 			
 			@Override
@@ -37,10 +46,6 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 			
 			@Override
 			public List<String> getMethodNames() {
-				mMethods.add("showIPAddress");
-				mMethods.add("showMACAddress");
-				mMethods.add("showNetMaskAddress");
-				mMethods.add("showNetworkSpeed");
 				return mMethods;
 			}
 			
@@ -56,7 +61,6 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 			
 			@Override
 			public List<String> getAllEvents() {
-				mEvents.add("empty event");
 				return mEvents;
 			}
 			
@@ -65,7 +69,7 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 				List<String> answer=new ArrayList<String>();
 				if(method.equals("showIPAddress")){
 					answer.add("192.168.1.1");
-					//onEvent("empty event", null);
+					onEvent("empty event", null);
 				}
 				if(method.equals("showMACAddress")){
 					answer.add("AC:00:FF:12:A4:34");
@@ -89,27 +93,28 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 			@Override
 			public void registerEventListener(String eventName,
 					PluginEventListener listener) {
-				// TODO Auto-generated method stub
-				
+				mEventListeners.put(eventName, listener);				
 			}
 		};
+	}
+	
+	@Override
+	protected Plugin getPlugin() {
 		return mPlugin;
 	}
 
 	@Override
-	protected void onEvent(String eventName, List<String> eventParams) {
-		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER);
-		intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, mEventID++);
-		intent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, mPlugin.getName());
-		intent.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, mPlugin.getVersionCode());
+	protected void onEvent(String eventName, List<String> params) {
+		List<String> result=new ArrayList<String>();
 		
 		if(eventName.equals("empty event")){
-			
-			intent.putExtra(Constants.INTENT_EXTRA_KEY_EVENT_NAME, eventName);
-			intent.putStringArrayListExtra(Constants.INTENT_EXTRA_VALUE_EVENT, new ArrayList<String>(eventParams));
-			//context.sendBroadcast(intent);
+			result.add("This ");
+			result.add("an ");
+			result.add("empty ");
+			result.add("event.");
 		}
 		
+		mEventListeners.get(eventName).onEvent(mEventID++, mPlugin.getName(),mPlugin.getVersionCode(), eventName, result);
 	}
-
+	
 }
