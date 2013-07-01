@@ -104,9 +104,10 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 		}
 		
 		if(intent.getAction().equals(Constants.INTENT_ACTION_PLUGIN_EVENT)){
+			final long id = extras.getLong(Constants.INTENT_EXTRA_CALL_ID);
 			final String eventName = extras.getString("eventName");
-			final List<String> eventParams = extras.getStringArrayList("eventParams");
-			notifyEventListener(eventName,eventParams);
+			final List<String> eventResults = extras.getStringArrayList("eventResults");
+			notifyEventListener(id, eventName,eventResults);
 		}
 		
 	}
@@ -124,9 +125,9 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 											error_message);
 	}
 	
-	public void notifyEventListener(String eventName, List<String> eventParams){
+	public void notifyEventListener(long id, String eventName, List<String> eventResults){
 		for (int i = 0; i < mPluginEventListeners.size(); i++)
-			mPluginEventListeners.get(i).onEvent(eventParams);
+			mPluginEventListeners.get(i).onEvent(id, eventName,eventResults);
 	}
 
 }

@@ -77,4 +77,6 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver {
 	}
 	
 	protected abstract Plugin getPlugin();
+	
+	protected abstract void onEvent(String eventName, List<String> params);
 }

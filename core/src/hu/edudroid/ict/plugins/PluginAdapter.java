@@ -21,7 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-public class PluginAdapter implements OnClickListener, Plugin, PluginResultListener {
+public class PluginAdapter implements OnClickListener, Plugin, PluginResultListener, PluginEventListener {
 
 	private final String					mName;
 	private final String					mAuthor;
@@ -36,6 +36,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	
 	
 	private Map<Long, PluginResultListener> mCallBackIdentification;
+	private Map<String, PluginEventListener> mEventListeners;
 	private static long mCallMethodID = 0;
 
 	public PluginAdapter(final String name,
@@ -54,6 +55,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 		mEvents = events;
 		
 		mCallBackIdentification = new HashMap<Long, PluginResultListener>();
+		mEventListeners = new HashMap<String, PluginEventListener>();
 		mContext = context;
 	}
 
@@ -90,13 +92,6 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	@Override
 	public List<String> getMethodNames() {
 		return mPluginMethods;
-	}
-
-	@Override
-	public void registerEventListener(String eventName,
-			PluginEventListener listener) {
-		// TODO Register modules to be notified when plugin events arrive
-		
 	}
 
 	@Override
@@ -154,5 +149,17 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	@Override
 	public List<String> callMethodSync(String method, List<Object> parameters) {
 		throw new UnsupportedOperationException("Can't call sync methods on stub.");
+	}
+
+	@Override
+	public void onEvent(long id, String eventName, List<String> result) {
+		mEventListeners.get(eventName).onEvent(id, eventName, result);
+	}
+
+	@Override
+	public void registerEventListener(String eventName,
+			PluginEventListener listener) {
+		mEventListeners.put(eventName, listener);
+		
 	}
 }

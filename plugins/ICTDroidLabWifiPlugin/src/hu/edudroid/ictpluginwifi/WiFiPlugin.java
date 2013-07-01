@@ -1,30 +1,29 @@
 package hu.edudroid.ictpluginwifi;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import android.content.Intent;
 import android.widget.Toast;
 
 import hu.edudroid.ictplugin.PluginCommunicationInterface;
+import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginResultListener;
 
 public class WiFiPlugin extends PluginCommunicationInterface {
 
-	private static final List<String> methods=new ArrayList<String>();
-	private static final List<String> events=new ArrayList<String>();
+	private static final List<String> mMethods=new ArrayList<String>();
+	private static final List<String> mEvents=new ArrayList<String>();
+	private static Plugin mPlugin;
+	private static long mEventID;
 	
 	@Override
 	protected Plugin getPlugin() {
-		return new Plugin() {
-			
-			@Override
-			public void registerEventListener(String eventName,
-					PluginEventListener listener) {
-				// TODO Auto-generated method stub
-				
-			}
+		mPlugin=new Plugin() {
 			
 			@Override
 			public String getVersionCode() {
@@ -38,11 +37,11 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 			
 			@Override
 			public List<String> getMethodNames() {
-				methods.add("showIPAddress");
-				methods.add("showMACAddress");
-				methods.add("showNetMaskAddress");
-				methods.add("showNetworkSpeed");
-				return methods;
+				mMethods.add("showIPAddress");
+				mMethods.add("showMACAddress");
+				mMethods.add("showNetMaskAddress");
+				mMethods.add("showNetworkSpeed");
+				return mMethods;
 			}
 			
 			@Override
@@ -57,8 +56,8 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 			
 			@Override
 			public List<String> getAllEvents() {
-				events.add("empty event");
-				return events;
+				mEvents.add("empty event");
+				return mEvents;
 			}
 			
 			@Override
@@ -66,6 +65,7 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 				List<String> answer=new ArrayList<String>();
 				if(method.equals("showIPAddress")){
 					answer.add("192.168.1.1");
+					//onEvent("empty event", null);
 				}
 				if(method.equals("showMACAddress")){
 					answer.add("AC:00:FF:12:A4:34");
@@ -85,7 +85,31 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 				// TODO Auto-generated method stub
 				return -1;
 			}
+
+			@Override
+			public void registerEventListener(String eventName,
+					PluginEventListener listener) {
+				// TODO Auto-generated method stub
+				
+			}
 		};
+		return mPlugin;
+	}
+
+	@Override
+	protected void onEvent(String eventName, List<String> eventParams) {
+		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER);
+		intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, mEventID++);
+		intent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, mPlugin.getName());
+		intent.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, mPlugin.getVersionCode());
+		
+		if(eventName.equals("empty event")){
+			
+			intent.putExtra(Constants.INTENT_EXTRA_KEY_EVENT_NAME, eventName);
+			intent.putStringArrayListExtra(Constants.INTENT_EXTRA_VALUE_EVENT, new ArrayList<String>(eventParams));
+			//context.sendBroadcast(intent);
+		}
+		
 	}
 
 }
