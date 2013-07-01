@@ -34,7 +34,8 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver {
 					new ArrayList<String>(plugin.getMethodNames()));
 			response.putStringArrayListExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_EVENTS,
 					new ArrayList<String>(plugin.getAllEvents()));
-			context.sendBroadcast(intent);
+			context.sendBroadcast(response);
+			Log.e("Plugin","ACTION_DESCRIBE intent has been sent!");
 		} else if (intent.getAction().equals(Constants.INTENT_ACTION_CALL_METHOD)) {
 			final String callId = intent.getExtras().getString(Constants.INTENT_EXTRA_CALL_ID);
 			final String methodName = intent.getExtras().getString(Constants.INTENT_EXTRA_METHOD_NAME);
@@ -65,12 +66,12 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver {
 	private void reportResult(String id, String resultCode, Plugin plugin, String method, List<String> result, Context context) {
 		Intent intent = new Intent(Constants.INTENT_ACTION_DESCRIBE);
 		intent.putExtra("id", id);
-		intent.putExtra("action", resultCode);
 		intent.putExtra("plugin", plugin.getName());
 		intent.putExtra("version", plugin.getVersionCode());
 		intent.putExtra("method", method);
 		intent.putStringArrayListExtra("result", new ArrayList<String>(result));
 		context.sendBroadcast(intent);
+		Log.e("Plugin","ReportResult intent has been sent!");
 	}
 	
 	protected abstract Plugin getPlugin();

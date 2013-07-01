@@ -56,11 +56,11 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent){
+		
 		final Bundle extras = intent.getExtras();
 
 		if (extras == null)
 			return;
-		final String action = extras.getString("action");
 
 		if(intent.getAction().equals(Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER)){
 			final int id = extras.getInt("id");
@@ -80,6 +80,7 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 		}
 		if(intent.getAction().equals(Constants.INTENT_ACTION_DESCRIBE)){
 			if(extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIPTION).equals(Constants.INTENT_EXTRA_VALUE_RESULT)){
+				Log.e("PluginPollingBroadcast","Answer received from plugin!");
 				mListener.newPlugin(new PluginAdapter(	extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_ID),
 						extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_AUTHOR),
 						extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIPTION),

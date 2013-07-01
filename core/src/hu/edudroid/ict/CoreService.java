@@ -35,7 +35,6 @@ public class CoreService extends Service {
 		mBroadcast.registerPluginDetailsListener(mPluginCollection);
 		
         Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
-		mIntent.putExtra("action", "reportSelf");
 		sendBroadcast(mIntent);
 		//ModuleLoader.runModule("none", "SampleModule.jar", this);
 		Log.e(TAG, "Modules not started");

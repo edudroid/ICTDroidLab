@@ -19,6 +19,6 @@
             android:name="hu.edudroid.ictplugin.PluginCommunicationInterface"
             android:enabled="true"
             android:exported="true">
-    </receiver>
+        </receiver>
 
 </manifest>

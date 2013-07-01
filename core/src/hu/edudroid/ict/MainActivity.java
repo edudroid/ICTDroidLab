@@ -61,7 +61,6 @@ public class MainActivity extends Activity implements PluginListener,
 		findViewById(R.id.plugin_count).setVisibility(View.GONE);
 		
 		Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
-		mIntent.putExtra("action", "reportSelf");
 		sendBroadcast(mIntent);
 		
 		ArrayList<Plugin> plugins=mPluginCollection.getAllPlugins();
