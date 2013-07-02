@@ -36,7 +36,9 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	
 	
 	private Map<Long, PluginResultListener> mCallBackIdentification;
-	private Map<String, PluginEventListener> mEventListeners;
+	private Map<Long, Map<String,PluginEventListener>> mEventListeners;
+	
+	private static long mEventListenerID = 0;
 	private static long mCallMethodID = 0;
 
 	public PluginAdapter(final String name,
@@ -55,7 +57,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 		mEvents = events;
 		
 		mCallBackIdentification = new HashMap<Long, PluginResultListener>();
-		mEventListeners = new HashMap<String, PluginEventListener>();
+		mEventListeners = new HashMap<Long, Map<String,PluginEventListener>>();
 		mContext = context;
 	}
 
@@ -153,13 +155,22 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 
 	@Override
 	public void onEvent(long id, String plugin, String version, String eventName, List<String> result) {
-		mEventListeners.get(eventName).onEvent(id, plugin, version, eventName, result);
+		try{
+			Log.e("Size:",String.valueOf(mEventListeners.values().size()));
+			
+		} catch (NullPointerException e){
+			Log.e("PluginAdapter","Event captured, but no such event defined for listeners!");
+			//e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void registerEventListener(String eventName,
 			PluginEventListener listener) {
-		mEventListeners.put(eventName, listener);
+		Map<String, PluginEventListener> eventListeners = new HashMap<String, PluginEventListener>();
+		eventListeners.put(eventName, listener);
+		mEventListeners.put(mEventListenerID++, eventListeners);		
+		
 		mBroadcast.registerEventListener(this);
 	}
 }

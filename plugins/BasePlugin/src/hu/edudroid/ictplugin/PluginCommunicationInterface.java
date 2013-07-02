@@ -18,7 +18,7 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver {
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Plugin plugin = getPlugin();
+		Plugin plugin = getPlugin(context);
 		
 		if (intent.getAction().equals(Constants.INTENT_ACTION_PLUGIN_POLL)) {
 			
@@ -74,7 +74,7 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver {
 		context.sendBroadcast(intent);
 	}
 	
-	protected abstract Plugin getPlugin();
+	protected abstract Plugin getPlugin(Context context);
 	
 	protected abstract void onEvent(String eventName, List<String> params);
 }

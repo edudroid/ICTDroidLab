@@ -21,12 +21,18 @@ public class ModulExample extends ModuleBase implements PluginEventListener, Plu
 		
 		Plugin plugin2  = mPluginCollection.getPluginByName("WiFi Plugin");
 		if (plugin2 != null) {
-			long id2 = plugin2.callMethodAsync("showIPAddress", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
-			long id3 = plugin2.callMethodAsync("showMACAddress", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
-			long id4 = plugin2.callMethodAsync("showNetMaskAddress", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
-			long id5 = plugin2.callMethodAsync("showNetworkSpeed", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
+			long id2 = plugin2.callMethodAsync("getBSSID", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
+			long id3 = plugin2.callMethodAsync("getSSID", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
+			long id4 = plugin2.callMethodAsync("isHiddenSSID", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
+			long id5 = plugin2.callMethodAsync("getIpAddress", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
+			long id6 = plugin2.callMethodAsync("getMacAddress", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
+			long id7 = plugin2.callMethodAsync("getLinkSpeed", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
+			long id8 = plugin2.callMethodAsync("getNetworkId", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
+			long id9 = plugin2.callMethodAsync("getRssi", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
+			long id10 = plugin2.callMethodAsync("getDescribeContents", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
 			
 			plugin2.registerEventListener("empty event", this);
+			plugin2.registerEventListener("scanned networks", this);
 		} else {
 			mLogger.e(TAG, "Couldn't find WiFi Plugin");
 		}
@@ -54,5 +60,8 @@ public class ModulExample extends ModuleBase implements PluginEventListener, Plu
 	@Override
 	public void onEvent(long id, String plugin, String version, String eventName, List<String> result) {
 		mLogger.e("EVENT in module ", eventName);
+		for(int i=0;i<result.size();i++){
+			mLogger.e("Result:", result.get(i));
+		}
 	}
 } 
