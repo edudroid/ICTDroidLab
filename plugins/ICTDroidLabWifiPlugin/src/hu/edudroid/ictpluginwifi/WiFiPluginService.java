@@ -23,7 +23,6 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.Toast;
 
 public class WiFiPluginService extends Service {
@@ -82,7 +81,7 @@ public class WiFiPluginService extends Service {
     	mPingTask.execute("127.0.0.1");
     	
     	mTracerouteTask=new TracerouteTask();
-    	mTracerouteTask.execute("128.242.54.18");
+    	mTracerouteTask.execute("173.194.39.64");
 		
 		try{
 			BroadcastReceiver wifi_scan = new BroadcastReceiver()

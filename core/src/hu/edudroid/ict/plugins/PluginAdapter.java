@@ -38,7 +38,6 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	private Map<Long, PluginResultListener> mCallBackIdentification;
 	private List<Map<String,PluginEventListener>> mEventListeners;
 	
-	private static long mEventListenerID = 0;
 	private static long mCallMethodID = 0;
 
 	public PluginAdapter(final String name,

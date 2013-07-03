@@ -12,16 +12,18 @@ public abstract class ModuleBase implements PluginResultListener, Module {
 	protected Preferences				mPrefs;
 	protected Logger 					mLogger;
 	protected PluginCollection 			mPluginCollection;
+	protected ModuleTimeService			mTimeService;
 	
 	
 	public ModuleBase() {
 		super();
 	}
 	
-	public final void init(Preferences prefs, Logger logger, PluginCollection pluginCollection) {
+	public final void init(Preferences prefs, Logger logger, PluginCollection pluginCollection, ModuleTimeService timeservice) {
 		mPrefs = prefs;
 		mLogger = logger;
 		mPluginCollection = pluginCollection;
+		mTimeService = timeservice;
 	}
 
 	// Settings
