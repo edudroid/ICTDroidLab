@@ -1,6 +1,13 @@
 package hu.edudroid.ictpluginwifi;
 import hu.edudroid.interfaces.Constants;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -14,6 +21,7 @@ import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.widget.Toast;
 
@@ -21,7 +29,9 @@ public class WiFiPluginService extends Service {
 	private static long mEventID=0;
 	
 	private WifiManager mWifiManager;
-	private String resultMessage;
+	
+	PingTask mPingTask;
+	TracerouteTask mTracerouteTask;
 	
 	private Timer t;
 	private TimerTask ttask;
@@ -36,7 +46,13 @@ public class WiFiPluginService extends Service {
 			result.add("event");
 		}
 		if(eventName.equals("scanned networks")){
-			result.add(resultMessage);
+			result.addAll(params);
+		}
+		if(eventName.equals("ping")){
+			result.addAll(params);
+		}
+		if(eventName.equals("traceroute")){
+			result.addAll(params);
 		}
 		
 		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_EVENT);
@@ -61,19 +77,27 @@ public class WiFiPluginService extends Service {
 		
 		mWifiManager = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 		
+		mPingTask=new PingTask();
+    	mPingTask.execute("127.0.0.1");
+    	
+    	mTracerouteTask=new TracerouteTask();
+    	mTracerouteTask.execute("128.242.54.18");
+		
 		try{
 			BroadcastReceiver wifi_scan = new BroadcastReceiver()
 	        {
+				String wifiScanningResult;
+				
 	            @Override
 				public void onReceive(Context arg0, Intent arg1) {
-					resultMessage="";
+	            	wifiScanningResult="";
 	            	List<WifiConfiguration> results = mWifiManager.getConfiguredNetworks();
 		            List<ScanResult> scanResults = mWifiManager.getScanResults();
 		            
 		            
 		            for(int i=0;i<results.size();i++){
 		    			
-		            	resultMessage+="CONFIGURED NETWORK:\n" +
+		            	wifiScanningResult+="CONFIGURED NETWORK:\n" +
 		    					"BSSID: " + results.get(i).BSSID + "\n" +
 		    					"Network ID: " + results.get(i).networkId + "\n" +
 		    					"PreSharedKey: " + results.get(i).preSharedKey + "\n" +
@@ -85,14 +109,16 @@ public class WiFiPluginService extends Service {
 		            
 		            for(int i=0;i<scanResults.size();i++){
 		    			
-		            	resultMessage+="SCANNED NETWORKS:\n" + 
+		            	wifiScanningResult+="SCANNED NETWORKS:\n" + 
 		    					"BSSID: " + scanResults.get(i).BSSID + "\n" +
 		    					"Capabilities: " + scanResults.get(i).capabilities + "\n" +
 		    					"Frekvency: " + scanResults.get(i).frequency + " MHz\n" +
 		    					"Level: " + scanResults.get(i).level + " dBm\n" +
 		    					"SSID: " + scanResults.get(i).SSID + "\n---\n";
 		    		}
-		            onEvent("scanned networks", null);
+		            List<String> res=new ArrayList<String>();
+		            res.add(wifiScanningResult);
+		            onEvent("scanned networks", res);
 		            
 				}
 	        };
@@ -121,13 +147,163 @@ public class WiFiPluginService extends Service {
 		return "none";
 	}
 	
-class myTimerTask extends TimerTask {
+	class myTimerTask extends TimerTask {
 				
 		@Override
 		public void run() {
 			mWifiManager.startScan();
 		}
 	};
+	
+	class PingTask extends AsyncTask<String, Void, Void> {
+        PipedOutputStream mPOut;
+        PipedInputStream mPIn;
+        LineNumberReader mReader;
+        Process mProcess;
+        @Override
+        protected void onPreExecute() {
+            mPOut = new PipedOutputStream();
+            try {
+                mPIn = new PipedInputStream(mPOut);
+                mReader = new LineNumberReader(new InputStreamReader(mPIn));
+            } catch (IOException e) {
+                cancel(true);
+            }
+
+        }
+
+        public void stop() {
+            Process p = mProcess;
+            if (p != null) {
+                p.destroy();
+            }
+            cancel(true);
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+            	ArrayList<String> commandLine = new ArrayList<String>();
+                //commandLine.add("su");
+                //commandLine.add("-c");
+                commandLine.add("ping");
+                commandLine.add(params[0]);
+
+                mProcess = Runtime.getRuntime().exec(commandLine.toArray(new String[0]));
+
+                try {
+                    InputStream in = mProcess.getInputStream();
+                    OutputStream out = mProcess.getOutputStream();
+                    byte[] buffer = new byte[1024];
+                    int count;
+
+                    // in -> buffer -> mPOut -> mReader -> 1 line of ping information to parse
+                    while ((count = in.read(buffer)) != -1) {
+                        mPOut.write(buffer, 0, count);
+                        publishProgress();
+                    }
+                    out.close();
+                    in.close();
+                    mPOut.close();
+                    mPIn.close();
+                } finally {
+                    mProcess.destroy();
+                    mProcess = null;
+                }
+            } catch (IOException e) {
+            }
+            return null;
+        }
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            try {
+                // Is a line ready to read from the "ping" command?
+                while (mReader.ready()) {
+                    List<String> res=new ArrayList<String>();
+                    String text=mReader.readLine();
+                    res.add(text);
+                	onEvent("ping", res);
+                }
+            } catch (IOException t) {
+            	t.printStackTrace();
+            }
+        }
+    }
+	
+	class TracerouteTask extends AsyncTask<String, Void, Void> {
+        PipedOutputStream mPOut;
+        PipedInputStream mPIn;
+        LineNumberReader mReader;
+        Process mProcess;
+        @Override
+        protected void onPreExecute() {
+            mPOut = new PipedOutputStream();
+            try {
+                mPIn = new PipedInputStream(mPOut);
+                mReader = new LineNumberReader(new InputStreamReader(mPIn));
+            } catch (IOException e) {
+                cancel(true);
+            }
+
+        }
+
+        public void stop() {
+            Process p = mProcess;
+            if (p != null) {
+                p.destroy();
+            }
+            cancel(true);
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            try {
+            	ArrayList<String> commandLine = new ArrayList<String>();
+                commandLine.add("su");
+                commandLine.add("-c");
+                commandLine.add("traceroute");
+                commandLine.add(params[0]);
+
+                mProcess = Runtime.getRuntime().exec(commandLine.toArray(new String[0]));
+
+                try {
+                    InputStream in = mProcess.getInputStream();
+                    OutputStream out = mProcess.getOutputStream();
+                    byte[] buffer = new byte[1024];
+                    int count;
+
+                    // in -> buffer -> mPOut -> mReader -> 1 line of ping information to parse
+                    while ((count = in.read(buffer)) != -1) {
+                        mPOut.write(buffer, 0, count);
+                        publishProgress();
+                    }
+                    out.close();
+                    in.close();
+                    mPOut.close();
+                    mPIn.close();
+                } finally {
+                    mProcess.destroy();
+                    mProcess = null;
+                }
+            } catch (IOException e) {
+            }
+            return null;
+        }
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            try {
+                // Is a line ready to read from the "traceroute" command?
+                while (mReader.ready()) {
+                    List<String> res=new ArrayList<String>();
+                    String text=mReader.readLine();
+                    res.add(text);
+                	onEvent("traceroute", res);
+                }
+            } catch (IOException t) {
+            	t.printStackTrace();
+            }
+        }
+    }
 		
 		
 	

@@ -30,6 +30,7 @@ public class WiFiPlugin extends PluginCommunicationInterface implements Plugin {
 	static{
 		mEvents.add("empty event");
 		mEvents.add("scanned networks");
+		mEvents.add("ping");
 	}
 	
 	private Context mContext;

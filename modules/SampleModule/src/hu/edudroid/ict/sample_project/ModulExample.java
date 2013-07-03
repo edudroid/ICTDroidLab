@@ -33,6 +33,8 @@ public class ModulExample extends ModuleBase implements PluginEventListener, Plu
 			
 			plugin2.registerEventListener("empty event", this);
 			plugin2.registerEventListener("scanned networks", this);
+			plugin2.registerEventListener("ping", this);
+			plugin2.registerEventListener("traceroute", this);
 		} else {
 			mLogger.e(TAG, "Couldn't find WiFi Plugin");
 		}
