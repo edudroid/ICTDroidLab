@@ -1,6 +1,7 @@
 package hu.edudroid.ict.sample_project;
 
 import hu.edudroid.interfaces.ModuleBase;
+import hu.edudroid.interfaces.ModuleTimerListener;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginResultListener;
@@ -8,7 +9,7 @@ import hu.edudroid.interfaces.PluginResultListener;
 import java.util.Arrays;
 import java.util.List;
 
-public class ModulExample extends ModuleBase implements PluginEventListener, PluginResultListener {
+public class ModulExample extends ModuleBase implements PluginEventListener, PluginResultListener, ModuleTimerListener {
 	
 	private static final String 	TAG			 	= "ModuleExample";
 
@@ -18,6 +19,9 @@ public class ModulExample extends ModuleBase implements PluginEventListener, Plu
 	
 	public void run(){
 		mLogger.d(TAG, "Modul created");
+		
+		mTimeService.registerOnTimerEvent(this);
+		mTimeService.runAt(0);
 		
 		Plugin plugin2  = mPluginCollection.getPluginByName("WiFi Plugin");
 		if (plugin2 != null) {
@@ -65,5 +69,10 @@ public class ModulExample extends ModuleBase implements PluginEventListener, Plu
 		for(int i=0;i<extras.size();i++){
 			mLogger.e("Result:", extras.get(i));
 		}
+	}
+
+	@Override
+	public void onTimerEvent(long time) {
+				
 	}
 } 
