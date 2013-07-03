@@ -49,7 +49,7 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver {
 				for (int i = 0; i < paramsCount; i++)
 					params[i] = ois.readObject();
 				try {
-					List<String> result = plugin.callMethodSync(methodName, Arrays.asList(params));
+					List<String> result = plugin.callMethodSync(callId, methodName, Arrays.asList(params));
 					reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, plugin, methodName, result, context);
 				} catch (Exception e) {
 					List<String> result = new ArrayList<String>();

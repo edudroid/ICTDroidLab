@@ -78,7 +78,7 @@ public class WiFiPlugin extends PluginCommunicationInterface implements Plugin {
 	}
 	
 	@Override
-	public List<String> callMethodSync(String method, List<Object> parameters) {
+	public List<String> callMethodSync(long callId, String method, List<Object> parameters) {
 		List<String> answer=new ArrayList<String>();
 		mWifiInfo=mWifiManager.getConnectionInfo();
 		if(method.equals("getIpAddress")){
@@ -109,10 +109,12 @@ public class WiFiPlugin extends PluginCommunicationInterface implements Plugin {
 			answer.add(String.valueOf(mWifiInfo.describeContents()));
 		}
 		if(method.equals("scanning")){
+			answer.add("scanning in progress...");
 			Intent serviceIntent=new Intent(this.mContext,WiFiPluginService.class);
 			serviceIntent.putExtra("delay", Integer.parseInt((String)parameters.get(0)));
 			serviceIntent.putExtra("periodicity", Integer.parseInt((String)parameters.get(1)));
 			serviceIntent.putExtra("count", Integer.parseInt((String)parameters.get(2)));
+			serviceIntent.putExtra("callId", callId);
 			this.mContext.startService(serviceIntent);
 		}
 		return answer;				

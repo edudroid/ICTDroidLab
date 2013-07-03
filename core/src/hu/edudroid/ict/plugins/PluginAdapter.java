@@ -149,7 +149,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	}
 
 	@Override
-	public List<String> callMethodSync(String method, List<Object> parameters) {
+	public List<String> callMethodSync(long callId, String method, List<Object> parameters) {
 		throw new UnsupportedOperationException("Can't call sync methods on stub.");
 	}
 

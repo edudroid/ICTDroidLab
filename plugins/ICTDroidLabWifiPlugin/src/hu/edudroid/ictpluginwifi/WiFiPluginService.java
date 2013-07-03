@@ -87,6 +87,7 @@ public class WiFiPluginService extends Service {
     	final int delay=intent.getExtras().getInt("delay");
     	final int periodicity=intent.getExtras().getInt("periodicity");
     	final int count=intent.getExtras().getInt("count");
+    	final long callId=intent.getExtras().getLong("callId");
     	
 		try{
 			BroadcastReceiver wifi_scan = new BroadcastReceiver()
@@ -122,6 +123,7 @@ public class WiFiPluginService extends Service {
 		    					"SSID: " + scanResults.get(i).SSID + "\n---\n";
 		    		}
 		            List<String> res=new ArrayList<String>();
+		            res.add(String.valueOf(callId));
 		            res.add(wifiScanningResult);
 		            onEvent("scanned networks", res);
 		            
