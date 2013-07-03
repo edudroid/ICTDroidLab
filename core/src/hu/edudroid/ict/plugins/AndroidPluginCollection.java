@@ -2,7 +2,6 @@ package hu.edudroid.ict.plugins;
 
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginCollection;
-import hu.edudroid.interfaces.PluginResultListener;
 
 import java.util.ArrayList;
 

@@ -11,7 +11,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 public class PluginPollingBroadcast extends BroadcastReceiver {
 
@@ -110,12 +109,11 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 		}
 		
 		if(intent.getAction().equals(Constants.INTENT_ACTION_PLUGIN_EVENT)){
-			final long id = extras.getLong(Constants.INTENT_EXTRA_CALL_ID);
 			final String plugin = extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_ID);
 			final String version = extras.getString(Constants.INTENT_EXTRA_KEY_VERSION);
 			final String eventName = extras.getString(Constants.INTENT_EXTRA_KEY_EVENT_NAME);
-			final List<String> eventResults = extras.getStringArrayList(Constants.INTENT_EXTRA_VALUE_RESULT);
-			notifyEventListener(id, plugin, version, eventName,eventResults);
+			final List<String> result = extras.getStringArrayList(Constants.INTENT_EXTRA_VALUE_RESULT);
+			notifyEventListener(plugin, version, eventName, result);
 		}
 		
 	}
@@ -133,9 +131,10 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 											error_message);
 	}
 	
-	public void notifyEventListener(long id, String plugin, String version, String eventName, List<String> eventResults){
-		for (int i = 0; i < mPluginEventListeners.size(); i++)
-			mPluginEventListeners.get(i).onEvent(id, plugin, version, eventName,eventResults);
+	public void notifyEventListener(String plugin, String version, String eventName, List<String> extras){
+		for (PluginEventListener listener : mPluginEventListeners){
+			listener.onEvent(plugin, version, eventName, extras);
+		}
 	}
 
 }
