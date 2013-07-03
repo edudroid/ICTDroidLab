@@ -12,16 +12,19 @@ import dalvik.system.DexClassLoader;
 
 public class ModuleLoader {
 
+	private static final String TAG = "ModuleLoader";
 	private static final String MODULE_SHARED_PREFS = "ModulePrefs";
 
-	private static Module loadModule(File file, String jarName, Context context){
+	private static Module loadModule(String jarName, String className, Context context) {
+		Log.i(TAG, "Loading module " + className + " from file " + jarName);
+		String dexOptimizedFolder = context.getFilesDir().getAbsolutePath();
 		File dexedJavaFile = AssetReader.copyAssetToInternalStorage(jarName, context);
 		DexClassLoader dexLoader = new DexClassLoader(dexedJavaFile.getAbsolutePath(), 
-														file.getAbsolutePath(), 
+														dexOptimizedFolder, 
 														null, 
 														context.getClassLoader());
 		try {
-			Class<?> dexLoadedClass = dexLoader.loadClass("hu.edudroid.ict.sample_project.ModulExample");
+			Class<?> dexLoadedClass = dexLoader.loadClass(className);
 			Module dexContent = (Module)dexLoadedClass.newInstance();
 			PluginCollection pluginCollection = AndroidPluginCollection.getInstance();
 			dexContent.init(
@@ -39,10 +42,9 @@ public class ModuleLoader {
 		return null;
 	}
 	
-	public static void runModule(String urlString, String jarName, Context context){
+	public static void runModule(String jarName, String className, Context context){
 		try {
-			File outFile = new File(context.getFilesDir().getAbsolutePath());
-			Module module = loadModule(outFile, jarName, context);
+			Module module = loadModule(jarName, className, context);
 			module.run();			
 		} catch (NullPointerException e) {
 			

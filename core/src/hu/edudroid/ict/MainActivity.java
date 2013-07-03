@@ -104,7 +104,7 @@ public class MainActivity extends Activity implements PluginListener,
 				refreshPluginlist();
 				break;
 			case R.id.runAllModulesButton:
-				ModuleLoader.runModule("none", "SampleModule.jar", this);
+				ModuleLoader.runModule("SampleModule.jar", "hu.edudroid.ict.sample_project.ModulExample", this);
 		}
 	}
 
