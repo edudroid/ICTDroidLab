@@ -6,9 +6,7 @@ import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginResultListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.content.Context;
 import android.net.wifi.WifiInfo;
@@ -16,18 +14,8 @@ import android.net.wifi.WifiManager;
 
 public class WiFiPlugin extends PluginCommunicationInterface implements Plugin {
 
-	private static final List<String> mMethods=new ArrayList<String>();
-	private static final List<String> mEvents=new ArrayList<String>();
-	private static final Map<String,PluginEventListener> mEventListeners=new HashMap<String,PluginEventListener>();
-	
-	private static long mEventID=0;	
-	
-	private Context mContext;
-	private WifiManager mWifiManager;
-	private WifiInfo mWifiInfo;
-	
-	public WiFiPlugin(){
-		
+	private static final List<String> mMethods = new ArrayList<String>();
+	static {
 		mMethods.add("getIpAddress");
 		mMethods.add("getMacAddress");
 		mMethods.add("getLinkSpeed");
@@ -37,26 +25,23 @@ public class WiFiPlugin extends PluginCommunicationInterface implements Plugin {
 		mMethods.add("isHiddenSSID");
 		mMethods.add("getRssi");
 		mMethods.add("getDescribeContents");
-		
-		
+	}
+	private static final List<String> mEvents = new ArrayList<String>();
+	static{
 		mEvents.add("empty event");
 		mEvents.add("scanned networks");
-		
-		
-	
 	}
+	
+	private Context mContext;
+	private WifiManager mWifiManager;
+	private WifiInfo mWifiInfo;
 	
 	@Override
 	protected Plugin getPlugin(Context context) {
-		this.mContext=context;
+		this.mContext = context;
 		mWifiManager = (WifiManager)mContext.getSystemService(Context.WIFI_SERVICE);	
 			
 		return this;
-	}
-
-	@Override
-	protected void onEvent(String eventName, List<String> params) throws UnsupportedOperationException{
-		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -124,16 +109,13 @@ public class WiFiPlugin extends PluginCommunicationInterface implements Plugin {
 	}
 	
 	@Override
-	public long callMethodAsync(String method, List<Object> parameters,
-			PluginResultListener listener) {
-		// TODO Auto-generated method stub
-		return -1;
+	public long callMethodAsync(String method, List<Object> parameters, PluginResultListener listener) {
+		throw new UnsupportedOperationException("Can't call async method on plugin.");
 	}
 
 	@Override
-	public void registerEventListener(String eventName,
-			PluginEventListener listener) {
-		mEventListeners.put(eventName, listener);				
+	public void registerEventListener(String eventName, PluginEventListener listener) {
+		throw new UnsupportedOperationException("Can't call async method on plugin.");
 	}
 	
 	public String intToIP(int addr) {

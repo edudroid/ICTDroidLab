@@ -2,7 +2,6 @@ package hu.edudroid.ictplugin;
 
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
-import hu.edudroid.interfaces.PluginEventListener;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
@@ -74,7 +73,11 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver {
 		context.sendBroadcast(intent);
 	}
 	
-	protected abstract Plugin getPlugin(Context context);
-	
-	protected abstract void onEvent(String eventName, List<String> params);
+	/**
+	 * This method will be called to retrieve an instance of the plugin to work with. Developers can use singleton design pattern or instantiate a new
+	 * plugin for every call.
+	 * @param context
+	 * @return
+	 */
+	protected abstract Plugin getPlugin(Context context);	
 }
