@@ -23,6 +23,7 @@ import android.view.View.OnClickListener;
 
 public class PluginAdapter implements OnClickListener, Plugin, PluginResultListener, PluginEventListener {
 
+	private static final String TAG = "PluginAdapter";
 	private final String					mName;
 	private final String					mAuthor;
 	private final String					mDescription;
@@ -36,9 +37,8 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	
 	
 	private Map<Long, PluginResultListener> mCallBackIdentification;
-	private List<Map<String,PluginEventListener>> mEventListeners;
+	private Map<String,List<PluginEventListener>> mEventListeners;
 	
-	private static long mEventListenerID = 0;
 	private static long mCallMethodID = 0;
 
 	public PluginAdapter(final String name,
@@ -57,7 +57,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 		mEvents = events;
 		
 		mCallBackIdentification = new HashMap<Long, PluginResultListener>();
-		mEventListeners = new ArrayList<Map<String,PluginEventListener>>();
+		mEventListeners = new HashMap<String,List<PluginEventListener>>();
 		mContext = context;
 	}
 
@@ -154,26 +154,32 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	}
 
 	@Override
-	public void onEvent(long id, String plugin, String version, String eventName, List<String> result) {
-		try{
-			for(int i=0;i<mEventListeners.size();i++){
-				if(mEventListeners.get(i).containsKey(eventName)){
-					mEventListeners.get(i).get(eventName).onEvent(id, plugin, version, eventName, result);
+	public void onEvent(String plugin, String version, String eventName, List<String> extras) {
+		if (plugin.equals(getName())) {
+			List<PluginEventListener> listeners = mEventListeners.get(eventName);
+			if (listeners != null) {
+				for (PluginEventListener listener : listeners) {
+					try {
+						listener.onEvent(plugin, version, eventName, extras);
+					} catch (Exception e) {
+						e.printStackTrace();
+						Log.e(TAG, "Error occured while processing plugin event " + e.getMessage());
+					}
 				}
-			}			
-		} catch (NullPointerException e){
-			Log.e("PluginAdapter","Event captured, but no such event defined for listeners!");
-			//e.printStackTrace();
+			}
+		} else {
+			Log.w(TAG, "Event from other plugin " + plugin + " at adapter for " + getName());
 		}
 	}
 
 	@Override
-	public void registerEventListener(String eventName,
-			PluginEventListener listener) {
-		Map<String, PluginEventListener> eventListeners = new HashMap<String, PluginEventListener>();
-		eventListeners.put(eventName, listener);
-		mEventListeners.add(eventListeners);		
-		
+	public void registerEventListener(String eventName, PluginEventListener listener) {
+		List<PluginEventListener> listeners = mEventListeners.get(eventName);
+		if (listeners == null) {
+			listeners = new ArrayList<PluginEventListener>();
+			mEventListeners.put(eventName, listeners);
+		}
+		listeners.add(listener);
 		mBroadcast.registerEventListener(this);
 	}
 }
