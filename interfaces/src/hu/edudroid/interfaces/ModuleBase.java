@@ -19,7 +19,7 @@ public abstract class ModuleBase implements PluginResultListener, Module {
 		super();
 	}
 	
-	public final void init(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice) {
+	public void init(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice) {
 		mPrefs = prefs;
 		mLogger = logger;
 		mPluginCollection = pluginCollection;

@@ -1,10 +1,14 @@
 package hu.edudroid.ict.sample_project;
 
+import hu.edudroid.interfaces.Logger;
 import hu.edudroid.interfaces.ModuleBase;
 import hu.edudroid.interfaces.ModuleTimerListener;
 import hu.edudroid.interfaces.Plugin;
+import hu.edudroid.interfaces.PluginCollection;
 import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginResultListener;
+import hu.edudroid.interfaces.Preferences;
+import hu.edudroid.interfaces.TimeServiceInterface;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,28 +21,32 @@ public class ModulExample extends ModuleBase implements PluginEventListener, Plu
 		super();
 	}
 	
+	@Override
+	public void init(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice){
+		super.init(prefs, logger, pluginCollection, timeservice);
+		//mTimeService.runAt(0,this);
+		mTimeService.runPeriodic(1000, 1000, 5, this);
+	}
+	
 	public void run(){
-		mLogger.d(TAG, "Modul created");
-		
-		mTimeService.registerOnTimerEvent(this);
-		mTimeService.runAt(0);
 		
 		Plugin plugin2  = mPluginCollection.getPluginByName("WiFi Plugin");
 		if (plugin2 != null) {
-			plugin2.callMethodAsync("getBSSID", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
-			plugin2.callMethodAsync("getSSID", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
-			plugin2.callMethodAsync("isHiddenSSID", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
-			plugin2.callMethodAsync("getIpAddress", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
-			plugin2.callMethodAsync("getMacAddress", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
-			plugin2.callMethodAsync("getLinkSpeed", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
-			plugin2.callMethodAsync("getNetworkId", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
-			plugin2.callMethodAsync("getRssi", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
-			plugin2.callMethodAsync("getDescribeContents", Arrays.asList(new Object[]{"WiFiparam1","WiFiparam2","WiFiparam3"}),this);
+			plugin2.callMethodAsync("getBSSID", Arrays.asList(new Object[]{"empty"}),this);
+			plugin2.callMethodAsync("getSSID", Arrays.asList(new Object[]{"empty"}),this);
+			plugin2.callMethodAsync("isHiddenSSID", Arrays.asList(new Object[]{"empty"}),this);
+			plugin2.callMethodAsync("getIpAddress", Arrays.asList(new Object[]{"empty"}),this);
+			plugin2.callMethodAsync("getMacAddress", Arrays.asList(new Object[]{"empty"}),this);
+			plugin2.callMethodAsync("getLinkSpeed", Arrays.asList(new Object[]{"empty"}),this);
+			plugin2.callMethodAsync("getNetworkId", Arrays.asList(new Object[]{"empty"}),this);
+			plugin2.callMethodAsync("getRssi", Arrays.asList(new Object[]{"empty"}),this);
+			plugin2.callMethodAsync("getDescribeContents", Arrays.asList(new Object[]{"empty"}),this);
+			plugin2.callMethodAsync("scanning", Arrays.asList(new Object[]{"0","1000","5"}),this);
 			
 			plugin2.registerEventListener("empty event", this);
 			plugin2.registerEventListener("scanned networks", this);
-			plugin2.registerEventListener("ping", this);
-			plugin2.registerEventListener("traceroute", this);
+			//plugin2.registerEventListener("ping", this);
+			//plugin2.registerEventListener("traceroute", this);
 		} else {
 			mLogger.e(TAG, "Couldn't find WiFi Plugin");
 		}
@@ -67,12 +75,13 @@ public class ModulExample extends ModuleBase implements PluginEventListener, Plu
 	public void onEvent(String plugin, String version, String eventName, List<String> extras) {
 		mLogger.e("EVENT in module ", eventName);
 		for(int i=0;i<extras.size();i++){
-			mLogger.e("Result:", extras.get(i));
+			//mLogger.e("Result:", extras.get(i));
 		}
 	}
 
 	@Override
-	public void onTimerEvent(long time) {
-				
+	public void onTimerEvent() {
+		mLogger.e("TIMER in module", "timer event");
+		this.run();		
 	}
 } 

@@ -23,6 +23,7 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 public class WiFiPluginService extends Service {
@@ -83,6 +84,10 @@ public class WiFiPluginService extends Service {
     	mTracerouteTask=new TracerouteTask();
     	mTracerouteTask.execute("173.194.39.64");
 		
+    	final int delay=intent.getExtras().getInt("delay");
+    	final int periodicity=intent.getExtras().getInt("periodicity");
+    	final int count=intent.getExtras().getInt("count");
+    	
 		try{
 			BroadcastReceiver wifi_scan = new BroadcastReceiver()
 	        {
@@ -126,10 +131,21 @@ public class WiFiPluginService extends Service {
 	        filter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
 	        registerReceiver(wifi_scan,filter);
 	        
-	        
 	        t=new Timer();
-	    	ttask=new myTimerTask();
-	      	t.scheduleAtFixedRate(ttask, 0, 1000);
+	    	ttask=new TimerTask() {
+				int tickCount=count;
+				@Override
+				public void run() {
+					if(tickCount<0){
+						t.purge();
+					}
+					else{
+						mWifiManager.startScan();
+						tickCount--;
+					}
+				}
+			};
+	      	t.scheduleAtFixedRate(ttask, delay, periodicity);
 		}catch(Exception e){
 			Toast.makeText(this, "Hiba a betöltés során!", Toast.LENGTH_LONG).show();
 		}
@@ -146,14 +162,6 @@ public class WiFiPluginService extends Service {
 		}
 		return "none";
 	}
-	
-	class myTimerTask extends TimerTask {
-				
-		@Override
-		public void run() {
-			mWifiManager.startScan();
-		}
-	};
 	
 	class PingTask extends AsyncTask<String, Void, Void> {
         PipedOutputStream mPOut;

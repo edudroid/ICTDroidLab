@@ -15,7 +15,7 @@ public class ModuleLoader {
 
 	private static final String TAG = "ModuleLoader";
 	private static final String MODULE_SHARED_PREFS = "ModulePrefs";
-
+	
 	private static Module loadModule(String jarName, String className, Context context) {
 		Log.i(TAG, "Loading module " + className + " from file " + jarName);
 		String dexOptimizedFolder = context.getFilesDir().getAbsolutePath();
@@ -27,6 +27,7 @@ public class ModuleLoader {
 		try {
 			Class<?> dexLoadedClass = dexLoader.loadClass(className);
 			Module dexContent = (Module)dexLoadedClass.newInstance();
+			
 			PluginCollection pluginCollection = AndroidPluginCollection.getInstance();
 			TimeServiceInterface timeservice = ModuleTimeService.getInstance();
 			dexContent.init(
@@ -34,6 +35,7 @@ public class ModuleLoader {
 					new AndroidLogger(),
 					pluginCollection,
 					timeservice);
+			Log.e("Module init","ready");
 			return dexContent;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -48,7 +50,7 @@ public class ModuleLoader {
 	public static void runModule(String jarName, String className, Context context){
 		try {
 			Module module = loadModule(jarName, className, context);
-			module.run();			
+			//module.run();
 		} catch (NullPointerException e) {
 			
 		}
