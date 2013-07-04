@@ -1,0 +1,47 @@
+<project name="SampleModule" basedir="." default="createCoreAsset">
+
+    <property name="src.dir"     value="src:../../interfaces/src"/>
+
+    <property name="build.dir"   	value="build"/>
+    <property name="classes.dir" 	value="${build.dir}/classes"/>
+    <property name="jar.dir"		value="${build.dir}/jar"/>
+    <property name="core.asset.dir"	value="../../core/assets"/>
+    
+
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac includeantruntime="false" srcdir="${src.dir}" destdir="${classes.dir}"/>
+    </target>
+
+    <target name="jar" depends="clean,compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${ant.project.name}.jar"
+            basedir="${classes.dir}"
+            excludes="**/interfaces/*,**/interfaces/,**/interfaces">
+        </jar>
+    </target>
+
+    <target name="run" depends="jar">
+        <java jar="${jar.dir}/${ant.project.name}.jar" fork="true"/>
+    </target>
+    
+    <target name="createCoreAsset" depends="jar">
+        <exec executable="cmd">
+	    	<arg value="/c"/>
+	    	<arg value="createdex.bat"/>
+		</exec>
+        <exec executable="cmd">
+	    	<arg value="/c"/>
+	    	<arg value="dextojar.bat"/>
+		</exec>
+        <copy file="${jar.dir}/${ant.project.name}.jar" todir="${core.asset.dir}"/>
+    </target>
+
+    <target name="clean-build" depends="clean,jar"/>
+
+</project>

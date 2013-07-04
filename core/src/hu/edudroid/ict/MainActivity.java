@@ -105,6 +105,7 @@ public class MainActivity extends Activity implements PluginListener,
 				break;
 			case R.id.runAllModulesButton:
 				ModuleLoader.runModule("SampleModule.jar", "hu.edudroid.ict.sample_project.ModulExample", this);
+				ModuleLoader.runModule("SampleModule2.jar", "hu.edudroid.ict.sample_project2.ModulExample2", this);
 		}
 	}
 
