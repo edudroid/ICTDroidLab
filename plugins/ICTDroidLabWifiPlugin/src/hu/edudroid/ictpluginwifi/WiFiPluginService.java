@@ -23,7 +23,6 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.Toast;
 
 public class WiFiPluginService extends Service {

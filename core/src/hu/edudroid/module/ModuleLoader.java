@@ -47,7 +47,7 @@ public class ModuleLoader {
 	public static void runModule(String jarName, String className, Context context){
 		try {
 			Module module = loadModule(jarName, className, context);
-			//module.run();
+			module.run();
 		} catch (NullPointerException e) {
 			
 		}

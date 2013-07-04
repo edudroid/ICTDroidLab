@@ -4,15 +4,9 @@ package hu.edudroid.module;
 import hu.edudroid.interfaces.ModuleTimerListener;
 import hu.edudroid.interfaces.TimeServiceInterface;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import android.util.Log;
 
 public class ModuleTimeService implements TimeServiceInterface {
 	

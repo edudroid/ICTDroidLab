@@ -18,5 +18,8 @@
     <string name="showModules">Show %1$s modul%2$s</string>
     <string name="showPlugins">Show %1$s plugin%2$s</string>
     <string name="setQuotas">Set quotas</string>
+    <string name="placeholder">PLACEHOLDER</string>
+    <string name="enabled">Enabled</string>
+    <string name="run">Run</string>
 
 </resources>
