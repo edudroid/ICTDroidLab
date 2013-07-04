@@ -14,7 +14,6 @@ import dalvik.system.DexClassLoader;
 public class ModuleLoader {
 
 	private static final String TAG = "ModuleLoader";
-
 	private static Module loadModule(String jarName, String className, Context context) {
 		Log.i(TAG, "Loading module " + className + " from file " + jarName);
 		String dexOptimizedFolder = context.getFilesDir().getAbsolutePath();
@@ -33,6 +32,7 @@ public class ModuleLoader {
 					new AndroidLogger(),
 					pluginCollection,
 					timeservice);
+			Log.e("Module init","ready");
 			return module;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -47,7 +47,7 @@ public class ModuleLoader {
 	public static void runModule(String jarName, String className, Context context){
 		try {
 			Module module = loadModule(jarName, className, context);
-			module.run();			
+			//module.run();
 		} catch (NullPointerException e) {
 			
 		}
