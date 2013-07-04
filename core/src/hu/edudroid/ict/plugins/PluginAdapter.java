@@ -1,6 +1,6 @@
 package hu.edudroid.ict.plugins;
 
-import hu.edudroid.ict.PluginDetailsActivity;
+import hu.edudroid.ict.ui.PluginDetailsActivity;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;

@@ -1,4 +1,4 @@
-package hu.edudroid.ict;
+package hu.edudroid.ict.ui;
 
 import hu.edudroid.ict.R;
 import hu.edudroid.interfaces.Plugin;

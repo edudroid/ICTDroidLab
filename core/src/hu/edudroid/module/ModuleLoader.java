@@ -14,7 +14,6 @@ import dalvik.system.DexClassLoader;
 public class ModuleLoader {
 
 	private static final String TAG = "ModuleLoader";
-	private static final String MODULE_SHARED_PREFS = "ModulePrefs";
 
 	private static Module loadModule(String jarName, String className, Context context) {
 		Log.i(TAG, "Loading module " + className + " from file " + jarName);
@@ -26,15 +25,15 @@ public class ModuleLoader {
 														context.getClassLoader());
 		try {
 			Class<?> dexLoadedClass = dexLoader.loadClass(className);
-			Module dexContent = (Module)dexLoadedClass.newInstance();
+			Module module = (Module)dexLoadedClass.newInstance();
 			PluginCollection pluginCollection = AndroidPluginCollection.getInstance();
 			TimeServiceInterface timeservice = ModuleTimeService.getInstance();
-			dexContent.init(
-					new SharedPrefs(context.getSharedPreferences(MODULE_SHARED_PREFS, Context.MODE_PRIVATE)),
+			module.init(
+					new SharedPrefs(context, className),
 					new AndroidLogger(),
 					pluginCollection,
 					timeservice);
-			return dexContent;
+			return module;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {

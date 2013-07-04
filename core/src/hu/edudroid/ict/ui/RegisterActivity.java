@@ -1,4 +1,7 @@
-package hu.edudroid.ict;
+package hu.edudroid.ict.ui;
+
+import hu.edudroid.ict.HttpUtils;
+import hu.edudroid.ict.R;
 
 import java.util.LinkedList;
 import org.apache.http.message.BasicNameValuePair;
@@ -57,7 +60,7 @@ public class RegisterActivity extends Activity {
 			GCMRegistrar.register(this, SENDER_ID);
 		}
 		if (prefs.contains(REGISTRATION_KEY)){
-			final Intent intent = new Intent(this, MainActivity.class);
+			final Intent intent = new Intent(this, PluginListActivity.class);
 			startActivity(intent);
 			finish();
 		}
@@ -140,7 +143,7 @@ public class RegisterActivity extends Activity {
 				if (response.contains("Success")){
 					prefs.edit().putString(REGISTRATION_KEY, GCM).commit();
 					Intent intent = new Intent(	RegisterActivity.this,
-												MainActivity.class);
+												PluginListActivity.class);
 					startActivity(intent);
 					finish();
 				}
