@@ -14,5 +14,4 @@ public interface Plugin {
 	List<String> callMethodSync(long callId, String method, List<Object> parameters);
 	void registerEventListener(String eventName, PluginEventListener listener);
 	void unregisterEventListener(String eventName, PluginEventListener listener);
-
 }

@@ -159,5 +159,4 @@ public class WiFiPlugin extends PluginCommunicationInterface implements Plugin {
 		throw new UnsupportedOperationException("You have to register the listener on PluginAdapter...");
 		
 	}
-	
 }
