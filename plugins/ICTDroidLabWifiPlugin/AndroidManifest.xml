@@ -28,7 +28,15 @@
         </activity>
         
         <service 
-            android:name="hu.edudroid.ictpluginwifi.WiFiPluginService"
+            android:name="hu.edudroid.ictpluginwifi.WiFiPluginScanningService"
+            android:label="@string/wifi_plugin_service" />
+        
+        <service 
+            android:name="hu.edudroid.ictpluginwifi.WiFiPluginPingService"
+            android:label="@string/wifi_plugin_service" />
+        
+        <service 
+            android:name="hu.edudroid.ictpluginwifi.WiFiPluginTracerouteService"
             android:label="@string/wifi_plugin_service" />
         
         <receiver

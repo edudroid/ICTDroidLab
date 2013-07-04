@@ -27,12 +27,15 @@ public class WiFiPlugin extends PluginCommunicationInterface implements Plugin {
 		mMethods.add("getRssi");
 		mMethods.add("getDescribeContents");
 		mMethods.add("scanning");
+		mMethods.add("ping");
+		mMethods.add("traceroute");
 	}
 	private static final List<String> mEvents = new ArrayList<String>();
 	static{
 		mEvents.add("empty event");
 		mEvents.add("scanned networks");
 		mEvents.add("ping");
+		mEvents.add("traceroute");
 	}
 	
 	private Context mContext;
@@ -110,11 +113,24 @@ public class WiFiPlugin extends PluginCommunicationInterface implements Plugin {
 		}
 		if(method.equals("scanning")){
 			answer.add("scanning in progress...");
-			Intent serviceIntent=new Intent(this.mContext,WiFiPluginService.class);
+			Intent serviceIntent=new Intent(this.mContext,WiFiPluginScanningService.class);
 			serviceIntent.putExtra("delay", Integer.parseInt((String)parameters.get(0)));
 			serviceIntent.putExtra("periodicity", Integer.parseInt((String)parameters.get(1)));
 			serviceIntent.putExtra("count", Integer.parseInt((String)parameters.get(2)));
 			serviceIntent.putExtra("callId", callId);
+			this.mContext.startService(serviceIntent);
+		}
+		if(method.equals("ping")){
+			answer.add("ping in progress...");
+			Intent serviceIntent=new Intent(this.mContext,WiFiPluginPingService.class);
+			serviceIntent.putExtra("ip", (String)parameters.get(0));
+			serviceIntent.putExtra("count", Integer.parseInt((String)parameters.get(1)));
+			this.mContext.startService(serviceIntent);
+		}
+		if(method.equals("traceroute")){
+			answer.add("traceroute in progress...");
+			Intent serviceIntent=new Intent(this.mContext,WiFiPluginTracerouteService.class);
+			serviceIntent.putExtra("ip", (String)parameters.get(0));
 			this.mContext.startService(serviceIntent);
 		}
 		return answer;				
@@ -127,7 +143,7 @@ public class WiFiPlugin extends PluginCommunicationInterface implements Plugin {
 
 	@Override
 	public void registerEventListener(String eventName, PluginEventListener listener) {
-		throw new UnsupportedOperationException("Can't call async method on plugin.");
+		throw new UnsupportedOperationException("You have to register the listener on PluginAdapter...");
 	}
 	
 	public String intToIP(int addr) {
@@ -135,6 +151,13 @@ public class WiFiPlugin extends PluginCommunicationInterface implements Plugin {
 	            ((addr >>>= 8) & 0xFF) + "." + 
 	            ((addr >>>= 8) & 0xFF) + "." + 
 	            ((addr >>>= 8) & 0xFF));
+	}
+
+	@Override
+	public void unregisterEventListener(String eventName,
+			PluginEventListener listener) {
+		throw new UnsupportedOperationException("You have to register the listener on PluginAdapter...");
+		
 	}
 	
 }
