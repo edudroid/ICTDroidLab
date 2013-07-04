@@ -88,19 +88,19 @@ public class ModulExample extends ModuleBase implements PluginEventListener, Plu
 	@Override
 	public void onResult(long id, String plugin, String pluginVersion,
 			String methodName, List<String> result) {
-		mLogger.e("REPORT in module", plugin + " " + methodName + " " + result);
+		mLogger.e("REPORT in module: "+getModuleName(), plugin + " " + methodName + " " + result);
 	}
 
 
 	@Override
 	public void onError(long id, String plugin, String pluginVersion, String methodName,
 			String errorMessage) {
-		mLogger.e("ERROR in module ", plugin + " " + methodName + " " + errorMessage);
+		mLogger.e("ERROR in module: "+getModuleName(), plugin + " " + methodName + " " + errorMessage);
 	}
 
 	@Override
 	public void onEvent(String plugin, String version, String eventName, List<String> extras) {
-		mLogger.e("EVENT in module ", eventName +" size: " +extras.size());
+		mLogger.e("EVENT in module: "+getModuleName(), eventName +" size: " +extras.size());
 		
 		for(int i=0;i<extras.size();i++){
 			mLogger.e("Result:", extras.get(i));
@@ -110,7 +110,7 @@ public class ModulExample extends ModuleBase implements PluginEventListener, Plu
 
 	@Override
 	public void onTimerEvent() {
-		mLogger.e("TIMER in module", "timer event");
+		mLogger.e("TIMER in module: "+getModuleName(), "timer event");
 		this.run();		
 	}
 
