@@ -39,10 +39,10 @@ public class ModulExample extends ModuleBase implements PluginEventListener, Plu
 		mTimeService.runPeriodic(1000, 10000, 2, this);
 		
 		plugin2  = mPluginCollection.getPluginByName("WiFi Plugin");
-		plugin2.registerEventListener("empty event", this);
+		//plugin2.registerEventListener("empty event", this);
 		//plugin2.registerEventListener("scanned networks", this);
 		plugin2.registerEventListener("ping", this);
-		plugin2.registerEventListener("traceroute", this);
+		//plugin2.registerEventListener("traceroute", this);
 		
 	}
 	
@@ -112,5 +112,10 @@ public class ModulExample extends ModuleBase implements PluginEventListener, Plu
 	public void onTimerEvent() {
 		mLogger.e("TIMER in module", "timer event");
 		this.run();		
+	}
+
+	@Override
+	public String getEventListenerName() {
+		return this.getModuleName();
 	}
 } 

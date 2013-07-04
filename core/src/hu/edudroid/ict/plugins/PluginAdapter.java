@@ -11,6 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -161,6 +162,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 				for (PluginEventListener listener : listeners) {
 					try {
 						listener.onEvent(plugin, version, eventName, extras);
+						Log.e("PluginAdapter","event sent from: "+plugin+" "+eventName);
 					} catch (Exception e) {
 						e.printStackTrace();
 						Log.e(TAG, "Error occured while processing plugin event " + e.getMessage());
@@ -180,11 +182,15 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 			mEventListeners.put(eventName, listeners);
 			mBroadcast.registerEventListener(this);
 		}
-		if(!listeners.contains(listener)){
+		if(listeners.size()==0){
 			listeners.add(listener);
 		}
 		else{
-			Log.e("PluginAdapter","Listener already has been registered to event");
+			for(PluginEventListener listIter : listeners){
+				if(!listIter.getEventListenerName().equals(listener.getEventListenerName())){
+					listeners.add(listener);
+				}
+			}
 		}
 		
 	}
@@ -194,15 +200,15 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 			PluginEventListener listener) {
 		List<PluginEventListener> listeners = mEventListeners.get(eventName);
 		if(listeners!=null){
-			if(listeners.contains(listener)){
-				listeners.remove(listener);
-			}
-			else{
-				Log.e("PluginAdapter","Listener is not registered on this event... Cannot unregister");
-			}
+			listeners.remove(listener);
 		}
 		else{
 			Log.e("PluginAdapter","No listeners for this event... Cannot unregister");
 		}
+	}
+
+	@Override
+	public String getEventListenerName() {
+		return this.mName;
 	}
 }
