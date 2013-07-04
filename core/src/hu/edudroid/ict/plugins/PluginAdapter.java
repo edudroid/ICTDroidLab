@@ -178,8 +178,31 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 		if (listeners == null) {
 			listeners = new ArrayList<PluginEventListener>();
 			mEventListeners.put(eventName, listeners);
+			mBroadcast.registerEventListener(this);
 		}
-		listeners.add(listener);
-		mBroadcast.registerEventListener(this);
+		if(!listeners.contains(listener)){
+			listeners.add(listener);
+		}
+		else{
+			Log.e("PluginAdapter","Listener already has been registered to event");
+		}
+		
+	}
+
+	@Override
+	public void unregisterEventListener(String eventName,
+			PluginEventListener listener) {
+		List<PluginEventListener> listeners = mEventListeners.get(eventName);
+		if(listeners!=null){
+			if(listeners.contains(listener)){
+				listeners.remove(listener);
+			}
+			else{
+				Log.e("PluginAdapter","Listener is not registered on this event... Cannot unregister");
+			}
+		}
+		else{
+			Log.e("PluginAdapter","No listeners for this event... Cannot unregister");
+		}
 	}
 }

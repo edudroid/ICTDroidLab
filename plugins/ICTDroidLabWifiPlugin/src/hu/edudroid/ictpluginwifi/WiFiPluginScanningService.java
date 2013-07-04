@@ -26,12 +26,11 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-public class WiFiPluginService extends Service {
+public class WiFiPluginScanningService extends Service {
 	private static long mEventID=0;
 	
 	private WifiManager mWifiManager;
 	
-	PingTask mPingTask;
 	TracerouteTask mTracerouteTask;
 	
 	private Timer t;
@@ -74,15 +73,8 @@ public class WiFiPluginService extends Service {
 	
 	@Override
     public void onStart(Intent intent, int startId) {
-		onEvent("empty event", null);
 		
 		mWifiManager = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-		
-		mPingTask=new PingTask();
-    	mPingTask.execute("127.0.0.1");
-    	
-    	mTracerouteTask=new TracerouteTask();
-    	mTracerouteTask.execute("173.194.39.64");
 		
     	final int delay=intent.getExtras().getInt("delay");
     	final int periodicity=intent.getExtras().getInt("periodicity");
@@ -93,40 +85,45 @@ public class WiFiPluginService extends Service {
 			BroadcastReceiver wifi_scan = new BroadcastReceiver()
 	        {
 				String wifiScanningResult;
+			
+				boolean scanned=false;
 				
 	            @Override
 				public void onReceive(Context arg0, Intent arg1) {
 	            	wifiScanningResult="";
-	            	List<WifiConfiguration> results = mWifiManager.getConfiguredNetworks();
-		            List<ScanResult> scanResults = mWifiManager.getScanResults();
-		            
-		            
-		            for(int i=0;i<results.size();i++){
-		    			
-		            	wifiScanningResult+="CONFIGURED NETWORK:\n" +
-		    					"BSSID: " + results.get(i).BSSID + "\n" +
-		    					"Network ID: " + results.get(i).networkId + "\n" +
-		    					"PreSharedKey: " + results.get(i).preSharedKey + "\n" +
-		    					"Priority: " + results.get(i).priority + "\n" +
-		    					"SSID: " + results.get(i).SSID + "\n" +
-		    					"Status: " + wifiStatus(results.get(i).status) + "\n" +
-		    					"WEP key: " + results.get(i).wepTxKeyIndex + "\n---\n";
-		    		}
-		            
-		            for(int i=0;i<scanResults.size();i++){
-		    			
-		            	wifiScanningResult+="SCANNED NETWORKS:\n" + 
-		    					"BSSID: " + scanResults.get(i).BSSID + "\n" +
-		    					"Capabilities: " + scanResults.get(i).capabilities + "\n" +
-		    					"Frekvency: " + scanResults.get(i).frequency + " MHz\n" +
-		    					"Level: " + scanResults.get(i).level + " dBm\n" +
-		    					"SSID: " + scanResults.get(i).SSID + "\n---\n";
-		    		}
-		            List<String> res=new ArrayList<String>();
-		            res.add(String.valueOf(callId));
-		            res.add(wifiScanningResult);
-		            onEvent("scanned networks", res);
-		            
+	            	
+	            	if(!scanned){
+		            	List<WifiConfiguration> results = mWifiManager.getConfiguredNetworks();
+			            List<ScanResult> scanResults = mWifiManager.getScanResults();
+			            
+			            for(int i=0;i<results.size();i++){
+			    			
+			            	wifiScanningResult+="CONFIGURED NETWORK:\n" +
+			    					"BSSID: " + results.get(i).BSSID + "\n" +
+			    					"Network ID: " + results.get(i).networkId + "\n" +
+			    					"PreSharedKey: " + results.get(i).preSharedKey + "\n" +
+			    					"Priority: " + results.get(i).priority + "\n" +
+			    					"SSID: " + results.get(i).SSID + "\n" +
+			    					"Status: " + wifiStatus(results.get(i).status) + "\n" +
+			    					"WEP key: " + results.get(i).wepTxKeyIndex + "\n---\n";
+			    		}
+			            
+			            for(int i=0;i<scanResults.size();i++){
+			    			
+			            	wifiScanningResult+="SCANNED NETWORKS:\n" + 
+			    					"BSSID: " + scanResults.get(i).BSSID + "\n" +
+			    					"Capabilities: " + scanResults.get(i).capabilities + "\n" +
+			    					"Frekvency: " + scanResults.get(i).frequency + " MHz\n" +
+			    					"Level: " + scanResults.get(i).level + " dBm\n" +
+			    					"SSID: " + scanResults.get(i).SSID + "\n---\n";
+			    		}
+			    		
+			            List<String> res=new ArrayList<String>();
+			            res.add(String.valueOf(callId));
+			            res.add(wifiScanningResult);
+			            onEvent("scanned networks", res);
+	            	}
+	            	scanned=true;
 				}
 	        };
 	        IntentFilter filter = new IntentFilter();
@@ -138,7 +135,7 @@ public class WiFiPluginService extends Service {
 				int tickCount=count;
 				@Override
 				public void run() {
-					if(tickCount<0){
+					if(tickCount==0){
 						t.purge();
 					}
 					else{
@@ -164,81 +161,6 @@ public class WiFiPluginService extends Service {
 		}
 		return "none";
 	}
-	
-	class PingTask extends AsyncTask<String, Void, Void> {
-        PipedOutputStream mPOut;
-        PipedInputStream mPIn;
-        LineNumberReader mReader;
-        Process mProcess;
-        @Override
-        protected void onPreExecute() {
-            mPOut = new PipedOutputStream();
-            try {
-                mPIn = new PipedInputStream(mPOut);
-                mReader = new LineNumberReader(new InputStreamReader(mPIn));
-            } catch (IOException e) {
-                cancel(true);
-            }
-
-        }
-
-        public void stop() {
-            Process p = mProcess;
-            if (p != null) {
-                p.destroy();
-            }
-            cancel(true);
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            try {
-            	ArrayList<String> commandLine = new ArrayList<String>();
-                //commandLine.add("su");
-                //commandLine.add("-c");
-                commandLine.add("ping");
-                commandLine.add(params[0]);
-
-                mProcess = Runtime.getRuntime().exec(commandLine.toArray(new String[0]));
-
-                try {
-                    InputStream in = mProcess.getInputStream();
-                    OutputStream out = mProcess.getOutputStream();
-                    byte[] buffer = new byte[1024];
-                    int count;
-
-                    // in -> buffer -> mPOut -> mReader -> 1 line of ping information to parse
-                    while ((count = in.read(buffer)) != -1) {
-                        mPOut.write(buffer, 0, count);
-                        publishProgress();
-                    }
-                    out.close();
-                    in.close();
-                    mPOut.close();
-                    mPIn.close();
-                } finally {
-                    mProcess.destroy();
-                    mProcess = null;
-                }
-            } catch (IOException e) {
-            }
-            return null;
-        }
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            try {
-                // Is a line ready to read from the "ping" command?
-                while (mReader.ready()) {
-                    List<String> res=new ArrayList<String>();
-                    String text=mReader.readLine();
-                    res.add(text);
-                	onEvent("ping", res);
-                }
-            } catch (IOException t) {
-            	t.printStackTrace();
-            }
-        }
-    }
 	
 	class TracerouteTask extends AsyncTask<String, Void, Void> {
         PipedOutputStream mPOut;
