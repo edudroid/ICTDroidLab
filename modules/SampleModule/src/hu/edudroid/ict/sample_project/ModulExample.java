@@ -1,7 +1,7 @@
 package hu.edudroid.ict.sample_project;
 
 import hu.edudroid.interfaces.Logger;
-import hu.edudroid.interfaces.ModuleBase;
+import hu.edudroid.interfaces.Module;
 import hu.edudroid.interfaces.ModuleTimerListener;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginCollection;
@@ -14,8 +14,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ModulExample extends ModuleBase implements PluginEventListener, PluginResultListener, ModuleTimerListener {
+public class ModulExample extends Module implements PluginEventListener, PluginResultListener, ModuleTimerListener {
 	
+	public ModulExample(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice) {
+		super(prefs, logger, pluginCollection, timeservice);
+	}
+
 	private static final String 	TAG			 	= "ModuleExample";
 
 	private List<Long> answersForScanning=new ArrayList<Long>();
@@ -24,13 +28,8 @@ public class ModulExample extends ModuleBase implements PluginEventListener, Plu
 	
 	private Plugin plugin2;
 	
-	public ModulExample() {
-		super();
-	}
-	
 	@Override
-	public void init(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice){
-		super.init(prefs, logger, pluginCollection, timeservice);
+	public void init(){
 		answersForScanning.clear();
 		answersForPing.clear();
 		answersForTraceroute.clear();
@@ -81,11 +80,6 @@ public class ModulExample extends ModuleBase implements PluginEventListener, Plu
 	}
 	
 	@Override
-	public String getModuleName(){
-		return "TestModule";
-	}
-
-	@Override
 	public void onResult(long id, String plugin, String pluginVersion,
 			String methodName, List<String> result) {
 		mLogger.e("REPORT in module", plugin + " " + methodName + " " + result);
@@ -112,10 +106,5 @@ public class ModulExample extends ModuleBase implements PluginEventListener, Plu
 	public void onTimerEvent() {
 		mLogger.e("TIMER in module", "timer event");
 		this.run();		
-	}
-
-	@Override
-	public String getEventListenerName() {
-		return this.getModuleName();
 	}
 } 

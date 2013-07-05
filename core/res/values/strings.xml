@@ -21,5 +21,7 @@
     <string name="placeholder">PLACEHOLDER</string>
     <string name="enabled">Enabled</string>
     <string name="run">Run</string>
-
+    <string name="load">Load</string>
+    <string name="loaded">Loaded</string>
+    
 </resources>

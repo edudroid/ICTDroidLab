@@ -5,9 +5,10 @@
     android:orientation="vertical"
     tools:context=".PluginListActivity" >
 
-    <Button
-        android:id="@+id/runAllModulesButton"
+    <ListView
+        android:id="@+id/moduleList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/runAllModules" />
+        android:layout_height="wrap_content" >
+    </ListView>
+
 </LinearLayout>

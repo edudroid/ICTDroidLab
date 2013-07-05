@@ -11,7 +11,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -182,17 +181,9 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 			mEventListeners.put(eventName, listeners);
 			mBroadcast.registerEventListener(this);
 		}
-		if(listeners.size()==0){
+		if (!listeners.contains(listener)) {
 			listeners.add(listener);
 		}
-		else{
-			for(PluginEventListener listIter : listeners){
-				if(!listIter.getEventListenerName().equals(listener.getEventListenerName())){
-					listeners.add(listener);
-				}
-			}
-		}
-		
 	}
 
 	@Override
@@ -205,10 +196,5 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 		else{
 			Log.e("PluginAdapter","No listeners for this event... Cannot unregister");
 		}
-	}
-
-	@Override
-	public String getEventListenerName() {
-		return this.mName;
 	}
 }

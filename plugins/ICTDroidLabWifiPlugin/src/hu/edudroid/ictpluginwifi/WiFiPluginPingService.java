@@ -44,7 +44,6 @@ public class WiFiPluginPingService extends Service {
 		final int pcount=intent.getExtras().getInt("count");
 		
 		pingCount=pcount;
-		boolean quit=false;
 		
 		List<String> commandLine=new ArrayList<String>();
 		commandLine.add("ping");

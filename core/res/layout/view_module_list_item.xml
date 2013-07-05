@@ -11,15 +11,16 @@
         android:layout_weight="1"
         android:text="@string/placeholder" />
 
-    <CheckBox
-        android:id="@+id/moduleEnabledBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
     <Button
-        android:id="@+id/runModuleButton"
+        android:id="@+id/loadModuleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/run" />
+        android:text="@string/load" />
+
+    <TextView
+        android:id="@+id/loadedLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loaded" />
 
 </LinearLayout>
