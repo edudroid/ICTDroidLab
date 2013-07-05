@@ -16,7 +16,7 @@ public class ModuleLoader {
 	private static final String TAG = "ModuleLoader";
 	private static final String MODULE_SHARED_PREFS = "ModulePrefs";
 	
-	private static Module loadModule(String jarName, String className, Context context) {
+	public static Module loadModule(String jarName, String className, Context context) {
 		Log.i(TAG, "Loading module " + className + " from file " + jarName);
 		String dexOptimizedFolder = context.getFilesDir().getAbsolutePath();
 		File dexedJavaFile = AssetReader.copyAssetToInternalStorage(jarName, context);
@@ -45,14 +45,5 @@ public class ModuleLoader {
 			e.printStackTrace();
 		}
 		return null;
-	}
-	
-	public static void runModule(String jarName, String className, Context context){
-		try {
-			Module module = loadModule(jarName, className, context);
-			//module.run();
-		} catch (NullPointerException e) {
-			
-		}
 	}
 }

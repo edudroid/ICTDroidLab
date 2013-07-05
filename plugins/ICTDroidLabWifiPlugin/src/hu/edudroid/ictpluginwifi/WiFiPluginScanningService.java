@@ -1,13 +1,6 @@
 package hu.edudroid.ictpluginwifi;
 import hu.edudroid.interfaces.Constants;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.io.OutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -21,9 +14,7 @@ import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.Toast;
 
 public class WiFiPluginScanningService extends Service {
@@ -35,7 +26,7 @@ public class WiFiPluginScanningService extends Service {
 	
 	private Context mContext;
 	
-	private void reportResult(long callId, String versionCode, String methodName, String method, List<String> result) {
+	private void reportResult(long callId, String methodName, String versionCode, String method, List<String> result) {
 		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER);
 		intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, callId);
 		intent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, methodName);
@@ -61,7 +52,7 @@ public class WiFiPluginScanningService extends Service {
     	final int delay=Integer.parseInt(intent.getExtras().getString("delay"));
     	final int periodicity=Integer.parseInt(intent.getExtras().getString("periodicity"));
     	final int count=Integer.parseInt(intent.getExtras().getString("count"));
-    	final long callId=Long.parseLong(intent.getExtras().getString("callId"));
+    	final long callId=Long.parseLong(intent.getExtras().getString(Constants.INTENT_EXTRA_CALL_ID));
     	
 		try{
 			BroadcastReceiver wifi_scan = new BroadcastReceiver()
@@ -102,7 +93,7 @@ public class WiFiPluginScanningService extends Service {
 			    		
 			            List<String> res=new ArrayList<String>();
 			            res.add(wifiScanningResult);
-			            reportResult(callId, "v1.0", "WiFi Plugin", "scanning", res);
+			            reportResult(callId, "WiFi Plugin", "v1.0", "scanning", res);
 	            	}
 	            	scanned=true;
 				}

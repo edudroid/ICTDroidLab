@@ -22,11 +22,10 @@ public class CoreService extends Service {
 	}
 	
 	@Override
-    public void onStart(Intent intent, int startId) {
-        Log.e(TAG,"Service has been started!");
-        
+    public void onStart(Intent intent, int startId) {        
         //Plugin -> PluginPollingBroadcast
-        mBroadcast = PluginPollingBroadcast.getInstance();
+        
+		mBroadcast = PluginPollingBroadcast.getInstance();
 		registerReceiver(mBroadcast, new IntentFilter(Constants.INTENT_ACTION_DESCRIBE));
 		registerReceiver(mBroadcast, new IntentFilter(Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER));
 		registerReceiver(mBroadcast, new IntentFilter(Constants.INTENT_ACTION_PLUGIN_EVENT));
@@ -36,12 +35,7 @@ public class CoreService extends Service {
 		mBroadcast.registerPluginDetailsListener(mPluginCollection);
 		
         Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
-		sendBroadcast(mIntent);
-		//ModuleLoader.runModule("none", "SampleModule.jar", this);
-		Log.e(TAG, "Modules not started");
-		
-        Log.e(TAG, "Ready...");
-        
+		sendBroadcast(mIntent);        
     }
 
 }

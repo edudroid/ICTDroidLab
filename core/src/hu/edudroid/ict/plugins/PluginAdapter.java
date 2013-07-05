@@ -11,7 +11,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -137,7 +136,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	@Override
 	public void onResult(long id, String plugin, String pluginVersion,
 			String methodName, List<String> result) {
-		try{	
+		try{
 			mCallBackIdentification.remove(id).onResult(id, plugin, pluginVersion, methodName, result);
 		} catch(NullPointerException e){
 			e.printStackTrace();
