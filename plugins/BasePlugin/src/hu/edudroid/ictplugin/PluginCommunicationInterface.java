@@ -1,5 +1,6 @@
 package hu.edudroid.ictplugin;
 
+import hu.edudroid.interfaces.AsyncMethodException;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 
@@ -12,6 +13,7 @@ import java.util.List;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 public  abstract class PluginCommunicationInterface extends BroadcastReceiver {
 	
@@ -51,7 +53,11 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver {
 				try {
 					List<String> result = plugin.callMethodSync(callId, methodName, Arrays.asList(params));
 					reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, plugin, methodName, result, context);
-				} catch (Exception e) {
+				} 
+				catch (AsyncMethodException a){
+					Log.i("Async method call","handled");
+				}
+				catch (Exception e) {
 					List<String> result = new ArrayList<String>();
 					result.add(e.getMessage());
 					reportResult(callId, Constants.INTENT_EXTRA_VALUE_ERROR, plugin, methodName, result, context);

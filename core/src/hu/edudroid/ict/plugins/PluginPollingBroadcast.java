@@ -135,7 +135,6 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 	public void notifyEventListener(String plugin, String version, String eventName, List<String> extras){
 		for (PluginEventListener listener : mPluginEventListeners){
 			listener.onEvent(plugin, version, eventName, extras);
-			Log.e("PluginPolling","event sent from: "+plugin+" "+eventName);
 		}
 	}
 

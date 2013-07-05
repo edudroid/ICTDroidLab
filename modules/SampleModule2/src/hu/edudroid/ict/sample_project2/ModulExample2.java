@@ -17,10 +17,6 @@ import java.util.List;
 public class ModulExample2 extends ModuleBase implements PluginEventListener, PluginResultListener, ModuleTimerListener {
 	
 	private static final String 	TAG			 	= "ModuleExample2";
-
-	private List<Long> answersForScanning=new ArrayList<Long>();
-	private List<Long> answersForPing=new ArrayList<Long>();
-	private List<Long> answersForTraceroute=new ArrayList<Long>();
 	
 	private Plugin plugin2;
 	
@@ -31,24 +27,18 @@ public class ModulExample2 extends ModuleBase implements PluginEventListener, Pl
 	@Override
 	public void init(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice){
 		super.init(prefs, logger, pluginCollection, timeservice);
-		answersForScanning.clear();
-		answersForPing.clear();
-		answersForTraceroute.clear();
 		
 		//mTimeService.runAt(0,this);
-		mTimeService.runPeriodic(1000, 10000, 2, this);
+		mTimeService.runPeriodic(5000, 10000, 2, this);
 		
 		plugin2  = mPluginCollection.getPluginByName("WiFi Plugin");
-		plugin2.registerEventListener("empty event", this);
-		//plugin2.registerEventListener("scanned networks", this);
-		//plugin2.registerEventListener("ping", this);
-		//plugin2.registerEventListener("traceroute", this);
 		
 	}
 	
 	public void run(){
 		
 		if (plugin2 != null) {
+			/*
 			plugin2.callMethodAsync("getBSSID", Arrays.asList(new Object[]{"empty"}),this);
 			plugin2.callMethodAsync("getSSID", Arrays.asList(new Object[]{"empty"}),this);
 			plugin2.callMethodAsync("isHiddenSSID", Arrays.asList(new Object[]{"empty"}),this);
@@ -58,7 +48,7 @@ public class ModulExample2 extends ModuleBase implements PluginEventListener, Pl
 			plugin2.callMethodAsync("getNetworkId", Arrays.asList(new Object[]{"empty"}),this);
 			plugin2.callMethodAsync("getRssi", Arrays.asList(new Object[]{"empty"}),this);
 			plugin2.callMethodAsync("getDescribeContents", Arrays.asList(new Object[]{"empty"}),this);
-			
+			*/
 			/*
 			long callScanId=plugin2.callMethodAsync("scanning", Arrays.asList(new Object[]{"0","10000","1"}),this);
 			answersForScanning.add(callScanId);
@@ -67,11 +57,10 @@ public class ModulExample2 extends ModuleBase implements PluginEventListener, Pl
 			long callPingId=plugin2.callMethodAsync("ping", Arrays.asList(new Object[]{"173.194.39.64","5"}),this);
 			answersForPing.add(callPingId);
 			*/
-			/*
-			long callTracerouteId=plugin2.callMethodAsync("traceroute", Arrays.asList(new Object[]{"127.0.0.1"}),this);
-			answersForTraceroute.add(callTracerouteId);
-			*/
-			//plugin2.unregisterEventListener("scanned networks", this);
+			
+			long callTracerouteId=plugin2.callMethodAsync("traceroute", Arrays.asList(new Object[]{"173.194.39.64"}),this);
+			
+			mLogger.e("traceroute callID:", String.valueOf(callTracerouteId));
 			
 			
 		} else {
@@ -88,7 +77,7 @@ public class ModulExample2 extends ModuleBase implements PluginEventListener, Pl
 	@Override
 	public void onResult(long id, String plugin, String pluginVersion,
 			String methodName, List<String> result) {
-		mLogger.e("REPORT in module: "+getModuleName(), plugin + " " + methodName + " " + result);
+		mLogger.e("REPORT in module: "+getModuleName(), id+" " +plugin + " " + methodName + " " + result);
 	}
 
 

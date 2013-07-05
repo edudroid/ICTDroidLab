@@ -27,42 +27,22 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class WiFiPluginScanningService extends Service {
-	private static long mEventID=0;
 	
 	private WifiManager mWifiManager;
-	
-	TracerouteTask mTracerouteTask;
 	
 	private Timer t;
 	private TimerTask ttask;
 	
-	public void onEvent(String eventName, List<String> params) {
-		List<String> result = new ArrayList<String>();
-		if(eventName.equals("empty event")){
-			result.add("This ");
-			result.add("is ");
-			result.add("an ");
-			result.add("empty ");
-			result.add("event");
-		}
-		if(eventName.equals("scanned networks")){
-			result.addAll(params);
-		}
-		if(eventName.equals("ping")){
-			result.addAll(params);
-		}
-		if(eventName.equals("traceroute")){
-			result.addAll(params);
-		}
-		
-		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_EVENT);
-		intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, mEventID++);
-		intent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, "WiFi Plugin");
-		intent.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, "v1.0");
-		intent.putExtra(Constants.INTENT_EXTRA_KEY_EVENT_NAME, eventName);
+	private Context mContext;
+	
+	private void reportResult(long callId, String versionCode, String methodName, String method, List<String> result) {
+		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER);
+		intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, callId);
+		intent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, methodName);
+		intent.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, versionCode);
+		intent.putExtra(Constants.INTENT_EXTRA_METHOD_NAME, method);
 		intent.putStringArrayListExtra(Constants.INTENT_EXTRA_VALUE_RESULT, new ArrayList<String>(result));
-		this.sendBroadcast(intent);
-		
+		mContext.sendBroadcast(intent);
 	}
 	
 	@Override
@@ -74,12 +54,14 @@ public class WiFiPluginScanningService extends Service {
 	@Override
     public void onStart(Intent intent, int startId) {
 		
+		mContext=this.getApplicationContext();
+		
 		mWifiManager = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 		
-    	final int delay=intent.getExtras().getInt("delay");
-    	final int periodicity=intent.getExtras().getInt("periodicity");
-    	final int count=intent.getExtras().getInt("count");
-    	final long callId=intent.getExtras().getLong("callId");
+    	final int delay=Integer.parseInt(intent.getExtras().getString("delay"));
+    	final int periodicity=Integer.parseInt(intent.getExtras().getString("periodicity"));
+    	final int count=Integer.parseInt(intent.getExtras().getString("count"));
+    	final long callId=Long.parseLong(intent.getExtras().getString("callId"));
     	
 		try{
 			BroadcastReceiver wifi_scan = new BroadcastReceiver()
@@ -119,9 +101,8 @@ public class WiFiPluginScanningService extends Service {
 			    		}
 			    		
 			            List<String> res=new ArrayList<String>();
-			            res.add(String.valueOf(callId));
 			            res.add(wifiScanningResult);
-			            onEvent("scanned networks", res);
+			            reportResult(callId, "v1.0", "WiFi Plugin", "scanning", res);
 	            	}
 	            	scanned=true;
 				}
@@ -160,83 +141,5 @@ public class WiFiPluginScanningService extends Service {
 			return "ENABLED";
 		}
 		return "none";
-	}
-	
-	class TracerouteTask extends AsyncTask<String, Void, Void> {
-        PipedOutputStream mPOut;
-        PipedInputStream mPIn;
-        LineNumberReader mReader;
-        Process mProcess;
-        @Override
-        protected void onPreExecute() {
-            mPOut = new PipedOutputStream();
-            try {
-                mPIn = new PipedInputStream(mPOut);
-                mReader = new LineNumberReader(new InputStreamReader(mPIn));
-            } catch (IOException e) {
-                cancel(true);
-            }
-
-        }
-
-        public void stop() {
-            Process p = mProcess;
-            if (p != null) {
-                p.destroy();
-            }
-            cancel(true);
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            try {
-            	ArrayList<String> commandLine = new ArrayList<String>();
-                commandLine.add("su");
-                commandLine.add("-c");
-                commandLine.add("traceroute");
-                commandLine.add(params[0]);
-
-                mProcess = Runtime.getRuntime().exec(commandLine.toArray(new String[0]));
-
-                try {
-                    InputStream in = mProcess.getInputStream();
-                    OutputStream out = mProcess.getOutputStream();
-                    byte[] buffer = new byte[1024];
-                    int count;
-
-                    // in -> buffer -> mPOut -> mReader -> 1 line of ping information to parse
-                    while ((count = in.read(buffer)) != -1) {
-                        mPOut.write(buffer, 0, count);
-                        publishProgress();
-                    }
-                    out.close();
-                    in.close();
-                    mPOut.close();
-                    mPIn.close();
-                } finally {
-                    mProcess.destroy();
-                    mProcess = null;
-                }
-            } catch (IOException e) {
-            }
-            return null;
-        }
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            try {
-                // Is a line ready to read from the "traceroute" command?
-                while (mReader.ready()) {
-                    List<String> res=new ArrayList<String>();
-                    String text=mReader.readLine();
-                    res.add(text);
-                	onEvent("traceroute", res);
-                }
-            } catch (IOException t) {
-            	t.printStackTrace();
-            }
-        }
-    }
-		
-		
-	
+	}	
 }

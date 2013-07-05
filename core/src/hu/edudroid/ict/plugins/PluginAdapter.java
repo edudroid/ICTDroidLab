@@ -162,7 +162,6 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 				for (PluginEventListener listener : listeners) {
 					try {
 						listener.onEvent(plugin, version, eventName, extras);
-						Log.e("PluginAdapter","event sent from: "+plugin+" "+eventName);
 					} catch (Exception e) {
 						e.printStackTrace();
 						Log.e(TAG, "Error occured while processing plugin event " + e.getMessage());
