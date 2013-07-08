@@ -17,6 +17,9 @@ import android.os.IBinder;
 public class WiFiPluginPingService extends Service {
 
 	private Context mContext;
+	public static final String PLUGIN_NAME="WiFi Plugin";
+	public static final String PING_METHOD_NAME="ping";
+	public static final String VERSION_CODE="v1.0";
 	
 	private void reportResult(long callId, String methodName, String versionCode, String method, List<String> result) {
 		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER);
@@ -52,7 +55,7 @@ public class WiFiPluginPingService extends Service {
                     }
                     lineCount--;
                 }
-                reportResult(callId, "WiFi Plugin", "v1.0", "ping", res);
+                reportResult(callId, PLUGIN_NAME, VERSION_CODE, PING_METHOD_NAME, res);
                 reader.close();
             } catch (IOException e) {
                 e.printStackTrace();

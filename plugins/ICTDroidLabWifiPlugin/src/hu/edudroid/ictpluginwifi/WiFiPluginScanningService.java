@@ -20,6 +20,9 @@ import android.widget.Toast;
 public class WiFiPluginScanningService extends Service {
 	
 	private WifiManager mWifiManager;
+	public static final String PLUGIN_NAME="WiFi Plugin";
+	public static final String SCAN_METHOD_NAME="scanned networks";
+	public static final String VERSION_CODE="v1.0";
 	
 	private Timer t;
 	private TimerTask ttask;
@@ -93,7 +96,7 @@ public class WiFiPluginScanningService extends Service {
 			    		
 			            List<String> res=new ArrayList<String>();
 			            res.add(wifiScanningResult);
-			            reportResult(callId, "WiFi Plugin", "v1.0", "scanning", res);
+			            reportResult(callId, PLUGIN_NAME, VERSION_CODE, SCAN_METHOD_NAME, res);
 	            	}
 	            	scanned=true;
 				}

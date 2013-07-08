@@ -53,6 +53,8 @@
         
         <service android:name=".GCMIntentService" />
         
+        <service android:name="UploadService"></service>
+        
         <service 
             android:name="hu.edudroid.ict.CoreService"
             android:label="@string/core_service_name" />

@@ -11,6 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/runAllModules" />
+    
+    <Button
+        android:id="@+id/uploadManual"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/uploadManual" />
 
     <LinearLayout
         android:id="@+id/plugin_count"

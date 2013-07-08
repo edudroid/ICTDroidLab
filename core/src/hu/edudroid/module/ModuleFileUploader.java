@@ -10,7 +10,6 @@ import android.util.Log;
 
 public class ModuleFileUploader extends AsyncTask<String, Void, Boolean> {
 
-	// TODO átírni az URL-t
 	private static final String	URL				= "http://innoid.hu/CellInfo/fileupload.php";
 	private static final String	KEY_MODULNAME	= "modulename";
 	private static final String	KEY_DEVICE_ID	= "deviceid";
