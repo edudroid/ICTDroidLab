@@ -8,19 +8,16 @@ import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.module.ModuleLoader;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends Activity implements PluginListener,
 		OnClickListener, OnItemClickListener {
@@ -67,8 +64,6 @@ public class MainActivity extends Activity implements PluginListener,
 		
 		ArrayList<Plugin> plugins=mPluginCollection.getAllPlugins();
 		
-		Log.e("Plugin number:",String.valueOf(plugins.size()));
-		
 		for(int i=0;i<plugins.size();i++){
 			this.newPlugin(plugins.get(i));
 		}
@@ -77,7 +72,6 @@ public class MainActivity extends Activity implements PluginListener,
 	@Override
 	public boolean newPlugin(Plugin plugin){
 		try{
-			Log.e("MainActivity","Adding new plugin "+plugin.getName());
 			mAdapter.addPlugin(plugin);
 	
 			findViewById(R.id.no_plugins).setVisibility(View.GONE);
@@ -122,13 +116,6 @@ public class MainActivity extends Activity implements PluginListener,
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		Plugin plugin = mAdapter.getItem(arg2);
-		List<String> methodNames = plugin.getMethodNames();
-		for(String methodName : methodNames){
-			Log.e("Methods for this plugin:", methodName);
-		}
-		
-		Toast.makeText(this,"PluginName:"+mAdapter.getItem(arg2).getName(), Toast.LENGTH_SHORT).show();
 		Intent mIntent=new Intent(this,PluginDetailsActivity.class);
 		mIntent.putExtra("pluginName", mAdapter.getItem(arg2).getName());
 		startActivity(mIntent);

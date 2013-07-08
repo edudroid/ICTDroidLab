@@ -172,6 +172,7 @@ public class UploadService extends IntentService {
 				return;
 			}
 			
+			
 			// Check WiFi availability
 			WifiManager manager = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 			WifiInfo info = manager.getConnectionInfo();
@@ -180,6 +181,7 @@ public class UploadService extends IntentService {
 				return;
 			}
 			String ssid = info.getSSID();
+			
 			//String preferredSSID = prefs.getString(MeasurementUploaderActivity.PREFERRED_SSID, null);
 			String preferredSSID="BME";
 			if (manager.getWifiState() != WifiManager.WIFI_STATE_ENABLED) { 
@@ -193,6 +195,7 @@ public class UploadService extends IntentService {
 					return;
 				}
 			}
+			
 			upload(this);
 		}
 	}

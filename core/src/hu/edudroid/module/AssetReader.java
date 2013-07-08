@@ -6,13 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import android.content.Context;
-import android.util.Log;
 
 public class AssetReader {
-	private static final String TAG = "AssetReader";
 	
 	public static File copyAssetToInternalStorage(String assetPath, Context context) {
-		Log.i(TAG, "Copying asset " + assetPath);
     	File outFile = new File(context.getFilesDir(),assetPath);
 
 	    try {

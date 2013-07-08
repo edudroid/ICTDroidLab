@@ -17,13 +17,11 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
 public class PluginAdapter implements OnClickListener, Plugin, PluginResultListener, PluginEventListener {
 
-	private static final String TAG = "PluginAdapter";
 	private final String					mName;
 	private final String					mAuthor;
 	private final String					mDescription;
@@ -163,12 +161,9 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 						listener.onEvent(plugin, version, eventName, extras);
 					} catch (Exception e) {
 						e.printStackTrace();
-						Log.e(TAG, "Error occured while processing plugin event " + e.getMessage());
 					}
 				}
 			}
-		} else {
-			Log.w(TAG, "Event from other plugin " + plugin + " at adapter for " + getName());
 		}
 	}
 
@@ -199,9 +194,6 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 		List<PluginEventListener> listeners = mEventListeners.get(eventName);
 		if(listeners!=null){
 			listeners.remove(listener);
-		}
-		else{
-			Log.e("PluginAdapter","No listeners for this event... Cannot unregister");
 		}
 	}
 

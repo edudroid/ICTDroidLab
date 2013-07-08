@@ -5,8 +5,6 @@ import hu.edudroid.interfaces.PluginCollection;
 
 import java.util.ArrayList;
 
-import android.util.Log;
-
 public class AndroidPluginCollection implements PluginCollection, PluginListener {
 
 	private static AndroidPluginCollection	mInstance	= null;
@@ -27,9 +25,7 @@ public class AndroidPluginCollection implements PluginCollection, PluginListener
 	}
 	
 	public Plugin getPluginByHashcode(final int hash){
-		Log.e("PLUGIN", "# of plugins = " + mPlugins.size());
 		for (int i = 0; i < mPlugins.size(); i++){
-			Log.e("PLUGIN", "(" + i + ") hash: " + mPlugins.get(i).hashCode());
 			if (mPlugins.get(i).hashCode() == hash)
 				return mPlugins.get(i);
 		}
