@@ -34,15 +34,10 @@ public class ModulExample extends Module implements PluginEventListener, PluginR
 		answersForPing.clear();
 		answersForTraceroute.clear();
 		
-		//mTimeService.runAt(0,this);
 		mTimeService.runPeriodic(1000, 10000, 2, this);
 		
 		plugin2  = mPluginCollection.getPluginByName("WiFi Plugin");
-		//plugin2.registerEventListener("empty event", this);
-		//plugin2.registerEventListener("scanned networks", this);
 		plugin2.registerEventListener("ping", this);
-		//plugin2.registerEventListener("traceroute", this);
-		
 	}
 	
 	public void run(){

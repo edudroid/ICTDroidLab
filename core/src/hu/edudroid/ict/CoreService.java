@@ -195,17 +195,19 @@ public class CoreService extends Service {
 		try {
 			Class<?> dexLoadedClass = dexLoader.loadClass(className);
 			Module module = null; 
+			Log.e(TAG,"Retrieving constructor");
 			Constructor<Module> constructor = (Constructor<Module>) dexLoadedClass.getConstructor(Preferences.class, Logger.class, PluginCollection.class, TimeServiceInterface.class);
 			if (constructor == null) {
 				throw new NoSuchMethodException("Couldn't find proper consturctor.");
 			}
 			PluginCollection pluginCollection = AndroidPluginCollection.getInstance();
 			TimeServiceInterface timeservice = ModuleTimeService.getInstance();
-			constructor.newInstance(new SharedPrefs(this, className),
+			Log.e(TAG,"Calling constructor");
+			module = constructor.newInstance(new SharedPrefs(this, className),
 					new AndroidLogger(),
 					pluginCollection,
 					timeservice);
-			Log.e("Module init","ready");
+			Log.e(TAG,"Module init ready " + module);
 			return module;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
