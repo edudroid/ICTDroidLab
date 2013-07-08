@@ -1,29 +1,27 @@
 package hu.edudroid.ict.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import hu.edudroid.ict.CoreService;
 import hu.edudroid.ict.R;
-
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginListener;
 import hu.edudroid.ict.plugins.PluginMethod;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
-import hu.edudroid.module.ModuleLoader;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class PluginListActivity extends Activity implements PluginListener,
 		OnClickListener, OnItemClickListener {

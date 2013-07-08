@@ -1,17 +1,5 @@
 package hu.edudroid.ict;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import dalvik.system.DexClassLoader;
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginPollingBroadcast;
 import hu.edudroid.interfaces.Constants;
@@ -24,12 +12,26 @@ import hu.edudroid.interfaces.TimeServiceInterface;
 import hu.edudroid.module.AndroidLogger;
 import hu.edudroid.module.ModuleTimeService;
 import hu.edudroid.module.SharedPrefs;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
+import dalvik.system.DexClassLoader;
 
 public class CoreService extends Service {
 	
@@ -203,7 +205,7 @@ public class CoreService extends Service {
 			TimeServiceInterface timeservice = ModuleTimeService.getInstance();
 			Log.e(TAG,"Calling constructor");
 			module = constructor.newInstance(new SharedPrefs(this, className),
-					new AndroidLogger(),
+					new AndroidLogger(className),
 					pluginCollection,
 					timeservice);
 			Log.e(TAG,"Module init ready " + module);

@@ -25,14 +25,9 @@ public class ModulExample extends Module implements PluginEventListener, PluginR
 	
 	@Override
 	public void init(){
-		answersForScanning.clear();
-		answersForPing.clear();
-		answersForTraceroute.clear();
-		
 		mTimeService.runPeriodic(1000, 10000, 2, this);
-		
 		plugin2  = mPluginCollection.getPluginByName("WiFi Plugin");
-		//plugin2.registerEventListener("empty event", this);		
+		plugin2.registerEventListener("empty event", this);		
 	}
 	
 	public void run(){
@@ -68,29 +63,29 @@ public class ModulExample extends Module implements PluginEventListener, PluginR
 	@Override
 	public void onResult(long id, String plugin, String pluginVersion,
 			String methodName, List<String> result) {
-		mLogger.e("REPORT in module: "+getModuleName(), id+" " + plugin + " " + methodName + " " + result);
+		mLogger.e(TAG, id+" " + plugin + " " + methodName + " " + result);
 	}
 
 
 	@Override
 	public void onError(long id, String plugin, String pluginVersion, String methodName,
 			String errorMessage) {
-		mLogger.e("ERROR in module: "+getModuleName(), plugin + " " + methodName + " " + errorMessage);
+		mLogger.e(TAG, plugin + " " + methodName + " " + errorMessage);
 	}
 
 	@Override
 	public void onEvent(String plugin, String version, String eventName, List<String> extras) {
-		mLogger.e("EVENT in module: "+getModuleName(), eventName +" size: " +extras.size());
+		mLogger.e(TAG, eventName +" size: " +extras.size());
 		
 		for(int i=0;i<extras.size();i++){
-			mLogger.e("Result:", extras.get(i));
+			mLogger.e(TAG, extras.get(i));
 		}
 		
 	}
 
 	@Override
 	public void onTimerEvent() {
-		mLogger.e("TIMER in module: "+getModuleName(), "timer event");
+		mLogger.e(TAG, "timer event");
 		this.run();		
 	}
 } 

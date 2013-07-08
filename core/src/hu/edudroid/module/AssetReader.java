@@ -6,8 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import android.content.Context;
+import android.util.Log;
 
 public class AssetReader {
+	
+	private static final String TAG = "AssetReader";
 	
 	/**
 	 * Copy a file to the destination folder
