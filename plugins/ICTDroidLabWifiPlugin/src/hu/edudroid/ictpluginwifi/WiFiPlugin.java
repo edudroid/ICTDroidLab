@@ -2,6 +2,7 @@ package hu.edudroid.ictpluginwifi;
 
 import hu.edudroid.ictplugin.PluginCommunicationInterface;
 import hu.edudroid.interfaces.AsyncMethodException;
+import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginResultListener;
@@ -161,7 +162,7 @@ public class WiFiPlugin extends PluginCommunicationInterface implements Plugin {
 	public void callingServiceMethod(long callId, Class<?> c, Map<String, String> extras) throws AsyncMethodException{
 		
 		Intent serviceIntent=new Intent(this.mContext,c);
-		serviceIntent.putExtra("callId", String.valueOf(callId));
+		serviceIntent.putExtra(Constants.INTENT_EXTRA_CALL_ID, String.valueOf(callId));
 		for (Map.Entry<String, String> entry : extras.entrySet()) {
 			serviceIntent.putExtra(entry.getKey(), entry.getValue());		    
 		}

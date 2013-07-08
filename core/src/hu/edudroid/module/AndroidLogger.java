@@ -15,7 +15,6 @@ public class AndroidLogger implements Logger {
 		this.mModule = module;
 		this.mJarName = jarName;
 		this.mClassName = className;
-		Log.e("Android Logger created:",mModule.getModuleName()+ " " +mJarName+ " " +mClassName);
 	}
 	
 	@Override

@@ -1,16 +1,11 @@
 package hu.edudroid.ictpluginwifi;
 
 import hu.edudroid.interfaces.Constants;
-import hu.edudroid.interfaces.Plugin;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.io.OutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,13 +13,12 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
 
 public class WiFiPluginTracerouteService extends Service {
 	
 	private Context mContext;
 	
-	private void reportResult(long callId, String versionCode, String methodName, String method, List<String> result) {
+	private void reportResult(long callId, String methodName, String versionCode, String method, List<String> result) {
 		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER);
 		intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, callId);
 		intent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, methodName);
@@ -51,11 +45,11 @@ public class WiFiPluginTracerouteService extends Service {
                 while (line != null) {
                     line = reader.readLine();
                     if(line!=null){
-                    	res.add(line);
+                    	res.add(line+"\n");
                     }
                 }
                 
-                reportResult(callId, "v1.0", "WiFi Plugin", "traceroute", res);
+                reportResult(callId, "WiFi Plugin", "v1.0", "traceroute", res);
                 
                 reader.close();
             } catch (IOException e) {
@@ -70,7 +64,7 @@ public class WiFiPluginTracerouteService extends Service {
 		mContext=this.getApplicationContext();
 		
 		final String ip=intent.getExtras().getString("ip");
-		final long callId=Long.parseLong(intent.getExtras().getString("callId"));
+		final long callId=Long.parseLong(intent.getExtras().getString(Constants.INTENT_EXTRA_CALL_ID));
 		
 		List<String> commandLine=new ArrayList<String>();
 		commandLine.add("su");
@@ -88,8 +82,6 @@ public class WiFiPluginTracerouteService extends Service {
         } catch(Exception e){
         	e.printStackTrace();
         }
-        	
-
 	}
 
 	@Override

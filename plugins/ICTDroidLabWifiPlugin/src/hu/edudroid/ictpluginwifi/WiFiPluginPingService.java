@@ -13,13 +13,12 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
 
 public class WiFiPluginPingService extends Service {
 
 	private Context mContext;
 	
-	private void reportResult(long callId, String versionCode, String methodName, String method, List<String> result) {
+	private void reportResult(long callId, String methodName, String versionCode, String method, List<String> result) {
 		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER);
 		intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, callId);
 		intent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, methodName);
@@ -46,14 +45,14 @@ public class WiFiPluginPingService extends Service {
                 String line = reader.readLine();
                 List<String> res = new ArrayList<String>();
                 res.add(String.valueOf(callId));
-                while (lineCount>0 && line != null) {
+                while (lineCount>-1 && line != null) {
                     line = reader.readLine();
                     if(line!=null){
-                    	res.add(line);
+                    	res.add(line+"\n");
                     }
                     lineCount--;
                 }
-                reportResult(callId, "v1.0", "WiFi Plugin", "ping", res);
+                reportResult(callId, "WiFi Plugin", "v1.0", "ping", res);
                 reader.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -68,7 +67,7 @@ public class WiFiPluginPingService extends Service {
 		
 		final String ip=intent.getExtras().getString("ip");
 		final int pcount=Integer.parseInt(intent.getExtras().getString("count"));
-		final long callId=Long.parseLong(intent.getExtras().getString("callId"));
+		final long callId=Long.parseLong(intent.getExtras().getString(Constants.INTENT_EXTRA_CALL_ID));
 		
 		List<String> commandLine=new ArrayList<String>();
 		commandLine.add("ping");
