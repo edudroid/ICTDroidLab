@@ -5,7 +5,8 @@
 		$userName = $_SESSION["userName"];
 	}
 	if ($userName != NULL) {
-		$deviceName = $_POST['deviceName'];
+		# $deviceName = $_POST['deviceName'];
+		$deviceName = "ICTDroidLab";
 		# TODO Get device's key from
 		if ($_FILES['userFile']['error'] > 0) {
 			echo '{ error: ' . $_FILES['userFile']['error'] . '<br>';
@@ -15,7 +16,7 @@
 			echo 'Size: ' . ($_FILES['userFile']['size'] / 1024) . ' kB<br>';
 			// Creates user's upload folder if not exists
 			$uploadFolderPath = 'upload/' . $userName; 
-			$storageFile = $uploadFolderPath . '/' . $_FILES['file']['name'];			
+			$storageFile = $uploadFolderPath . '/' . $_FILES['userFile']['name'];			
 			if (!file_exists('upload/' . $userName)) {
 				mkdir($uploadFolderPath);
 				echo 'Upload folder created';
