@@ -23,7 +23,7 @@ public class UploadService extends IntentService {
 	private static final String LOG_TAG = "UploadService";
 	private static final String TMP_FOLDER = "capture_compressed_tmp";
 	public static final String INPROGRESS_SUFFIX = "inprogress";
-	private static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss_SSS", Locale.getDefault());
+	private static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss_SSS", Locale.UK);
 	
 	public static final File OUTPUT_FOLDER = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/ictdroidlab_log");
 	

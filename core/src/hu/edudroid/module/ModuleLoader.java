@@ -32,7 +32,7 @@ public class ModuleLoader {
 			TimeServiceInterface timeservice = ModuleTimeService.getInstance();
 			dexContent.init(
 					new SharedPrefs(context.getSharedPreferences(MODULE_SHARED_PREFS, Context.MODE_PRIVATE)),
-					new AndroidLogger(dexContent, jarName, className),
+					new AndroidLogger(dexContent),
 					pluginCollection,
 					timeservice);
 			Log.e("Module init","ready");

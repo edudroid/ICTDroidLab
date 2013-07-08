@@ -5,19 +5,14 @@ import hu.edudroid.ict.plugins.PluginListener;
 import hu.edudroid.ict.plugins.PluginMethod;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
-import hu.edudroid.module.AndroidLogger;
 import hu.edudroid.module.ModuleLoader;
 
-import java.io.File;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -53,11 +48,6 @@ public class MainActivity extends Activity implements PluginListener,
 		findViewById(R.id.btn_refresh).setOnClickListener(this);
 		findViewById(R.id.runAllModulesButton).setOnClickListener(this);
 		findViewById(R.id.uploadManual).setOnClickListener(this);
-		
-		AndroidLogger logger = new AndroidLogger(null, null, null);
-		logger.saveLogLine("Task", System.currentTimeMillis(), "hello");
-		logger.saveLogLine("Task", System.currentTimeMillis(), "world");
-		logger.saveLogLine("Task", System.currentTimeMillis(), "!");
 		
 	}
 	

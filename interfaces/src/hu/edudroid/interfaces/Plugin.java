@@ -11,7 +11,7 @@ public interface Plugin {
 	List<String> getAllEvents();
 	List<String> getMethodNames();
 	long callMethodAsync(String method, List<Object> parameters,PluginResultListener listener);
-	List<String> callMethodSync(long callId, String method, List<Object> parameters);
+	List<String> callMethodSync(long callId, String method, List<Object> parameters) throws AsyncMethodException;
 	void registerEventListener(String eventName, PluginEventListener listener);
 	void unregisterEventListener(String eventName, PluginEventListener listener);
 }

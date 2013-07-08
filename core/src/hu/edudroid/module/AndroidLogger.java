@@ -24,35 +24,32 @@ public class AndroidLogger implements Logger {
 	private Date date = new Date();
 	private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss_SSS", Locale.UK);
 	
+	private Module mModule;
 	
 	private HashMap<String, Long> fileStartTimes = new HashMap<String, Long>();
 	private HashMap<String, FileWriter> writers = new HashMap<String, FileWriter>();
 	private String timeLabel;
 	
-	private Module mModule;
-	private String mJarName;
-	private String mClassName;
-	
-	public AndroidLogger(Module module, String jarName, String className){
-		super();
-		this.mModule = module;
-		this.mJarName = jarName;
-		this.mClassName = className;
+	public AndroidLogger(Module module){
+		mModule=module;
 	}
 	
 	@Override
 	public void e(String tag, String message) {
-		Log.e(tag, message);		
+		Log.e(TAG+":"+tag, message);
+		saveLogLine(mModule.getModuleName(), System.currentTimeMillis(), "error: "+message);
 	}
 
 	@Override
 	public void d(String tag, String message) {
-		Log.e(tag, message);
+		Log.d(TAG+":"+tag, message);
+		saveLogLine(mModule.getModuleName(), System.currentTimeMillis(), "debug: "+message);
 	}
 
 	@Override
 	public void i(String tag, String message) {
-		Log.i(tag, message);
+		Log.i(TAG+":"+tag, message);
+		saveLogLine(mModule.getModuleName(), System.currentTimeMillis(), "info: "+message);
 	}
 	
 	public void saveLogLine(String task, long timestamp, String message) {
