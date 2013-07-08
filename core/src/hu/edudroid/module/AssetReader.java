@@ -6,15 +6,30 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import android.content.Context;
+import android.util.Log;
 
 public class AssetReader {
 	
-	public static File copyAssetToInternalStorage(String assetPath, Context context) {
-    	File outFile = new File(context.getFilesDir(),assetPath);
-
+	private static final String TAG = "AssetReader";
+	
+	/**
+	 * Copy a file to the destination folder
+	 * @param assetPath
+	 * @param folder
+	 * @param context
+	 * @return
+	 */
+	public static File copyAsset(String assetPath, File folder, Context context) {
+		Log.i(TAG, "Copying asset " + assetPath);
+		if (assetPath.startsWith("/")) {
+			assetPath = assetPath.substring(1);
+		}
+		String fileName = new File(assetPath).getName();
+		folder.mkdirs();
+    	File outFile = new File(folder, fileName);
 	    try {
-	    	FileOutputStream outStream = context.openFileOutput(assetPath, Context.MODE_PRIVATE);	    	
 	        InputStream in = context.getAssets().open(assetPath);
+	    	FileOutputStream outStream = new FileOutputStream(outFile);	    	
 	        int read;
 	        byte[] buffer = new byte[4096];
 	        while ((read = in.read(buffer)) > 0) {

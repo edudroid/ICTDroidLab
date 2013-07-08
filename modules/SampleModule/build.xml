@@ -2,10 +2,11 @@
 
     <property name="src.dir"     value="src:../../interfaces/src"/>
 
-    <property name="build.dir"   	value="build"/>
-    <property name="classes.dir" 	value="${build.dir}/classes"/>
-    <property name="jar.dir"		value="${build.dir}/jar"/>
-    <property name="core.asset.dir"	value="../../core/assets"/>
+    <property name="build.dir"   			value="build"/>
+    <property name="classes.dir" 			value="${build.dir}/classes"/>
+    <property name="jar.dir"				value="${build.dir}/jar"/>
+    <property name="core.asset.jar_dir"		value="../../core/assets/jars"/>
+    <property name="core.asset.desc_dir"	value="../../core/assets/descriptions"/>
     
 
 
@@ -39,7 +40,7 @@
 	    	<arg value="/c"/>
 	    	<arg value="dextojar.bat"/>
 		</exec>
-        <copy file="${jar.dir}/${ant.project.name}.jar" todir="${core.asset.dir}"/>
+        <copy file="${jar.dir}/${ant.project.name}.jar" todir="${core.asset.jar_dir}"/>
     </target>
 
     <target name="clean-build" depends="clean,jar"/>
