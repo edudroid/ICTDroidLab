@@ -17,13 +17,11 @@ import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
 public class PluginAdapter implements OnClickListener, Plugin, PluginResultListener, PluginEventListener {
 
-	private static final String TAG = "PluginAdapter";
 	private final String					mName;
 	private final String					mAuthor;
 	private final String					mDescription;
@@ -136,7 +134,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	@Override
 	public void onResult(long id, String plugin, String pluginVersion,
 			String methodName, List<String> result) {
-		try{	
+		try{
 			mCallBackIdentification.remove(id).onResult(id, plugin, pluginVersion, methodName, result);
 		} catch(NullPointerException e){
 			e.printStackTrace();
@@ -161,15 +159,11 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 				for (PluginEventListener listener : listeners) {
 					try {
 						listener.onEvent(plugin, version, eventName, extras);
-						Log.e("PluginAdapter","event sent from: "+plugin+" "+eventName);
 					} catch (Exception e) {
 						e.printStackTrace();
-						Log.e(TAG, "Error occured while processing plugin event " + e.getMessage());
 					}
 				}
 			}
-		} else {
-			Log.w(TAG, "Event from other plugin " + plugin + " at adapter for " + getName());
 		}
 	}
 
@@ -192,9 +186,6 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 		List<PluginEventListener> listeners = mEventListeners.get(eventName);
 		if(listeners!=null){
 			listeners.remove(listener);
-		}
-		else{
-			Log.e("PluginAdapter","No listeners for this event... Cannot unregister");
 		}
 	}
 }

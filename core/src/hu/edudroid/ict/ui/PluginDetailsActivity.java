@@ -14,7 +14,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,18 +50,12 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 		textview.setText("Methods defined for "+mPlugin.getName());
 		mBroadcast=PluginPollingBroadcast.getInstance();
 		mBroadcast.registerPluginDetailsListener(this);
-		refreshMethodList();
-	}
-
-	private void refreshMethodList(){
-		Toast.makeText(this, "NOT IMPLEMENTED YET!", Toast.LENGTH_SHORT).show();
 	}
 
 	private void addMethod(PluginMethod method){
 		boolean foundMethodInList=false;
 		for(int i=0;i<mMethods.size();i++){
 			if(mMethods.get(i).mName.equals(method.mName)){
-				Log.e("CORE:PluginDetailsActivity:addMethod","Method already exists in list.");
 				foundMethodInList=true;
 			}
 		}

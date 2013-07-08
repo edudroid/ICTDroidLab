@@ -12,6 +12,12 @@
         android:text="@string/showPlugins" />
     
     <Button
+        android:id="@+id/uploadManual"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/uploadManual" />
+    
+    <Button
         android:id="@+id/showModules"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

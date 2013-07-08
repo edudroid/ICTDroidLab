@@ -11,7 +11,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 public class PluginPollingBroadcast extends BroadcastReceiver {
 
@@ -135,7 +134,6 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 	public void notifyEventListener(String plugin, String version, String eventName, List<String> extras){
 		for (PluginEventListener listener : mPluginEventListeners){
 			listener.onEvent(plugin, version, eventName, extras);
-			Log.e("PluginPolling","event sent from: "+plugin+" "+eventName);
 		}
 	}
 

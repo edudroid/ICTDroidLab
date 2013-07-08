@@ -6,11 +6,9 @@ import java.util.LinkedList;
 import org.apache.http.message.BasicNameValuePair;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.util.Log;
 
 public class ModuleFileUploader extends AsyncTask<String, Void, Boolean> {
 
-	// TODO átírni az URL-t
 	private static final String	URL				= "http://innoid.hu/CellInfo/fileupload.php";
 	private static final String	KEY_MODULNAME	= "modulename";
 	private static final String	KEY_DEVICE_ID	= "deviceid";
@@ -42,10 +40,8 @@ public class ModuleFileUploader extends AsyncTask<String, Void, Boolean> {
 																		logFile);
 				if (response == null || response.equals("Error")) {
 					if (response != null)
-						Log.e("RESPONSE", response);
 					return false;
 				}
-				Log.e("RESPONSE", response);
 				return true;
 			}
 			catch (Exception e){

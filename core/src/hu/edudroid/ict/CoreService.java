@@ -30,7 +30,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 
 public class CoreService extends Service {
 	
@@ -217,4 +216,5 @@ public class CoreService extends Service {
 			e.printStackTrace();
 		}
 		return null;
-	}}
+	}
+}

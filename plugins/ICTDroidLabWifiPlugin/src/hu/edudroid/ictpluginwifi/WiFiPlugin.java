@@ -1,17 +1,22 @@
 package hu.edudroid.ictpluginwifi;
 
 import hu.edudroid.ictplugin.PluginCommunicationInterface;
+import hu.edudroid.interfaces.AsyncMethodException;
+import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginResultListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 
 public class WiFiPlugin extends PluginCommunicationInterface implements Plugin {
 
@@ -81,7 +86,7 @@ public class WiFiPlugin extends PluginCommunicationInterface implements Plugin {
 	}
 	
 	@Override
-	public List<String> callMethodSync(long callId, String method, List<Object> parameters) {
+	public List<String> callMethodSync(long callId, String method, List<Object> parameters) throws AsyncMethodException {
 		List<String> answer=new ArrayList<String>();
 		mWifiInfo=mWifiManager.getConnectionInfo();
 		if(method.equals("getIpAddress")){
@@ -112,28 +117,57 @@ public class WiFiPlugin extends PluginCommunicationInterface implements Plugin {
 			answer.add(String.valueOf(mWifiInfo.describeContents()));
 		}
 		if(method.equals("scanning")){
-			answer.add("scanning in progress...");
-			Intent serviceIntent=new Intent(this.mContext,WiFiPluginScanningService.class);
-			serviceIntent.putExtra("delay", Integer.parseInt((String)parameters.get(0)));
-			serviceIntent.putExtra("periodicity", Integer.parseInt((String)parameters.get(1)));
-			serviceIntent.putExtra("count", Integer.parseInt((String)parameters.get(2)));
-			serviceIntent.putExtra("callId", callId);
-			this.mContext.startService(serviceIntent);
+			if(parameters.get(0)!=null && parameters.get(1)!=null && parameters.get(2)!=null){				
+				Map<String,String> extras = new HashMap<String, String>();
+				
+				extras.put("delay", (String)parameters.get(0));
+				extras.put("periodicity", (String)parameters.get(1));
+				extras.put("count", (String)parameters.get(2));
+				
+				callingServiceMethod(callId, WiFiPluginScanningService.class, extras);
+			}
+			else{
+				Log.e("WiFiPlugin","Missing parameters for scanning!");
+			}
 		}
 		if(method.equals("ping")){
-			answer.add("ping in progress...");
-			Intent serviceIntent=new Intent(this.mContext,WiFiPluginPingService.class);
-			serviceIntent.putExtra("ip", (String)parameters.get(0));
-			serviceIntent.putExtra("count", Integer.parseInt((String)parameters.get(1)));
-			this.mContext.startService(serviceIntent);
+			if(parameters.get(0)!=null && parameters.get(1)!=null){
+				Map<String,String> extras = new HashMap<String, String>();
+				
+				extras.put("ip", (String)parameters.get(0));
+				extras.put("count", (String)parameters.get(1));
+				
+				callingServiceMethod(callId, WiFiPluginPingService.class, extras);
+			}
+			else{
+				Log.e("WiFiPlugin","Missing IP and count parameters for ping!");
+			}
 		}
 		if(method.equals("traceroute")){
-			answer.add("traceroute in progress...");
-			Intent serviceIntent=new Intent(this.mContext,WiFiPluginTracerouteService.class);
-			serviceIntent.putExtra("ip", (String)parameters.get(0));
-			this.mContext.startService(serviceIntent);
+			if(parameters.get(0)!=null){
+				Map<String,String> extras = new HashMap<String, String>();
+				
+				extras.put("ip", (String)parameters.get(0));
+				
+				callingServiceMethod(callId, WiFiPluginTracerouteService.class, extras);
+			}
+			else{
+				Log.e("WiFiPlugin","Missing IP parameter for traceroute!");
+			}
+			
 		}
 		return answer;				
+	}
+	
+	public void callingServiceMethod(long callId, Class<?> c, Map<String, String> extras) throws AsyncMethodException{
+		
+		Intent serviceIntent=new Intent(this.mContext,c);
+		serviceIntent.putExtra(Constants.INTENT_EXTRA_CALL_ID, String.valueOf(callId));
+		for (Map.Entry<String, String> entry : extras.entrySet()) {
+			serviceIntent.putExtra(entry.getKey(), entry.getValue());		    
+		}
+		this.mContext.startService(serviceIntent);
+		throw new AsyncMethodException();
 	}
 	
 	@Override

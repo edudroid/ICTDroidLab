@@ -23,5 +23,5 @@
     <string name="run">Run</string>
     <string name="load">Load</string>
     <string name="loaded">Loaded</string>
-    
+    <string name="uploadManual">Manual Upload</string>
 </resources>
