@@ -102,8 +102,10 @@ public class CoreService extends Service {
 			}
 		});
 		for (String descriptor : descriptors) {
-			ModuleDescriptor moduleDescriptor = parseModuleDescriptor(descriptor);
-			addModule(moduleDescriptor);
+			ModuleDescriptor moduleDescriptor = parseModuleDescriptor(new File(descriptorFolder,descriptor));
+			if (moduleDescriptor != null) {
+				addModule(moduleDescriptor);
+			}
 		}
 	}
 	
@@ -112,7 +114,7 @@ public class CoreService extends Service {
 	 * @param descriptorPath Path to the JSON descriptor file.
 	 * @return The descriptor of the parsed module, or null if parsing was unsuccessful.
 	 */
-	public ModuleDescriptor parseModuleDescriptor(String descriptorPath) {
+	public ModuleDescriptor parseModuleDescriptor(File descriptorPath) {
 		Log.i(TAG, "Parsing module from descriptor " + descriptorPath);
 		JSONObject json = null;
 		String moduleName = null;
@@ -120,6 +122,7 @@ public class CoreService extends Service {
 		String className = null;
 		try {
 			String fileContent = FileUtils.readFile(descriptorPath);
+			Log.i(TAG, "Parsing descriptor : " + fileContent);
 			json = new JSONObject(fileContent);
 			jarFile = json.getString(JAR_FILE_KEY);
 			className = json.getString(CLASS_NAME_KEY);
@@ -137,13 +140,17 @@ public class CoreService extends Service {
 			Log.e(TAG, "Couldn't load " + className + " from " + jarFile + " : " + e.getMessage());
 			e.printStackTrace();
 			return null;
+		} catch (Exception e) {
+			Log.e(TAG, "Couldn't load " + className + " from " + jarFile + " : " + e.getMessage());
+			e.printStackTrace();
+			return null;
 		}
 	}
 	
 	public List<ModuleDescriptor> getLoadedModules() {
 		List<ModuleDescriptor> ret = new ArrayList<ModuleDescriptor>();
-		for (Module module : modules.values()) {
-			ModuleDescriptor descriptor = descriptors .get(module);
+		for (String moduleClass : modules.keySet()) {
+			ModuleDescriptor descriptor = descriptors.get(moduleClass);
 			ret.add(descriptor);
 		}
 		return ret;
@@ -218,5 +225,11 @@ public class CoreService extends Service {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@Override
+	public void onDestroy() {
+		Log.e(TAG, "Service destroyed");
+		super.onDestroy();
 	}
 }

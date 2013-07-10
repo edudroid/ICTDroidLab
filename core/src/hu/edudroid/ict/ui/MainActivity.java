@@ -1,5 +1,6 @@
 package hu.edudroid.ict.ui;
 
+import hu.edudroid.ict.CoreService;
 import hu.edudroid.ict.R;
 import android.app.Activity;
 import android.content.Intent;
@@ -25,6 +26,7 @@ public class MainActivity extends Activity implements OnClickListener{
 		showPlugins.setOnClickListener(this);
 		toQuotas = (Button)findViewById(R.id.toQuotas);
 		toQuotas.setOnClickListener(this);
+		startService(new Intent(this, CoreService.class));
 	}
 
 	@Override

@@ -70,7 +70,15 @@ public class ModuleOverviewActivity extends Activity implements OnItemClickListe
 	
 	private void refreshModuleList() {
 		List<ModuleDescriptor> loadedModules = service.getLoadedModules();
+		Log.e(TAG, "Loaded modules " + loadedModules.size());
+		for (ModuleDescriptor descriptor : loadedModules) {
+			Log.w(TAG, "Loaded " + descriptor);
+		}
 		List<ModuleDescriptor> modulesInAssets = new ArrayList<ModuleDescriptor>();
+		Log.e(TAG, "Modules in assets " + modulesInAssets.size());
+		for (ModuleDescriptor descriptor : modulesInAssets) {
+			Log.w(TAG, "In assets " + descriptor);
+		}
 		AssetManager assetManager = getAssets();
 		// Check if there is a module available that has not been loaded already.
 		try {
@@ -82,7 +90,7 @@ public class ModuleOverviewActivity extends Activity implements OnItemClickListe
 			}
 			for (String descriptor : descriptors) {
 				File descriptorFile = AssetReader.copyAsset(new File(DESCRIPTOR_ASSET_FOLDER, descriptor).getAbsolutePath(), new File(getFilesDir(), CoreService.DESCRIPTOR_FOLDER), this);
-				ModuleDescriptor moduleDescriptor = service.parseModuleDescriptor(descriptorFile.getAbsolutePath());
+				ModuleDescriptor moduleDescriptor = service.parseModuleDescriptor(descriptorFile);
 				if (moduleDescriptor != null) {
 					modulesInAssets.add(moduleDescriptor);
 				}
@@ -90,6 +98,9 @@ public class ModuleOverviewActivity extends Activity implements OnItemClickListe
 		} catch (IOException e) {
 			Log.e(TAG, "Unable to load assets.");
 			e.printStackTrace();
+		}
+		for (ModuleDescriptor descriptor : loadedModules) {
+			Log.e(TAG, "Descriptor " + descriptor);
 		}
 		TreeSet<ModuleDescriptor> orderer = new TreeSet<ModuleDescriptor>(loadedModules);
 		orderer.addAll(modulesInAssets);
