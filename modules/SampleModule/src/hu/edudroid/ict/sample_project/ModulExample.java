@@ -26,8 +26,7 @@ public class ModulExample extends Module implements PluginEventListener, PluginR
 	@Override
 	public void init(){
 		mTimeService.runPeriodic(1000, 10000, 2, this);
-		plugin2  = mPluginCollection.getPluginByName("WiFi Plugin");
-		plugin2.registerEventListener("empty event", this);		
+		plugin2  = mPluginCollection.getPluginByName("WiFi Plugin");	
 	}
 	
 	public void run(){
@@ -44,10 +43,10 @@ public class ModulExample extends Module implements PluginEventListener, PluginR
 			plugin2.callMethodAsync("getDescribeContents", Arrays.asList(new Object[]{"empty"}),this);
 			
 			
-			long callScanId=plugin2.callMethodAsync("scanning", Arrays.asList(new Object[]{"0","10000","1"}),this);
-			mLogger.e("scanning callID:", String.valueOf(callScanId));
-			long callPingId=plugin2.callMethodAsync("ping", Arrays.asList(new Object[]{"173.194.39.64","5"}),this);
-			mLogger.e("ping callID:", String.valueOf(callPingId));
+			plugin2.callMethodAsync("scanning", Arrays.asList(new Object[]{"0","10000","1"}),this);
+			
+			plugin2.callMethodAsync("ping", Arrays.asList(new Object[]{"173.194.39.64","5"}),this);
+			
 			/*
 			long callTracerouteId=plugin2.callMethodAsync("traceroute", Arrays.asList(new Object[]{"127.0.0.1"}),this);
 			answersForTraceroute.add(callTracerouteId);
@@ -57,7 +56,6 @@ public class ModulExample extends Module implements PluginEventListener, PluginR
 		} else {
 			mLogger.e(TAG, "Couldn't find WiFi Plugin");
 		}
-		mLogger.d(TAG,"Modul run ended");
 	}
 	
 	@Override
