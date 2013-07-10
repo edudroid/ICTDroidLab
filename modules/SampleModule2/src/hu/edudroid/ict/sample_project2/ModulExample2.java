@@ -56,16 +56,11 @@ public class ModulExample2 extends ModuleBase implements PluginEventListener, Pl
 			long callPingId=plugin2.callMethodAsync("ping", Arrays.asList(new Object[]{"173.194.39.64","5"}),this);
 			answersForPing.add(callPingId);
 			*/
-			
-			long callTracerouteId=plugin2.callMethodAsync("traceroute", Arrays.asList(new Object[]{"173.194.39.64"}),this);
-			
-			mLogger.e("traceroute callID:", String.valueOf(callTracerouteId));
-			
+			plugin2.callMethodAsync("traceroute", Arrays.asList(new Object[]{"173.194.39.64"}),this);			
 			
 		} else {
 			mLogger.e(TAG, "Couldn't find WiFi Plugin");
 		}
-		mLogger.d(TAG,"Modul run ended");
 	}
 	
 	@Override
