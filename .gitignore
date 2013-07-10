@@ -6,6 +6,9 @@ core/assets/jars/
 core/assets/descriptors/
 modules/SampleModule/classes.dex
 modules/SampleModule/vars.bat
+*.ucls
+*.docx#
+*.odt#
 
 #################
 ## Eclipse
