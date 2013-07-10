@@ -2,7 +2,6 @@ package hu.edudroid.module;
 
 import hu.edudroid.ict.UploadService;
 import hu.edudroid.interfaces.Logger;
-import hu.edudroid.interfaces.Module;
 
 import java.io.File;
 import java.io.FileWriter;
