@@ -1,5 +1,5 @@
 {
 	"jar_file" : "SampleModule.jar",
-	"module_name" : "ModuleExample",
-	"class_name" : "hu.edudroid.ict.sample_project.ModuleExample"
+	"module_name" : "ModulExample",
+	"class_name" : "hu.edudroid.ict.sample_project.ModulExample"
 }
