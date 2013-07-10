@@ -1,4 +1,5 @@
 package hu.edudroid.ictpluginwifi;
+import hu.edudroid.ictplugin.PluginCommunicationInterface;
 import hu.edudroid.interfaces.Constants;
 
 import java.util.ArrayList;
@@ -27,35 +28,20 @@ public class WiFiPluginScanningService extends Service {
 	private Timer t;
 	private TimerTask ttask;
 	
-	private Context mContext;
-	
-	private void reportResult(long callId, String methodName, String versionCode, String method, List<String> result) {
-		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER);
-		intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, callId);
-		intent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, methodName);
-		intent.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, versionCode);
-		intent.putExtra(Constants.INTENT_EXTRA_METHOD_NAME, method);
-		intent.putStringArrayListExtra(Constants.INTENT_EXTRA_VALUE_RESULT, new ArrayList<String>(result));
-		mContext.sendBroadcast(intent);
-	}
-	
 	@Override
 	public IBinder onBind(Intent arg0) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@Override
     public void onStart(Intent intent, int startId) {
 		
-		mContext=this.getApplicationContext();
-		
 		mWifiManager = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 		
-    	final int delay=Integer.parseInt(intent.getExtras().getString("delay"));
-    	final int periodicity=Integer.parseInt(intent.getExtras().getString("periodicity"));
-    	final int count=Integer.parseInt(intent.getExtras().getString("count"));
-    	final long callId=Long.parseLong(intent.getExtras().getString(Constants.INTENT_EXTRA_CALL_ID));
+    	final int delay = Integer.parseInt(intent.getExtras().getString("delay"));
+    	final int periodicity = Integer.parseInt(intent.getExtras().getString("periodicity"));
+    	final int count = Integer.parseInt(intent.getExtras().getString("count"));
+    	final long callId = Long.parseLong(intent.getExtras().getString(Constants.INTENT_EXTRA_CALL_ID));
     	
 		try{
 			BroadcastReceiver wifi_scan = new BroadcastReceiver()
@@ -96,7 +82,7 @@ public class WiFiPluginScanningService extends Service {
 			    		
 			            List<String> res=new ArrayList<String>();
 			            res.add(wifiScanningResult);
-			            reportResult(callId, PLUGIN_NAME, VERSION_CODE, SCAN_METHOD_NAME, res);
+		                PluginCommunicationInterface.reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, PLUGIN_NAME, VERSION_CODE, SCAN_METHOD_NAME, res, getApplicationContext());
 	            	}
 	            	scanned=true;
 				}

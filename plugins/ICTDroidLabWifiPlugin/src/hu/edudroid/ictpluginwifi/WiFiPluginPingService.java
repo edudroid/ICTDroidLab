@@ -1,5 +1,6 @@
 package hu.edudroid.ictpluginwifi;
 
+import hu.edudroid.ictplugin.PluginCommunicationInterface;
 import hu.edudroid.interfaces.Constants;
 
 import java.io.BufferedReader;
@@ -10,26 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
 public class WiFiPluginPingService extends Service {
 
-	private Context mContext;
 	public static final String PLUGIN_NAME="WiFi Plugin";
 	public static final String PING_METHOD_NAME="ping";
 	public static final String VERSION_CODE="v1.0";
-	
-	private void reportResult(long callId, String methodName, String versionCode, String method, List<String> result) {
-		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER);
-		intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, callId);
-		intent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, methodName);
-		intent.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, versionCode);
-		intent.putExtra(Constants.INTENT_EXTRA_METHOD_NAME, method);
-		intent.putStringArrayListExtra(Constants.INTENT_EXTRA_VALUE_RESULT, new ArrayList<String>(result));
-		mContext.sendBroadcast(intent);
-	}
 	
 	public class LogStreamReader implements Runnable {
 
@@ -55,7 +44,7 @@ public class WiFiPluginPingService extends Service {
                     }
                     lineCount--;
                 }
-                reportResult(callId, PLUGIN_NAME, VERSION_CODE, PING_METHOD_NAME, res);
+                PluginCommunicationInterface.reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, PLUGIN_NAME, VERSION_CODE, PING_METHOD_NAME, res, getApplicationContext());
                 reader.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -65,8 +54,6 @@ public class WiFiPluginPingService extends Service {
 	
 	@Override
     public void onStart(Intent intent, int startId) {
-		
-		mContext=this.getApplicationContext();
 		
 		final String ip=intent.getExtras().getString("ip");
 		final int pcount=Integer.parseInt(intent.getExtras().getString("count"));

@@ -3,7 +3,6 @@ package hu.edudroid.ictpluginwifi;
 import hu.edudroid.ictplugin.PluginCommunicationInterface;
 import hu.edudroid.interfaces.AsyncMethodException;
 import hu.edudroid.interfaces.Constants;
-import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginResultListener;
 
@@ -12,13 +11,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
-public class WiFiPlugin extends PluginCommunicationInterface implements Plugin {
+public class WiFiPlugin extends PluginCommunicationInterface {
 
 	private static final List<String> mMethods = new ArrayList<String>();
 	static {
@@ -43,18 +41,9 @@ public class WiFiPlugin extends PluginCommunicationInterface implements Plugin {
 		mEvents.add("traceroute");
 	}
 	
-	private Context mContext;
 	private WifiManager mWifiManager;
 	private WifiInfo mWifiInfo;
 	
-	@Override
-	protected Plugin getPlugin(Context context) {
-		this.mContext = context;
-		mWifiManager = (WifiManager)mContext.getSystemService(Context.WIFI_SERVICE);	
-			
-		return this;
-	}
-
 	@Override
 	public String getVersionCode() {
 		return "v1.0";
@@ -161,12 +150,12 @@ public class WiFiPlugin extends PluginCommunicationInterface implements Plugin {
 	
 	public void callingServiceMethod(long callId, Class<?> c, Map<String, String> extras) throws AsyncMethodException{
 		
-		Intent serviceIntent=new Intent(this.mContext,c);
+		Intent serviceIntent=new Intent(getContext(), c);
 		serviceIntent.putExtra(Constants.INTENT_EXTRA_CALL_ID, String.valueOf(callId));
 		for (Map.Entry<String, String> entry : extras.entrySet()) {
 			serviceIntent.putExtra(entry.getKey(), entry.getValue());		    
 		}
-		this.mContext.startService(serviceIntent);
+		getContext().startService(serviceIntent);
 		throw new AsyncMethodException();
 	}
 	
