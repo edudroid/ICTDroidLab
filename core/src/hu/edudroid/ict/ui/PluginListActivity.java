@@ -26,13 +26,14 @@ public class PluginListActivity extends Activity implements PluginListener,
 		OnClickListener, OnItemClickListener {
 
 	private PluginListAdapter mAdapter = null;
+	private static final String TAG = "PluginListActivity";
 
 	private AndroidPluginCollection mPluginCollection = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_plugin_list);
 
 		mAdapter = new PluginListAdapter(this);
 
@@ -69,7 +70,7 @@ public class PluginListActivity extends Activity implements PluginListener,
 	@Override
 	public boolean newPlugin(Plugin plugin) {
 		try {
-			Log.e("MainActivity", "Adding new plugin " + plugin.getName());
+			Log.e(TAG, "Adding new plugin " + plugin.getName());
 			mAdapter.addPlugin(plugin);
 
 			findViewById(R.id.no_plugins).setVisibility(View.GONE);
@@ -100,13 +101,13 @@ public class PluginListActivity extends Activity implements PluginListener,
 		Plugin plugin = mAdapter.getItem(arg2);
 		List<String> methodNames = plugin.getMethodNames();
 		for (String methodName : methodNames) {
-			Log.e("Methods for this plugin:", methodName);
+			Log.e(TAG, "Methods for this plugin: " + methodName);
 		}
 
 		Toast.makeText(this, "PluginName:" + mAdapter.getItem(arg2).getName(),
 				Toast.LENGTH_SHORT).show();
 		Intent mIntent = new Intent(this, PluginDetailsActivity.class);
-		mIntent.putExtra("pluginName", mAdapter.getItem(arg2).getName());
+		mIntent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, mAdapter.getItem(arg2).getName());
 		startActivity(mIntent);
 
 	}

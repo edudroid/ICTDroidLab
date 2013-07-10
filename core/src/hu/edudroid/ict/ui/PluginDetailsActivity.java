@@ -4,6 +4,7 @@ import hu.edudroid.ict.R;
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginListener;
 import hu.edudroid.ict.plugins.PluginPollingBroadcast;
+import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 
 import java.util.HashSet;
@@ -42,10 +43,8 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 		listview.setAdapter(this);
 		TextView textview=((TextView)findViewById(R.id.method_title));
 		
-		mPlugin = AndroidPluginCollection.getInstance()
-									.getPluginByName((getIntent().getExtras()
-																	.getString("pluginName")));
-		textview.setText("Methods defined for "+mPlugin.getName());
+		mPlugin = AndroidPluginCollection.getInstance().getPluginByName((getIntent().getExtras().getString(Constants.INTENT_EXTRA_KEY_PLUGIN_ID)));
+		textview.setText("Methods defined for " + mPlugin.getName());
 		mBroadcast=PluginPollingBroadcast.getInstance();
 		mBroadcast.registerPluginDetailsListener(this);
 	}

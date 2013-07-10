@@ -44,6 +44,8 @@ public class AndroidPluginCollection implements PluginCollection, PluginListener
 			Log.i(TAG, "We already have " + plugin.getName());
 			return false;
 		} else{
+			
+			Log.i(TAG, "Plugin discovered " + plugin.getName());
 			mPlugins.put(plugin.getName(), plugin);
 			return true;
 		}
