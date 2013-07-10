@@ -10,7 +10,5 @@ public class BootingBroadcastReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent arg1) {
 		Intent startServiceIntent = new Intent(context, CoreService.class);
         context.startService(startServiceIntent);
-	}
-
-	
+	}	
 }
