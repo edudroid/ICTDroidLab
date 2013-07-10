@@ -4,7 +4,6 @@ import hu.edudroid.ict.CoreService;
 import hu.edudroid.ict.R;
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginListener;
-import hu.edudroid.ict.plugins.PluginMethod;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 
@@ -85,11 +84,6 @@ public class PluginListActivity extends Activity implements PluginListener,
 			e.printStackTrace();
 			return false;
 		}
-	}
-
-	@Override
-	public boolean newPluginMethod(PluginMethod method) {
-		return true;
 	}
 
 	@Override

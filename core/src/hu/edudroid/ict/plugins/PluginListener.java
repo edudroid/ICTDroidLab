@@ -4,5 +4,4 @@ import hu.edudroid.interfaces.Plugin;
 
 public interface PluginListener {
 	public boolean newPlugin(Plugin plugin);
-	public boolean newPluginMethod(PluginMethod method);
 }

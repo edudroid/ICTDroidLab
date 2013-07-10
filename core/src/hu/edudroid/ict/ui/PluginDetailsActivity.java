@@ -3,12 +3,12 @@ package hu.edudroid.ict.ui;
 import hu.edudroid.ict.R;
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginListener;
-import hu.edudroid.ict.plugins.PluginMethod;
 import hu.edudroid.ict.plugins.PluginPollingBroadcast;
 import hu.edudroid.interfaces.Plugin;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,19 +18,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class PluginDetailsActivity extends Activity implements ListAdapter,
 		PluginListener, OnItemClickListener {
 
 	private Plugin					mPlugin;
-	private ArrayList<PluginMethod>	mMethods;
 	private LayoutInflater			mInflater;
-	private DataSetObserver			mObserver;
+	private Set<DataSetObserver> observers = new HashSet<DataSetObserver>();
 	private PluginPollingBroadcast	mBroadcast;
 
 	@Override
@@ -39,7 +38,6 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 		setContentView(R.layout.activity_plugin_details);
 
 		mInflater = getLayoutInflater();
-		mMethods = new ArrayList<PluginMethod>();
 		ListView listview=((ListView) findViewById(R.id.details_list));
 		listview.setAdapter(this);
 		TextView textview=((TextView)findViewById(R.id.method_title));
@@ -52,33 +50,14 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 		mBroadcast.registerPluginDetailsListener(this);
 	}
 
-	private void addMethod(PluginMethod method){
-		boolean foundMethodInList=false;
-		for(int i=0;i<mMethods.size();i++){
-			if(mMethods.get(i).mName.equals(method.mName)){
-				foundMethodInList=true;
-			}
-		}
-		for(int i=0;i<mPlugin.getMethodNames().size();i++){
-			if(mPlugin.getMethodNames().get(i).equals(method.mName)){
-				if(!foundMethodInList){
-					mMethods.add(method);
-				}
-			}
-		}
-		
-		Collections.sort(mMethods);
-		mObserver.onChanged();
-	}
-
 	@Override
 	public int getCount(){
-		return mMethods.size();
+		return 0;
 	}
 
 	@Override
-	public PluginMethod getItem(int position){
-		return mMethods.get(position);
+	public String getItem(int position){
+		return null;
 	}
 
 	@Override
@@ -98,9 +77,8 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 											parent,
 											false);
 
-		final PluginMethod method = getItem(position);
-		((TextView) convertView.findViewById(R.id.method_name)).setText(method.mName);
-		((TextView) convertView.findViewById(R.id.method_details)).setText(method.mDescription);
+		final String method = getItem(position);
+		((TextView) convertView.findViewById(R.id.method_name)).setText(method);
 
 		return convertView;
 	}
@@ -122,12 +100,12 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 
 	@Override
 	public void registerDataSetObserver(DataSetObserver observer){
-		mObserver = observer;
+		observers.add(observer);
 	}
 
 	@Override
 	public void unregisterDataSetObserver(DataSetObserver observer){
-		mObserver = null;
+		observers.remove(observer);
 	}
 
 	@Override
@@ -145,12 +123,6 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 		return true;
 	}
 
-	@Override
-	public boolean newPluginMethod(PluginMethod method){
-		addMethod(method);
-		return true;
-	}
-
 	public static Intent generateIntent(final int pluginHash,
 										final Context context){
 		Intent intent = new Intent(context, PluginDetailsActivity.class);
@@ -160,7 +132,7 @@ public class PluginDetailsActivity extends Activity implements ListAdapter,
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		Toast.makeText(this, mMethods.get(arg2).mName, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, getItem(arg2), Toast.LENGTH_SHORT).show();
 	}
 
 }

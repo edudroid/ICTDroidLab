@@ -4,14 +4,18 @@ import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginCollection;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import android.util.Log;
 
 public class AndroidPluginCollection implements PluginCollection, PluginListener {
 
+	private static final String TAG = null;
 	private static AndroidPluginCollection	mInstance	= null;
-	private ArrayList<Plugin>			mPlugins	= null;
+	private HashMap<String, Plugin>			mPlugins	= null;
 
 	private AndroidPluginCollection() {
-		mPlugins = new ArrayList<Plugin>();		
+		mPlugins = new HashMap<String, Plugin>();		
 	}
 
 	public static AndroidPluginCollection getInstance(){
@@ -24,47 +28,24 @@ public class AndroidPluginCollection implements PluginCollection, PluginListener
 		return mInstance;
 	}
 	
-	public Plugin getPluginByHashcode(final int hash){
-		for (int i = 0; i < mPlugins.size(); i++){
-			if (mPlugins.get(i).hashCode() == hash)
-				return mPlugins.get(i);
-		}
-		return null;
-	}
-	
 	@Override
-	public Plugin getPluginByName(final String name) {
-		for (int i=0; i< mPlugins.size(); i++) {
-			if (mPlugins.get(i).getName().equals(name))
-				return mPlugins.get(i);
-		}
-		return null;
+	public Plugin getPluginByName(String name) {
+		return mPlugins.get(name);
 	}
 	
 	@Override
 	public ArrayList<Plugin> getAllPlugins() {
-		return mPlugins;
+		return new ArrayList<Plugin>(mPlugins.values());
 	}
 
 	@Override
 	public boolean newPlugin(Plugin plugin) {
-		boolean isAlreadyInList=false;
-		for(int i=0;i<mPlugins.size();i++){
-			if(mPlugins.get(i).getName().equals(plugin.getName())){
-				isAlreadyInList=true;
-			}
-		}
-		if(!isAlreadyInList){
-			mPlugins.add(plugin);
-			return true;			
-		}		
-		else{
+		if (mPlugins.containsKey(plugin.getName())){
+			Log.i(TAG, "We already have " + plugin.getName());
 			return false;
+		} else{
+			mPlugins.put(plugin.getName(), plugin);
+			return true;
 		}
-	}
-
-	@Override
-	public boolean newPluginMethod(PluginMethod method) {
-		return true;
 	}
 }
