@@ -1,6 +1,6 @@
 package hu.edudroid.ict.plugins;
 
-import hu.edudroid.ict.PluginDetailsActivity;
+import hu.edudroid.ict.ui.PluginDetailsActivity;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;
@@ -175,17 +175,9 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 			mEventListeners.put(eventName, listeners);
 			mBroadcast.registerEventListener(this);
 		}
-		if(listeners.size()==0){
+		if (!listeners.contains(listener)) {
 			listeners.add(listener);
 		}
-		else{
-			for(PluginEventListener listIter : listeners){
-				if(!listIter.getEventListenerName().equals(listener.getEventListenerName())){
-					listeners.add(listener);
-				}
-			}
-		}
-		
 	}
 
 	@Override
@@ -195,10 +187,5 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 		if(listeners!=null){
 			listeners.remove(listener);
 		}
-	}
-
-	@Override
-	public String getEventListenerName() {
-		return this.mName;
 	}
 }

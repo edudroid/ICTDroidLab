@@ -3,64 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="4dip"
-    tools:context=".MainActivity" >
+    tools:context=".PluginListActivity" >
 
     <Button
-        android:id="@+id/runAllModulesButton"
+        android:id="@+id/showPlugins"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/runAllModules" />
+        android:text="@string/showPlugins" />
     
     <Button
         android:id="@+id/uploadManual"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/uploadManual" />
-
-    <LinearLayout
-        android:id="@+id/plugin_count"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/plugin_count_text"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dip"
-            android:gravity="center"
-            android:text="@string/plugins_count"
-            android:textAppearance="@android:style/TextAppearance.Medium" />
-    </LinearLayout>
     
-    <LinearLayout
-        android:id="@+id/no_plugins"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dip" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/no_plugins"
-            android:layout_marginBottom="12dip"
-            android:textAppearance="@android:style/TextAppearance.Medium" />
-
-        <Button
-            android:id="@+id/btn_refresh"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:text="@string/refresh" />
-
-    </LinearLayout>
-
-    <ListView
-        android:id="@+id/plugin_list"
+    <Button
+        android:id="@+id/showModules"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="wrap_content"
+        android:text="@string/showModules" />
+
+    <Button
+        android:id="@+id/toQuotas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/setQuotas" />
 
 </LinearLayout>

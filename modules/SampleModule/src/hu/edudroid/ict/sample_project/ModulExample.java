@@ -1,7 +1,7 @@
 package hu.edudroid.ict.sample_project;
 
 import hu.edudroid.interfaces.Logger;
-import hu.edudroid.interfaces.ModuleBase;
+import hu.edudroid.interfaces.Module;
 import hu.edudroid.interfaces.ModuleTimerListener;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginCollection;
@@ -13,25 +13,21 @@ import hu.edudroid.interfaces.TimeServiceInterface;
 import java.util.Arrays;
 import java.util.List;
 
-public class ModulExample extends ModuleBase implements PluginEventListener, PluginResultListener, ModuleTimerListener {
+public class ModulExample extends Module implements PluginEventListener, PluginResultListener, ModuleTimerListener {
 	
+	public ModulExample(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice) {
+		super(prefs, logger, pluginCollection, timeservice);
+	}
+
 	private static final String 	TAG			 	= "ModuleExample";
 	
 	private Plugin plugin2;
 	
-	public ModulExample() {
-		super();
-	}
-	
 	@Override
-	public void init(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice){
-		super.init(prefs, logger, pluginCollection, timeservice);
-		
-		//mTimeService.runAt(0,this);
+	public void init(){
 		mTimeService.runPeriodic(1000, 10000, 2, this);
-		
 		plugin2  = mPluginCollection.getPluginByName("WiFi Plugin");
-		//plugin2.registerEventListener("empty event", this);		
+		plugin2.registerEventListener("empty event", this);		
 	}
 	
 	public void run(){
@@ -64,41 +60,31 @@ public class ModulExample extends ModuleBase implements PluginEventListener, Plu
 	}
 	
 	@Override
-	public String getModuleName(){
-		return "TestModule";
-	}
-
-	@Override
 	public void onResult(long id, String plugin, String pluginVersion,
 			String methodName, List<String> result) {
-		mLogger.e("REPORT in module: "+getModuleName(), id+" " + plugin + " " + methodName + " " + result);
+		mLogger.e(TAG, id+" " + plugin + " " + methodName + " " + result);
 	}
 
 
 	@Override
 	public void onError(long id, String plugin, String pluginVersion, String methodName,
 			String errorMessage) {
-		mLogger.e("ERROR in module: "+getModuleName(), plugin + " " + methodName + " " + errorMessage);
+		mLogger.e(TAG, plugin + " " + methodName + " " + errorMessage);
 	}
 
 	@Override
 	public void onEvent(String plugin, String version, String eventName, List<String> extras) {
-		mLogger.e("EVENT in module: "+getModuleName(), eventName +" size: " +extras.size());
+		mLogger.e(TAG, eventName +" size: " +extras.size());
 		
 		for(int i=0;i<extras.size();i++){
-			mLogger.e("Result:", extras.get(i));
+			mLogger.e(TAG, extras.get(i));
 		}
 		
 	}
 
 	@Override
 	public void onTimerEvent() {
-		mLogger.e("TIMER in module: "+getModuleName(), "timer event");
+		mLogger.e(TAG, "timer event");
 		this.run();		
-	}
-
-	@Override
-	public String getEventListenerName() {
-		return this.getModuleName();
 	}
 } 
