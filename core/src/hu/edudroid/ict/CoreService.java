@@ -2,7 +2,7 @@ package hu.edudroid.ict;
 
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginListener;
-import hu.edudroid.ict.plugins.PluginPollingBroadcast;
+import hu.edudroid.ict.plugins.PLuginIntentReceiver;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Logger;
 import hu.edudroid.interfaces.Module;
@@ -21,6 +21,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import android.app.Service;
@@ -49,7 +50,7 @@ public class CoreService extends Service implements PluginListener {
 
 	private static final String TAG = "CoreService";
 
-	private PluginPollingBroadcast mBroadcast;
+	private PLuginIntentReceiver mBroadcast;
 	private HashMap<String, Module> modules = new HashMap<String, Module>(); // Modules by class name
 	private HashMap<String, ModuleDescriptor> descriptors = new HashMap<String, ModuleDescriptor>(); // Descriptors by class name
 	
@@ -57,7 +58,8 @@ public class CoreService extends Service implements PluginListener {
 	
 	private AndroidPluginCollection pluginCollection;
 
-	private List<PluginListener> listeners;
+	private HashSet<PluginListener> listeners = new HashSet<PluginListener>();
+	private boolean started = false;
 	
 	public class CoreBinder extends Binder {
 		public CoreService getService() {
@@ -72,41 +74,41 @@ public class CoreService extends Service implements PluginListener {
 
 	@Override
 	public void onStart(Intent intent, int startId) {
-		Log.e(TAG, "Service has been started!");
-
-		// Plugin -> PluginPollingBroadcast
-		mBroadcast = new PluginPollingBroadcast();
-		registerReceiver(mBroadcast, new IntentFilter(
-				Constants.INTENT_ACTION_DESCRIBE));
-		registerReceiver(mBroadcast, new IntentFilter(
-				Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER));
-		registerReceiver(mBroadcast, new IntentFilter(
-				Constants.INTENT_ACTION_PLUGIN_EVENT));
-
-		// PluginPollingBroadcast -> mPluginCollection
-		if (pluginCollection == null) {
+		if (!started) {
+			started = true;
+			Log.e(TAG, "Starting service!");
+			mBroadcast = new PLuginIntentReceiver();
+			registerReceiver(mBroadcast, new IntentFilter(
+					Constants.INTENT_ACTION_DESCRIBE));
+			registerReceiver(mBroadcast, new IntentFilter(
+					Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER));
+			registerReceiver(mBroadcast, new IntentFilter(
+					Constants.INTENT_ACTION_PLUGIN_EVENT));
+	
 			pluginCollection = new AndroidPluginCollection();
 			mBroadcast.registerPluginDetailsListener(this);
-		}
-
-		Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
-		sendBroadcast(mIntent);
-
-		// Process descriptor files
-		File descriptorFolder = getDescriptorFolder(this);
-		String[] descriptors = descriptorFolder.list(new FilenameFilter() {
-			@Override
-			public boolean accept(File dir, String filename) {
-				return filename.endsWith("desc");
+	
+			Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
+			sendBroadcast(mIntent);
+	
+			// Process descriptor files
+			File descriptorFolder = getDescriptorFolder(this);
+			String[] descriptors = descriptorFolder.list(new FilenameFilter() {
+				@Override
+				public boolean accept(File dir, String filename) {
+					return filename.endsWith("desc");
+				}
+			});
+			for (String descriptor : descriptors) {
+				ModuleDescriptor moduleDescriptor = ModuleLoader.parseModuleDescriptor(new File(descriptorFolder,descriptor));
+				if (moduleDescriptor != null) {
+					addModule(moduleDescriptor);
+				}
 			}
-		});
-		for (String descriptor : descriptors) {
-			ModuleDescriptor moduleDescriptor = ModuleLoader.parseModuleDescriptor(new File(descriptorFolder,descriptor));
-			if (moduleDescriptor != null) {
-				addModule(moduleDescriptor);
-			}
+		} else {
+			Log.e(TAG, "Service already running.");
 		}
-	}	
+	}
 	
 	public void registerPluginDetailsListener(PluginListener listener) {
 		listeners.add(listener);

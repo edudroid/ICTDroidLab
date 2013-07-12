@@ -7,7 +7,7 @@
     
     
     <!-- Plugins -->
-    <string name="no_plugins">You have not installed any plugins yet.</string>
+    <string name="noPlugins">You have not installed any plugins yet.</string>
     <string name="plugins_count">%1$s plugin%2$s found.</string>
     <string name="created_by">Created by %1$s.</string>
     <string name="refresh">Refresh</string>
@@ -15,8 +15,8 @@
     <!-- PluginDetails -->
     <string name="methods_defined">Methods defined for this plugin</string>
     <string name="runAllModules">Run all modules</string>
-    <string name="showModules">Show %1$s modul%2$s</string>
-    <string name="showPlugins">Show %1$s plugin%2$s</string>
+    <string name="showModules">Show %1$s modul(s)</string>
+    <string name="showPlugins">Show %1$s plugin(s)</string>
     <string name="setQuotas">Set quotas</string>
     <string name="placeholder">PLACEHOLDER</string>
     <string name="enabled">Enabled</string>
@@ -24,4 +24,6 @@
     <string name="load">Load</string>
     <string name="loaded">Loaded</string>
     <string name="uploadManual">Manual Upload</string>
+    <string name="storageButtonLabel">Manage local storage</string>
+    <string name="statisticsButtonLabel">Statistics</string>
 </resources>

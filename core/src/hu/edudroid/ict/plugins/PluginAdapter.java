@@ -27,7 +27,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	private final String					mDescription;
 	private final String					mVersionCode;
 	private final ArrayList<PluginQuota>	mQuotas;
-	private final PluginPollingBroadcast 	mBroadcast;
+	private final PLuginIntentReceiver 	mBroadcast;
 
 	private Context							mContext;
 	private List<String>					mPluginMethods;
@@ -45,7 +45,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 					final String versionCode,
 					final List<String> pluginMethods,
 					final List<String> events,
-					PluginPollingBroadcast broadcast,
+					PLuginIntentReceiver broadcast,
 					final Context context) {
 		mName = name;
 		mAuthor = author;

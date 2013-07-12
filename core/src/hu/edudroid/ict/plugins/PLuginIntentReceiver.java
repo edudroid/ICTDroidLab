@@ -12,7 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class PluginPollingBroadcast extends BroadcastReceiver {
+public class PLuginIntentReceiver extends BroadcastReceiver {
 
 	private final HashSet<PluginListener> pluginListeners = new HashSet<PluginListener>();
 	private final HashSet<PluginResultListener> mResultListeners = new HashSet<PluginResultListener>();
@@ -58,7 +58,7 @@ public class PluginPollingBroadcast extends BroadcastReceiver {
 			final List<String> result = extras.getStringArrayList(Constants.INTENT_EXTRA_VALUE_RESULT);
 
 			for ( PluginResultListener listener : mResultListeners) {
-				listener.onResult(	id,	plugin,version, method, result);
+				listener.onResult(id,	plugin,version, method, result);
 			}
 		}
 		if(intent.getAction().equals(Constants.INTENT_ACTION_DESCRIBE)){

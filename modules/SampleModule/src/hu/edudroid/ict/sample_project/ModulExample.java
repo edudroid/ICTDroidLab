@@ -26,11 +26,12 @@ public class ModulExample extends Module implements PluginEventListener, PluginR
 	@Override
 	public void init(){
 		mTimeService.runPeriodic(1000, 10000, 2, this);
-		plugin2  = mPluginCollection.getPluginByName("WiFi Plugin");	
 	}
 	
 	public void run(){
-		
+		mLogger.i(TAG, "Searching for WiFi Plugin");
+		plugin2  = mPluginCollection.getPluginByName("WiFi Plugin");		
+		mLogger.i(TAG, "Found " + plugin2);
 		if (plugin2 != null) {
 			plugin2.callMethodAsync("getBSSID", Arrays.asList(new Object[]{"empty"}),this);
 			plugin2.callMethodAsync("getSSID", Arrays.asList(new Object[]{"empty"}),this);

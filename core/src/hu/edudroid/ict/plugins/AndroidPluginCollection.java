@@ -21,6 +21,7 @@ public class AndroidPluginCollection implements PluginCollection, PluginListener
 	
 	@Override
 	public Plugin getPluginByName(String name) {
+		Log.i(TAG, "Requested " + name + ", searching among " + mPlugins.size() + " plugins.");
 		return mPlugins.get(name);
 	}
 	

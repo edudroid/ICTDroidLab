@@ -59,9 +59,6 @@ public class PluginListActivity extends ActivityBase implements PluginListener,
 			findViewById(R.id.no_plugins).setVisibility(View.VISIBLE);
 			findViewById(R.id.plugin_count).setVisibility(View.GONE);			
 		}
-
-		Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
-		sendBroadcast(mIntent);
 	}
 
 	@Override
@@ -75,6 +72,8 @@ public class PluginListActivity extends ActivityBase implements PluginListener,
 		switch (view.getId()) {
 		case R.id.btn_refresh:
 			refreshPluginlist();
+			Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
+			sendBroadcast(mIntent);
 			break;
 		}
 	}

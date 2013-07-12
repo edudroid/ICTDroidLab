@@ -2,7 +2,6 @@ package hu.edudroid.ict.ui;
 
 import hu.edudroid.ict.R;
 import hu.edudroid.ict.plugins.PluginListener;
-import hu.edudroid.ict.plugins.PluginPollingBroadcast;
 import hu.edudroid.interfaces.Plugin;
 import android.app.Activity;
 import android.content.Context;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class PluginDetailsActivity extends Activity implements PluginListener, OnItemClickListener {
 
