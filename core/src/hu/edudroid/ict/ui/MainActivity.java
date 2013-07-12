@@ -1,8 +1,7 @@
 package hu.edudroid.ict.ui;
 
-import hu.edudroid.ict.CoreService;
 import hu.edudroid.ict.R;
-import android.app.Activity;
+import hu.edudroid.interfaces.Plugin;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,7 +9,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements OnClickListener{
+public class MainActivity extends ActivityBase implements OnClickListener{
 
 	private Button showModules;
 	private Button showPlugins;
@@ -26,7 +25,6 @@ public class MainActivity extends Activity implements OnClickListener{
 		showPlugins.setOnClickListener(this);
 		toQuotas = (Button)findViewById(R.id.toQuotas);
 		toQuotas.setOnClickListener(this);
-		startService(new Intent(this, CoreService.class));
 	}
 
 	@Override
@@ -42,6 +40,12 @@ public class MainActivity extends Activity implements OnClickListener{
 				startActivity(new Intent(this, ModuleOverviewActivity.class));
 				break;
 		}
+	}
+
+	@Override
+	public boolean newPlugin(Plugin plugin) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

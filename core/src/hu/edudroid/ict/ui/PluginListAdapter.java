@@ -4,6 +4,7 @@ import hu.edudroid.ict.R;
 import hu.edudroid.interfaces.Plugin;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
@@ -31,6 +32,12 @@ public class PluginListAdapter implements ListAdapter {
 
 	public void clearPlugins(){
 		mPlugins.clear();
+		onChanged();
+	}
+	
+	public void setPlugins(List<Plugin> plugins) {
+		mPlugins.clear();
+		mPlugins.addAll(plugins);
 		onChanged();
 	}
 	
@@ -140,5 +147,4 @@ public class PluginListAdapter implements ListAdapter {
 	public boolean isEnabled(int position){
 		return true;
 	}
-
 }

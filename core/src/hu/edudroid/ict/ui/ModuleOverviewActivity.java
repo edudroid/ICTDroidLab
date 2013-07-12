@@ -1,9 +1,10 @@
 package hu.edudroid.ict.ui;
 
 import hu.edudroid.ict.CoreService;
-import hu.edudroid.ict.CoreService.CoreBinder;
+import hu.edudroid.ict.ModuleLoader;
 import hu.edudroid.ict.R;
 import hu.edudroid.interfaces.ModuleDescriptor;
+import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.module.AssetReader;
 
 import java.io.File;
@@ -12,10 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
-import android.app.Activity;
 import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -26,13 +24,12 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-public class ModuleOverviewActivity extends Activity implements OnItemClickListener, ServiceConnection {
+public class ModuleOverviewActivity extends ActivityBase implements OnItemClickListener {
 	private static final String TAG = "ModuleOverviewActivity";
 	private static final String DESCRIPTOR_ASSET_FOLDER = "descriptors";
 	private static final String JAR_ASSET_FOLDER = "jars";
 	private ListView moduleList;
 	private ModuleListAdapter moduleListAdapter;
-	private CoreService service;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,18 +41,6 @@ public class ModuleOverviewActivity extends Activity implements OnItemClickListe
 		moduleList.setAdapter(moduleListAdapter);
 	}
 	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		bindService(new Intent(this, CoreService.class), this, BIND_AUTO_CREATE);
-	}
-	
-	@Override
-	protected void onPause() {
-		service = null;
-		unbindService(this);
-		super.onPause();
-	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
@@ -63,8 +48,7 @@ public class ModuleOverviewActivity extends Activity implements OnItemClickListe
 
 	@Override
 	public void onServiceConnected(ComponentName arg0, IBinder arg1) {
-		Log.e(TAG, "Service connected");
-		this.service = ((CoreBinder)arg1).getService();
+		super.onServiceConnected(arg0, arg1);
 		refreshModuleList();
 	}
 	
@@ -90,7 +74,7 @@ public class ModuleOverviewActivity extends Activity implements OnItemClickListe
 			}
 			for (String descriptor : descriptors) {
 				File descriptorFile = AssetReader.copyAsset(new File(DESCRIPTOR_ASSET_FOLDER, descriptor).getAbsolutePath(), new File(getFilesDir(), CoreService.DESCRIPTOR_FOLDER), this);
-				ModuleDescriptor moduleDescriptor = service.parseModuleDescriptor(descriptorFile);
+				ModuleDescriptor moduleDescriptor = ModuleLoader.parseModuleDescriptor(descriptorFile);
 				if (moduleDescriptor != null) {
 					modulesInAssets.add(moduleDescriptor);
 				}
@@ -117,11 +101,6 @@ public class ModuleOverviewActivity extends Activity implements OnItemClickListe
 		});
 	}
 
-	@Override
-	public void onServiceDisconnected(ComponentName arg0) {
-		this.service = null;
-	}
-
 	public void loadModule(ModuleDescriptor moduleDescriptor) {
 		if (service != null) {
 			boolean success = service.addModule(moduleDescriptor);
@@ -133,5 +112,12 @@ public class ModuleOverviewActivity extends Activity implements OnItemClickListe
 			}
 		}
 		
+	}
+
+
+	@Override
+	public boolean newPlugin(Plugin plugin) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

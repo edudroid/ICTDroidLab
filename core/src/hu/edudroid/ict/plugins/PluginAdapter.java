@@ -27,7 +27,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	private final String					mDescription;
 	private final String					mVersionCode;
 	private final ArrayList<PluginQuota>	mQuotas;
-	private final PluginPollingBroadcast 	mBroadcast = PluginPollingBroadcast.getInstance();
+	private final PluginPollingBroadcast 	mBroadcast;
 
 	private Context							mContext;
 	private List<String>					mPluginMethods;
@@ -45,6 +45,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 					final String versionCode,
 					final List<String> pluginMethods,
 					final List<String> events,
+					PluginPollingBroadcast broadcast,
 					final Context context) {
 		mName = name;
 		mAuthor = author;
@@ -53,6 +54,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 		mQuotas = new ArrayList<PluginQuota>();
 		mPluginMethods = pluginMethods;
 		mEvents = events;
+		mBroadcast = broadcast;
 		
 		mCallBackIdentification = new HashMap<Long, PluginResultListener>();
 		mEventListeners = new HashMap<String,List<PluginEventListener>>();

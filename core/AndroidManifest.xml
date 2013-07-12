@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="15" />
+        android:targetSdkVersion="17" />
     
     
     <!--  JUST FOR TEST -->
@@ -43,6 +43,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             
+        </activity>
+        
+        <activity android:name="hu.edudroid.ict.ui.ActivityBase" android:screenOrientation="portrait">
         </activity>
         
         <activity android:name="hu.edudroid.ict.ui.PluginListActivity" android:screenOrientation="portrait">
