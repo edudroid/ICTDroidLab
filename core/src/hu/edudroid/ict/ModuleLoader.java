@@ -1,12 +1,18 @@
 package hu.edudroid.ict;
 
 import hu.edudroid.interfaces.ModuleDescriptor;
+import hu.edudroid.module.AssetReader;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.util.Log;
 
 public class ModuleLoader {
@@ -14,6 +20,8 @@ public class ModuleLoader {
 	private static final String CLASS_NAME_KEY = "class_name";
 	private static final String MODULE_NAME_KEY = "module_name";
 	private static final String TAG = "ModuleLoader";
+	private static final String DESCRIPTOR_ASSET_FOLDER = "descriptors";
+	private static final String JAR_ASSET_FOLDER = "jars";
 
 	/**
 	 * Parse a module descriptor.
@@ -51,5 +59,23 @@ public class ModuleLoader {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public static List<ModuleDescriptor> readModulesFromAssets(Context context, AssetManager assetManager) throws IOException {
+		ArrayList<ModuleDescriptor> modulesInAssets = new ArrayList<ModuleDescriptor>();
+		String[] descriptors = assetManager.list(DESCRIPTOR_ASSET_FOLDER);
+		String[] jars = assetManager.list(JAR_ASSET_FOLDER);
+		for (String jar : jars) {
+			String assetPath = new File(JAR_ASSET_FOLDER, jar).getAbsolutePath();
+			AssetReader.copyAsset(assetPath, CoreService.getJarFolder(context), context);
+		}
+		for (String descriptor : descriptors) {
+			File descriptorFile = AssetReader.copyAsset(new File(DESCRIPTOR_ASSET_FOLDER, descriptor).getAbsolutePath(), new File(context.getFilesDir(), CoreService.DESCRIPTOR_FOLDER), context);
+			ModuleDescriptor moduleDescriptor = ModuleLoader.parseModuleDescriptor(descriptorFile);
+			if (moduleDescriptor != null) {
+				modulesInAssets.add(moduleDescriptor);
+			}
+		}
+		return modulesInAssets;
 	}
 }

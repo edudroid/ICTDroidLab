@@ -40,6 +40,7 @@ public class PluginListActivity extends ActivityBase implements PluginListener,
 	@Override
 	protected void onResume() {
 		super.onResume();
+		refreshPluginlist();
 	}
 
 	private void refreshPluginlist() {
