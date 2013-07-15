@@ -1,9 +1,11 @@
 package hu.edudroid.ict.ui;
 
-import hu.edudroid.ict.ModuleLoader;
+import hu.edudroid.ict.ModuleSetListener;
 import hu.edudroid.ict.R;
 import hu.edudroid.interfaces.ModuleDescriptor;
 import hu.edudroid.interfaces.Plugin;
+import hu.edudroid.module.ModuleLoader;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +21,7 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-public class ModuleOverviewActivity extends ActivityBase implements OnItemClickListener {
+public class ModuleOverviewActivity extends ActivityBase implements OnItemClickListener, ModuleSetListener {
 	private static final String TAG = "ModuleOverviewActivity";
 	private ListView moduleList;
 	private ModuleListAdapter moduleListAdapter;
@@ -34,7 +36,6 @@ public class ModuleOverviewActivity extends ActivityBase implements OnItemClickL
 		moduleList.setAdapter(moduleListAdapter);
 	}
 	
-
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 	}
@@ -86,14 +87,33 @@ public class ModuleOverviewActivity extends ActivityBase implements OnItemClickL
 			} else {
 				Toast.makeText(this, "Module " + moduleDescriptor.getModuleName() + " couldn't be loaded.", Toast.LENGTH_LONG).show();
 			}
-		}
-		
+		}		
 	}
 
+	public void removeModule(ModuleDescriptor moduleDescriptor) {
+		if (service != null) {
+			boolean success = service.removeModule(moduleDescriptor.getClassName());
+			if (success) {
+				refreshModuleList();
+				Toast.makeText(this, "Module " + moduleDescriptor.getModuleName() + " loaded successfully!", Toast.LENGTH_LONG).show();
+			} else {
+				Toast.makeText(this, "Module " + moduleDescriptor.getModuleName() + " couldn't be loaded.", Toast.LENGTH_LONG).show();
+			}
+		}
+	}
 
 	@Override
 	public boolean newPlugin(Plugin plugin) {
-		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void moduleAdded(ModuleDescriptor moduleDescriptor) {
+		refreshModuleList();
+	}
+
+	@Override
+	public void moduleRemoved(ModuleDescriptor moduleDescriptor) {
+		refreshModuleList();
 	}
 }

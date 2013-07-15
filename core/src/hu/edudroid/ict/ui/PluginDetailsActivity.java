@@ -1,8 +1,8 @@
 package hu.edudroid.ict.ui;
 
 import hu.edudroid.ict.R;
-import hu.edudroid.ict.plugins.PluginListener;
 import hu.edudroid.interfaces.Plugin;
+import hu.edudroid.interfaces.PluginListener;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +14,7 @@ import android.widget.ListView;
 
 public class PluginDetailsActivity extends Activity implements PluginListener, OnItemClickListener {
 
-	private Plugin					mPlugin;
+	private Plugin mPlugin;
 	private ListView methodList;
 
 	@Override

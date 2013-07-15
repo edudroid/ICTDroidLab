@@ -3,9 +3,9 @@ package hu.edudroid.ict.ui;
 import hu.edudroid.ict.CoreService;
 import hu.edudroid.ict.R;
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
-import hu.edudroid.ict.plugins.PluginListener;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
+import hu.edudroid.interfaces.PluginListener;
 
 import java.util.List;
 

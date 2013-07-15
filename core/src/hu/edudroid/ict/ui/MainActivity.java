@@ -3,6 +3,7 @@ package hu.edudroid.ict.ui;
 import java.util.List;
 
 import hu.edudroid.ict.R;
+import hu.edudroid.interfaces.ModuleDescriptor;
 import hu.edudroid.interfaces.Plugin;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -54,6 +55,7 @@ public class MainActivity extends ActivityBase implements OnClickListener{
 			} else {
 				showPlugins.setText(R.string.noPlugins);
 			}
+			List<ModuleDescriptor> modules = service.getLoadedModules();
 		} else {
 			showPlugins.setText(R.string.noPlugins);
 		}

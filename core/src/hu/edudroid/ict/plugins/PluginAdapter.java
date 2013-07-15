@@ -12,8 +12,10 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import android.content.Context;
 import android.content.Intent;
@@ -35,7 +37,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	
 	
 	private Map<Long, PluginResultListener> mCallBackIdentification;
-	private Map<String,List<PluginEventListener>> mEventListeners;
+	private Map<String,HashSet<PluginEventListener>> mEventListeners;
 	
 	private static long mCallMethodID = 0;
 
@@ -57,7 +59,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 		mBroadcast = broadcast;
 		
 		mCallBackIdentification = new HashMap<Long, PluginResultListener>();
-		mEventListeners = new HashMap<String,List<PluginEventListener>>();
+		mEventListeners = new HashMap<String,HashSet<PluginEventListener>>();
 		mContext = context;
 	}
 
@@ -156,7 +158,7 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	@Override
 	public void onEvent(String plugin, String version, String eventName, List<String> extras) {
 		if (plugin.equals(getName())) {
-			List<PluginEventListener> listeners = mEventListeners.get(eventName);
+			HashSet<PluginEventListener> listeners = mEventListeners.get(eventName);
 			if (listeners != null) {
 				for (PluginEventListener listener : listeners) {
 					try {
@@ -171,9 +173,9 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 
 	@Override
 	public void registerEventListener(String eventName, PluginEventListener listener) {
-		List<PluginEventListener> listeners = mEventListeners.get(eventName);
+		HashSet<PluginEventListener> listeners = mEventListeners.get(eventName);
 		if (listeners == null) {
-			listeners = new ArrayList<PluginEventListener>();
+			listeners = new HashSet<PluginEventListener>();
 			mEventListeners.put(eventName, listeners);
 			mBroadcast.registerEventListener(this);
 		}
@@ -185,9 +187,29 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 	@Override
 	public void unregisterEventListener(String eventName,
 			PluginEventListener listener) {
-		List<PluginEventListener> listeners = mEventListeners.get(eventName);
+		HashSet<PluginEventListener> listeners = mEventListeners.get(eventName);
 		if(listeners!=null){
 			listeners.remove(listener);
+		}
+	}
+
+	@Override
+	public void unregisterEventListener(PluginEventListener listener) {
+		for(HashSet<PluginEventListener> listeners : mEventListeners.values()){
+			listeners.remove(listener);
+		}
+	}
+
+	@Override
+	public void cancelCallsForListener(PluginResultListener listener) {
+		HashSet<Long> callsToRemove = new HashSet<Long>();
+		for (Entry<Long, PluginResultListener> entry : mCallBackIdentification.entrySet()){
+			if (entry.getValue().equals(listener)) {
+				callsToRemove.add(entry.getKey());
+			}
+		}
+		for (Long callId : callsToRemove){
+			mCallBackIdentification.remove(callId);
 		}
 	}
 }

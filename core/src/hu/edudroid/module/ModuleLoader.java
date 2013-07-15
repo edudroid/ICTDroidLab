@@ -1,7 +1,8 @@
-package hu.edudroid.ict;
+package hu.edudroid.module;
 
+import hu.edudroid.ict.CoreService;
+import hu.edudroid.ict.FileUtils;
 import hu.edudroid.interfaces.ModuleDescriptor;
-import hu.edudroid.module.AssetReader;
 
 import java.io.File;
 import java.io.IOException;

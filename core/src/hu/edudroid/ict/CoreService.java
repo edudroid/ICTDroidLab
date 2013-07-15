@@ -1,7 +1,6 @@
 package hu.edudroid.ict;
 
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
-import hu.edudroid.ict.plugins.PluginListener;
 import hu.edudroid.ict.plugins.PLuginIntentReceiver;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Logger;
@@ -9,9 +8,11 @@ import hu.edudroid.interfaces.Module;
 import hu.edudroid.interfaces.ModuleDescriptor;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginCollection;
+import hu.edudroid.interfaces.PluginListener;
 import hu.edudroid.interfaces.Preferences;
 import hu.edudroid.interfaces.TimeServiceInterface;
 import hu.edudroid.module.AndroidLogger;
+import hu.edudroid.module.ModuleLoader;
 import hu.edudroid.module.ModuleTimeService;
 import hu.edudroid.module.SharedPrefs;
 
@@ -59,6 +60,7 @@ public class CoreService extends Service implements PluginListener {
 	private AndroidPluginCollection pluginCollection;
 
 	private HashSet<PluginListener> listeners = new HashSet<PluginListener>();
+	private HashSet<ModuleSetListener> moduleListeners = new HashSet<ModuleSetListener>();
 	private boolean started = false;
 	
 	public class CoreBinder extends Binder {
@@ -76,7 +78,7 @@ public class CoreService extends Service implements PluginListener {
 	public void onStart(Intent intent, int startId) {
 		if (!started) {
 			started = true;
-			Log.e(TAG, "Starting service!");
+			Log.i(TAG, "Starting service!");
 			mBroadcast = new PLuginIntentReceiver();
 			registerReceiver(mBroadcast, new IntentFilter(
 					Constants.INTENT_ACTION_DESCRIBE));
@@ -99,6 +101,7 @@ public class CoreService extends Service implements PluginListener {
 					return filename.endsWith("desc");
 				}
 			});
+			Log.i(TAG, "Loading " + descriptors.length + " module(s).");
 			for (String descriptor : descriptors) {
 				ModuleDescriptor moduleDescriptor = ModuleLoader.parseModuleDescriptor(new File(descriptorFolder,descriptor));
 				if (moduleDescriptor != null) {
@@ -106,7 +109,7 @@ public class CoreService extends Service implements PluginListener {
 				}
 			}
 		} else {
-			Log.e(TAG, "Service already running.");
+			Log.i(TAG, "Service already running.");
 		}
 	}
 	
@@ -117,7 +120,15 @@ public class CoreService extends Service implements PluginListener {
 	public void unregisterPluginDetailsListener(PluginListener listener) {
 		listeners.remove(listener);
 	}
-	
+
+	public void registerModuleSetListener(ModuleSetListener listener) {
+		moduleListeners.add(listener);
+	}
+
+	public void unregisterModuleSetListenerListener(ModuleSetListener listener) {
+		moduleListeners.remove(listener);
+	}
+
 	public List<ModuleDescriptor> getLoadedModules() {
 		List<ModuleDescriptor> ret = new ArrayList<ModuleDescriptor>();
 		for (String moduleClass : modules.keySet()) {
@@ -138,6 +149,9 @@ public class CoreService extends Service implements PluginListener {
 			modules.put(moduleDescriptor.getClassName(), module);
 			this.descriptors.put(moduleDescriptor.getClassName(), moduleDescriptor);
 			module.init();
+			for (ModuleSetListener listener : moduleListeners) {
+				listener.moduleAdded(moduleDescriptor);
+			}
 			return true;
 		} catch (NullPointerException e) {
 			Log.e(TAG, "Couldn't load module " + e);
@@ -160,6 +174,23 @@ public class CoreService extends Service implements PluginListener {
 			e.printStackTrace();
 			return false;
 		}
+	}
+	
+	public boolean removeModule(String moduleName) {
+		Log.w(TAG, "Removing module " + moduleName);
+		Module module = modules.remove(moduleName);
+		ModuleDescriptor descriptor = descriptors.remove(moduleName);
+		if (module != null) {
+			pluginCollection.removeEventListener(module);
+			pluginCollection.removeResultListener(module);
+			for (ModuleSetListener listener : moduleListeners) {
+				listener.moduleRemoved(descriptor);
+			}
+			Log.w(TAG, "Module removed " + moduleName);
+			return true;
+		}
+		Log.e(TAG, "Couldn't remove module " + moduleName);		
+		return false;
 	}
 	
 	@SuppressWarnings("unchecked")

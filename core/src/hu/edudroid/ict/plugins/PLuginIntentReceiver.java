@@ -2,6 +2,7 @@ package hu.edudroid.ict.plugins;
 
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.PluginEventListener;
+import hu.edudroid.interfaces.PluginListener;
 import hu.edudroid.interfaces.PluginResultListener;
 
 import java.util.HashSet;

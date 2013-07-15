@@ -71,7 +71,11 @@ public class ModuleListAdapter implements ListAdapter, OnClickListener {
 		if (loadedState.get(arg0)) {
 			arg1.findViewById(R.id.loadModuleButton).setVisibility(View.INVISIBLE);
 			arg1.findViewById(R.id.loadedLabel).setVisibility(View.VISIBLE);
+			arg1.findViewById(R.id.removeModule).setVisibility(View.VISIBLE);
+			arg1.findViewById(R.id.removeModule).setOnClickListener(this);
+			arg1.findViewById(R.id.removeModule).setTag(module);
 		} else {
+			arg1.findViewById(R.id.removeModule).setVisibility(View.INVISIBLE);
 			arg1.findViewById(R.id.loadedLabel).setVisibility(View.GONE);
 			arg1.findViewById(R.id.loadModuleButton).setVisibility(View.VISIBLE);
 			arg1.findViewById(R.id.loadModuleButton).setOnClickListener(this);
@@ -118,6 +122,13 @@ public class ModuleListAdapter implements ListAdapter, OnClickListener {
 
 	@Override
 	public void onClick(View arg0) {
-		activity.loadModule((ModuleDescriptor)arg0.getTag());
+		switch(arg0.getId()) {
+		case R.id.removeModule: 
+			activity.removeModule((ModuleDescriptor)arg0.getTag());
+			break;
+		case R.id.loadModuleButton:
+			activity.loadModule((ModuleDescriptor)arg0.getTag());
+			break;
+		}
 	}
 }
