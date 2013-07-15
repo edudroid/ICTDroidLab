@@ -75,6 +75,7 @@ public class CoreService extends Service implements PluginListener {
 	private HashSet<PluginListener> listeners = new HashSet<PluginListener>();
 	private HashSet<ModuleSetListener> moduleListeners = new HashSet<ModuleSetListener>();
 	private boolean started = false;
+	private HashMap<String, TimeServiceInterface> timers = new HashMap<String, TimeServiceInterface>();
 	
 	public class CoreBinder extends Binder {
 		public CoreService getService() {
@@ -194,6 +195,7 @@ public class CoreService extends Service implements PluginListener {
 		Module module = modules.remove(moduleName);
 		ModuleDescriptor descriptor = descriptors.remove(moduleName);
 		if (module != null) {
+			timers.remove(moduleName);
 			pluginCollection.removeEventListener(module);
 			pluginCollection.removeResultListener(module);
 			for (ModuleSetListener listener : moduleListeners) {
@@ -223,12 +225,13 @@ public class CoreService extends Service implements PluginListener {
 			if (constructor == null) {
 				throw new NoSuchMethodException("Couldn't find proper consturctor.");
 			}
-			TimeServiceInterface timeservice = ModuleTimeService.getInstance();
+			TimeServiceInterface timeService = new ModuleTimeService();
+			timers.put(className, timeService);
 			Log.e(TAG,"Calling constructor");
 			module = constructor.newInstance(new SharedPrefs(this, className),
 					new AndroidLogger(className),
 					pluginCollection,
-					timeservice);
+					timeService);
 			Log.e(TAG,"Module init ready " + module);
 			return module;
 		} catch (ClassNotFoundException e) {
