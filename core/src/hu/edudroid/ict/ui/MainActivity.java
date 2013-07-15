@@ -1,24 +1,24 @@
 package hu.edudroid.ict.ui;
 
+import hu.edudroid.ict.ModuleSetListener;
+import hu.edudroid.ict.R;
+import hu.edudroid.interfaces.ModuleDescriptor;
+import hu.edudroid.interfaces.Plugin;
+import hu.edudroid.module.ModuleLoader;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import hu.edudroid.ict.ModuleSetListener;
-import hu.edudroid.ict.R;
-import hu.edudroid.interfaces.Plugin;
-import hu.edudroid.module.ModuleLoader;
-import hu.edudroid.ict.gcm.ServerUtilities;
-import hu.edudroid.interfaces.ModuleDescriptor;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
-import com.google.android.gcm.GCMRegistrar;
 
 public class MainActivity extends ActivityBase implements OnClickListener, ModuleSetListener {
 	private static final String TAG = "MainActivity";
