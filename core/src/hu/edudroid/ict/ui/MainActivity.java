@@ -1,21 +1,26 @@
 package hu.edudroid.ict.ui;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import hu.edudroid.ict.ModuleSetListener;
 import hu.edudroid.ict.R;
-import hu.edudroid.interfaces.ModuleDescriptor;
 import hu.edudroid.interfaces.Plugin;
+import hu.edudroid.module.ModuleLoader;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class MainActivity extends ActivityBase implements OnClickListener{
+public class MainActivity extends ActivityBase implements OnClickListener, ModuleSetListener{
 
+	private static final String TAG = "MainActivity";
 	private Button showModules;
 	private Button showPlugins;
 	private Button manageLocalStorage;
@@ -42,8 +47,17 @@ public class MainActivity extends ActivityBase implements OnClickListener{
 	}
 	
 	@Override
+	protected void onPause() {
+		if (service != null) {
+			service.unregisterModuleSetListenerListener(this);
+		}
+		super.onPause();
+	}
+	
+	@Override
 	public void onServiceConnected(ComponentName arg0, IBinder arg1) {
 		super.onServiceConnected(arg0, arg1);
+		service.registerModuleSetListener(this);
 		refreshUI();
 	}
 
@@ -55,7 +69,15 @@ public class MainActivity extends ActivityBase implements OnClickListener{
 			} else {
 				showPlugins.setText(R.string.noPlugins);
 			}
-			List<ModuleDescriptor> modules = service.getLoadedModules();
+			List<ModuleDescriptor> modules = new ArrayList<ModuleDescriptor>();
+			try {
+				modules.addAll(ModuleUtils.processModules(service.getLoadedModules(), ModuleLoader.readModulesFromAssets(this, getAssets())));
+				showModules.setText(getString(R.string.showModules, modules.size()));
+			} catch (IOException e) {
+				e.printStackTrace();
+				Log.e(TAG, "Error loading modules " + e);
+				showModules.setText("Error loading modules");
+			}
 		} else {
 			showPlugins.setText(R.string.noPlugins);
 		}
@@ -83,6 +105,18 @@ public class MainActivity extends ActivityBase implements OnClickListener{
 	public boolean newPlugin(Plugin plugin) {
 		refreshUI();
 		return false;
+	}
+
+	@Override
+	public void moduleAdded(
+			hu.edudroid.interfaces.ModuleDescriptor moduleDescriptor) {
+		refreshUI();
+	}
+
+	@Override
+	public void moduleRemoved(
+			hu.edudroid.interfaces.ModuleDescriptor moduleDescriptor) {
+		refreshUI();
 	}
 
 }

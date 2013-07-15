@@ -21,7 +21,6 @@ public class PluginDetailsActivity extends Activity implements PluginListener, O
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_plugin_details);
-
 		methodList = ((ListView) findViewById(R.id.details_list));
 	}
 

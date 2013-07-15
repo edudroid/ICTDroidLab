@@ -73,5 +73,10 @@ public class ModuleTimeService implements TimeServiceInterface {
 		
 		timer.scheduleAtFixedRate(tTask, when, periodicity);
 	}
+
+	@Override
+	public void cancelAll() {
+		timer.cancel();
+	}
 	
 }
