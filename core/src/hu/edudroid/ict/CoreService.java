@@ -2,6 +2,7 @@ package hu.edudroid.ict;
 
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PLuginIntentReceiver;
+import hu.edudroid.ict.plugins.PluginListener;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Logger;
 import hu.edudroid.interfaces.Module;
@@ -17,7 +18,6 @@ import hu.edudroid.module.ModuleTimeService;
 import hu.edudroid.module.SharedPrefs;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -25,15 +25,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -49,9 +40,6 @@ public class CoreService extends Service implements PluginListener {
 	public static final String DESCRIPTOR_FOLDER = "descriptors";
 	public static final String JAR_FOLDER = "jars";
 	
-	public static final String URL="http://localhost/wb/pages/mobile_api/";
-	
-	public static String C2DMid;
 	
 	public static File getDescriptorFolder(Context context) {
 		return new File(context.getFilesDir(), CoreService.DESCRIPTOR_FOLDER);
@@ -106,7 +94,8 @@ public class CoreService extends Service implements PluginListener {
 	
 			Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
 			sendBroadcast(mIntent);
-	
+			
+	/*
 			// Process descriptor files
 			File descriptorFolder = getDescriptorFolder(this);
 			String[] descriptors = descriptorFolder.list(new FilenameFilter() {
@@ -121,7 +110,8 @@ public class CoreService extends Service implements PluginListener {
 				if (moduleDescriptor != null) {
 					addModule(moduleDescriptor);
 				}
-			}
+			}*/
+			
 		} else {
 			Log.i(TAG, "Service already running.");
 		}
@@ -264,41 +254,4 @@ public class CoreService extends Service implements PluginListener {
 	public List<Plugin> getPlugins() {
 		return pluginCollection.getAllPlugins();
 	}
-	
-	public void StartRegistrationNotification()
-    {
-        Log.i("StartRegistrationNotification","Begin...");
-        Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
-        registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
-        registrationIntent.putExtra("sender", "wpatrik14@gmail.com");
-        this.startService(registrationIntent);
-        Log.i("StartRegistrationNotification","End");
-    }
-    
-    public static void sendRegId(){
-        try{
-            HttpClient client = new DefaultHttpClient();
-            HttpResponse response=null;
-
-            ArrayList<NameValuePair> nameValuePairs;
-            
-            nameValuePairs = new ArrayList<NameValuePair>();
-            nameValuePairs.add(new BasicNameValuePair("device_id", C2DMid));
-            nameValuePairs.add(new BasicNameValuePair("android_version", "4.0.4"));
-            nameValuePairs.add(new BasicNameValuePair("wifi_service", "1"));
-            nameValuePairs.add(new BasicNameValuePair("gps_service", "1"));
-            nameValuePairs.add(new BasicNameValuePair("3g_service", "1"));
-
-            HttpPost httppost = new HttpPost(URL+"registerDevice.php");
-            
-
-            Log.i("REG_ID",C2DMid);
-            
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
-            response=client.execute(httppost);
-        }
-        catch(Exception e){
-            Log.i("Hiba (sendRegId)",e.toString());
-        }
-    }
 }
