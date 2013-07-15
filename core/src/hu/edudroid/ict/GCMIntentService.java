@@ -1,6 +1,5 @@
 package hu.edudroid.ict;
 
-import hu.edudroid.ict.ui.MainActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -12,7 +11,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     private static final String TAG = "GCMIntentService";
  
     public GCMIntentService() {
-        super(MainActivity.SENDER_ID);
+        super(CoreService.SENDER_ID);
     }
  
     /**

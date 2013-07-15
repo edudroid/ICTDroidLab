@@ -24,7 +24,7 @@ public final class ServerUtilities {
     private static final int BACKOFF_MILLI_SECONDS = 2000;
     private static final Random random = new Random();
     
-    public static final String SERVER_URL="http://asd.com";
+    public static final String SERVER_URL="http://152.66.244.83/pages/mobile_api/";
     public static final String TAG="Server Utilities";
  
     /**
@@ -35,9 +35,7 @@ public final class ServerUtilities {
         Log.i(TAG, "registering device (regId = " + regId + ")");
         String serverUrl = SERVER_URL;
         Map<String, String> params = new HashMap<String, String>();
-        params.put("regId", regId);
-        params.put("name", name);
-        params.put("email", email);
+        params.put("device_id", regId);
          
         long backoff = BACKOFF_MILLI_SECONDS + random.nextInt(1000);
         // Once GCM returns a registration id, we need to register on our server
@@ -46,7 +44,7 @@ public final class ServerUtilities {
         for (int i = 1; i <= MAX_ATTEMPTS; i++) {
             Log.d(TAG, "Attempt #" + i + " to register");
             try {
-                post(serverUrl, params);
+                post(serverUrl+"registerDevice.php", params);
                 GCMRegistrar.setRegisteredOnServer(context, true);
                 String message = context.getString(R.string.server_registered);
                 Log.e(TAG,message);

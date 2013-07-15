@@ -26,7 +26,6 @@
     <string name="uploadManual">Manual Upload</string>
     <string name="storageButtonLabel">Manage local storage</string>
     <string name="statisticsButtonLabel">Statistics</string>
-<<<<<<< HEAD
     
     <!-- Google Cloud Messaging -->
     <string name="title_activity_main">Push Notifications</string>
@@ -48,7 +47,5 @@
     <string name="options_clear">Clear</string>
     <string name="options_exit">Exit</string>
    
-=======
     <string name="remove">Remove</string>   
->>>>>>> origin/master
 </resources>
