@@ -2,7 +2,6 @@ package hu.edudroid.ict;
 
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PLuginIntentReceiver;
-import hu.edudroid.ict.plugins.PluginListener;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Logger;
 import hu.edudroid.interfaces.Module;
@@ -13,7 +12,6 @@ import hu.edudroid.interfaces.PluginListener;
 import hu.edudroid.interfaces.Preferences;
 import hu.edudroid.interfaces.TimeServiceInterface;
 import hu.edudroid.module.AndroidLogger;
-import hu.edudroid.module.ModuleLoader;
 import hu.edudroid.module.ModuleTimeService;
 import hu.edudroid.module.SharedPrefs;
 

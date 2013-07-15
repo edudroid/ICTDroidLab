@@ -23,7 +23,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import com.google.android.gcm.GCMRegistrar;
 
-public class MainActivity extends ActivityBase implements OnClickListener, ModuleSetListener{
+public class MainActivity extends ActivityBase implements OnClickListener, ModuleSetListener {
 	private static final String TAG = "MainActivity";
 	private Button showModules;
 	private Button showPlugins;
@@ -109,6 +109,7 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
             GCMRegistrar.onDestroy(this);
         } catch (Exception e) {
             Log.e("UnRegister Receiver Error", "> " + e.getMessage());
+            e.printStackTrace();
         }
         super.onDestroy();
     }
@@ -116,6 +117,9 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if (service != null) {
+			service.registerModuleSetListener(this);
+		}
 		refreshUI();
 	}
 	

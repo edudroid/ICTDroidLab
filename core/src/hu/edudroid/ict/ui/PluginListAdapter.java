@@ -9,7 +9,6 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.database.DataSetObserver;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +17,11 @@ import android.widget.TextView;
 
 public class PluginListAdapter implements ListAdapter {
 
-	private ArrayList<Plugin>	mPlugins;
-	
-	private Context					mContext			= null;
-	private LayoutInflater			mInflater			= null;
-	private DataSetObserver			mObserver			= null;
+	private ArrayList<Plugin> mPlugins;
+
+	private Context mContext = null;
+	private LayoutInflater mInflater = null;
+	private DataSetObserver mObserver = null;
 
 	public PluginListAdapter(Activity activity) {
 		mPlugins = new ArrayList<Plugin>();
@@ -30,121 +29,106 @@ public class PluginListAdapter implements ListAdapter {
 		mInflater = activity.getLayoutInflater();
 	}
 
-	public void clearPlugins(){
+	public void clearPlugins() {
 		mPlugins.clear();
 		onChanged();
 	}
-	
+
 	public void setPlugins(List<Plugin> plugins) {
 		mPlugins.clear();
 		mPlugins.addAll(plugins);
 		onChanged();
 	}
-	
-	public boolean addPlugin(final Plugin plugin){
-		if(!mPlugins.contains(plugin)){
-			mPlugins.add(plugin);
-			Log.e("New Plugin added to PluginAdapter!",plugin.getName());
-			onChanged();
-			return true;
-		}
-		else{
-			Log.e("Plugin is already in PluginAdapter",plugin.getName());
-			return false;
-		}
-	}
 
-	public void onChanged(){
+	public void onChanged() {
 		if (mObserver != null)
 			mObserver.onChanged();
 	}
 
 	@Override
-	public int getCount(){
+	public int getCount() {
 		if (mPlugins == null)
 			return 0;
 		return (mPlugins.size());
 	}
 
 	@Override
-	public Plugin getItem(int position){
+	public Plugin getItem(int position) {
 		if (mPlugins == null)
 			return null;
 		return (mPlugins.get(position));
 	}
 
 	@Override
-	public long getItemId(int position){
+	public long getItemId(int position) {
 		return position;
 	}
 
 	@Override
-	public int getItemViewType(int position){
+	public int getItemViewType(int position) {
 		return 0;
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent){
+	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null)
 			convertView = mInflater.inflate(R.layout.view_listitem_plugins,
-											parent,
-											false);
+					parent, false);
 
-		generateView(convertView, mContext,getItem(position));
+		generateView(convertView, mContext, getItem(position));
 
 		return convertView;
 	}
-	
-	public View generateView(final View root, final Context context,Plugin plugin){
-		try{
+
+	public View generateView(final View root, final Context context,
+			Plugin plugin) {
+		try {
 			final String author = context.getString(R.string.created_by,
-													plugin.getAuthor());
-			((TextView) root.findViewById(R.id.plugin_title)).setText(plugin.getName()
-																		+ " (version "
-																		+ plugin.getVersionCode()
-																		+ ")");
+					plugin.getAuthor());
+			((TextView) root.findViewById(R.id.plugin_title)).setText(plugin
+					.getName() + " (version " + plugin.getVersionCode() + ")");
 			((TextView) root.findViewById(R.id.plugin_author)).setText(author);
-			((TextView) root.findViewById(R.id.plugin_description)).setText(plugin.getDescription());
+			((TextView) root.findViewById(R.id.plugin_description))
+					.setText(plugin.getDescription());
 
 			return root;
-		}
-		catch (Exception ex){
+		} catch (Exception ex) {
 			throw new IllegalArgumentException();
 		}
 	}
 
 	@Override
-	public int getViewTypeCount(){
+	public int getViewTypeCount() {
 		return 1;
 	}
 
 	@Override
-	public boolean hasStableIds(){
+	public boolean hasStableIds() {
 		return true;
 	}
 
 	@Override
-	public boolean isEmpty(){
+	public boolean isEmpty() {
 		return (getCount() == 0);
 	}
 
 	@Override
-	public void registerDataSetObserver(DataSetObserver observer){
+	public void registerDataSetObserver(DataSetObserver observer) {
 		mObserver = observer;
 	}
 
 	@Override
-	public void unregisterDataSetObserver(DataSetObserver observer){
+	public void unregisterDataSetObserver(DataSetObserver observer) {
 		mObserver = null;
 	}
 
 	@Override
-	public boolean areAllItemsEnabled(){
+	public boolean areAllItemsEnabled() {
 		return true;
 	}
 
 	@Override
-	public boolean isEnabled(int position){
+	public boolean isEnabled(int position) {
 		return true;
 	}
 }

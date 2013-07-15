@@ -6,21 +6,6 @@
     tools:context=".PluginListActivity" >
 
     <LinearLayout
-        android:id="@+id/plugin_count"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/plugin_count_text"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dip"
-            android:gravity="center"
-            android:text="@string/plugins_count"
-            android:textAppearance="@android:style/TextAppearance.Medium" />
-    </LinearLayout>
-    
-    <LinearLayout
         android:id="@+id/no_plugins"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
