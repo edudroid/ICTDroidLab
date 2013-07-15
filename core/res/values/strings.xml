@@ -26,4 +26,6 @@
     <string name="uploadManual">Manual Upload</string>
     <string name="storageButtonLabel">Manage local storage</string>
     <string name="statisticsButtonLabel">Statistics</string>
+    
+   
 </resources>
