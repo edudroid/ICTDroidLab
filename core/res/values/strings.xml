@@ -26,5 +26,5 @@
     <string name="uploadManual">Manual Upload</string>
     <string name="storageButtonLabel">Manage local storage</string>
     <string name="statisticsButtonLabel">Statistics</string>
-    <string name="remove">Remove</string>
+    <string name="remove">Remove</string>   
 </resources>
