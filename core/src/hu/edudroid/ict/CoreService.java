@@ -1,11 +1,13 @@
 package hu.edudroid.ict;
 
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
-import hu.edudroid.ict.plugins.PluginPollingBroadcast;
+import hu.edudroid.ict.plugins.PluginListener;
+import hu.edudroid.ict.plugins.PLuginIntentReceiver;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Logger;
 import hu.edudroid.interfaces.Module;
 import hu.edudroid.interfaces.ModuleDescriptor;
+import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginCollection;
 import hu.edudroid.interfaces.Preferences;
 import hu.edudroid.interfaces.TimeServiceInterface;
@@ -19,10 +21,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Service;
 import android.content.Context;
@@ -33,34 +33,33 @@ import android.os.IBinder;
 import android.util.Log;
 import dalvik.system.DexClassLoader;
 
-public class CoreService extends Service {
+public class CoreService extends Service implements PluginListener {
 	
 	public static final String TEMP_DIR = "temp";
-	
 	public static final String DESCRIPTOR_FOLDER = "descriptors";
+	public static final String JAR_FOLDER = "jars";	
 	
 	public static File getDescriptorFolder(Context context) {
 		return new File(context.getFilesDir(), CoreService.DESCRIPTOR_FOLDER);
 	}
 
-	public static final String JAR_FOLDER = "jars";	
 	
 	public static File getJarFolder(Context context) {
 		return new File(context.getFilesDir(), CoreService.JAR_FOLDER);
 	}
 
 	private static final String TAG = "CoreService";
-	private static final String JAR_FILE_KEY = "jar_file";
-	private static final String CLASS_NAME_KEY = "class_name";
 
-	private static final String MODULE_NAME_KEY = "module_name";
-
-	private PluginPollingBroadcast mBroadcast = null;
-	private AndroidPluginCollection mPluginCollection = null;
+	private PLuginIntentReceiver mBroadcast;
 	private HashMap<String, Module> modules = new HashMap<String, Module>(); // Modules by class name
 	private HashMap<String, ModuleDescriptor> descriptors = new HashMap<String, ModuleDescriptor>(); // Descriptors by class name
 	
 	private CoreBinder binder = new CoreBinder();
+	
+	private AndroidPluginCollection pluginCollection;
+
+	private HashSet<PluginListener> listeners = new HashSet<PluginListener>();
+	private boolean started = false;
 	
 	public class CoreBinder extends Binder {
 		public CoreService getService() {
@@ -75,76 +74,48 @@ public class CoreService extends Service {
 
 	@Override
 	public void onStart(Intent intent, int startId) {
-		Log.e(TAG, "Service has been started!");
-
-		// Plugin -> PluginPollingBroadcast
-		mBroadcast = PluginPollingBroadcast.getInstance();
-		registerReceiver(mBroadcast, new IntentFilter(
-				Constants.INTENT_ACTION_DESCRIBE));
-		registerReceiver(mBroadcast, new IntentFilter(
-				Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER));
-		registerReceiver(mBroadcast, new IntentFilter(
-				Constants.INTENT_ACTION_PLUGIN_EVENT));
-
-		// PluginPollingBroadcast -> mPluginCollection
-		mPluginCollection = AndroidPluginCollection.getInstance();
-		mBroadcast.registerPluginDetailsListener(mPluginCollection);
-
-		Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
-		sendBroadcast(mIntent);
-
-		// Process descriptor files
-		File descriptorFolder = getDescriptorFolder(this);
-		String[] descriptors = descriptorFolder.list(new FilenameFilter() {
-			@Override
-			public boolean accept(File dir, String filename) {
-				return filename.endsWith("desc");
+		if (!started) {
+			started = true;
+			Log.e(TAG, "Starting service!");
+			mBroadcast = new PLuginIntentReceiver();
+			registerReceiver(mBroadcast, new IntentFilter(
+					Constants.INTENT_ACTION_DESCRIBE));
+			registerReceiver(mBroadcast, new IntentFilter(
+					Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER));
+			registerReceiver(mBroadcast, new IntentFilter(
+					Constants.INTENT_ACTION_PLUGIN_EVENT));
+	
+			pluginCollection = new AndroidPluginCollection();
+			mBroadcast.registerPluginDetailsListener(this);
+	
+			Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
+			sendBroadcast(mIntent);
+	
+			// Process descriptor files
+			File descriptorFolder = getDescriptorFolder(this);
+			String[] descriptors = descriptorFolder.list(new FilenameFilter() {
+				@Override
+				public boolean accept(File dir, String filename) {
+					return filename.endsWith("desc");
+				}
+			});
+			for (String descriptor : descriptors) {
+				ModuleDescriptor moduleDescriptor = ModuleLoader.parseModuleDescriptor(new File(descriptorFolder,descriptor));
+				if (moduleDescriptor != null) {
+					addModule(moduleDescriptor);
+				}
 			}
-		});
-		for (String descriptor : descriptors) {
-			ModuleDescriptor moduleDescriptor = parseModuleDescriptor(new File(descriptorFolder,descriptor));
-			if (moduleDescriptor != null) {
-				addModule(moduleDescriptor);
-			}
+		} else {
+			Log.e(TAG, "Service already running.");
 		}
 	}
 	
-	/**
-	 * Parse a module descriptor.
-	 * @param descriptorPath Path to the JSON descriptor file.
-	 * @return The descriptor of the parsed module, or null if parsing was unsuccessful.
-	 */
-	public ModuleDescriptor parseModuleDescriptor(File descriptorPath) {
-		Log.i(TAG, "Parsing module from descriptor " + descriptorPath);
-		JSONObject json = null;
-		String moduleName = null;
-		String jarFile = null;
-		String className = null;
-		try {
-			String fileContent = FileUtils.readFile(descriptorPath);
-			Log.i(TAG, "Parsing descriptor : " + fileContent);
-			json = new JSONObject(fileContent);
-			jarFile = json.getString(JAR_FILE_KEY);
-			className = json.getString(CLASS_NAME_KEY);
-			moduleName = json.getString(MODULE_NAME_KEY);
-			return new ModuleDescriptor(moduleName, className, jarFile);
-		} catch (JSONException e) {
-			Log.e(TAG, "Couldn't load parameters from descriptor " + descriptorPath);
-			e.printStackTrace();
-			return null;
-		} catch (SecurityException e) {
-			Log.e(TAG, "Couldn't load " + className + " from " + jarFile + " : " + e.getMessage());
-			e.printStackTrace();
-			return null;
-		} catch (IllegalArgumentException e) {
-			Log.e(TAG, "Couldn't load " + className + " from " + jarFile + " : " + e.getMessage());
-			e.printStackTrace();
-			return null;
-		} catch (Exception e) {
-			Log.e(TAG, "Couldn't load " + className + " from " + jarFile + " : " + e.getMessage());
-			e.printStackTrace();
-			return null;
-		}
+	public void registerPluginDetailsListener(PluginListener listener) {
+		listeners.add(listener);
+	}
+
+	public void unregisterPluginDetailsListener(PluginListener listener) {
+		listeners.remove(listener);
 	}
 	
 	public List<ModuleDescriptor> getLoadedModules() {
@@ -208,7 +179,6 @@ public class CoreService extends Service {
 			if (constructor == null) {
 				throw new NoSuchMethodException("Couldn't find proper consturctor.");
 			}
-			PluginCollection pluginCollection = AndroidPluginCollection.getInstance();
 			TimeServiceInterface timeservice = ModuleTimeService.getInstance();
 			Log.e(TAG,"Calling constructor");
 			module = constructor.newInstance(new SharedPrefs(this, className),
@@ -231,5 +201,19 @@ public class CoreService extends Service {
 	public void onDestroy() {
 		Log.e(TAG, "Service destroyed");
 		super.onDestroy();
+	}
+
+	@Override
+	public boolean newPlugin(Plugin plugin) {
+		pluginCollection.newPlugin(plugin);
+		for (PluginListener listener : listeners) {
+			listener.newPlugin(plugin);
+		}
+		return true;
+	}
+
+
+	public List<Plugin> getPlugins() {
+		return pluginCollection.getAllPlugins();
 	}
 }

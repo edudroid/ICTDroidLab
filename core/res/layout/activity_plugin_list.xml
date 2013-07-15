@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/no_plugins"
+            android:text="@string/noPlugins"
             android:layout_marginBottom="12dip"
             android:textAppearance="@android:style/TextAppearance.Medium" />
 

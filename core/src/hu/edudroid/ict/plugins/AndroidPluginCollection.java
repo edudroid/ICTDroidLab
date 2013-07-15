@@ -5,36 +5,28 @@ import hu.edudroid.interfaces.PluginCollection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import android.util.Log;
 
 public class AndroidPluginCollection implements PluginCollection, PluginListener {
 
 	private static final String TAG = null;
-	private static AndroidPluginCollection	mInstance	= null;
 	private HashMap<String, Plugin>			mPlugins	= null;
 
-	private AndroidPluginCollection() {
+	public AndroidPluginCollection() {
 		mPlugins = new HashMap<String, Plugin>();		
 	}
 
-	public static AndroidPluginCollection getInstance(){
-		if (mInstance == null){
-			synchronized (AndroidPluginCollection.class){
-				if (mInstance == null)
-					mInstance = new AndroidPluginCollection();
-			}
-		}
-		return mInstance;
-	}
 	
 	@Override
 	public Plugin getPluginByName(String name) {
+		Log.i(TAG, "Requested " + name + ", searching among " + mPlugins.size() + " plugins.");
 		return mPlugins.get(name);
 	}
 	
 	@Override
-	public ArrayList<Plugin> getAllPlugins() {
+	public List<Plugin> getAllPlugins() {
 		return new ArrayList<Plugin>(mPlugins.values());
 	}
 
