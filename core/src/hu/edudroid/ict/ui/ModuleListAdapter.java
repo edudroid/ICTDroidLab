@@ -1,7 +1,6 @@
 package hu.edudroid.ict.ui;
 
 import hu.edudroid.ict.R;
-import hu.edudroid.interfaces.ModuleDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,21 +16,18 @@ import android.widget.TextView;
 public class ModuleListAdapter implements ListAdapter, OnClickListener {
 	
 	private List<ModuleDescriptor> modules;
-	private List<Boolean> loadedState;
 	private List<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 	private LayoutInflater inflater;
 	private ModuleOverviewActivity activity;
 
-	public ModuleListAdapter(List<ModuleDescriptor> modules, List<Boolean> loadedState, ModuleOverviewActivity activity, LayoutInflater inflater) {
-		this.loadedState = loadedState;
+	public ModuleListAdapter(List<ModuleDescriptor> modules, ModuleOverviewActivity activity, LayoutInflater inflater) {
 		this.modules = modules;
 		this.inflater = inflater;
 		this.activity = activity;
 	}
 	
-	public void setModules(List<ModuleDescriptor> modules, List<Boolean> loadedState){
+	public void setModules(List<ModuleDescriptor> modules){
 		this.modules = modules;
-		this.loadedState = loadedState;
 		notifyObservers();
 	}
 	
@@ -68,14 +64,14 @@ public class ModuleListAdapter implements ListAdapter, OnClickListener {
 			arg1 = inflater.inflate(R.layout.view_module_list_item, null);
 		}
 		((TextView)arg1.findViewById(R.id.moduleNameLable)).setText(module.getModuleName());
-		if (loadedState.get(arg0)) {
-			arg1.findViewById(R.id.loadModuleButton).setVisibility(View.INVISIBLE);
+		if (module.isLoaded()) {
+			arg1.findViewById(R.id.loadModuleButton).setVisibility(View.GONE);
 			arg1.findViewById(R.id.loadedLabel).setVisibility(View.VISIBLE);
 			arg1.findViewById(R.id.removeModule).setVisibility(View.VISIBLE);
 			arg1.findViewById(R.id.removeModule).setOnClickListener(this);
 			arg1.findViewById(R.id.removeModule).setTag(module);
 		} else {
-			arg1.findViewById(R.id.removeModule).setVisibility(View.INVISIBLE);
+			arg1.findViewById(R.id.removeModule).setVisibility(View.GONE);
 			arg1.findViewById(R.id.loadedLabel).setVisibility(View.GONE);
 			arg1.findViewById(R.id.loadModuleButton).setVisibility(View.VISIBLE);
 			arg1.findViewById(R.id.loadModuleButton).setOnClickListener(this);

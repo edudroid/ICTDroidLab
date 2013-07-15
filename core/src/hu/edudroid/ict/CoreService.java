@@ -195,7 +195,8 @@ public class CoreService extends Service implements PluginListener {
 		Module module = modules.remove(moduleName);
 		ModuleDescriptor descriptor = descriptors.remove(moduleName);
 		if (module != null) {
-			timers.remove(moduleName);
+			TimeServiceInterface timer = timers.remove(moduleName);
+			timer.cancelAll();
 			pluginCollection.removeEventListener(module);
 			pluginCollection.removeResultListener(module);
 			for (ModuleSetListener listener : moduleListeners) {

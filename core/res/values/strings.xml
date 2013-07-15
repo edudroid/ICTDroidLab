@@ -15,7 +15,7 @@
     <!-- PluginDetails -->
     <string name="methods_defined">Methods defined for this plugin</string>
     <string name="runAllModules">Run all modules</string>
-    <string name="showModules">Show %1$s modul(s)</string>
+    <string name="showModules">Show %1$s module(s)</string>
     <string name="showPlugins">Show %1$s plugin(s)</string>
     <string name="setQuotas">Set quotas</string>
     <string name="placeholder">PLACEHOLDER</string>

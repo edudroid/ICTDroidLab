@@ -2,14 +2,12 @@ package hu.edudroid.ict.ui;
 
 import hu.edudroid.ict.ModuleSetListener;
 import hu.edudroid.ict.R;
-import hu.edudroid.interfaces.ModuleDescriptor;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.module.ModuleLoader;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 
 import android.content.ComponentName;
 import android.os.Bundle;
@@ -32,8 +30,16 @@ public class ModuleOverviewActivity extends ActivityBase implements OnItemClickL
 		setContentView(R.layout.activity_modules_overview);
 		moduleList = (ListView)findViewById(R.id.moduleList);
 		moduleList.setOnItemClickListener(this);
-		moduleListAdapter = new ModuleListAdapter(new ArrayList<ModuleDescriptor>(), new ArrayList<Boolean>(), this, getLayoutInflater());
+		moduleListAdapter = new ModuleListAdapter(new ArrayList<ModuleDescriptor>(), this, getLayoutInflater());
 		moduleList.setAdapter(moduleListAdapter);
+	}
+	
+	@Override
+	protected void onPause() {
+		if (service != null) {
+			service.unregisterModuleSetListenerListener(this);
+		}
+		super.onPause();
 	}
 	
 	@Override
@@ -43,37 +49,23 @@ public class ModuleOverviewActivity extends ActivityBase implements OnItemClickL
 	@Override
 	public void onServiceConnected(ComponentName arg0, IBinder arg1) {
 		super.onServiceConnected(arg0, arg1);
+		service.registerModuleSetListener(this);
 		refreshModuleList();
 	}
 	
 	private void refreshModuleList() {
-		List<ModuleDescriptor> loadedModules = service.getLoadedModules();
-		Log.e(TAG, "Loaded modules " + loadedModules.size());
-		for (ModuleDescriptor descriptor : loadedModules) {
-			Log.w(TAG, "Loaded " + descriptor);
-		}
-		List<ModuleDescriptor> modulesInAssets = new ArrayList<ModuleDescriptor>();
-		// Check if there is a module available that has not been loaded already.
+		final List<ModuleDescriptor> orderedModules = new ArrayList<ModuleDescriptor>();
 		try {
-			modulesInAssets = ModuleLoader.readModulesFromAssets(this, getAssets());
+			orderedModules.addAll(ModuleUtils.processModules(service.getLoadedModules(), ModuleLoader.readModulesFromAssets(this, getAssets())));
+			Log.i(TAG, "Found " + orderedModules.size() + " module(s).");
 		} catch (IOException e) {
-			Log.e(TAG, "Unable to load assets.");
 			e.printStackTrace();
-		}
-		for (ModuleDescriptor descriptor : loadedModules) {
-			Log.e(TAG, "Descriptor " + descriptor);
-		}
-		TreeSet<ModuleDescriptor> orderer = new TreeSet<ModuleDescriptor>(loadedModules);
-		orderer.addAll(modulesInAssets);
-		final List<ModuleDescriptor> orderedModules = new ArrayList<ModuleDescriptor>(orderer);
-		final List<Boolean> loadedStates = new ArrayList<Boolean>();
-		for (ModuleDescriptor descriptor : orderedModules) {
-			loadedStates.add(loadedModules.contains(descriptor));
+			Log.e(TAG, "Error retrieving modules " + e);
 		}
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				moduleListAdapter.setModules(orderedModules, loadedStates);
+				moduleListAdapter.setModules(orderedModules);
 			}
 		});
 	}
@@ -108,12 +100,12 @@ public class ModuleOverviewActivity extends ActivityBase implements OnItemClickL
 	}
 
 	@Override
-	public void moduleAdded(ModuleDescriptor moduleDescriptor) {
+	public void moduleAdded(hu.edudroid.interfaces.ModuleDescriptor moduleDescriptor) {
 		refreshModuleList();
 	}
 
 	@Override
-	public void moduleRemoved(ModuleDescriptor moduleDescriptor) {
+	public void moduleRemoved(hu.edudroid.interfaces.ModuleDescriptor moduleDescriptor) {
 		refreshModuleList();
 	}
 }
