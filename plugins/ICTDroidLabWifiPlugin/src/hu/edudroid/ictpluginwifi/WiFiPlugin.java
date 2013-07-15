@@ -179,7 +179,17 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 	@Override
 	public void unregisterEventListener(String eventName,
 			PluginEventListener listener) {
-		throw new UnsupportedOperationException("You have to register the listener on PluginAdapter...");
+		throw new UnsupportedOperationException("You have to register the listener on PluginAdapter.");
 		
+	}
+
+	@Override
+	public void unregisterEventListener(PluginEventListener listener) {
+		throw new UnsupportedOperationException("You have to unregister the listener on PluginAdapter.");
+	}
+
+	@Override
+	public void cancelCallsForListener(PluginResultListener listener) {
+		throw new UnsupportedOperationException("Can't cancel a call here.");
 	}
 }

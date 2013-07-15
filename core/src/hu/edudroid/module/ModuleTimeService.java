@@ -10,19 +10,7 @@ import java.util.TimerTask;
 
 public class ModuleTimeService implements TimeServiceInterface {
 	
-	private static ModuleTimeService	mInstance	= null;
-	
-	Timer t=new Timer();
-	
-	public static ModuleTimeService getInstance(){
-		if (mInstance == null){
-			synchronized (ModuleTimeService.class){
-				if (mInstance == null)
-					mInstance = new ModuleTimeService();
-			}
-		}
-		return mInstance;
-	}
+	Timer timer = new Timer();
 	
 	public void runAt(final int delay, final ModuleTimerListener listener){
 		TimerTask tTask=new TimerTask() {
@@ -33,7 +21,7 @@ public class ModuleTimeService implements TimeServiceInterface {
 			}
 		};
 		
-		t.schedule(tTask, delay);
+		timer.schedule(tTask, delay);
 	}
 	
 	public void runAt(final Date when, final ModuleTimerListener listener){
@@ -45,7 +33,7 @@ public class ModuleTimeService implements TimeServiceInterface {
 			}
 		};
 		
-		t.schedule(tTask, when);
+		timer.schedule(tTask, when);
 	}
 	
 	public void runPeriodic(final int delay, final int periodicity, final int tickCount, final ModuleTimerListener listener){
@@ -55,7 +43,7 @@ public class ModuleTimeService implements TimeServiceInterface {
 			@Override
 			public void run() {
 				if(count==0){
-					t.purge();
+					timer.purge();
 				}
 				else{
 					listener.onTimerEvent();
@@ -64,7 +52,7 @@ public class ModuleTimeService implements TimeServiceInterface {
 			}
 		};
 		
-		t.scheduleAtFixedRate(tTask, delay, periodicity);
+		timer.scheduleAtFixedRate(tTask, delay, periodicity);
 	}
 	
 	public void runPeriodic(final Date when, final int periodicity, final int tickCount, final ModuleTimerListener listener){
@@ -74,7 +62,7 @@ public class ModuleTimeService implements TimeServiceInterface {
 			@Override
 			public void run() {
 				if(count==0){
-					t.purge();
+					timer.purge();
 				}
 				else{
 					listener.onTimerEvent();
@@ -83,7 +71,7 @@ public class ModuleTimeService implements TimeServiceInterface {
 			}
 		};
 		
-		t.scheduleAtFixedRate(tTask, when, periodicity);
+		timer.scheduleAtFixedRate(tTask, when, periodicity);
 	}
 	
 }

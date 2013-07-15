@@ -2,6 +2,9 @@ package hu.edudroid.ict.plugins;
 
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginCollection;
+import hu.edudroid.interfaces.PluginEventListener;
+import hu.edudroid.interfaces.PluginListener;
+import hu.edudroid.interfaces.PluginResultListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +43,18 @@ public class AndroidPluginCollection implements PluginCollection, PluginListener
 			Log.i(TAG, "Plugin discovered " + plugin.getName());
 			mPlugins.put(plugin.getName(), plugin);
 			return true;
+		}
+	}
+	
+	public void removeEventListener(PluginEventListener listener){
+		for (Plugin plugin : mPlugins.values()){
+			plugin.unregisterEventListener(listener);
+		}
+	}
+	
+	public void removeResultListener(PluginResultListener listener){
+		for (Plugin plugin : mPlugins.values()){
+			plugin.cancelCallsForListener(listener);
 		}
 	}
 }

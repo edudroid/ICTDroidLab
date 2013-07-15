@@ -2,7 +2,7 @@ package hu.edudroid.ict.ui;
 
 import hu.edudroid.ict.CoreService;
 import hu.edudroid.ict.CoreService.CoreBinder;
-import hu.edudroid.ict.plugins.PluginListener;
+import hu.edudroid.interfaces.PluginListener;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;

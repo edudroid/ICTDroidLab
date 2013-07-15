@@ -1,7 +1,11 @@
 package hu.edudroid.ict.ui;
 
 import hu.edudroid.ict.R;
+<<<<<<< HEAD
 import hu.edudroid.ict.gcm.ServerUtilities;
+=======
+import hu.edudroid.interfaces.ModuleDescriptor;
+>>>>>>> origin/master
 import hu.edudroid.interfaces.Plugin;
 
 import java.util.List;
@@ -130,6 +134,7 @@ public class MainActivity extends ActivityBase implements OnClickListener{
 			} else {
 				showPlugins.setText(R.string.noPlugins);
 			}
+			List<ModuleDescriptor> modules = service.getLoadedModules();
 		} else {
 			showPlugins.setText(R.string.noPlugins);
 		}
