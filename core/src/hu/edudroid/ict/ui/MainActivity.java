@@ -40,8 +40,6 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 		stats.setOnClickListener(this);
 		manageLocalStorage = (Button)findViewById(R.id.manageLocalStorageButton);
 		manageLocalStorage.setOnClickListener(this);
-         
-       
 	}
 
 	@Override
