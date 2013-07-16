@@ -1,16 +1,13 @@
 package hu.edudroid.ict.plugins;
 
-import hu.edudroid.ict.ui.PluginDetailsActivity;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;
-import hu.edudroid.interfaces.PluginQuota;
 import hu.edudroid.interfaces.PluginResultListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -19,16 +16,13 @@ import java.util.Map.Entry;
 
 import android.content.Context;
 import android.content.Intent;
-import android.view.View;
-import android.view.View.OnClickListener;
 
-public class PluginAdapter implements OnClickListener, Plugin, PluginResultListener, PluginEventListener {
+public class PluginAdapter implements Plugin, PluginResultListener, PluginEventListener {
 
 	private final String					mName;
 	private final String					mAuthor;
 	private final String					mDescription;
 	private final String					mVersionCode;
-	private final ArrayList<PluginQuota>	mQuotas;
 	private final PLuginIntentReceiver 	mBroadcast;
 
 	private Context							mContext;
@@ -53,7 +47,6 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 		mAuthor = author;
 		mDescription = description;
 		mVersionCode = versionCode;
-		mQuotas = new ArrayList<PluginQuota>();
 		mPluginMethods = pluginMethods;
 		mEvents = events;
 		mBroadcast = broadcast;
@@ -63,16 +56,6 @@ public class PluginAdapter implements OnClickListener, Plugin, PluginResultListe
 		mContext = context;
 	}
 
-	public void addQuota(PluginQuota quota){
-		mQuotas.add(quota);
-	}
-
-	@Override
-	public void onClick(View view){
-		mContext.startActivity(PluginDetailsActivity.generateIntent(hashCode(),
-																	mContext));
-	}
-	
 	@Override
 	public String getName() {
 		return mName;

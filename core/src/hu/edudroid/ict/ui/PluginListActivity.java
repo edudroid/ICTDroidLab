@@ -9,8 +9,10 @@ import hu.edudroid.interfaces.PluginListener;
 
 import java.util.List;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,16 +51,13 @@ public class PluginListActivity extends ActivityBase implements PluginListener,
 			if (plugins != null && plugins.size() > 0) {
 				mAdapter.setPlugins(plugins);
 				findViewById(R.id.no_plugins).setVisibility(View.GONE);
-				findViewById(R.id.plugin_count).setVisibility(View.VISIBLE);
 			} else {
 				mAdapter.clearPlugins();
 				findViewById(R.id.no_plugins).setVisibility(View.VISIBLE);
-				findViewById(R.id.plugin_count).setVisibility(View.GONE);
 			}
 		} else {
 			mAdapter.clearPlugins();
 			findViewById(R.id.no_plugins).setVisibility(View.VISIBLE);
-			findViewById(R.id.plugin_count).setVisibility(View.GONE);			
 		}
 	}
 
@@ -86,6 +85,17 @@ public class PluginListActivity extends ActivityBase implements PluginListener,
 		Intent mIntent = new Intent(this, PluginDetailsActivity.class);
 		mIntent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, plugin.getName());
 		startActivity(mIntent);
-
+	}
+	
+	@Override
+	public void onServiceConnected(ComponentName arg0, IBinder arg1) {
+		super.onServiceConnected(arg0, arg1);
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				refreshPluginlist();
+			}
+		});
 	}
 }
