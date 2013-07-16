@@ -20,11 +20,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-<<<<<<< HEAD
-public class MainActivity extends ActivityBase implements OnClickListener, ModuleSetListener{
-=======
 public class MainActivity extends ActivityBase implements OnClickListener, ModuleSetListener {
->>>>>>> origin/master
+
 	private static final String TAG = "MainActivity";
 	private Button showModules;
 	private Button showPlugins;
