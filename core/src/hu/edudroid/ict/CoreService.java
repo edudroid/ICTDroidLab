@@ -24,17 +24,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import com.google.android.gcm.GCMRegistrar;
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
+import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.Binder;
 import android.os.IBinder;
+import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.google.android.gcm.GCMRegistrar;
+
 import dalvik.system.DexClassLoader;
 
 public class CoreService extends Service implements PluginListener {
@@ -44,10 +46,8 @@ public class CoreService extends Service implements PluginListener {
 	public static final String JAR_FOLDER = "jars";
 	
 	// Google project id
-    public static final String SENDER_ID = "1017069233076";
-    // Asyntask
-    AsyncTask<Void, Void, Void> mRegisterTask;
-	
+    public static final String SENDER_ID = "1017069233076";	
+    public static String registration_ID = "";
 	
 	public static File getDescriptorFolder(Context context) {
 		return new File(context.getFilesDir(), CoreService.DESCRIPTOR_FOLDER);
@@ -101,6 +101,8 @@ public class CoreService extends Service implements PluginListener {
 			mBroadcast.registerPluginDetailsListener(this);
 	
 			registeringGCM();
+			
+			refreshMetaDatas();
 			
 			Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
 			sendBroadcast(mIntent);
@@ -247,14 +249,7 @@ public class CoreService extends Service implements PluginListener {
 	
 	@Override
 	public void onDestroy() {
-		if (mRegisterTask != null) {
-            mRegisterTask.cancel(true);
-        }
-        try {
-            GCMRegistrar.onDestroy(this);
-        } catch (Exception e) {
-            Log.e("UnRegister Receiver Error", "> " + e.getMessage());
-        }
+		
 		Log.e(TAG, "Service destroyed");
 		super.onDestroy();
 	}
@@ -283,41 +278,113 @@ public class CoreService extends Service implements PluginListener {
          
          
         // Get GCM registration id
-        final String regId = GCMRegistrar.getRegistrationId(this);
-        Log.e("Reg id:",regId);
+        registration_ID = GCMRegistrar.getRegistrationId(this);
  
         // Check if regid already presents
-        if (regId.equals("")) {
+        if (registration_ID.equals("")) {
             Log.e("GCM:","Registration is not present, register now with GCM ");          
             GCMRegistrar.register(this, SENDER_ID);
         } else {
-            Log.e("GCM:","Device is already registered on GCM");
+        	Log.e("GCM:","Device is already registered on GCM: " +registration_ID);
             if (GCMRegistrar.isRegisteredOnServer(this)) {
-                Log.e("GCM:","Skips registration.");              
-                Toast.makeText(getApplicationContext(), "Already registered with GCM", Toast.LENGTH_LONG).show();
+                Log.e("GCM:","Skips registration.");
             } else {
                 // Try to register again, but not in the UI thread.
                 // It's also necessary to cancel the thread onDestroy(),
                 // hence the use of AsyncTask instead of a raw thread.
                 final Context context = this;
-                mRegisterTask = new AsyncTask<Void, Void, Void>() {
- 
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        // Register on our server
-                        // On server creates a new user
-                        ServerUtilities.register(context, "ICTDroidLab", "wpatrik14@gmail.com", regId);
-                        return null;
-                    }
- 
-                    @Override
-                    protected void onPostExecute(Void result) {
-                        mRegisterTask = null;
-                    }
- 
-                };
-                mRegisterTask.execute(null, null, null);
+                TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
+                String imei=mngr.getDeviceId();                              
+                
+                RegisterToServer regTask = new RegisterToServer(context,imei,registration_ID);
+                Thread thread = new Thread(regTask, "RegisterToServer");
+                thread.start();
             }
         }
 	}
+	
+	public void refreshMetaDatas(){
+		TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
+        String imei=mngr.getDeviceId(); 
+		
+		ConnectivityManager conmngr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		boolean mobile=false;
+		boolean wifi=false;
+		boolean wimax=false;
+		boolean bluetooth=false;
+		boolean ethernet=false;
+		boolean gps=false;
+		
+		try{ mobile=conmngr.getNetworkInfo(0).isAvailable();
+		} catch(NullPointerException e){
+			mobile=false; }
+		try{ wifi=conmngr.getNetworkInfo(1).isAvailable();
+		} catch(NullPointerException e){
+			wifi=false; }
+		try{ wimax=conmngr.getNetworkInfo(6).isAvailable();
+		} catch(NullPointerException e){
+			wimax=false; }
+		try{ bluetooth=conmngr.getNetworkInfo(7).isAvailable();
+		} catch(NullPointerException e){
+			bluetooth=false; }
+		try{ ethernet=conmngr.getNetworkInfo(9).isAvailable();
+		} catch(NullPointerException e){
+			ethernet=false; }
+		try{ 
+			PackageManager pm = this.getPackageManager();
+			gps = pm.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
+		} catch(NullPointerException e){
+			gps=false; }
+	        
+		
+        
+        refreshMetaDatasToServer refTask = new refreshMetaDatasToServer(this,imei,mobile,wifi,wimax,bluetooth,gps,ethernet);
+        Thread thread = new Thread(refTask, "refreshMetaDatasToServer");
+        thread.start();
+	}
+	
+	public class RegisterToServer implements Runnable {
+
+		Context mContext;
+		String mIMEI;
+		String mRegistrationID;
+		
+        public RegisterToServer(Context context,String imei, String regId) {
+            mContext=context;
+            mIMEI=imei;
+            mRegistrationID=regId;
+        }
+
+        public void run() {
+        	ServerUtilities.register(mContext, mIMEI, mRegistrationID);
+        }
+    }
+	
+	public class refreshMetaDatasToServer implements Runnable {
+
+		Context mContext;
+		String imei;
+		boolean mobile;
+		boolean wifi;
+		boolean wimax;
+		boolean bluetooth;
+		boolean gps;
+		boolean ethernet;
+		
+        public refreshMetaDatasToServer(Context context,String imei,boolean mobile, boolean wifi, boolean wimax, boolean bluetooth, boolean gps, boolean ethernet) {
+            mContext=context;
+            this.imei=imei;
+	        this.mobile=mobile;
+	        this.wifi=wifi;
+	        this.wimax=wimax;
+	        this.bluetooth=bluetooth;
+	        this.gps=gps;
+	        this.ethernet=ethernet;
+	        
+        }
+
+        public void run() {
+        	ServerUtilities.refreshMetaDatas(mContext,imei, mobile,wifi,wimax,bluetooth,gps,ethernet);
+        }
+    }
 }

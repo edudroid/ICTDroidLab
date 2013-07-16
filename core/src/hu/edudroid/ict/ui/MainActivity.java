@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class MainActivity extends ActivityBase implements OnClickListener, ModuleSetListener {
+
 	private static final String TAG = "MainActivity";
 	private Button showModules;
 	private Button showPlugins;

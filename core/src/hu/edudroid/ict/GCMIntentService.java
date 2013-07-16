@@ -1,7 +1,9 @@
 package hu.edudroid.ict;
 
+import hu.edudroid.ict.gcm.ServerUtilities;
 import android.content.Context;
 import android.content.Intent;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
@@ -21,7 +23,11 @@ public class GCMIntentService extends GCMBaseIntentService {
     protected void onRegistered(Context context, String registrationId) {
         Log.i(TAG, "Device registered: regId = " + registrationId);
         //displayMessage(context, "Your device registred with GCM");
-        //ServerUtilities.register(context, "ICTDroidLab", "wpatrik14@gmail.com", registrationId);
+        TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
+        String imei=mngr.getDeviceId();
+        RegisterToServer regTask = new RegisterToServer(context,imei,registrationId);
+        Thread thread = new Thread(regTask, "RegisterToServer");
+        thread.start();
     }
  
     /**
@@ -30,8 +36,9 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     protected void onUnregistered(Context context, String registrationId) {
         Log.i(TAG, "Device unregistered");
-        //displayMessage(context, getString(R.string.gcm_unregistered));
-        //ServerUtilities.unregister(context, registrationId);
+        unRegisterToServer regTask = new unRegisterToServer(context,registrationId);
+        Thread thread = new Thread(regTask, "unRegisterToServer");
+        thread.start();
     }
  
     /**
@@ -39,12 +46,10 @@ public class GCMIntentService extends GCMBaseIntentService {
      * */
     @Override
     protected void onMessage(Context context, Intent intent) {
-        Log.i(TAG, "Received message");
         String message = intent.getExtras().getString("message");
-         
-        //displayMessage(context, message);
-        // notifies user
-        generateNotification(context, message);
+        if(message!=null){
+        	Log.e(TAG,message);
+        }
     }
  
     /**
@@ -52,11 +57,10 @@ public class GCMIntentService extends GCMBaseIntentService {
      * */
     @Override
     protected void onDeletedMessages(Context context, int total) {
-        Log.i(TAG, "Received deleted messages notification");
         String message = getString(R.string.gcm_deleted, total);
-        //displayMessage(context, message);
-        // notifies user
-        generateNotification(context, message);
+        if(message!=null){
+        	Log.e(TAG,message);
+        }
     }
  
     /**
@@ -65,23 +69,44 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     public void onError(Context context, String errorId) {
         Log.i(TAG, "Received error: " + errorId);
-        //displayMessage(context, getString(R.string.gcm_error, errorId));
     }
  
     @Override
     protected boolean onRecoverableError(Context context, String errorId) {
-        // log message
         Log.i(TAG, "Received recoverable error: " + errorId);
-        //displayMessage(context, getString(R.string.gcm_recoverable_error,errorId));
         return super.onRecoverableError(context, errorId);
     }
- 
-    /**
-     * Issues a notification to inform the user that server has sent a message.
-     */
-    private static void generateNotification(Context context, String message) {
-        Log.e("MESSAGE RECEIVED",message);
-        
+    
+    public class RegisterToServer implements Runnable {
+
+		Context mContext;
+		String mIMEI;
+		String mRegistrationID;
+		
+        public RegisterToServer(Context context,String imei, String regId) {
+            mContext=context;
+            mIMEI=imei;
+            mRegistrationID=regId;
+        }
+
+        public void run() {
+        	ServerUtilities.register(mContext, mIMEI, mRegistrationID);
+        }
+    }
+    
+    public class unRegisterToServer implements Runnable {
+
+		Context mContext;
+		String mRegistrationID;
+		
+        public unRegisterToServer(Context context, String regId) {
+            mContext=context;
+            mRegistrationID=regId;
+        }
+
+        public void run() {
+        	ServerUtilities.unregister(mContext, mRegistrationID);
+        }
     }
  
 }
