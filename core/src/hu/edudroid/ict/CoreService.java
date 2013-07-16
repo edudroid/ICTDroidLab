@@ -30,7 +30,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
@@ -316,38 +315,15 @@ public class CoreService extends Service implements PluginListener {
 		TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
         String imei=mngr.getDeviceId(); 
 		
-		ConnectivityManager conmngr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		boolean mobile=false;
-		boolean wifi=false;
-		boolean wimax=false;
-		boolean bluetooth=false;
-		boolean ethernet=false;
-		boolean gps=false;
+		PackageManager pm = this.getPackageManager();
 		
-		try{ mobile=conmngr.getNetworkInfo(0).isAvailable();
-		} catch(NullPointerException e){
-			mobile=false; }
-		try{ wifi=conmngr.getNetworkInfo(1).isAvailable();
-		} catch(NullPointerException e){
-			wifi=false; }
-		try{ wimax=conmngr.getNetworkInfo(6).isAvailable();
-		} catch(NullPointerException e){
-			wimax=false; }
-		try{ bluetooth=conmngr.getNetworkInfo(7).isAvailable();
-		} catch(NullPointerException e){
-			bluetooth=false; }
-		try{ ethernet=conmngr.getNetworkInfo(9).isAvailable();
-		} catch(NullPointerException e){
-			ethernet=false; }
-		try{ 
-			PackageManager pm = this.getPackageManager();
-			gps = pm.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
-		} catch(NullPointerException e){
-			gps=false; }
-	        
+		boolean mobile = pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
+		boolean wifi = pm.hasSystemFeature(PackageManager.FEATURE_WIFI);
+		boolean bluetooth = pm.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH);
+		boolean gps = pm.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
 		
         
-        refreshMetaDatasToServer refTask = new refreshMetaDatasToServer(this,imei,mobile,wifi,wimax,bluetooth,gps,ethernet);
+        refreshMetaDatasToServer refTask = new refreshMetaDatasToServer(this,imei,mobile,wifi,bluetooth,gps);
         Thread thread = new Thread(refTask, "refreshMetaDatasToServer");
         thread.start();
 	}
@@ -375,25 +351,21 @@ public class CoreService extends Service implements PluginListener {
 		String imei;
 		boolean mobile;
 		boolean wifi;
-		boolean wimax;
 		boolean bluetooth;
 		boolean gps;
-		boolean ethernet;
 		
-        public refreshMetaDatasToServer(Context context,String imei,boolean mobile, boolean wifi, boolean wimax, boolean bluetooth, boolean gps, boolean ethernet) {
+        public refreshMetaDatasToServer(Context context,String imei,boolean mobile, boolean wifi, boolean bluetooth, boolean gps) {
             mContext=context;
             this.imei=imei;
 	        this.mobile=mobile;
 	        this.wifi=wifi;
-	        this.wimax=wimax;
 	        this.bluetooth=bluetooth;
 	        this.gps=gps;
-	        this.ethernet=ethernet;
 	        
         }
 
         public void run() {
-        	ServerUtilities.refreshMetaDatas(mContext,imei, mobile,wifi,wimax,bluetooth,gps,ethernet);
+        	ServerUtilities.refreshMetaDatas(mContext,imei, mobile,wifi,bluetooth,gps);
         }
     }
 	

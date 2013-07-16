@@ -107,17 +107,15 @@ public final class ServerUtilities {
      * Register this account/device pair within the server.
      *
      */
-    public static void refreshMetaDatas(final Context context,String imei, boolean mobile, boolean wifi, boolean wimax, boolean bluetooth, boolean gps, boolean ethernet) {
+    public static void refreshMetaDatas(final Context context,String imei, boolean mobile, boolean wifi, boolean bluetooth, boolean gps) {
         
         String serverUrl = SERVER_URL;
         Map<String, String> params = new HashMap<String, String>();
         params.put("imei", imei);
         params.put("mobile", (mobile) ? "1" : "0");
         params.put("wifi", (wifi) ? "1" : "0");
-        params.put("wimax", (wimax) ? "1" : "0");
         params.put("bluetooth", (bluetooth) ? "1" : "0");
         params.put("gps", (gps) ? "1" : "0");
-        params.put("ethernet", (ethernet) ? "1" : "0");
          
         long backoff = BACKOFF_MILLI_SECONDS + random.nextInt(1000);
         // Once GCM returns a registration id, we need to register on our server
