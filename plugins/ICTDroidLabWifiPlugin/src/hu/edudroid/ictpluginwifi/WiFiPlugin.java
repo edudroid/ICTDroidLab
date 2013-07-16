@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -76,9 +77,11 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 	
 	@Override
 	public List<String> callMethodSync(long callId, String method, List<Object> parameters) throws AsyncMethodException {
-		List<String> answer=new ArrayList<String>();
+		mWifiManager=(WifiManager)this.getContext().getSystemService(Context.WIFI_SERVICE);
 		mWifiInfo=mWifiManager.getConnectionInfo();
+		List<String> answer=new ArrayList<String>();
 		if(method.equals("getIpAddress")){
+			Log.e("WifiPlugin","2");
 			answer.add(intToIP(mWifiInfo.getIpAddress()));
 		}
 		if(method.equals("getMacAddress")){
@@ -145,6 +148,7 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 			}
 			
 		}
+		Log.e("WifiPlugin",answer.get(0));
 		return answer;				
 	}
 	
