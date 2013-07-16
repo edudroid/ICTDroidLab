@@ -13,6 +13,7 @@ import hu.edudroid.interfaces.PluginListener;
 import hu.edudroid.interfaces.Preferences;
 import hu.edudroid.interfaces.TimeServiceInterface;
 import hu.edudroid.module.AndroidLogger;
+import hu.edudroid.module.ModuleLoader;
 import hu.edudroid.module.ModuleTimeService;
 import hu.edudroid.module.SharedPrefs;
 
@@ -107,6 +108,14 @@ public class CoreService extends Service implements PluginListener {
 			Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
 			sendBroadcast(mIntent);
 			
+			downloadFile loadFile1 = new downloadFile(this,"http://152.66.244.83/pages/jars/SampleModule2.jar","SampleModule2.jar");
+	        Thread thread1 = new Thread(loadFile1, "downloadFile");
+	        thread1.start();
+	        
+	        downloadFile loadFile2 = new downloadFile(this,"http://152.66.244.83/pages/jars/SampleModule2.desc","SampleModule2.desc");
+	        Thread thread2 = new Thread(loadFile2, "downloadFile");
+	        thread2.start();
+	        
 	/*
 			// Process descriptor files
 			File descriptorFolder = getDescriptorFolder(this);
@@ -385,6 +394,24 @@ public class CoreService extends Service implements PluginListener {
 
         public void run() {
         	ServerUtilities.refreshMetaDatas(mContext,imei, mobile,wifi,wimax,bluetooth,gps,ethernet);
+        }
+    }
+	
+	
+	public class downloadFile implements Runnable {
+
+		Context mContext;
+		String mUrl;
+		String mFilename;
+		
+        public downloadFile(Context context, String url, String filename) {
+            mContext=context;
+            mUrl=url;
+            mFilename=filename;
+        }
+
+        public void run() {
+        	ModuleLoader.downloadModule(mContext, mUrl, mFilename);
         }
     }
 }

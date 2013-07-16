@@ -4,8 +4,13 @@ import hu.edudroid.ict.CoreService;
 import hu.edudroid.ict.FileUtils;
 import hu.edudroid.interfaces.ModuleDescriptor;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +19,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Environment;
 import android.util.Log;
 
 public class ModuleLoader {
@@ -78,5 +84,49 @@ public class ModuleLoader {
 			}
 		}
 		return modulesInAssets;
+	}
+	
+	public static void downloadModule(Context context,String fileUrl,String filename){
+		final int TIMEOUT_CONNECTION = 5000;//5sec
+		final int TIMEOUT_SOCKET = 30000;//30sec
+		try{
+			URL url = new URL(fileUrl);
+			long startTime = System.currentTimeMillis();
+			Log.e(TAG, "download beginning: "+fileUrl);
+	
+			//Open a connection to that URL.
+			URLConnection ucon = url.openConnection();
+	
+			//this timeout affects how long it takes for the app to realize there's a connection problem
+			ucon.setReadTimeout(TIMEOUT_CONNECTION);
+			ucon.setConnectTimeout(TIMEOUT_SOCKET);
+	
+	
+			//Define InputStreams to read from the URLConnection.
+			// uses 3KB download buffer
+			InputStream is = ucon.getInputStream();
+			BufferedInputStream inStream = new BufferedInputStream(is, 1024 * 5);
+			File file=new File(Environment.getExternalStorageDirectory().getAbsolutePath(),filename);
+			Log.e("Saving file to:",file.getAbsolutePath());
+			FileOutputStream outStream = new FileOutputStream(file);
+			byte[] buff = new byte[5 * 1024];
+	
+			 //Read bytes (and store them) until there is nothing more to read(-1)
+			int len;
+			while ((len = inStream.read(buff)) != -1)
+			{
+			    outStream.write(buff,0,len);
+			}
+			//clean up
+			outStream.flush();
+			outStream.close();
+			inStream.close();
+			
+			Log.i(TAG, "download completed in "
+				    + ((System.currentTimeMillis() - startTime) / 1000)
+				    + " sec");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 }
