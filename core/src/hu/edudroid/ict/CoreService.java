@@ -18,6 +18,7 @@ import hu.edudroid.module.ModuleTimeService;
 import hu.edudroid.module.SharedPrefs;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -50,7 +51,8 @@ public class CoreService extends Service implements PluginListener {
     public static String registration_ID = "";
 	
 	public static File getDescriptorFolder(Context context) {
-		return new File(context.getFilesDir(), CoreService.DESCRIPTOR_FOLDER);
+		// TODO Itt van egy hiba, mivel a .desc fileok nem a CoreService.DESCRIPTOR_FOLDER-ben vannak....
+		return new File(context.getFilesDir(), CoreService.JAR_FOLDER);
 	}
 
 	
@@ -106,16 +108,8 @@ public class CoreService extends Service implements PluginListener {
 			
 			Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
 			sendBroadcast(mIntent);
-			
-			downloadFile loadFile1 = new downloadFile(this,"http://152.66.244.83/pages/jars/SampleModule2.jar","SampleModule2.jar");
-	        Thread thread1 = new Thread(loadFile1, "downloadFile");
-	        thread1.start();
 	        
-	        downloadFile loadFile2 = new downloadFile(this,"http://152.66.244.83/pages/jars/SampleModule2.desc","SampleModule2.desc");
-	        Thread thread2 = new Thread(loadFile2, "downloadFile");
-	        thread2.start();
-	        
-	/*
+	
 			// Process descriptor files
 			File descriptorFolder = getDescriptorFolder(this);
 			String[] descriptors = descriptorFolder.list(new FilenameFilter() {
@@ -124,13 +118,15 @@ public class CoreService extends Service implements PluginListener {
 					return filename.endsWith("desc");
 				}
 			});
-			Log.i(TAG, "Loading " + descriptors.length + " module(s).");
-			for (String descriptor : descriptors) {
-				ModuleDescriptor moduleDescriptor = ModuleLoader.parseModuleDescriptor(new File(descriptorFolder,descriptor));
-				if (moduleDescriptor != null) {
-					addModule(moduleDescriptor);
+			//Log.i(TAG, "Loading " + descriptors.length + " module(s).");
+			if(descriptors!=null){
+				for (String descriptor : descriptors) {
+					ModuleDescriptor moduleDescriptor = ModuleLoader.parseModuleDescriptor(new File(descriptorFolder,descriptor));
+					if (moduleDescriptor != null) {
+						addModule(moduleDescriptor);
+					}
 				}
-			}*/
+			}
 			
 		} else {
 			Log.i(TAG, "Service already running.");
@@ -296,6 +292,7 @@ public class CoreService extends Service implements PluginListener {
         	Log.e("GCM:","Device is already registered on GCM: " +registration_ID);
             if (GCMRegistrar.isRegisteredOnServer(this)) {
                 Log.e("GCM:","Skips registration.");
+                
             } else {
                 // Try to register again, but not in the UI thread.
                 // It's also necessary to cancel the thread onDestroy(),
@@ -312,9 +309,14 @@ public class CoreService extends Service implements PluginListener {
 	}
 	
 	public void refreshMetaDatas(){
+		Log.e("CoreService","Refreshing Metadatas");
+		
+		
 		TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
         String imei=mngr.getDeviceId(); 
 		
+        String sdk_version=String.valueOf(android.os.Build.VERSION.SDK_INT);
+        
 		PackageManager pm = this.getPackageManager();
 		
 		boolean mobile = pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
@@ -323,7 +325,7 @@ public class CoreService extends Service implements PluginListener {
 		boolean gps = pm.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
 		
         
-        refreshMetaDatasToServer refTask = new refreshMetaDatasToServer(this,imei,mobile,wifi,bluetooth,gps);
+        refreshMetaDatasToServer refTask = new refreshMetaDatasToServer(this,imei,sdk_version,mobile,wifi,bluetooth,gps);
         Thread thread = new Thread(refTask, "refreshMetaDatasToServer");
         thread.start();
 	}
@@ -349,14 +351,16 @@ public class CoreService extends Service implements PluginListener {
 
 		Context mContext;
 		String imei;
+		String sdk_version;
 		boolean mobile;
 		boolean wifi;
 		boolean bluetooth;
 		boolean gps;
 		
-        public refreshMetaDatasToServer(Context context,String imei,boolean mobile, boolean wifi, boolean bluetooth, boolean gps) {
+        public refreshMetaDatasToServer(Context context,String imei,String sdk_version,boolean mobile, boolean wifi, boolean bluetooth, boolean gps) {
             mContext=context;
             this.imei=imei;
+            this.sdk_version=sdk_version;
 	        this.mobile=mobile;
 	        this.wifi=wifi;
 	        this.bluetooth=bluetooth;
@@ -365,7 +369,7 @@ public class CoreService extends Service implements PluginListener {
         }
 
         public void run() {
-        	ServerUtilities.refreshMetaDatas(mContext,imei, mobile,wifi,bluetooth,gps);
+        	ServerUtilities.refreshMetaDatas(mContext,imei, sdk_version, mobile,wifi,bluetooth,gps);
         }
     }
 	
@@ -376,14 +380,13 @@ public class CoreService extends Service implements PluginListener {
 		String mUrl;
 		String mFilename;
 		
-        public downloadFile(Context context, String url, String filename) {
+        public downloadFile(Context context, String url) {
             mContext=context;
             mUrl=url;
-            mFilename=filename;
         }
 
         public void run() {
-        	ModuleLoader.downloadModule(mContext, mUrl, mFilename);
+        	ModuleLoader.downloadModule(mContext, mUrl);
         }
     }
 }

@@ -19,7 +19,6 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.os.Environment;
 import android.util.Log;
 
 public class ModuleLoader {
@@ -86,7 +85,7 @@ public class ModuleLoader {
 		return modulesInAssets;
 	}
 	
-	public static void downloadModule(Context context,String fileUrl,String filename){
+	public static void downloadModule(Context context,String fileUrl){
 		final int TIMEOUT_CONNECTION = 5000;//5sec
 		final int TIMEOUT_SOCKET = 30000;//30sec
 		try{
@@ -106,7 +105,9 @@ public class ModuleLoader {
 			// uses 3KB download buffer
 			InputStream is = ucon.getInputStream();
 			BufferedInputStream inStream = new BufferedInputStream(is, 1024 * 5);
-			File file=new File(Environment.getExternalStorageDirectory().getAbsolutePath(),filename);
+			String[] splitString=fileUrl.split("/");
+			String filename=splitString[splitString.length-1];
+			File file=new File(context.getFilesDir()+"/"+ CoreService.JAR_FOLDER,filename);
 			Log.e("Saving file to:",file.getAbsolutePath());
 			FileOutputStream outStream = new FileOutputStream(file);
 			byte[] buff = new byte[5 * 1024];

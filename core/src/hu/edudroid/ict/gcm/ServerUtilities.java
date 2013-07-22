@@ -107,11 +107,12 @@ public final class ServerUtilities {
      * Register this account/device pair within the server.
      *
      */
-    public static void refreshMetaDatas(final Context context,String imei, boolean mobile, boolean wifi, boolean bluetooth, boolean gps) {
+    public static void refreshMetaDatas(final Context context,String imei, String sdk_version, boolean mobile, boolean wifi, boolean bluetooth, boolean gps) {
         
         String serverUrl = SERVER_URL;
         Map<String, String> params = new HashMap<String, String>();
         params.put("imei", imei);
+        params.put("sdk_version", sdk_version); 
         params.put("mobile", (mobile) ? "1" : "0");
         params.put("wifi", (wifi) ? "1" : "0");
         params.put("bluetooth", (bluetooth) ? "1" : "0");

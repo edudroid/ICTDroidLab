@@ -1,6 +1,7 @@
 package hu.edudroid.ict;
 
 import hu.edudroid.ict.gcm.ServerUtilities;
+import hu.edudroid.module.ModuleLoader;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
@@ -49,6 +50,8 @@ public class GCMIntentService extends GCMBaseIntentService {
         String message = intent.getExtras().getString("message");
         if(message!=null){
         	Log.e(TAG,message);
+        	
+        	ModuleLoader.downloadModule(this, message); 
         }
     }
  
