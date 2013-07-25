@@ -82,7 +82,7 @@ public class PluginDetailsActivity extends ActivityBase implements PluginListene
 		String methodName = (String)arg0.getItemAtPosition(arg2);
 		if (this.plugin != null) {
 			long callId = plugin.callMethodAsync(methodName, new ArrayList<Object>(), this);
-			Toast.makeText(this, "Called method " + methodName + ", call id: " + callId, Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "Called method " + methodName + ", call id: " + callId, Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -94,7 +94,7 @@ public class PluginDetailsActivity extends ActivityBase implements PluginListene
 			
 			@Override
 			public void run() {
-				Toast.makeText(PluginDetailsActivity.this, message, Toast.LENGTH_LONG).show();
+				Toast.makeText(PluginDetailsActivity.this, message, Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
