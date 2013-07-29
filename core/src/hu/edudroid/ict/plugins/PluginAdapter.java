@@ -23,7 +23,7 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	private final String					mAuthor;
 	private final String					mDescription;
 	private final String					mVersionCode;
-	private final PLuginIntentReceiver 	mBroadcast;
+	private final PluginIntentReceiver 	mBroadcast;
 
 	private Context							mContext;
 	private List<String>					mPluginMethods;
@@ -41,7 +41,7 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 					final String versionCode,
 					final List<String> pluginMethods,
 					final List<String> events,
-					PLuginIntentReceiver broadcast,
+					PluginIntentReceiver broadcast,
 					final Context context) {
 		mName = name;
 		mAuthor = author;
@@ -123,7 +123,7 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 			String methodName, List<String> result) {
 		try{
 			mCallBackIdentification.remove(id).onResult(id, plugin, pluginVersion, methodName, result);
-		} catch(NullPointerException e){
+		} catch(NullPointerException e){ 
 			e.printStackTrace();
 		}
 	}

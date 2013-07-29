@@ -2,7 +2,7 @@ package hu.edudroid.ict;
 
 import hu.edudroid.ict.gcm.ServerUtilities;
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
-import hu.edudroid.ict.plugins.PLuginIntentReceiver;
+import hu.edudroid.ict.plugins.PluginIntentReceiver;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Logger;
 import hu.edudroid.interfaces.Module;
@@ -43,7 +43,7 @@ import dalvik.system.DexClassLoader;
 public class CoreService extends Service implements PluginListener {
 	
 	public static final String TEMP_DIR = "temp";
-	public static final String DESCRIPTOR_FOLDER = "descriptors";
+	public static final String DESCRIPTOR_FOLDER = "descriptors"; 
 	public static final String JAR_FOLDER = "jars";
 	
 	// Google project id
@@ -62,7 +62,7 @@ public class CoreService extends Service implements PluginListener {
 
 	private static final String TAG = "CoreService";
 
-	private PLuginIntentReceiver mBroadcast;
+	private PluginIntentReceiver mBroadcast;
 	private HashMap<String, Module> modules = new HashMap<String, Module>(); // Modules by class name
 	private HashMap<String, ModuleDescriptor> descriptors = new HashMap<String, ModuleDescriptor>(); // Descriptors by class name
 	
@@ -91,7 +91,7 @@ public class CoreService extends Service implements PluginListener {
 		if (!started) {
 			started = true;
 			Log.i(TAG, "Starting service!");
-			mBroadcast = new PLuginIntentReceiver();
+			mBroadcast = new PluginIntentReceiver();
 			registerReceiver(mBroadcast, new IntentFilter(
 					Constants.INTENT_ACTION_DESCRIBE));
 			registerReceiver(mBroadcast, new IntentFilter(
@@ -108,6 +108,9 @@ public class CoreService extends Service implements PluginListener {
 			
 			Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
 			sendBroadcast(mIntent);
+			
+			Intent uploadLogs = new Intent(this,UploadService.class);
+			startService(uploadLogs);
 	        
 	
 			// Process descriptor files
