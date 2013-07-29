@@ -14,8 +14,8 @@ import android.util.Log;
 
 public class AndroidPluginCollection implements PluginCollection, PluginListener {
 
-	private static final String TAG = null;
-	private HashMap<String, Plugin>			mPlugins	= null;
+	private static final String TAG = "AndroidPluginCollection";
+	private static HashMap<String, Plugin>			mPlugins	= null;
 
 	public AndroidPluginCollection() {
 		mPlugins = new HashMap<String, Plugin>();		
@@ -25,7 +25,15 @@ public class AndroidPluginCollection implements PluginCollection, PluginListener
 	@Override
 	public Plugin getPluginByName(String name) {
 		Log.i(TAG, "Requested " + name + ", searching among " + mPlugins.size() + " plugins.");
-		return mPlugins.get(name);
+		Plugin res=mPlugins.get(name);
+		if (res!=null){
+			Log.i(TAG,"Plugin returned");
+			return res;
+		}
+		else{
+			Log.i(TAG,"No such plugin");
+			return null;
+		}
 	}
 	
 	@Override
