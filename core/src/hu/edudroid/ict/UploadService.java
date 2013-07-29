@@ -13,23 +13,21 @@ import org.apache.http.message.BasicNameValuePair;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.util.Log;
 
 public class UploadService extends IntentService { 
 
-	private static final String LOG_TAG = "UploadService";
+	private static final String LOG_TAG = "UploadService"; 
 	private static final String TMP_FOLDER = "capture_compressed_tmp";
 	public static final String INPROGRESS_SUFFIX = "inprogress";
 	private static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss_SSS", Locale.UK);
 	
 	public static final File OUTPUT_FOLDER = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/ictdroidlab_log");
 	
-	public static final String SERVER_URL = "";
+	public static final String SERVER_URL = "http://152.66.244.83/pages/mobile_api/uploadLog.php";
 	private static final String USERNAME = "admin";
-	private static final String PASSWORD = "admin";
+	private static final String PASSWORD = "admin"; 
 
 	private static final FilenameFilter progressFilter = new FilenameFilter() {
 		
@@ -100,6 +98,7 @@ public class UploadService extends IntentService {
 					if ((files!=null) && (files.length > 0)) {
 						ZipExporter.compress(files, zip);
 					} else {
+						Log.d(LOG_TAG,"No files to zip");
 						return;
 					}
 				} catch (IOException e) {
@@ -112,16 +111,11 @@ public class UploadService extends IntentService {
 					//SharedPrefsLogger.log("Invalid settings or no network access: \n Server URL " + (serverUrl==null?"NULL":serverUrl) + "\nUser name " + (userName==null?"NULL":userName) + "\nPassword " + (password==null?"NULL":"PRESENT"), context);
 					return;
 				}
-				String modifiedServerUrl=SERVER_URL;
-				if (!SERVER_URL.endsWith("/")){
-					modifiedServerUrl = SERVER_URL + "/";
-				}
 				
-				modifiedServerUrl = SERVER_URL + "uploadFile.php";
 				LinkedList<BasicNameValuePair> postParameters = new LinkedList<BasicNameValuePair>();
 				postParameters.add(new BasicNameValuePair("userName", USERNAME));
 				postParameters.add(new BasicNameValuePair("password", PASSWORD));		
-				String uploadResult = HttpUtils.postMultipartWithFile(modifiedServerUrl, postParameters, "userFile", zip, null, null);
+				String uploadResult = HttpUtils.postMultipartWithFile(SERVER_URL, postParameters, "userFile", zip, null, null);
 				zip.delete();
 				if (uploadResult != null) {
 					if (uploadResult.startsWith("OK")) {
@@ -142,6 +136,7 @@ public class UploadService extends IntentService {
 					}
 				} else {
 					//SharedPrefsLogger.log("Upload failed.", context);
+					Log.d(LOG_TAG,"Something went wrong");
 				}
 			}
 		} catch (Exception e) {
@@ -152,10 +147,11 @@ public class UploadService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		synchronized (this) {
-			Log.d(LOG_TAG, "Upload service called.");
-			//SharedPreferences prefs = getSharedPreferences(MeasurementUploaderActivity.PREF_NAME, MODE_PRIVATE);
-			//long periodicity = prefs.getLong(MeasurementUploaderActivity.PREFERRED_PERIODICITY, SettingsActivity.PERIODICITIES[0]);
-			//long lastUpload = prefs.getLong(MeasurementUploaderActivity.LAST_UPLOAD_KEY, 0);
+			Log.d(LOG_TAG, "Upload service called."); 
+			/*
+			SharedPreferences prefs = getSharedPreferences(MeasurementUploaderActivity.PREF_NAME, MODE_PRIVATE);
+			long periodicity = prefs.getLong(MeasurementUploaderActivity.PREFERRED_PERIODICITY, SettingsActivity.PERIODICITIES[0]);
+			long lastUpload = prefs.getLong(MeasurementUploaderActivity.LAST_UPLOAD_KEY, 0);
 			
 			long periodicity = 0;
 			long lastUpload = 0;
@@ -171,31 +167,7 @@ public class UploadService extends IntentService {
 				//SharedPrefsLogger.log("Time till next upload: " + timeDiffString , this);
 				return;
 			}
-			
-			
-			// Check WiFi availability
-			WifiManager manager = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-			WifiInfo info = manager.getConnectionInfo();
-			if (info == null) {
-				//SharedPrefsLogger.log("Not connected to WiFi network." , this);			
-				return;
-			}
-			String ssid = info.getSSID();
-			
-			//String preferredSSID = prefs.getString(MeasurementUploaderActivity.PREFERRED_SSID, null);
-			String preferredSSID="BME";
-			if (manager.getWifiState() != WifiManager.WIFI_STATE_ENABLED) { 
-				//SharedPrefsLogger.log("WiFi not enabled, upload canceled.", this);
-				return;
-			}
-			if (preferredSSID != null) {
-				if (!preferredSSID.equals(ssid)) {
-					//SharedPrefsLogger.log("Not on selected WiFi network (current: " + ssid + " preffered: " + preferredSSID +"), upload canceled", this);
-					Log.d(LOG_TAG,"Not on selected WiFi network (current: " + ssid + " preffered: " + preferredSSID +"), upload canceled");
-					return;
-				}
-			}
-			
+			*/
 			upload(this);
 		}
 	}

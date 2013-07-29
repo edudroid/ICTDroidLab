@@ -30,7 +30,6 @@ public class ModulExample2 extends Module implements PluginEventListener, Plugin
 	}
 	
 	public void run(){
-		
 		if (plugin2 != null) {
 			/*
 			plugin2.callMethodAsync("getBSSID", Arrays.asList(new Object[]{"empty"}),this);

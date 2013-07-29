@@ -19,40 +19,55 @@ public class ModulExample extends Module implements PluginEventListener, PluginR
 		super(prefs, logger, pluginCollection, timeservice);
 	}
 	
-	private static final String 	TAG			 	= "ModuleExample2";
+	private static final String 	TAG			 	= "ModuleExample";
 	
-	private Plugin plugin2;
+	private Plugin plugin;
 	
 	@Override
 	public void init(){
 		mTimeService.runPeriodic(0000, 5000, 2, this);
-		plugin2  = mPluginCollection.getPluginByName("WiFi Plugin");
+		plugin  = mPluginCollection.getPluginByName("WiFi Plugin");
 	}
 	
 	public void run(){
 		
-		if (plugin2 != null) {
+		if (plugin != null) {
 			
-			plugin2.callMethodAsync("getBSSID", Arrays.asList(new Object[]{"empty"}),this);
-			plugin2.callMethodAsync("getSSID", Arrays.asList(new Object[]{"empty"}),this);
-			plugin2.callMethodAsync("isHiddenSSID", Arrays.asList(new Object[]{"empty"}),this);
-			plugin2.callMethodAsync("getIpAddress", Arrays.asList(new Object[]{"empty"}),this);
-			plugin2.callMethodAsync("getMacAddress", Arrays.asList(new Object[]{"empty"}),this);
-			plugin2.callMethodAsync("getLinkSpeed", Arrays.asList(new Object[]{"empty"}),this);
-			plugin2.callMethodAsync("getNetworkId", Arrays.asList(new Object[]{"empty"}),this);
-			plugin2.callMethodAsync("getRssi", Arrays.asList(new Object[]{"empty"}),this);
-			plugin2.callMethodAsync("getDescribeContents", Arrays.asList(new Object[]{"empty"}),this);
+			plugin.callMethodAsync("getBSSID", Arrays.asList(new Object[]{"empty"}),this);
+			plugin.callMethodAsync("getSSID", Arrays.asList(new Object[]{"empty"}),this);
+			plugin.callMethodAsync("isHiddenSSID", Arrays.asList(new Object[]{"empty"}),this);
+			plugin.callMethodAsync("getIpAddress", Arrays.asList(new Object[]{"empty"}),this);
+			plugin.callMethodAsync("getMacAddress", Arrays.asList(new Object[]{"empty"}),this);
+			plugin.callMethodAsync("getLinkSpeed", Arrays.asList(new Object[]{"empty"}),this);
+			plugin.callMethodAsync("getNetworkId", Arrays.asList(new Object[]{"empty"}),this);
+			plugin.callMethodAsync("getRssi", Arrays.asList(new Object[]{"empty"}),this);
+			plugin.callMethodAsync("getDescribeContents", Arrays.asList(new Object[]{"empty"}),this);
 			
 			/*
 			long callScanId=plugin2.callMethodAsync("scanning", Arrays.asList(new Object[]{"0","10000","1"}),this);
 			answersForScanning.add(callScanId);
 			*/
 			
-			plugin2.callMethodAsync("ping", Arrays.asList(new Object[]{"173.194.39.64","5"}),this);
+			plugin.callMethodAsync("ping", Arrays.asList(new Object[]{"173.194.39.64","5"}),this);
 			
 			//plugin2.callMethodAsync("traceroute", Arrays.asList(new Object[]{"173.194.39.64"}),this);			
 			
 		} else {
+			mLogger.e(TAG, "Couldn't find WiFi Plugin");
+			
+			mLogger.e(TAG, "Couldn't find WiFi Plugin");
+			mLogger.e(TAG, "Couldn't find WiFi Plugin");
+			mLogger.e(TAG, "Couldn't find WiFi Plugin");
+			mLogger.e(TAG, "Couldn't find WiFi Plugin");
+			mLogger.e(TAG, "Couldn't find WiFi Plugin");
+			mLogger.e(TAG, "Couldn't find WiFi Plugin");
+			mLogger.e(TAG, "Couldn't find WiFi Plugin");
+			mLogger.e(TAG, "Couldn't find WiFi Plugin");
+			mLogger.e(TAG, "Couldn't find WiFi Plugin");
+			mLogger.e(TAG, "Couldn't find WiFi Plugin");
+			mLogger.e(TAG, "Couldn't find WiFi Plugin");
+			mLogger.e(TAG, "Couldn't find WiFi Plugin");
+			mLogger.e(TAG, "Couldn't find WiFi Plugin");
 			mLogger.e(TAG, "Couldn't find WiFi Plugin");
 		}
 	}
