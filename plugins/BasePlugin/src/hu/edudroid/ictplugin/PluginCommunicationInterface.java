@@ -39,7 +39,6 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver im
 		} 
 		
 		if (intent.getAction().equals(Constants.INTENT_ACTION_CALL_METHOD)) {
-			Log.e("PluginCommInface","1");
 			final long callId = intent.getExtras().getLong(Constants.INTENT_EXTRA_CALL_ID);
 			final String methodName = intent.getExtras().getString(Constants.INTENT_EXTRA_METHOD_NAME);
 			final byte[] parameters = intent.getExtras().getByteArray(Constants.INTENT_EXTRA_METHOD_PARAMETERS);
@@ -52,7 +51,6 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver im
 				for (int i = 0; i < paramsCount; i++)
 					params[i] = ois.readObject();
 				try {
-					Log.e("PluginCommInface","2");
 					List<String> result = callMethodSync(callId, methodName, Arrays.asList(params));
 					reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, this.getName(), this.getVersionCode(), methodName, result, context);
 				} 
