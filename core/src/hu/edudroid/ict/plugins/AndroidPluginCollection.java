@@ -18,21 +18,17 @@ public class AndroidPluginCollection implements PluginCollection, PluginListener
 	private static HashMap<String, Plugin>			mPlugins	= null;
 
 	public AndroidPluginCollection() {
-		mPlugins = new HashMap<String, Plugin>();		
+		mPlugins = new HashMap<String, Plugin>();	
 	}
 
 	
 	@Override
 	public Plugin getPluginByName(String name) {
 		Log.i(TAG, "Requested " + name + ", searching among " + mPlugins.size() + " plugins.");
-		Plugin res=mPlugins.get(name);
-		if (res!=null){
+		synchronized (mPlugins) {
+			Plugin res=mPlugins.get(name);
 			Log.i(TAG,"Plugin returned");
 			return res;
-		}
-		else{
-			Log.i(TAG,"No such plugin");
-			return null;
 		}
 	}
 	
