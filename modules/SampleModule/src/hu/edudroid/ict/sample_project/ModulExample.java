@@ -25,8 +25,11 @@ public class ModulExample extends Module implements PluginEventListener, PluginR
 	
 	@Override
 	public void init(){
-		mTimeService.runPeriodic(5000, 10000, 2, this);
-		plugin2  = mPluginCollection.getPluginByName("WiFi Plugin");
+		mLogger.e(TAG, "Module init...");
+		mTimeService.runPeriodic(0000, 5000, 2, this);
+		mLogger.e(TAG, "Getting plugin...");
+		plugin2 = mPluginCollection.getPluginByName("WiFi Plugin");
+		mLogger.e(TAG, "Plugin: "+plugin2.getName());
 	}
 	
 	public void run(){
