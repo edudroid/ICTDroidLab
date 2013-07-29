@@ -66,16 +66,35 @@ Participatory sensing involves data collection outside of the system. Sensing ca
 To exploit these possibilities we offer DroidLab. DroidLab is a cloud backed mobile framework still under development, that aims to solve key challenges of mobile crowd sourcing. In this article we will present successful and promising mobile crowd sourcing application and crowd sourcing frameworks. We will identify the key challenges of mobile crowd sourcing and define the use cases for our framework. Then present the architecture and design of our solution and conclude with the evaluation of the current framework and define the future works.
 \section{Related work}
 \label{sec:related_work}
-We already mentioned two successful examples of crowd sourcing. Seti@Home and Google Image Game both targeted desktop platforms. Seti@Home was an automated solution while Google Image Game involved user interaction. Smart phones opened new horizons for crow sourcing, especially participatory sensing. The authors have participated in the development of the mobile application of Id\"ok\'ep, a Hungarian weather service. Id\"ok\'ep had more than a hundred deployed online weather stations and a web portal where users could input their weather observations and weather photos. The mobile application offered the same possibility. In the month following the release user contributions have doubled. Almost every uploaded photo now comes from mobile devices.
+We already mentioned two successful examples of crowd sourcing. Seti@Home and Google Image Game both targeted desktop platforms. Seti@Home was an automated solution while Google Image Game involved user interaction.
 
 While it's easy to find proposed applications for participatory sensing, academic articles discussing the challenges of such applications and their effects on society, there is merely a couple of successfully deployed applications. Mobile broadband penetration is 74.8 in the developed world while 19.8 in the developing world. While this equals in a larger number of subscribers in the developing regions, most application downloads come from the developed countries. Hence, most crowd sourced applications address "first world problems".
 
 \subsection{Transportation}
-Getting from point A to point B raises many issues, some of them can be solved by a crowd sourced approach. When using a car, knowing the traffic conditions in advance gives a huge advantage. Waze is one of the many raffic aware navigation applications that uses phone's sensors to identify traffic conditions. When arriving to the destination finding a parking spot will become the main concern. Google launched Open Spot, an experimental application that relied on user interaction to detect freed up parking spaces. The application was a failure, the problem remains unsolved.
+Getting from point A to point B raises many issues, some of them can be solved by a crowd sourced approach. When using a car, knowing the traffic conditions in advance gives a huge advantage. Waze is one of the many traffic aware navigation applications that uses phone's sensors to identify traffic conditions. Besides traffic, road quality is an important factor too, both for drivers and cyclists. Smartphone acceleration sensors can accurately detect potholes. While no single pothole detection application has emerged, several publications discuss such a framework.
+
+When arriving to the destination finding a parking spot will become the main concern. Google launched Open Spot, an experimental application that relied on user interaction to detect freed up parking spaces. The application was a failure, the problem remains unsolved.
 
 Public transportation can benefit of crowd sensed information. HotStop Live is an application that provides live transit information gathered by the users.
 
-\subsection{Health-care}
+\subsection{Presence and phone book}
+The user's presence can be detected using sensor information, enabling a framework to communicate detailed information about a contact's state before calling her. Phone books can be shared among users to ease reverse lookup of phone numbers. Mr Number helps it's users avoid unwanted calls by collaboratively maintaining a black list of telemarketers and robocallers.
+
+\subsection{Weather and environment}
+The authors have participated in the development of the mobile application of Id\"ok\'ep, a Hungarian weather service. Id\"ok\'ep had more than a hundred deployed online weather stations and the mobile application enabled users to share weather photos, perceived weather condition and analogue measurement results.
+
+While smartphones are not equipped with the proper sensors to become a weather station, their near field communication technologies (Bluetooth, WiFi, NFC) enable them to be extended with peripherals capable of measuring air quality, humidity or temperature. In the  Common Sense project bluetooth enabled air pollution sensors were deployed with the mobile application to measure and report air pollutants. Microphones enable smart phones to capture noise level and process noise pollution.
+
+CreekWatch is an application that helps monitor water quality and pollution relying on user's reports and photos.
+
+\subsection{Network coverage}
+Network access and quality is an important information for smartphone users. Network information can be sensed through available network status information and active probing. The two main channels are WiFi networks and cellular networks. WiFi Finder maintains a database of opened WiFi networks. It's built and updated based on automated reports of opened WiFi hotspots. It provides a map of the active free WiFi hotspots and their properties.
+
+RootMetrics monitors cellular coverage, it let's users share their active measurement data to process a coverage map.
+
+\subsection{Lifestyle and health}
+
+
 
 
 
@@ -94,7 +113,11 @@ http://au.businessinsider.com/comparing-app-downloads-across-countries-2013-6
 http://www.androidauthority.com/google-labs-open-spot-a-useful-application-that-no-one-uses-15186/
 http://www.waze.com/
 http://live.hopstop.com/
-
+http://www.bizjournals.com/sanjose/news/2013/05/31/whitepages-acquires-crowdsourced-spam.html
+http://www.lvmt.fr/ewgt2012/compendium
+http://www.communitysensing.org/
+https://play.google.com/store/apps/details?id=com.jiwire.android.finder
+http://www.rootmetrics.com/
 \end{document}
 
 %%% Local Variables: 
