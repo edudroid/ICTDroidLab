@@ -42,7 +42,7 @@ import dalvik.system.DexClassLoader;
 
 public class CoreService extends Service implements PluginListener {
 	
-	public static final String TEMP_DIR = "temp";
+	public static final String TEMP_DIR = "temp"; 
 	public static final String DESCRIPTOR_FOLDER = "descriptors"; 
 	public static final String JAR_FOLDER = "jars";
 	

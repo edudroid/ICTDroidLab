@@ -123,7 +123,7 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 			String methodName, List<String> result) {
 		try{
 			mCallBackIdentification.remove(id).onResult(id, plugin, pluginVersion, methodName, result);
-		} catch(NullPointerException e){ 
+		} catch(NullPointerException e){
 			e.printStackTrace();
 		}
 	}

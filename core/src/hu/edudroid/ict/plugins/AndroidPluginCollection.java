@@ -15,21 +15,19 @@ import android.util.Log;
 public class AndroidPluginCollection implements PluginCollection, PluginListener {
 
 	private static final String TAG = "AndroidPluginCollection";
-	private static HashMap<String, Plugin>			mPlugins	= null;
+	private static HashMap<String,Plugin> mPlugins;
 
 	public AndroidPluginCollection() {
-		mPlugins = new HashMap<String, Plugin>();	
+		if(mPlugins==null){
+			mPlugins = new HashMap<String,Plugin>();
+		}
 	}
 
 	
 	@Override
-	public Plugin getPluginByName(String name) {
+	public Plugin getPluginByName(String name) { 
 		Log.i(TAG, "Requested " + name + ", searching among " + mPlugins.size() + " plugins.");
-		synchronized (mPlugins) {
-			Plugin res=mPlugins.get(name);
-			Log.i(TAG,"Plugin returned");
-			return res;
-		}
+		return mPlugins.get(name);
 	}
 	
 	@Override
@@ -43,9 +41,10 @@ public class AndroidPluginCollection implements PluginCollection, PluginListener
 			Log.i(TAG, "We already have " + plugin.getName());
 			return false;
 		} else{
-			
 			Log.i(TAG, "Plugin discovered " + plugin.getName());
-			mPlugins.put(plugin.getName(), plugin);
+			synchronized (mPlugins) {
+				mPlugins.put(plugin.getName(), plugin);
+			}
 			return true;
 		}
 	}
