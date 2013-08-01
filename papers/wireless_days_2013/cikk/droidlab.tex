@@ -93,13 +93,38 @@ Network access and quality is an important information for smartphone users. Net
 RootMetrics monitors cellular coverage, it let's users share their active measurement data to process a coverage map.
 
 \subsection{Lifestyle and health}
+Healthcare in modern societies is a main concern. Smartphones' sensors can help on many different levels. For individuals it can help to monitor activity, track exercises, with external Bluetooth devices log blood pressure and other metrics. In a family results of the elderly members can trigger alarms at the younger generations. Same can be implemented in a smaller community. On national scale data provides insight of the health level of the people. On a global scale these statistics can help find correlation between lifestyle and health.
 
+A crowd sourced ad-hoc communication network can be useful both on outdoor events where cellular coverage is not designed for many users, and in case of an outage to help first responders contact those without mobile service. Crowd sensing is useful to detect and track parades, estimate number of participants.
 
+\subsection{Frameworks}
+Several frameworks have been proposed for different aspects of mobile crowd sourcing, most of them experimental. mCrowd is a mobile crowdsourcing platform that enables iPhone users to post or tag images or answer questions. mCrowd was a prototype application that demonstrated a micro-payment system rewarding the contributors.
+mClerk is a platform that distributes tasks and enables workers to post their responses. mClerk targeted third world users without smartphones. The key challenge of mClerk was to create a communication protocol that enables data transfer over text messages, enabling traditional phone users to receive complex tasks and report results. Both platforms focus on the active contribution of the users.
 
+Other frameworks target the communication protocols used in crowd source applications. When information is both gathered and consumed by the same crowd, it is crucial to have a robust, multi-source, multi-destination multicast infrastructure. Fan-Bai et al proposed such a system for vehicular networks. Demirbas et al developed an overlay that uses Twitter to distribute sensor information. Szabo et al investigated the use of XMPP as a carrier protocol for crowdsourced applications.
 
+MEDUSA is an experimental framework that enables the execution of sensing tasks on a swarm of devices connected to a cloud based server. Ryong Ra et al created a scripting language MedScript and a prototype of the runtime. MedScript introduced an abstraction that helps describe crowdsourcing tasks along with language constructs that map to user involvement like requesting user input or user actions and rewarding users. MEDUSA also defines a software architecture and provides a reference implementation for cloud-backed crowd sourcing frameworks.
+
+Opposed to MEDUSA DroidLab focuses on automated sensing. We designed our framework to be able to operate in the background, but taking in consideration the user's resources: our first contribution is a detailed permission and quota management system that gives full control to the user of DroidLab's activity.
+
+Our second contribution is the plugin-based design that allows the framework to be tailored to the devices capabilities. There exist several thousand different makes of Android devices, dozens of sensors, several different network stack implementations with different feature sets, and many different type of usages. DroidLab contains different plugins for different sensors and data types. This enables the user to configure his DroidLab installation to his comfort zone. We took in account the permission system of Android, and designed the framework to require only network access in itself.
+
+Our third contribution is the DroidLab API, a Java API that eases development of crowd sourcing application with functions to utilize the plugin's functionality and gives access to sensing related tasks like scheduling and data collection.
+
+In the following section we will define the intended use of the framework. We will describe the challenges of such a platform. In section XXX XXX we will present the design of the platform and review the state of the art of the implementation. We will conclude by evaluating the current implementation and laying out our future work.
 
 \section{Use cases and challenges}
 \label{sec:use_cases}
+Applications mentioned in the previous chapter have many properties in common:
+- Only work in areas where the application's coverage is high
+- Provide services to the users
+- Services provided can be consumed on a mobile device through a specific application
+This results in well polished, feature rich applications that emphasize the provided services. Users download the applications for their own benefit. If an application doesn't reach enough users or active user contribution is required and is too costly (see Google's parking app) the service dies out. This is a high cost, high risk scenario.
+
+
+
+
+
 
 Wikipedia motivation: using results vs 
 \section{Solutions}
