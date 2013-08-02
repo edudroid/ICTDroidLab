@@ -64,6 +64,7 @@ Both examples involved utilization of computational resources owned by the users
 Participatory sensing involves data collection outside of the system. Sensing can be automated or can involve the active participation of the user. Before smartphones, sensing was either done through expensive Internet-connected sensors or with the participation of the user through fixed personal computers. Sensors had to be deployed, and sensing involving the user had large delay and required considerable effort from the part of the user. The evolution of smartphones eased many new complex sensing applications. Smartphones have the connectivity that enable real time, high bandwidth communication. The devices can access precise location data, and are equipped with a wide range of sensors from cameras and microphones to accelerometers, gyroscopes and barometers. New mobile operating systems offer many seamless ways for the sensing system to prompt for user input.
 
 To exploit these possibilities we offer DroidLab. DroidLab is a cloud backed mobile framework still under development, that aims to solve key challenges of mobile crowd sourcing. In this article we will present successful and promising mobile crowd sourcing application and crowd sourcing frameworks. We will identify the key challenges of mobile crowd sourcing and define the use cases for our framework. Then present the architecture and design of our solution and conclude with the evaluation of the current framework and define the future works.
+
 \section{Related work}
 \label{sec:related_work}
 We already mentioned two successful examples of crowd sourcing. Seti@Home and Google Image Game both targeted desktop platforms. Seti@Home was an automated solution while Google Image Game involved user interaction.
@@ -111,23 +112,32 @@ Our second contribution is the plugin-based design that allows the framework to 
 
 Our third contribution is the DroidLab API, a Java API that eases development of crowd sourcing application with functions to utilize the plugin's functionality and gives access to sensing related tasks like scheduling and data collection.
 
-In the following section we will define the intended use of the framework. We will describe the challenges of such a platform. In section XXX XXX we will present the design of the platform and review the state of the art of the implementation. We will conclude by evaluating the current implementation and laying out our future work.
+In the following section we will define the intended use of the framework. We will address the challenges of such a platform..
 
-\section{Use cases and challenges}
+\section{Use cases}
 \label{sec:use_cases}
-Applications mentioned in the previous chapter have many properties in common:
-- Only work in areas where the application's coverage is high
-- Provide services to the users
-- Services provided can be consumed on a mobile device through a specific application
-This results in well polished, feature rich applications that emphasize the provided services. Users download the applications for their own benefit. If an application doesn't reach enough users or active user contribution is required and is too costly (see Google's parking app) the service dies out. This is a high cost, high risk scenario.
+Applications mentioned in the previous chapter have several properties in common:
+- Applications only work in areas where the application's coverage is high
+- They provide services to the users
+- Services provided can be consumed on the same mobile device, through a specific application
+For such an application to succeed the provided service has to be in balance with the required contribution, and the application has to be advertised and distributed fast. These requirements result in well polished, feature rich applications that emphasize the provided services, and high marketing costs. If an application doesn't reach enough users or active user contribution is required and is too costly (see Google's parking app) the service dies out. This is a high cost, high risk scenario.
 
+DroidLab has three main use cases. It aims at bootstrapping such applications. If an application developer needs sensory data for the provided service to work, he can deploy a sensor application to DroidLab and gather the required information before the launch of the stand alone application. If a service requires mobile sensed data, but doesn't offer mobile content to the users, it is really hard to motivate users to download yet another application that will run in the background and consume valuable resources. If a device runs DroidLab, such applications can be deployed seamlessly, without distracting the user. Finally DroidLab's initial purpose was to be a research platform, a mobile test network similar to PlanetLab and SenseLab. It is especially difficult to deploy applications for research purposes, as they usually don't provide any value to the user, operate only for shorter periods of times and usually target specific user groups. DroidLab provides a solution for both use cases.
 
+\section{Challenges}
+DroidLab is a cloud backed mobile framework. It consists of a cloud application running on Google App Engine. We will reference this app as the server. The mobile devices participating in DroidLab are called clients. Clients run the DroidLab framework which consists of the core and several plugins. The framework is capable of downloading and running crowd sourcing applications, called applications. When designing the framework, we faced the following challenges.
 
+\subsection{Modularity}
+DroidLab's Android framework from an Android perspective consists of a core application and plugin applications. Each plugin can be installed or removed as an Android application. Each plugin requires the permissions that are needed for it's use. This enables the user to assemble a setup that she is comfortable with, and is suitable for her device's capabilities. If she doesn't want to share her location, than omitting that plugin the framework will be limited on the OS level not to use the location services.
 
+The clear benefits of this modular approach come with some drawbacks. The DroidLab distributions will be fragmented, devices will have different plugin sets and even plugin versions. To overcome this problem, 
 
-
-Wikipedia motivation: using results vs 
-\section{Solutions}
+\subsection{Security}
+\subsection{Privacy}
+\subsection{Seamlessness}
+\subsection{Incentive}
+As any crowdsourcing application or platform, the key to success is penetration. For DroidLab to succeed users have to download and use it - we will define usage later. 
+\subsection{Scaling}
 \label{sec:solutions}
 \section{Conclusions}
 \label{sec:conclusion_and_future_work}
