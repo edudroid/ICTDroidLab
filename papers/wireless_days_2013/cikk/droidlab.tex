@@ -113,8 +113,13 @@ Our second contribution is the plugin-based design that allows the framework to 
 Our third contribution is the DroidLab API, a Java API that eases development of crowd sourcing application with functions to utilize the plugin's functionality and gives access to sensing related tasks like scheduling and data collection.
 
 In the following section we will define the intended use of the framework. We will address the challenges of such a platform..
+\section{Solution}
+\label{sec:solution}
+DroidLab is a cloud backed mobile framework. It consists of a cloud application running on Google App Engine. We will reference this app as the server. The mobile devices participating in DroidLab are called clients. Clients run the DroidLab framework which consists of the core and several plugins. The framework is capable of downloading and running crowd sourcing applications, called applications. To avoid confusion, users who upload and run their applications will be called Developers. Applications rely on events fired by the plugins and methods offered by the plugins to perform sensing tasks. The framework provides means to the applications for uploading results.
 
-\section{Use cases}
+DroidLab is under development. The Android client is already functional, and most of the features mentioned in this paper are already available. Limited server functionality is currently provided by a PHP based portal.
+
+\subsection{Use cases}
 \label{sec:use_cases}
 Applications mentioned in the previous chapter have several properties in common:
 - Applications only work in areas where the application's coverage is high
@@ -124,20 +129,42 @@ For such an application to succeed the provided service has to be in balance wit
 
 DroidLab has three main use cases. It aims at bootstrapping such applications. If an application developer needs sensory data for the provided service to work, he can deploy a sensor application to DroidLab and gather the required information before the launch of the stand alone application. If a service requires mobile sensed data, but doesn't offer mobile content to the users, it is really hard to motivate users to download yet another application that will run in the background and consume valuable resources. If a device runs DroidLab, such applications can be deployed seamlessly, without distracting the user. Finally DroidLab's initial purpose was to be a research platform, a mobile test network similar to PlanetLab and SenseLab. It is especially difficult to deploy applications for research purposes, as they usually don't provide any value to the user, operate only for shorter periods of times and usually target specific user groups. DroidLab provides a solution for both use cases.
 
-\section{Challenges}
-DroidLab is a cloud backed mobile framework. It consists of a cloud application running on Google App Engine. We will reference this app as the server. The mobile devices participating in DroidLab are called clients. Clients run the DroidLab framework which consists of the core and several plugins. The framework is capable of downloading and running crowd sourcing applications, called applications. When designing the framework, we faced the following challenges.
-
-\subsection{Modularity}
+\subsection{Challenges}
+\subsubsection{Modularity}
 DroidLab's Android framework from an Android perspective consists of a core application and plugin applications. Each plugin can be installed or removed as an Android application. Each plugin requires the permissions that are needed for it's use. This enables the user to assemble a setup that she is comfortable with, and is suitable for her device's capabilities. If she doesn't want to share her location, than omitting that plugin the framework will be limited on the OS level not to use the location services.
 
-The clear benefits of this modular approach come with some drawbacks. The DroidLab distributions will be fragmented, devices will have different plugin sets and even plugin versions. To overcome this problem, 
+The clear benefits of this modular approach come with some drawbacks. The DroidLab distributions will be fragmented, devices will have different plugin sets and even plugin versions. Users will also have the possibility to revoke permissions from the framework and limit the resource usage of plugins.
 
-\subsection{Security}
-\subsection{Privacy}
-\subsection{Seamlessness}
-\subsection{Incentive}
+To address this issue, DroidLab has dual conformance checking for the applications. When a Developer request devices for his application, he indicates the span of the deployment. He may target a specific user group - age, gender, country, urban area or countryside, device type, user activity type - and weather the application needs inter user connections or devices can be scattered over a larger area. He can request device capabilities: location sensor accuracy, network connectivity type, available sensors. And finally estimates the resources his application will consume on a device during the applications lifetime.
+
+A strong point of DroidLab is the management of the resources. As different sensors have different types of resources, we introduced a resource description system. For each resource we define quotas. Quotas can be associated with the volume of consumed resources and the speed of consumption. A resource can have several associated quota. Quotas are used to present users with resource management decisions and to limit an application's resource usage.
+
+A plugin interface is defined so that plugins can expose the quotas. Each quota has five usage levels. The user can choose not to grant any of that resource. Low, medium and high are different levels defined by the plugins and labeled by human readable labels. Finally unlimited indicates the user is willing to provide every available resource of the kind to the framework.
+
+Applications can be present parallel on a device. The quota limits defined by the user apply for the aggregated resource consumption of the application. The server is in charge of distributing the applications among devices in a way that each application will be able to access the amount of resources the developer required. This is the first level of conformance.
+
+Once an application is pushed to a device, each delivered event and called method is monitored by the framework and authorized by the resource manager running on the device. Once the application's quota level is reached or the overall quota limit has expired, the framework denies the request.
+
+\subsubsection{Security}
+DroidLab ensures that the user is protected from both outside attacks and malicious applications. We identified three high risk points in the architecture.
+
+Framework and plugin integrity
+
+We rely on Android Play Store's security measures to guarantee that nor the nor the framework or the plugins code can be compromised. Both the framework and the plugins can be downloaded from the Play Store through the Google Play Store application. This ensures that no third party application will be able to use the same package name on the device. Android user management system ensures code integrity: DroidLab isn't more fragile than any Android application.
+
+Application download from the server
+
+An attacker could compromise the DroidLab client by pushing an application to the client that either has altered quotas and permissions, or contains code that was not checked and compiled on the DroidLab server. To prevent such an intrusion, every application and accompanying resource descriptor is signed by the DroidLab's asymmetrical key. The application has the public key compiled inside itself. This signature is checked every time the application's is loaded from local storage.
+
+Inter-component communication
+
+
+
+\subsubsection{Privacy}
+\subsubsection{Seamlessness}
+\subsubsection{Incentive}
 As any crowdsourcing application or platform, the key to success is penetration. For DroidLab to succeed users have to download and use it - we will define usage later. 
-\subsection{Scaling}
+\subsubsection{Scaling}
 \label{sec:solutions}
 \section{Conclusions}
 \label{sec:conclusion_and_future_work}
