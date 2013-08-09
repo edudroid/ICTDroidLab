@@ -10,12 +10,6 @@
 
 \usepackage{longtable}
 
-
-
-
-
-
-
 \graphicspath{{./figs/}}
 %%\usepackage[T1]{fontenc}
 %%\usepackage[latin2]{inputenc}
@@ -64,9 +58,11 @@ Participatory sensing on the other hand involves distributed data collection . S
 
 Given these possibilities, a large number of smartphone-based crowd-sensing applications emerged recently. However, on one hand, all these applications have several common parts (e.g., communication with the sensor, data collection, data sending, or data processing modules) which are written from scratch by each application developer. In addition, if two or more such applications run on the same phone, they will all consume memory and CPU resources in a redundant and unnecessary way. On the other hand, once the application is written, a large ?crowd? of users is needed to test, run and use this application. Gathering such a crowd is however a difficult task, as the users should be motivated in a way to upload and run these specific applications on their personal devices.     
  
-. DroidLab is being developed to tackle exactly these issues. It  is a cloud-backed mobile framework  that aims to solve key challenges of mobile crowd sourcing. First, it provides the research community and the mobile application developers with an easy-to-use skeleton on which they can readily build their own crowd-sourcing applications, benefiting from the provided sensing and communication modules. Second, the DroidLab framework will run on a large number of smartphones, enabling application developers to upload their own code on these devices and test it on a large-scale testbed. 
+DroidLab is designed to tackle exactly these issues. It  is a cloud-backed mobile framework  that aims to solve key challenges of mobile crowd sourcing. First, it provides the research community and the mobile application developers with an easy-to-use skeleton on which they can readily build their own crowd-sourcing applications, benefiting from the provided sensing and communication modules. Second, the DroidLab framework will run on a large number of smartphones, enabling application developers to upload their own code on these devices and test it on a large-scale testbed. 
 
 DroidLab is being developed as part of the EIT ICT Labs FITTING European research project, which aims to federate several large scale wired and wireless testbeds, such as PlanetLab, OneLab or SensLab. The goal of the project is to provide a common interface and a transparent access to this large set of heterogeneous resources, enabling researchers to run experiments and test their various protocols and applications. DroidLab adds to FITTING the ability to support mobile nodes and mobility scenarios, a feature that was not addressed by the other, previously mentioned testbeds.     
+
+DroidLab is a cloud backed mobile platform. The mobile devices participating in DroidLab are called Clients. Clients run the DroidLab framework, which consists of the core and several plugins. The framework is capable of downloading and running crowd sourcing applications, called simply applications. To avoid confusion, users who upload and run their applications over DroidLab will be called Developers. Applications rely on events fired by the plugins and methods offered by the plugins to perform sensing tasks. The framework provides means to the applications for uploading results.
 
 The rest of this paper is organized as follows. First, as related work, in section II we present some  promising mobile crowd sourcing applications and frameworks. In section III we  identify the key challenges of mobile crowd sourcing and define the use cases for our DroidLab framework. Then, in section IV we present the architecture and design of our solution and  a short evaluation of the current framework. Finally, in section V we conclude the paper and propose some future works.
 
@@ -89,7 +85,6 @@ Finally, CreekWatch is an application that helps to monitor water quality and po
 
 Monitoring network coverage and connection quality can also be done through crowd-sensing. The two most important communication channels for smartphones are WiFi networks and cellular networks. WiFi Finder builds and maintains a database of open WiFi networks and their properties. RootMetrics on the other hand monitors cellular coverage, as it lets users share their active measurement data to process a coverage map.
 
-Lifestyle and health
 Healthcare in modern societies is a main concern. Smartphones' sensors can help on many different levels. For individuals it can help to monitor activity, track exercises, with external Bluetooth devices log blood pressure and other metrics. In a family results of the elderly members can trigger alarms at the younger generations. Same can be implemented in a smaller community. On national scale data provides insight of the health level of the people. On a global scale these statistics can help find correlation between lifestyle and health.
 
 A crowd sourced ad-hoc communication network can be useful both on outdoor events where cellular coverage is not designed for many users, and in case of an outage to help first responders contact those without mobile service. Crowd sensing is useful to detect and track parades, estimate number of participants.
@@ -203,23 +198,36 @@ DroidLab's server requests needed for its operation scale linearly with the numb
 
 \section{The DroidLab Architecture}
 
-DroidLab is a cloud backed mobile framework, includinga cloud application running on Google App Engine. We will reference this app as the Server. The mobile devices participating in DroidLab are called Clients. Clients run the DroidLab framework, which consists of the core and several plugins. The framework is capable of downloading and running crowd sourcing applications, called simply Applications. To avoid confusion, users who upload and run their applications over DroidLab will be called Developers. Applications rely on events fired by the plugins and methods offered by the plugins to perform sensing tasks. The framework provides means to the applications for uploading results.
-
-DroidLab is currently under development. The Android client is already operational, and most of the features mentioned in this paper are already available. Limited server functionality is currently provided by a PHP based portal.
-
-Figure 1 shows an overview of the DroidLab framework. In the center of DroidLab is the server. Developers upload the source code of their application along with a descriptor file of the users and a file containing the requirements towards the device and installed DroidLab setup. This descriptor file is matched to the available device pool. If needs are met the server compiles a downloadable package containing a .dex binary, and the granted permissions and quotas.
-
-A strong point of DroidLab is the management of the resources. As different sensors have different types of resources, we introduced a resource description language. For each resource we define quotas. Quotas can be associated with the volume of consumed resources and the speed of consumption. A resource can have several associated quotas. These are used to present users with resource management decisions giving the the power to limit an application's resource usage.
-
-A plugin interface is defined so that plugins can expose the quotas. Each quota has five usage levels. The user can choose not to grant any of that resource. Low, medium and high are different levels defined by the plugins and labeled by human readable labels. Finally unlimited indicates the user is willing to provide every available resource of the kind to the framework.
+A strong point of DroidLab is the resource management. As different sensors have different types of resources, we introduced a resource description language. Plugins use this language to provide information about the defined quotas. Developers use the language to express the needs of their applications. And devices generate descriptors based on the user's quota usage authorizations to advertise available capacity to the server.
 
 Several applications can be present in parallel on a device. The quota limits defined by the user apply for the aggregated resource consumption of the applications. The server is in charge of distributing the applications among devices in a way that each application will be able to access the amount of resources the developer required. This is the first level of conformance.
 
-Once an application is pushed to a device, each delivered event and called method is monitored by the framework and authorized by the resource manager running on the device. Once the application's quota level is reached or the overall quota limit has expired, the framework denies the request.
+\begin{figure}[h]
+\caption{A picture of a gull.}
+\centering
+	\includegraphics[width=\columnwidth]{structure.eps}
+\end{figure}
 
+Figure 1 shows an overview of the DroidLab framework. In the center of DroidLab is the server. Developers upload the source code of their application along with a descriptor file of the users and a file containing the requirements towards the device and installed DroidLab setup. This descriptor file is matched to the available device pool. If needs are met the server compiles a downloadable package containing a .dex binary, and the granted permissions and quotas. The packet is than pushed to the selected devices where the App scheduler manages the lifecycle of the applications.
+
+Once an application is pushed to a device, the App scheduler takes care of it's lifecycle. Applications can rely on timers and plugin events to trigger sensing behavior. Applications can be written using a limited feature set of Java, in stead of creating a domain specific language. This way sensing tasks or protocols can exploit the full power of base Java classes to implement complex business logic. Sensor functionality is wrapped in Plugin wrappers that applications can access to a weakly typed plugin interface. Sensor data is not saved directly. Sensor functions return with their results, and the Application can process the results, aggregate different sensors, and send preprocessed information to the server. We decided to use this more flexible approach to limit bandwidth and storage space needs. Applications use the Data manager to persist information. The Data manager is responsible for the local storage of this information, and of the scheduling of the uploads.
+
+The fourth main component of the framework core is the Presence manager. In order for the server to work properly a maintained device configuration is required. Presence manager notifies the server of device configuration changes and of device state.
+
+\begin{figure}[h]
+\caption{A picture of a gull.}
+\centering
+	\includegraphics[width = \columnwidth]{communication.eps}
+\end{figure}
+
+Applications run in a managed sandbox. Each delivered event and called method is monitored by the framework and authorized by the resource manager running on the device. Once the application's quota level is reached or the overall quota limit has expired, the framework denies the request. Figure 2 shows the control flow of a sensor access. Its starts off by a trigger. Either the scheduler can notify the core of a timeout that has been scheduled, or a plugin fires an event based on sensor values. The Core finds the Applications that have to be launched. Applications get to run only for a very short time, during this period they have to process the received event. In response they can initiate sensor readings, subscribe or unsubscribe from events, set timers. If the application places a sensor request, a callback is registered and the framework handles the call asynchronously. First permissions need to be checked. If the user authorized the call, the core asks for a quota estimate for the given parameter set from the plugins. If the application has enough credit for the call, the plugin method is called. When plugin returns a result, de applications available credit is decremented, and the callback is called. This mechanism is both secure and flexible.
+
+Application terminates if one of the required quotas or predefined lifespan expires, the user explicitly removes it from the framework, a required permission is revoked or a required plugin uninstalled. Application is than removed from the device. Data generated by the application is cached until uploaded to the server.
 
 \section{Conclusions}
 \label{sec:conclusion_and_future_work}
+DroidLab is currently under development. The Android client is already operational, and most of the features mentioned in this paper are already available. Limited server functionality is currently provided by a PHP based portal.
+
 
 \section{Acknowledgment}
 \label{sec:acknowledgment}
