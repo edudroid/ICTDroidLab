@@ -1,0 +1,10 @@
+\begin{thebibliography}{1}
+
+\bibitem{Doe:2009:Online}
+Ringo Doe.
+\newblock This is an electronic reference..., June 2009.
+
+\bibitem{IEEEexample:softonline}
+Ucb/lbnl/vint network simulator---ns (version 2).
+
+\end{thebibliography}
