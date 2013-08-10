@@ -1,9 +1,45 @@
 This is BibTeX, Version 0.99dThe top-level auxiliary file: droidlab.aux
 The style file: plain.bst
 Database file #1: droidlab.bib
-Database file #2: droidlab_web.bib
-Warning--entry type for "Doe:2009:Online" isn't style-file defined
---line 1 of file droidlab_web.bib
-Warning--entry type for "IEEEexample:softonline" isn't style-file defined
---line 9 of file droidlab_web.bib
-(There were 2 warnings)
+Database file #2: droidlab_manual.bib
+Warning--entry type for "MobileStats" isn't style-file defined
+--line 7 of file droidlab_manual.bib
+Warning--entry type for "AppDownloads" isn't style-file defined
+--line 14 of file droidlab_manual.bib
+Warning--entry type for "CreekWatch" isn't style-file defined
+--line 21 of file droidlab_manual.bib
+Warning--entry type for "OpenSpot" isn't style-file defined
+--line 28 of file droidlab_manual.bib
+Warning--entry type for "Waze" isn't style-file defined
+--line 35 of file droidlab_manual.bib
+Warning--entry type for "HopStop" isn't style-file defined
+--line 42 of file droidlab_manual.bib
+Warning--entry type for "MrNumber" isn't style-file defined
+--line 49 of file droidlab_manual.bib
+Warning--entry type for "WiFiFinder" isn't style-file defined
+--line 63 of file droidlab_manual.bib
+Warning--entry type for "RootMetrics" isn't style-file defined
+--line 70 of file droidlab_manual.bib
+Warning--to sort, need author or key in MobileStats
+Warning--to sort, need author or key in AppDownloads
+Warning--to sort, need author or key in Waze
+Warning--to sort, need author or key in OpenSpot
+Warning--to sort, need author or key in HopStop
+Warning--to sort, need author or key in MrNumber
+Warning--to sort, need author or key in CreekWatch
+Warning--to sort, need author or key in WiFiFinder
+Warning--to sort, need author or key in RootMetrics
+Warning--empty journal in Eriksson2008
+Warning--empty journal in Gupta2012
+Warning--empty journal in Haderer2013
+Warning--empty journal in Jeffrey2006
+Warning--empty journal in Korpela
+Warning--empty year in Korpela
+Warning--empty journal in Miluzzo2008
+Warning--empty journal in Ra
+Warning--there's a number but no volume in Ra
+Warning--empty year in Ra
+Warning--empty journal in Yan
+Warning--there's a number but no volume in Yan
+Warning--empty year in Yan
+(There were 31 warnings)
