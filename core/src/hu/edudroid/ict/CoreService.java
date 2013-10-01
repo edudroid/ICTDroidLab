@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -47,7 +48,7 @@ public class CoreService extends Service implements PluginListener {
 	public static final String JAR_FOLDER = "jars";
 	
 	// Google project id
-    public static final String SENDER_ID = "1017069233076";	
+    public static final String SENDER_ID = "1017069233076";
     public static String registration_ID = "";
 	
 	public static File getDescriptorFolder(Context context) {
@@ -134,6 +135,11 @@ public class CoreService extends Service implements PluginListener {
 		} else {
 			Log.i(TAG, "Service already running.");
 		}
+		
+		LogTask logTask = new LogTask(this);
+        Thread thread = new Thread(logTask, "uploadLogsToServer");
+        thread.start();
+		
 	}
 	
 	public void registerPluginDetailsListener(PluginListener listener) {
@@ -294,7 +300,7 @@ public class CoreService extends Service implements PluginListener {
         } else {
         	Log.e("GCM:","Device is already registered on GCM: " +registration_ID);
             if (GCMRegistrar.isRegisteredOnServer(this)) {
-                Log.e("GCM:","Skips registration.");
+                Log.e("GCM:","Skips registration.");              
                 
             } else {
                 // Try to register again, but not in the UI thread.
@@ -390,6 +396,19 @@ public class CoreService extends Service implements PluginListener {
 
         public void run() {
         	ModuleLoader.downloadModule(mContext, mUrl);
+        }
+    }
+	
+	public class LogTask implements Runnable {
+
+		Context mContext;
+		
+        public LogTask(Context context) {
+            mContext=context;
+        }
+
+        public void run() {
+        	UploadService.upload(mContext);
         }
     }
 }

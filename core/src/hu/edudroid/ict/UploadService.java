@@ -8,10 +8,19 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Locale;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.util.EntityUtils;
 
 import android.app.IntentService;
 import android.content.Context;
+import android.content.Entity;
 import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
@@ -25,7 +34,6 @@ public class UploadService extends IntentService {
 	
 	public static final File OUTPUT_FOLDER = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/ictdroidlab_log");
 	
-	public static final String SERVER_URL = "http://152.66.244.83/pages/mobile_api/uploadLog.php";
 	private static final String USERNAME = "admin";
 	private static final String PASSWORD = "admin"; 
 
@@ -49,7 +57,30 @@ public class UploadService extends IntentService {
 		return files.length;
 	}
 	
+	public static String getUploadURL(){
+		String uploadURL="";
+		
+		HttpClient httpclient = new DefaultHttpClient();    
+		HttpConnectionParams.setConnectionTimeout(httpclient.getParams(), 10000); //Timeout Limit
+
+		HttpGet httpGet = new HttpGet("http://ictdroidlab.appspot.com/uploadLog");
+		try {
+			HttpResponse response = httpclient.execute(httpGet);
+			HttpEntity ent=response.getEntity();
+			uploadURL=EntityUtils.toString(ent);
+			Log.e("UPLOAD LOG", uploadURL);
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return uploadURL;
+	}
+	
 	public static void upload(Context context) {
+		
 		try {
 			synchronized (context) {
 				//SharedPreferences prefs = context.getSharedPreferences(MeasurementUploaderActivity.PREF_NAME, MODE_PRIVATE);
@@ -106,16 +137,12 @@ public class UploadService extends IntentService {
 					return;
 				}
 				
-				if (SERVER_URL == null || USERNAME == null || PASSWORD == null){
-					Log.w(LOG_TAG, "Invalid settings or no network access.");
-					//SharedPrefsLogger.log("Invalid settings or no network access: \n Server URL " + (serverUrl==null?"NULL":serverUrl) + "\nUser name " + (userName==null?"NULL":userName) + "\nPassword " + (password==null?"NULL":"PRESENT"), context);
-					return;
-				}
-				
+				String uploadURL=getUploadURL();
+								
 				LinkedList<BasicNameValuePair> postParameters = new LinkedList<BasicNameValuePair>();
 				postParameters.add(new BasicNameValuePair("userName", USERNAME));
 				postParameters.add(new BasicNameValuePair("password", PASSWORD));		
-				String uploadResult = HttpUtils.postMultipartWithFile(SERVER_URL, postParameters, "userFile", zip, null, null);
+				String uploadResult = HttpUtils.postMultipartWithFile(uploadURL, postParameters, "logFile", zip, null, null);
 				zip.delete();
 				if (uploadResult != null) {
 					if (uploadResult.startsWith("OK")) {
