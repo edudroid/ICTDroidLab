@@ -29,8 +29,8 @@ public class GCMBroadcast extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        String userMessage = "hello";
-        String reg_id = "APA91bEmcxMvfwaDRW6XnziD4szvxpqes7Q6iZLhKMfK0xhEsomgfkqrGFBgVdJN_rc1eo9bJD0kyZo6SkKxXpZW28_1LfC4nFxNzqIygQ0RZwtjlaORSl9I9GhuYQQp2wBwCcZpimls";
+        String userMessage = req.getParameter("message");
+        String reg_id = req.getParameter("reg_id");
         
         androidTargets.add(reg_id);
 
