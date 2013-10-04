@@ -24,7 +24,7 @@ public final class ServerUtilities {
     private static final int BACKOFF_MILLI_SECONDS = 2000;
     private static final Random random = new Random();
     
-    public static final String SERVER_URL="http://152.66.244.83/pages/mobile_api/";
+    public static final String SERVER_URL="http://ictdroidlab.appspot.com/";
     public static final String TAG="Server Utilities";
  
     /**
@@ -47,7 +47,7 @@ public final class ServerUtilities {
         for (int i = 1; i <= MAX_ATTEMPTS; i++) {
             Log.d(TAG, "Attempt #" + i + " to register");
             try {
-                post(serverUrl+"registerDevice.php", params);
+                post(serverUrl+"registerdevice", params);
                 GCMRegistrar.setRegisteredOnServer(context, true);
                 String message = context.getString(R.string.server_registered);
                 Log.e(TAG,message);
@@ -83,7 +83,7 @@ public final class ServerUtilities {
      */
     public static void unregister(final Context context, final String regId) {
         Log.i(TAG, "unregistering device (regId = " + regId + ")");
-        String serverUrl = SERVER_URL + "unregisterDevice.php";
+        String serverUrl = SERVER_URL + "unregisterdevice";
         Map<String, String> params = new HashMap<String, String>();
         params.put("device_id", regId);
         try {
@@ -103,10 +103,6 @@ public final class ServerUtilities {
         }
     }
     
-    /**
-     * Register this account/device pair within the server.
-     *
-     */
     public static void refreshMetaDatas(final Context context,String imei, String sdk_version, boolean mobile, boolean wifi, boolean bluetooth, boolean gps) {
         
         String serverUrl = SERVER_URL;
@@ -125,7 +121,7 @@ public final class ServerUtilities {
         for (int i = 1; i <= MAX_ATTEMPTS; i++) {
             Log.d(TAG, "Attempt #" + i + " to register");
             try {
-                post(serverUrl+"refreshMetaDatas.php", params);
+                post(serverUrl+"refreshmetadatas", params);
                 GCMRegistrar.setRegisteredOnServer(context, true);
                 String message = context.getString(R.string.server_registered);
                 Log.e(TAG,message);
