@@ -31,14 +31,17 @@ public final class ServerUtilities {
      * Register this account/device pair within the server.
      *
      */
-    public static void register(final Context context, String imei, final String regId) {
-        Log.i(TAG, "registering device (regId = " + regId + ")");
-        Log.i(TAG, "params: IMEI:" + imei +" REGID:" +regId);
+    public static void register(final Context context, String imei, String gcmId, String sdk_version, boolean cellular, boolean wifi, boolean bluetooth, boolean gps) {
         
         String serverUrl = SERVER_URL;
         Map<String, String> params = new HashMap<String, String>();
-        params.put("device_id", regId);
         params.put("imei", imei);
+        params.put("gcm_id", gcmId);
+        params.put("sdk_version", sdk_version);
+        params.put("cellular", (cellular) ? "1" : "0");
+        params.put("wifi", (wifi) ? "1" : "0");
+        params.put("bluetooth", (bluetooth) ? "1" : "0");
+        params.put("gps", (gps) ? "1" : "0");
          
         long backoff = BACKOFF_MILLI_SECONDS + random.nextInt(1000);
         // Once GCM returns a registration id, we need to register on our server
@@ -101,55 +104,6 @@ public final class ServerUtilities {
                     e.getMessage());
             Log.e(TAG,message);
         }
-    }
-    
-    public static void refreshMetaDatas(final Context context,String imei, String sdk_version, boolean mobile, boolean wifi, boolean bluetooth, boolean gps) {
-        
-        String serverUrl = SERVER_URL;
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("imei", imei);
-        params.put("sdk_version", sdk_version); 
-        params.put("mobile", (mobile) ? "1" : "0");
-        params.put("wifi", (wifi) ? "1" : "0");
-        params.put("bluetooth", (bluetooth) ? "1" : "0");
-        params.put("gps", (gps) ? "1" : "0");
-         
-        long backoff = BACKOFF_MILLI_SECONDS + random.nextInt(1000);
-        // Once GCM returns a registration id, we need to register on our server
-        // As the server might be down, we will retry it a couple
-        // times.
-        for (int i = 1; i <= MAX_ATTEMPTS; i++) {
-            Log.d(TAG, "Attempt #" + i + " to register");
-            try {
-                post(serverUrl+"refreshmetadatas", params);
-                GCMRegistrar.setRegisteredOnServer(context, true);
-                String message = context.getString(R.string.server_registered);
-                Log.e(TAG,message);
-                return;
-            } catch (IOException e) {
-                // Here we are simplifying and retrying on any error; in a real
-                // application, it should retry only on unrecoverable errors
-                // (like HTTP error code 503).
-                Log.e(TAG, "Failed to register on attempt " + i + ":" + e);
-                if (i == MAX_ATTEMPTS) {
-                    break;
-                }
-                try {
-                    Log.d(TAG, "Sleeping for " + backoff + " ms before retry");
-                    Thread.sleep(backoff);
-                } catch (InterruptedException e1) {
-                    // Activity finished before we complete - exit.
-                    Log.d(TAG, "Thread interrupted: abort remaining retries!");
-                    Thread.currentThread().interrupt();
-                    return;
-                }
-                // increase backoff exponentially
-                backoff *= 2;
-            }
-        }
-        String message = context.getString(R.string.server_register_error,
-                MAX_ATTEMPTS);
-        Log.e(TAG,message);
     }
  
     /**

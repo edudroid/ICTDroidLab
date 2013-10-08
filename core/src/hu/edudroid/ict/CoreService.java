@@ -1,5 +1,6 @@
 package hu.edudroid.ict;
 
+import hu.edudroid.ict.GCMIntentService.RegisterToServer;
 import hu.edudroid.ict.gcm.ServerUtilities;
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginIntentReceiver;
@@ -104,8 +105,6 @@ public class CoreService extends Service implements PluginListener {
 			mBroadcast.registerPluginDetailsListener(this);
 	
 			registeringGCM();
-			
-			refreshMetaDatas();
 			
 			Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
 			sendBroadcast(mIntent);
@@ -299,89 +298,54 @@ public class CoreService extends Service implements PluginListener {
             GCMRegistrar.register(this, SENDER_ID);
         } else {
         	Log.e("GCM:","Device is already registered on GCM: " +registration_ID);
-            if (GCMRegistrar.isRegisteredOnServer(this)) {
-                Log.e("GCM:","Skips registration.");              
+            if (GCMRegistrar.isRegisteredOnServer(this)) {          
                 
             } else {
-                // Try to register again, but not in the UI thread.
-                // It's also necessary to cancel the thread onDestroy(),
-                // hence the use of AsyncTask instead of a raw thread.
-                final Context context = this;
-                TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
-                String imei=mngr.getDeviceId();                              
+            	TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
+                String imei=mngr.getDeviceId(); 
+        		
+                String sdk_version=String.valueOf(android.os.Build.VERSION.SDK_INT);
                 
-                RegisterToServer regTask = new RegisterToServer(context,imei,registration_ID);
+        		PackageManager pm = this.getPackageManager();
+        		
+        		boolean cellular = pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
+        		boolean wifi = pm.hasSystemFeature(PackageManager.FEATURE_WIFI);
+        		boolean bluetooth = pm.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH);
+        		boolean gps = pm.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
+            	
+                RegisterToServer regTask = new RegisterToServer(this,imei,registration_ID,sdk_version,cellular,wifi,bluetooth,gps);
                 Thread thread = new Thread(regTask, "RegisterToServer");
                 thread.start();
             }
         }
 	}
 	
-	public void refreshMetaDatas(){
-		Log.e("CoreService","Refreshing Metadatas");
-		
-		
-		TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
-        String imei=mngr.getDeviceId(); 
-		
-        String sdk_version=String.valueOf(android.os.Build.VERSION.SDK_INT);
-        
-		PackageManager pm = this.getPackageManager();
-		
-		boolean mobile = pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
-		boolean wifi = pm.hasSystemFeature(PackageManager.FEATURE_WIFI);
-		boolean bluetooth = pm.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH);
-		boolean gps = pm.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
-		
-        
-        refreshMetaDatasToServer refTask = new refreshMetaDatasToServer(this,imei,sdk_version,mobile,wifi,bluetooth,gps);
-        Thread thread = new Thread(refTask, "refreshMetaDatasToServer");
-        thread.start();
-	}
-	
 	public class RegisterToServer implements Runnable {
 
 		Context mContext;
 		String mIMEI;
-		String mRegistrationID;
+		String mGcmId;
+		String mSdk_version;
+		boolean mCellular;
+		boolean mWifi;
+		boolean mBluetooth;
+		boolean mGps;
 		
-        public RegisterToServer(Context context,String imei, String regId) {
+        public RegisterToServer(Context context,String imei, String gcmId, String sdk_version, boolean cellular, boolean wifi, boolean bluetooth, boolean gps) {
             mContext=context;
             mIMEI=imei;
-            mRegistrationID=regId;
+            mGcmId=gcmId;
+            mSdk_version=sdk_version;
+            mCellular=cellular;
+            mWifi=wifi;
+            mBluetooth=bluetooth;
+            mGps=gps;
         }
 
         public void run() {
-        	ServerUtilities.register(mContext, mIMEI, mRegistrationID);
+        	ServerUtilities.register(mContext, mIMEI, mGcmId,mSdk_version,mCellular,mWifi,mBluetooth,mGps);
         }
-    }
-	
-	public class refreshMetaDatasToServer implements Runnable {
-
-		Context mContext;
-		String imei;
-		String sdk_version;
-		boolean mobile;
-		boolean wifi;
-		boolean bluetooth;
-		boolean gps;
-		
-        public refreshMetaDatasToServer(Context context,String imei,String sdk_version,boolean mobile, boolean wifi, boolean bluetooth, boolean gps) {
-            mContext=context;
-            this.imei=imei;
-            this.sdk_version=sdk_version;
-	        this.mobile=mobile;
-	        this.wifi=wifi;
-	        this.bluetooth=bluetooth;
-	        this.gps=gps;
-	        
-        }
-
-        public void run() {
-        	ServerUtilities.refreshMetaDatas(mContext,imei, sdk_version, mobile,wifi,bluetooth,gps);
-        }
-    }
-	
+    }	
 	
 	public class downloadFile implements Runnable {
 

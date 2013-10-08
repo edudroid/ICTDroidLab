@@ -63,7 +63,7 @@ public class UploadService extends IntentService {
 		HttpClient httpclient = new DefaultHttpClient();    
 		HttpConnectionParams.setConnectionTimeout(httpclient.getParams(), 10000); //Timeout Limit
 
-		HttpGet httpGet = new HttpGet("http://ictdroidlab.appspot.com/uploadLog");
+		HttpGet httpGet = new HttpGet("http://ictdroidlab.appspot.com/getLogUrl");
 		try {
 			HttpResponse response = httpclient.execute(httpGet);
 			HttpEntity ent=response.getEntity();

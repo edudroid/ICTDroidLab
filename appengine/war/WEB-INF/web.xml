@@ -5,10 +5,6 @@ xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet>
-		<servlet-name>RefreshMetaDatasServlet</servlet-name>
-		<servlet-class>ict.edudroid.appengine.RefreshMetaDatasServlet</servlet-class>
-	</servlet>
-	<servlet>
 		<servlet-name>RegisterDeviceServlet</servlet-name>
 		<servlet-class>ict.edudroid.appengine.RegisterDeviceServlet</servlet-class>
 	</servlet>
@@ -16,11 +12,32 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>UnregisterDeviceServlet</servlet-name>
 		<servlet-class>ict.edudroid.appengine.UnregisterDeviceServlet</servlet-class>
 	</servlet>
-	<servlet-mapping>
-		<servlet-name>RefreshMetaDatasServlet</servlet-name>
-		<url-pattern>/refreshmetadatas</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
+	<servlet>
+    	<servlet-name>GetLogUrlServlet</servlet-name>
+    	<servlet-class>ict.edudroid.appengine.GetLogUrlServlet</servlet-class>
+  	</servlet>
+	<servlet>
+    	<servlet-name>UploadLogServlet</servlet-name>
+    	<servlet-class>ict.edudroid.appengine.UploadLogServlet</servlet-class>
+  	</servlet>
+  	<servlet>
+    	<servlet-name>ServeLogServlet</servlet-name>
+    	<servlet-class>ict.edudroid.appengine.ServeLogServlet</servlet-class>
+  	</servlet>
+  	<servlet>
+    	<servlet-name>UploadModuleServlet</servlet-name>
+    	<servlet-class>ict.edudroid.appengine.UploadModuleServlet</servlet-class>
+  	</servlet>
+  	<servlet>
+    	<servlet-name>ServeModuleServlet</servlet-name>
+    	<servlet-class>ict.edudroid.appengine.ServeModuleServlet</servlet-class>
+  	</servlet>
+  	<servlet>
+    	<servlet-name>GCMBroadcast</servlet-name>
+    	<servlet-class>ict.edudroid.appengine.GCMBroadcast</servlet-class>
+  	</servlet>
+  	
+ 	<servlet-mapping>
 		<servlet-name>RegisterDeviceServlet</servlet-name>
 		<url-pattern>/registerdevice</url-pattern>
 	</servlet-mapping>
@@ -28,60 +45,33 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>UnregisterDeviceServlet</servlet-name>
 		<url-pattern>/unregisterdevice</url-pattern>
 	</servlet-mapping>
-	
-	
-	<servlet>
+  	<servlet-mapping>
     	<servlet-name>UploadLogServlet</servlet-name>
-    	<servlet-class>ict.edudroid.appengine.UploadLogServlet</servlet-class>
-  	</servlet>
-  
-  	<servlet>
+    	<url-pattern>/uploadLog</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
+   	 	<servlet-name>GetLogUrlServlet</servlet-name>
+    	<url-pattern>/getLogUrl</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
     	<servlet-name>ServeLogServlet</servlet-name>
-    	<servlet-class>ict.edudroid.appengine.ServeLogServlet</servlet-class>
-  	</servlet>
- 
-  <servlet-mapping>
-    <servlet-name>UploadLogServlet</servlet-name>
-    <url-pattern>/uploadLog</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>ServeLogServlet</servlet-name>
-    <url-pattern>/serveLog</url-pattern>
-  </servlet-mapping>
-  
-  <servlet>
+    	<url-pattern>/serveLog</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
     	<servlet-name>UploadModuleServlet</servlet-name>
-    	<servlet-class>ict.edudroid.appengine.UploadModuleServlet</servlet-class>
-  	</servlet>
-  
-  	<servlet>
+    	<url-pattern>/uploadModule</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
     	<servlet-name>ServeModuleServlet</servlet-name>
-    	<servlet-class>ict.edudroid.appengine.ServeModuleServlet</servlet-class>
-  	</servlet>
- 
-  <servlet-mapping>
-    <servlet-name>UploadModuleServlet</servlet-name>
-    <url-pattern>/uploadModule</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>ServeModuleServlet</servlet-name>
-    <url-pattern>/serveModule</url-pattern>
-  </servlet-mapping>	
-  
-  
-  <servlet>
+    	<url-pattern>/serveModule</url-pattern>
+  	</servlet-mapping>	
+  	<servlet-mapping>
     	<servlet-name>GCMBroadcast</servlet-name>
-    	<servlet-class>ict.edudroid.appengine.GCMBroadcast</servlet-class>
-  	</servlet>
-  	
-  <servlet-mapping>
-    <servlet-name>GCMBroadcast</servlet-name>
-    <url-pattern>/GCMBroadcast</url-pattern>
-  </servlet-mapping>	
+    	<url-pattern>/GCMBroadcast</url-pattern>
+  	</servlet-mapping>	
 	
 	<welcome-file-list>
 		<welcome-file>ModuleSelector.jsp</welcome-file>
 	</welcome-file-list>
+	
 </web-app>

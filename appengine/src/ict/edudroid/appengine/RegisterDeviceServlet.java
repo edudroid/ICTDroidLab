@@ -12,18 +12,17 @@ import com.google.appengine.api.datastore.Entity;
 
 @SuppressWarnings("serial")
 public class RegisterDeviceServlet extends HttpServlet {
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
-		resp.setContentType("text/plain");
-		resp.getWriter().println("Hello, world");
-	}
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
-		resp.setContentType("text/plain");
 		
 		Entity registereddevice = new Entity("RegisteredDevice",req.getParameter("imei"));
-		registereddevice.setProperty("device_id", req.getParameter("device_id"));
+		registereddevice.setProperty("gcm_id", req.getParameter("gcm_id"));
+		registereddevice.setProperty("sdk_version", req.getParameter("sdk_version"));
+		registereddevice.setProperty("cellular", req.getParameter("cellular"));
+		registereddevice.setProperty("wifi", req.getParameter("wifi"));
+		registereddevice.setProperty("bluetooth", req.getParameter("bluetooth"));
+		registereddevice.setProperty("gps", req.getParameter("gps"));
         
         DatastoreService datastore =
                 DatastoreServiceFactory.getDatastoreService();

@@ -4,6 +4,7 @@ import hu.edudroid.ict.gcm.ServerUtilities;
 import hu.edudroid.module.ModuleLoader;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -21,12 +22,21 @@ public class GCMIntentService extends GCMBaseIntentService {
      * Method called on device registered
      **/
     @Override
-    protected void onRegistered(Context context, String registrationId) {
-        Log.i(TAG, "Device registered: regId = " + registrationId);
-        //displayMessage(context, "Your device registred with GCM");
-        TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
-        String imei=mngr.getDeviceId();
-        RegisterToServer regTask = new RegisterToServer(context,imei,registrationId);
+    protected void onRegistered(Context context, String gcmId) {
+        
+    	TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
+        String imei=mngr.getDeviceId(); 
+		
+        String sdk_version=String.valueOf(android.os.Build.VERSION.SDK_INT);
+        
+		PackageManager pm = this.getPackageManager();
+		
+		boolean cellular = pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
+		boolean wifi = pm.hasSystemFeature(PackageManager.FEATURE_WIFI);
+		boolean bluetooth = pm.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH);
+		boolean gps = pm.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
+    	
+        RegisterToServer regTask = new RegisterToServer(this,imei,gcmId,sdk_version,cellular,wifi,bluetooth,gps);
         Thread thread = new Thread(regTask, "RegisterToServer");
         thread.start();
     }
@@ -84,16 +94,26 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 		Context mContext;
 		String mIMEI;
-		String mRegistrationID;
+		String mGcmId;
+		String mSdk_version;
+		boolean mCellular;
+		boolean mWifi;
+		boolean mBluetooth;
+		boolean mGps;
 		
-        public RegisterToServer(Context context,String imei, String regId) {
+        public RegisterToServer(Context context,String imei, String gcmId, String sdk_version, boolean cellular, boolean wifi, boolean bluetooth, boolean gps) {
             mContext=context;
             mIMEI=imei;
-            mRegistrationID=regId;
+            mGcmId=gcmId;
+            mSdk_version=sdk_version;
+            mCellular=cellular;
+            mWifi=wifi;
+            mBluetooth=bluetooth;
+            mGps=gps;
         }
 
         public void run() {
-        	ServerUtilities.register(mContext, mIMEI, mRegistrationID);
+        	ServerUtilities.register(mContext, mIMEI, mGcmId,mSdk_version,mCellular,mWifi,mBluetooth,mGps);
         }
     }
     
