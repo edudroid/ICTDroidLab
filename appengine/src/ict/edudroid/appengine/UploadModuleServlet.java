@@ -22,6 +22,8 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 public class UploadModuleServlet extends HttpServlet {
 	private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
@@ -29,6 +31,8 @@ public class UploadModuleServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res)
         throws ServletException, IOException {
+    	
+    	UserService userService = UserServiceFactory.getUserService();
     	
     	Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);
     	
@@ -45,7 +49,8 @@ public class UploadModuleServlet extends HttpServlet {
 		try {
 			JSONObject json=new JSONObject(responseStrBuilder.toString());
 			Entity module = new Entity("Modules");
-			module.setProperty("author", req.getParameter("author"));
+			module.setProperty("email", userService.getCurrentUser().getEmail());
+			module.setProperty("nickname", userService.getCurrentUser().getNickname());
 			module.setProperty("desc_file", json.get("desc_file"));
 			module.setProperty("jar_file", json.get("jar_file"));
 			module.setProperty("module_name", json.get("module_name"));

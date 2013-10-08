@@ -372,7 +372,9 @@ public class CoreService extends Service implements PluginListener {
         }
 
         public void run() {
-        	UploadService.upload(mContext);
+        	TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
+	        String imei=mngr.getDeviceId(); 
+        	UploadService.upload(mContext,imei);
         }
     }
 }

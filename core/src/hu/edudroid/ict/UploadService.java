@@ -15,7 +15,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import android.app.IntentService;
@@ -23,6 +25,7 @@ import android.content.Context;
 import android.content.Entity;
 import android.content.Intent;
 import android.os.Environment;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class UploadService extends IntentService { 
@@ -79,7 +82,35 @@ public class UploadService extends IntentService {
 		return uploadURL;
 	}
 	
-	public static void upload(Context context) {
+	public static String sendImeiAndBlobKey(String imei, String blobkey){
+		String uploadURL="";
+		
+		HttpClient httpclient = new DefaultHttpClient();    
+		HttpConnectionParams.setConnectionTimeout(httpclient.getParams(), 10000); //Timeout Limit
+
+		HttpGet httpGet = new HttpGet("http://ictdroidlab.appspot.com/uploadLog");
+		
+		HttpParams params=new BasicHttpParams();
+	    params.setParameter("imei", imei);
+	    params.setParameter("blobkey", blobkey);
+	    httpGet.setParams(params);
+		
+		try {
+			HttpResponse response = httpclient.execute(httpGet);
+			HttpEntity ent=response.getEntity();
+			uploadURL=EntityUtils.toString(ent);
+			Log.e("UPLOAD LOG", uploadURL);
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return uploadURL;
+	}
+	
+	public static void upload(Context context, String imei) {
 		
 		try {
 			synchronized (context) {
@@ -138,33 +169,11 @@ public class UploadService extends IntentService {
 				}
 				
 				String uploadURL=getUploadURL();
-								
+				
 				LinkedList<BasicNameValuePair> postParameters = new LinkedList<BasicNameValuePair>();
-				postParameters.add(new BasicNameValuePair("userName", USERNAME));
-				postParameters.add(new BasicNameValuePair("password", PASSWORD));		
 				String uploadResult = HttpUtils.postMultipartWithFile(uploadURL, postParameters, "logFile", zip, null, null);
+				sendImeiAndBlobKey(imei, uploadResult);
 				zip.delete();
-				if (uploadResult != null) {
-					if (uploadResult.startsWith("OK")) {
-						// If upload successful, delete files
-						for (File file : files){
-							try{
-								file.delete();
-							} catch(Exception e) {
-								Log.e(LOG_TAG, "Couldn't delete file " + file.getName());					
-							}
-						}
-						//prefs.edit().putLong(MeasurementUploaderActivity.LAST_UPLOAD_KEY, System.currentTimeMillis()).commit();
-						Log.d(LOG_TAG, "Upload successful with result: " + uploadResult);
-						//SharedPrefsLogger.log("Upload successful with result " + uploadResult + ".", context);
-					} else {
-						Log.d(LOG_TAG, "Upload failed with result: " + uploadResult);
-						//SharedPrefsLogger.log("Upload failed with result " + uploadResult + ".", context);
-					}
-				} else {
-					//SharedPrefsLogger.log("Upload failed.", context);
-					Log.d(LOG_TAG,"Something went wrong");
-				}
 			}
 		} catch (Exception e) {
 			Log.e(LOG_TAG, "Error uploading files.", e);
@@ -195,7 +204,11 @@ public class UploadService extends IntentService {
 				return;
 			}
 			*/
-			upload(this);
+			
+			TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
+	        String imei=mngr.getDeviceId(); 
+			
+			upload(this, imei);
 		}
 	}
 }

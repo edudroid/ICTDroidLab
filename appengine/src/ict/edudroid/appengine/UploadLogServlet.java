@@ -21,14 +21,26 @@ public class UploadLogServlet extends HttpServlet {
 	private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 	
     @Override
-    public void doPost(HttpServletRequest req, HttpServletResponse res)
+    public void doPost(HttpServletRequest req, HttpServletResponse resp)
         throws ServletException, IOException {
-    	
-        Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);   	
+    	Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);
+    	resp.setStatus(HttpServletResponse.SC_OK);
+		resp.setContentType("text/plain");
+
+		PrintWriter out = resp.getWriter();
+		out.print(blobs.get("logFile").getKeyString());
+		out.flush();
+		out.close();
+    }
+    
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    		throws ServletException, IOException {
+    	Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);
     	
         Entity log = new Entity("Logs");
-        log.setProperty("user", "no user");
-        log.setProperty("logFileBlobKey", blobs.get("logFile").getKeyString());
+        log.setProperty("imei", req.getParameter("imei"));
+        log.setProperty("logFileBlobKey", req.getParameter("blobkey"));
         log.setProperty("date", new Date());
         
         DatastoreService datastore =
