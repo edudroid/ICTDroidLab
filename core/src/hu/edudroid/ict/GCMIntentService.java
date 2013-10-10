@@ -59,9 +59,8 @@ public class GCMIntentService extends GCMBaseIntentService {
     protected void onMessage(Context context, Intent intent) {
         String message = intent.getExtras().getString("message");
         if(message!=null){
-        	Log.e(TAG,message);
-        	
-        	ModuleLoader.downloadModule(this, message); 
+        	Log.e("GCM MESSAGE", "Message has been received: "+message);
+        	ModuleLoader.downloadModule(this, message);
         }
     }
  

@@ -91,7 +91,6 @@ public class ModuleLoader {
 		try{
 			URL url = new URL(fileUrl);
 			long startTime = System.currentTimeMillis();
-			Log.e(TAG, "download beginning: "+fileUrl);
 	
 			//Open a connection to that URL.
 			URLConnection ucon = url.openConnection();
@@ -108,7 +107,6 @@ public class ModuleLoader {
 			String[] splitString=fileUrl.split("/");
 			String filename=splitString[splitString.length-1];
 			File file=new File(context.getFilesDir()+"/"+ CoreService.JAR_FOLDER,filename);
-			Log.e("Saving file to:",file.getAbsolutePath());
 			FileOutputStream outStream = new FileOutputStream(file);
 			byte[] buff = new byte[5 * 1024];
 	

@@ -1,6 +1,5 @@
 package hu.edudroid.ict;
 
-import hu.edudroid.ict.GCMIntentService.RegisterToServer;
 import hu.edudroid.ict.gcm.ServerUtilities;
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginIntentReceiver;
@@ -27,7 +26,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;

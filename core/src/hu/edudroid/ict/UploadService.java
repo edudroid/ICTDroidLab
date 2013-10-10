@@ -36,9 +36,6 @@ public class UploadService extends IntentService {
 	private static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss_SSS", Locale.UK);
 	
 	public static final File OUTPUT_FOLDER = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/ictdroidlab_log");
-	
-	private static final String USERNAME = "admin";
-	private static final String PASSWORD = "admin"; 
 
 	private static final FilenameFilter progressFilter = new FilenameFilter() {
 		
@@ -82,24 +79,15 @@ public class UploadService extends IntentService {
 		return uploadURL;
 	}
 	
-	public static String sendImeiAndBlobKey(String imei, String blobkey){
-		String uploadURL="";
+	public static void sendImeiAndBlobKey(String imei, String blobkey){
 		
 		HttpClient httpclient = new DefaultHttpClient();    
 		HttpConnectionParams.setConnectionTimeout(httpclient.getParams(), 10000); //Timeout Limit
 
-		HttpGet httpGet = new HttpGet("http://ictdroidlab.appspot.com/uploadLog");
+		HttpGet httpGet = new HttpGet("http://ictdroidlab.appspot.com/uploadLog?imei="+imei+"&blobkey="+blobkey);
 		
-		HttpParams params=new BasicHttpParams();
-	    params.setParameter("imei", imei);
-	    params.setParameter("blobkey", blobkey);
-	    httpGet.setParams(params);
-		
-		try {
-			HttpResponse response = httpclient.execute(httpGet);
-			HttpEntity ent=response.getEntity();
-			uploadURL=EntityUtils.toString(ent);
-			Log.e("UPLOAD LOG", uploadURL);
+		try {			
+			httpclient.execute(httpGet);
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -107,7 +95,6 @@ public class UploadService extends IntentService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return uploadURL;
 	}
 	
 	public static void upload(Context context, String imei) {

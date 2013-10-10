@@ -36,15 +36,14 @@ public class UploadLogServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
     		throws ServletException, IOException {
-    	Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);
     	
-        Entity log = new Entity("Logs");
-        log.setProperty("imei", req.getParameter("imei"));
-        log.setProperty("logFileBlobKey", req.getParameter("blobkey"));
-        log.setProperty("date", new Date());
+        Entity logs = new Entity("Logs");
+        logs.setProperty("imei", req.getParameter("imei"));
+        logs.setProperty("logFileBlobKey", req.getParameter("blobkey"));
+        logs.setProperty("date", new Date());
         
         DatastoreService datastore =
                 DatastoreServiceFactory.getDatastoreService();
-        datastore.put(log);
+        datastore.put(logs);
     }
 }

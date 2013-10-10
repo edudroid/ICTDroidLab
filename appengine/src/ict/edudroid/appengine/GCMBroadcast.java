@@ -29,8 +29,8 @@ public class GCMBroadcast extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        String userMessage = req.getParameter("message");
-        String reg_id = req.getParameter("reg_id");
+        String userMessage = "http://ictdroidlab.appspot.com/serveModule?blob-key="+req.getParameter("modules");
+        String reg_id = req.getParameter("devices");
         
         androidTargets.add(reg_id);
 
@@ -50,6 +50,7 @@ public class GCMBroadcast extends HttpServlet {
             int error = result.getFailure();
             System.out.println("Broadcast failure: " + error);
         }
+        
         /*
 
         req.setAttribute("Message", userMessage);
