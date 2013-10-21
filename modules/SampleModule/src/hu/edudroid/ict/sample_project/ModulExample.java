@@ -2,18 +2,15 @@ package hu.edudroid.ict.sample_project;
 
 import hu.edudroid.interfaces.Logger;
 import hu.edudroid.interfaces.Module;
-import hu.edudroid.interfaces.ModuleTimerListener;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginCollection;
-import hu.edudroid.interfaces.PluginEventListener;
-import hu.edudroid.interfaces.PluginResultListener;
 import hu.edudroid.interfaces.Preferences;
 import hu.edudroid.interfaces.TimeServiceInterface;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class ModulExample extends Module implements PluginEventListener, PluginResultListener, ModuleTimerListener {
+public class ModulExample extends Module {
 	
 	public ModulExample(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice) {
 		super(prefs, logger, pluginCollection, timeservice);

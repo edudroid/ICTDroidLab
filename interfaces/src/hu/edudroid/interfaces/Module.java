@@ -1,6 +1,6 @@
 package hu.edudroid.interfaces;
 
-public abstract class Module implements PluginResultListener, PluginEventListener {
+public abstract class Module implements PluginResultListener, PluginEventListener, ModuleTimerListener {
 
 	protected final Preferences				mPrefs;
 	protected final Logger 					mLogger;

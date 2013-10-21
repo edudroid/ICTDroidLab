@@ -49,16 +49,6 @@ public class CoreService extends Service implements PluginListener {
 	// Google project id
     public static final String SENDER_ID = "1017069233076";
     public static String registration_ID = "";
-	
-	public static File getDescriptorFolder(Context context) {
-		// TODO Itt van egy hiba, mivel a .desc fileok nem a CoreService.DESCRIPTOR_FOLDER-ben vannak....
-		return new File(context.getFilesDir(), CoreService.JAR_FOLDER);
-	}
-
-	
-	public static File getJarFolder(Context context) {
-		return new File(context.getFilesDir(), CoreService.JAR_FOLDER);
-	}
 
 	private static final String TAG = "CoreService";
 
@@ -74,6 +64,16 @@ public class CoreService extends Service implements PluginListener {
 	private HashSet<ModuleSetListener> moduleListeners = new HashSet<ModuleSetListener>();
 	private boolean started = false;
 	private HashMap<String, TimeServiceInterface> timers = new HashMap<String, TimeServiceInterface>();
+	
+	public static File getDescriptorFolder(Context context) {
+		// TODO Itt van egy hiba, mivel a .desc fileok nem a CoreService.DESCRIPTOR_FOLDER-ben vannak....
+		return new File(context.getFilesDir(), CoreService.JAR_FOLDER);
+	}
+
+	
+	public static File getJarFolder(Context context) {
+		return new File(context.getFilesDir(), CoreService.JAR_FOLDER);
+	}
 	
 	public class CoreBinder extends Binder {
 		public CoreService getService() {
