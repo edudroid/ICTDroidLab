@@ -42,6 +42,11 @@ public class UploadLogServlet extends HttpServlet {
         logs.setProperty("logFileBlobKey", req.getParameter("blobkey"));
         logs.setProperty("date", new Date());
         
+        String info=req.getParameter("imei")+" "+
+        		req.getParameter("blobkey");
+        
+        log(info);
+        
         DatastoreService datastore =
                 DatastoreServiceFactory.getDatastoreService();
         datastore.put(logs);

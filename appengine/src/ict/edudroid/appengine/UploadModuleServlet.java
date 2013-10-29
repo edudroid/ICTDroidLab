@@ -59,6 +59,13 @@ public class UploadModuleServlet extends HttpServlet {
 			module.setProperty("descFileBlobKey", blobs.get("descFile").getKeyString());
 			module.setProperty("date", new Date());
 			
+			String info=userService.getCurrentUser().getEmail()+" "+
+					json.get("desc_file")+" "+
+					json.get("jar_file")+" "+
+					json.get("module_name")+" "+
+					json.get("class_name");
+			log(info);
+			
 			DatastoreService datastore =
 	                DatastoreServiceFactory.getDatastoreService();
 	        datastore.put(module);     

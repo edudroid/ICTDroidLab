@@ -1,8 +1,8 @@
 package hu.edudroid.ict;
 
-import hu.edudroid.ict.gcm.ServerUtilities;
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginIntentReceiver;
+import hu.edudroid.ict.utils.ServerUtilities;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Logger;
 import hu.edudroid.interfaces.Module;
@@ -60,7 +60,7 @@ public class CoreService extends Service implements PluginListener {
 	
 	private AndroidPluginCollection pluginCollection;
 
-	private HashSet<PluginListener> listeners = new HashSet<PluginListener>();
+	private HashSet<PluginListener> pluginListeners = new HashSet<PluginListener>();
 	private HashSet<ModuleSetListener> moduleListeners = new HashSet<ModuleSetListener>();
 	private boolean started = false;
 	private HashMap<String, TimeServiceInterface> timers = new HashMap<String, TimeServiceInterface>();
@@ -90,18 +90,23 @@ public class CoreService extends Service implements PluginListener {
 	public void onStart(Intent intent, int startId) {
 		if (!started) {
 			started = true;
-			Log.i(TAG, "Starting service!");
+			
+			Log.i(TAG, "Starting CoreService!");
+			
 			mBroadcast = new PluginIntentReceiver();
+			pluginCollection = new AndroidPluginCollection();
+			
+			Log.i(TAG, "Registering receivers...");
 			registerReceiver(mBroadcast, new IntentFilter(
 					Constants.INTENT_ACTION_DESCRIBE));
 			registerReceiver(mBroadcast, new IntentFilter(
 					Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER));
 			registerReceiver(mBroadcast, new IntentFilter(
 					Constants.INTENT_ACTION_PLUGIN_EVENT));
+			Log.i(TAG, "Receivers are registered!");
 	
-			pluginCollection = new AndroidPluginCollection();
 			mBroadcast.registerPluginDetailsListener(this);
-	
+			
 			registeringGCM();
 			
 			Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
@@ -109,8 +114,7 @@ public class CoreService extends Service implements PluginListener {
 			
 			Intent uploadLogs = new Intent(this,UploadService.class);
 			startService(uploadLogs);
-	        
-	
+			
 			// Process descriptor files
 			File descriptorFolder = getDescriptorFolder(this);
 			String[] descriptors = descriptorFolder.list(new FilenameFilter() {
@@ -129,22 +133,15 @@ public class CoreService extends Service implements PluginListener {
 				}
 			}
 			
-		} else {
-			Log.i(TAG, "Service already running.");
-		}
-		
-		LogTask logTask = new LogTask(this);
-        Thread thread = new Thread(logTask, "uploadLogsToServer");
-        thread.start();
-		
+		}		
 	}
 	
 	public void registerPluginDetailsListener(PluginListener listener) {
-		listeners.add(listener);
+		pluginListeners.add(listener);
 	}
 
 	public void unregisterPluginDetailsListener(PluginListener listener) {
-		listeners.remove(listener);
+		pluginListeners.remove(listener);
 	}
 
 	public void registerModuleSetListener(ModuleSetListener listener) {
@@ -233,19 +230,17 @@ public class CoreService extends Service implements PluginListener {
 		try {
 			Class<?> dexLoadedClass = dexLoader.loadClass(className);
 			Module module = null; 
-			Log.e(TAG,"Retrieving constructor");
 			Constructor<Module> constructor = (Constructor<Module>) dexLoadedClass.getConstructor(Preferences.class, Logger.class, PluginCollection.class, TimeServiceInterface.class);
 			if (constructor == null) {
 				throw new NoSuchMethodException("Couldn't find proper consturctor.");
 			}
 			TimeServiceInterface timeService = new ModuleTimeService();
 			timers.put(className, timeService);
-			Log.e(TAG,"Calling constructor");
+			Log.i(TAG,"Calling module constructor");
 			module = constructor.newInstance(new SharedPrefs(this, className),
 					new AndroidLogger(className),
 					pluginCollection,
 					timeService);
-			Log.e(TAG,"Module init ready " + module);
 			return module;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -266,8 +261,9 @@ public class CoreService extends Service implements PluginListener {
 
 	@Override
 	public boolean newPlugin(Plugin plugin) {
+		Log.i(TAG,"newPlugin: "+plugin.getName());
 		pluginCollection.newPlugin(plugin);
-		for (PluginListener listener : listeners) {
+		for (PluginListener listener : pluginListeners) {
 			listener.newPlugin(plugin);
 		}
 		return true;
@@ -279,43 +275,36 @@ public class CoreService extends Service implements PluginListener {
 	}
 	
 	public void registeringGCM(){
-		 // Make sure the device has the proper dependencies.
         GCMRegistrar.checkDevice(this);
- 
-        // Make sure the manifest was properly set - comment out this line
-        // while developing the app, then uncomment it when it's ready.
         GCMRegistrar.checkManifest(this);
-         
-         
-        // Get GCM registration id
+
         registration_ID = GCMRegistrar.getRegistrationId(this);
  
-        // Check if regid already presents
         if (registration_ID.equals("")) {
-            Log.e("GCM:","Registration is not present, register now with GCM ");          
+            Log.i("GCM registration","Registration is not present, register now with GCM!");          
             GCMRegistrar.register(this, SENDER_ID);
         } else {
-        	Log.e("GCM:","Device is already registered on GCM: " +registration_ID);
-            if (GCMRegistrar.isRegisteredOnServer(this)) {          
-                
-            } else {
-            	TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
-                String imei=mngr.getDeviceId(); 
-        		
-                String sdk_version=String.valueOf(android.os.Build.VERSION.SDK_INT);
-                
-        		PackageManager pm = this.getPackageManager();
-        		
-        		boolean cellular = pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
-        		boolean wifi = pm.hasSystemFeature(PackageManager.FEATURE_WIFI);
-        		boolean bluetooth = pm.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH);
-        		boolean gps = pm.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
-            	
-                RegisterToServer regTask = new RegisterToServer(this,imei,registration_ID,sdk_version,cellular,wifi,bluetooth,gps);
-                Thread thread = new Thread(regTask, "RegisterToServer");
-                thread.start();
+        	Log.i("GCM registration","Device is already registered on GCM: " +registration_ID);
+            if (!GCMRegistrar.isRegisteredOnServer(this)) {
+            	registeringGCMonServer();
             }
         }
+	}
+	
+	public void registeringGCMonServer(){
+		TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
+        String imei=mngr.getDeviceId(); 
+        String sdk_version=String.valueOf(android.os.Build.VERSION.SDK_INT);
+		PackageManager pm = this.getPackageManager();
+		
+		boolean cellular = pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
+		boolean wifi = pm.hasSystemFeature(PackageManager.FEATURE_WIFI);
+		boolean bluetooth = pm.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH);
+		boolean gps = pm.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
+    	
+        RegisterToServer regTask = new RegisterToServer(this,imei,registration_ID,sdk_version,cellular,wifi,bluetooth,gps);
+        Thread thread = new Thread(regTask, "RegisterToServer");
+        thread.start();
 	}
 	
 	public class RegisterToServer implements Runnable {
@@ -358,21 +347,6 @@ public class CoreService extends Service implements PluginListener {
 
         public void run() {
         	ModuleLoader.downloadModule(mContext, mUrl);
-        }
-    }
-	
-	public class LogTask implements Runnable {
-
-		Context mContext;
-		
-        public LogTask(Context context) {
-            mContext=context;
-        }
-
-        public void run() {
-        	TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
-	        String imei=mngr.getDeviceId(); 
-        	UploadService.upload(mContext,imei);
         }
     }
 }

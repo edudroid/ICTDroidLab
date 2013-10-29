@@ -35,14 +35,12 @@ public class ModuleLoader {
 	 * @return The descriptor of the parsed module, or null if parsing was unsuccessful.
 	 */
 	public static ModuleDescriptor parseModuleDescriptor(File descriptorPath) {
-		Log.i(TAG, "Parsing module from descriptor " + descriptorPath);
 		JSONObject json = null;
 		String moduleName = null;
 		String jarFile = null;
 		String className = null;
 		try {
 			String fileContent = FileUtils.readFile(descriptorPath);
-			Log.i(TAG, "Parsing descriptor : " + fileContent);
 			json = new JSONObject(fileContent);
 			jarFile = json.getString(JAR_FILE_KEY);
 			className = json.getString(CLASS_NAME_KEY);
@@ -90,7 +88,6 @@ public class ModuleLoader {
 		final int TIMEOUT_SOCKET = 30000;//30sec
 		try{
 			URL url = new URL(fileUrl);
-			long startTime = System.currentTimeMillis();
 	
 			//Open a connection to that URL.
 			URLConnection ucon = url.openConnection();
@@ -121,9 +118,7 @@ public class ModuleLoader {
 			outStream.close();
 			inStream.close();
 			
-			Log.i(TAG, "download completed in "
-				    + ((System.currentTimeMillis() - startTime) / 1000)
-				    + " sec");
+			Log.i(TAG,"Module has been downloaded succesfully from: "+fileUrl);
 		}catch(Exception e){
 			e.printStackTrace();
 		}

@@ -46,17 +46,12 @@ public class GCMBroadcast extends HttpServlet {
             if (canonicalRegId != 0) {
 
             }
+            log("GCM sent succesfully");
         } else {
             int error = result.getFailure();
             System.out.println("Broadcast failure: " + error);
         }
         
-        /*
-
-        req.setAttribute("Message", userMessage);
-
-        req.getRequestDispatcher("index.jsp").forward(req, resp);
-        */
     }
 
 }

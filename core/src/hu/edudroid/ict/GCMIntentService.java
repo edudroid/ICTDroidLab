@@ -1,6 +1,6 @@
 package hu.edudroid.ict;
 
-import hu.edudroid.ict.gcm.ServerUtilities;
+import hu.edudroid.ict.utils.ServerUtilities;
 import hu.edudroid.module.ModuleLoader;
 import android.content.Context;
 import android.content.Intent;
@@ -46,7 +46,6 @@ public class GCMIntentService extends GCMBaseIntentService {
      * */
     @Override
     protected void onUnregistered(Context context, String registrationId) {
-        Log.i(TAG, "Device unregistered");
         unRegisterToServer regTask = new unRegisterToServer(context,registrationId);
         Thread thread = new Thread(regTask, "unRegisterToServer");
         thread.start();
@@ -59,7 +58,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     protected void onMessage(Context context, Intent intent) {
         String message = intent.getExtras().getString("message");
         if(message!=null){
-        	Log.e("GCM MESSAGE", "Message has been received: "+message);
+        	Log.i(TAG, "Message has been received: "+message);
         	ModuleLoader.downloadModule(this, message);
         }
     }
@@ -71,7 +70,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     protected void onDeletedMessages(Context context, int total) {
         String message = getString(R.string.gcm_deleted, total);
         if(message!=null){
-        	Log.e(TAG,message);
+        	Log.d(TAG,message);
         }
     }
  
@@ -80,7 +79,7 @@ public class GCMIntentService extends GCMBaseIntentService {
      * */
     @Override
     public void onError(Context context, String errorId) {
-        Log.i(TAG, "Received error: " + errorId);
+        Log.e(TAG, "Received error: " + errorId);
     }
  
     @Override

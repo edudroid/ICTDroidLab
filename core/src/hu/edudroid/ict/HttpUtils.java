@@ -194,7 +194,6 @@ public class HttpUtils {
 			HttpEntity responseEntity = response.getEntity();
 			
 			String downloadedXml = EntityUtils.toString(responseEntity, "UTF-8");
-			Log.d("downloadedXML", ">" + downloadedXml);
 			return downloadedXml;
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

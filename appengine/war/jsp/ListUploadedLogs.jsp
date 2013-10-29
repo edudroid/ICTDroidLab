@@ -18,7 +18,8 @@
     // Run an ancestor query to ensure we see the most up-to-date
     // view of the Greetings belonging to the selected Guestbook.
     Query query = new Query("Logs");
-    List<Entity> logs = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(10));
+    query.addSort("date");
+    List<Entity> logs = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -36,7 +37,7 @@
 			    for(Entity log : logs){
 			    	%>
 			    	<tr>
-			    	<td><a href='http://ictdroidlab.appspot.com/serveLog?blob-key=<%= log.getProperty("logFileBlobKey") %>'><%= log.getProperty("date") %></a></td>
+			    	<td><a href='http://ictdroidlab.appspot.com/serveLog?blob-key=<%= log.getProperty("logFileBlobKey") %>'>IMEI: <%= log.getProperty("imei") %> - DATE: <%= log.getProperty("date") %></a></td>
 			    	</tr>
 			    	<%
 			    }

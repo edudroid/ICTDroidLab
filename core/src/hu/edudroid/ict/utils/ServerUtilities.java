@@ -1,4 +1,4 @@
-package hu.edudroid.ict.gcm;
+package hu.edudroid.ict.utils;
 
 
 import hu.edudroid.ict.R;
@@ -13,6 +13,15 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.util.EntityUtils;
 
 import com.google.android.gcm.GCMRegistrar;
 
@@ -32,8 +41,6 @@ public final class ServerUtilities {
      *
      */
     public static void register(final Context context, String imei, String gcmId, String sdk_version, boolean cellular, boolean wifi, boolean bluetooth, boolean gps) {
-        
-        String serverUrl = SERVER_URL;
         Map<String, String> params = new HashMap<String, String>();
         params.put("imei", imei);
         params.put("gcm_id", gcmId);
@@ -44,21 +51,14 @@ public final class ServerUtilities {
         params.put("gps", (gps) ? "1" : "0");
          
         long backoff = BACKOFF_MILLI_SECONDS + random.nextInt(1000);
-        // Once GCM returns a registration id, we need to register on our server
-        // As the server might be down, we will retry it a couple
-        // times.
+
         for (int i = 1; i <= MAX_ATTEMPTS; i++) {
             Log.d(TAG, "Attempt #" + i + " to register");
             try {
-                post(serverUrl+"registerdevice", params);
+                post(SERVER_URL+"registerdevice", params);
                 GCMRegistrar.setRegisteredOnServer(context, true);
-                String message = context.getString(R.string.server_registered);
-                Log.e(TAG,message);
                 return;
             } catch (IOException e) {
-                // Here we are simplifying and retrying on any error; in a real
-                // application, it should retry only on unrecoverable errors
-                // (like HTTP error code 503).
                 Log.e(TAG, "Failed to register on attempt " + i + ":" + e);
                 if (i == MAX_ATTEMPTS) {
                     break;
@@ -67,18 +67,13 @@ public final class ServerUtilities {
                     Log.d(TAG, "Sleeping for " + backoff + " ms before retry");
                     Thread.sleep(backoff);
                 } catch (InterruptedException e1) {
-                    // Activity finished before we complete - exit.
                     Log.d(TAG, "Thread interrupted: abort remaining retries!");
                     Thread.currentThread().interrupt();
                     return;
                 }
-                // increase backoff exponentially
                 backoff *= 2;
             }
         }
-        String message = context.getString(R.string.server_register_error,
-                MAX_ATTEMPTS);
-        Log.e(TAG,message);
     }
  
     /**
@@ -86,23 +81,15 @@ public final class ServerUtilities {
      */
     public static void unregister(final Context context, final String regId) {
         Log.i(TAG, "unregistering device (regId = " + regId + ")");
-        String serverUrl = SERVER_URL + "unregisterdevice";
         Map<String, String> params = new HashMap<String, String>();
         params.put("device_id", regId);
         try {
-            post(serverUrl, params);
+            post(SERVER_URL+"unregisterdevice", params);
             GCMRegistrar.setRegisteredOnServer(context, false);
             String message = context.getString(R.string.server_unregistered);
             Log.e(TAG,message);
         } catch (IOException e) {
-            // At this point the device is unregistered from GCM, but still
-            // registered in the server.
-            // We could try to unregister again, but it is not necessary:
-            // if the server tries to send a message to the device, it will get
-            // a "NotRegistered" error message and should unregister the device.
-            String message = context.getString(R.string.server_unregister_error,
-                    e.getMessage());
-            Log.e(TAG,message);
+            e.printStackTrace();
         }
     }
  
@@ -125,7 +112,7 @@ public final class ServerUtilities {
         }
         StringBuilder bodyBuilder = new StringBuilder();
         Iterator<Entry<String, String>> iterator = params.entrySet().iterator();
-        // constructs the POST body using the parameters
+
         while (iterator.hasNext()) {
             Entry<String, String> param = iterator.next();
             bodyBuilder.append(param.getKey()).append('=')
@@ -147,11 +134,9 @@ public final class ServerUtilities {
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type",
                     "application/x-www-form-urlencoded;charset=UTF-8");
-            // post the request
             OutputStream out = conn.getOutputStream();
             out.write(bytes);
             out.close();
-            // handle the response
             int status = conn.getResponseCode();
             if (status != 200) {
               throw new IOException("Post failed with error code " + status);
@@ -162,4 +147,25 @@ public final class ServerUtilities {
             }
         }
       }
+    
+    public static String get(String endpoint){
+		String result="";
+		
+		HttpClient httpclient = new DefaultHttpClient();    
+		HttpConnectionParams.setConnectionTimeout(httpclient.getParams(), 10000); //Timeout Limit
+
+		HttpGet httpGet = new HttpGet(endpoint);
+		try {
+			HttpResponse response = httpclient.execute(httpGet);
+			HttpEntity ent=response.getEntity();
+			result=EntityUtils.toString(ent);
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
 }

@@ -12,8 +12,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 public class PluginIntentReceiver extends BroadcastReceiver {
+	
+	private final String TAG = "PluginIntentReceiver";
 
 	private final HashSet<PluginListener> pluginListeners = new HashSet<PluginListener>();
 	private final HashSet<PluginResultListener> mResultListeners = new HashSet<PluginResultListener>();
@@ -45,6 +48,8 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent){
+		
+		Log.i(TAG,"onReceive: "+intent.getAction());
 		
 		final Bundle extras = intent.getExtras();
 
