@@ -1,0 +1,34 @@
+﻿DroidLab
+
+Motivation
+Smartphones are part of everyday life now. More popular than PCs and laptops, smartphones and tablets dominate not only yearly sales but also usage. And 2 out of three sold smartphones are Android devices. One out of ten people own an Android device. Android phones are getting better equiped with sensors, double in terms of computational power, available bandwidth and storage every year. It is high time to use these resources to learn more about user behavior and exploit the devices capabilities for scientific purposes.
+
+What is DroidLab?
+
+DroidLab is an open framework that enables researchers to run distributed experiments on Android devices. It is composed of a backend running on a scalable server architecture and of a host application that is installed on the participants phones. Researchers can upload scripts that will be scheduled by the back end and distributed over the selected number of available devices. The host application on the Android phone provides a safe sandbox that only grants user-supervised access to the phone's resources.
+
+Why create another sensor network platform?
+
+Android devices provide a resource that no other platform (PlanetLab, SenseLab...) can: a real life human behavior pattern. DroidLab device's mobility isn't simulated or emulated, nor is available bandwith or sensor data (noise, light, movement). This gives a unique value to the environemnt that DroidLab provides to the researchers. Experiments run on DroidLab benefit of information about real life events that earlier had to be generated based on vague models, or extracted from limited sets of pre-recorded measurements.
+
+What can DroidLab be used for?
+
+Telecom industry can benefit from DroidLab resources gaining insight into user's behavior, network usage. DroidLab could even be used for troubleshooting outages, measuring service availability. But DroidLab is aimed to be the swiss-army knife of network research. Devices participating in DroidLab experiments can sense each other and their surroundings, they can communicate with each other and form self organizing networks, where dynamic routing algorithms can be evaluated. Or just using single device measurements can get an insight on a user's phone usage: how much of the time is the phone switched off, how much time does it take for the user to check her Facebook account after the alarm wakes her up, what is the usual battery level when she connects the phone to a charger. From simulating deseas spreading to examining social interaction patterns, from traffic jam avoidance strategies to environmental noise maps and social interaction patterns it can be used to support research in many differnet network and communication related fields.
+
+What can't DroidLab be user for?
+
+Droidlab is not ment to replace grid computers. While it would be tempting to label it as a distributed computation platform Android and the mobile devices that DroidLab will run on are not suitable for this purpose. DroidLab doesn't aim to exploit the bare computatuinal power of the devices, but to harvest a far more valuable resource: information.
+
+Roadmap
+
+Design and development of DroidLab has begun 2012. september. A proof of concept prototype has been created
+to demonstrate the technical aspects of a modular Android program with an internal security sandbox.
+Our team has since doubled and working on the final version of the sandbox and plugin architecture.
+Our goal for 2013 Q1 is to finish the client side host application core.
+Backend device management will be available by 2013 Q2 and afte evaluating the platform on our dedicated device pool,
+by the end of 2013 we are planning on releasing the application with some basic plugins to the grand public to build up our network.
+Network will be opened for fellow researchers by the end of 2014 Q2.
+
+Challenges
+
+Designing DroidLab we are facing many technological and ethical challanges. How to keep the user motivated and let us use her phone for research? How to prevent an "experiment" from building a bot-net? How to protect user's privacy while providing value to the researcher? There are many unanswered questions, that depend on actual usage, user perferences and the evolution of the platform and devices. Therefor we designed DroidLab to be easily extensible. We provide a set of tools and components that enable future developers to easily modify or extend functionality.
