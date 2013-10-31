@@ -116,7 +116,7 @@ public class UploadService extends IntentService {
 		synchronized (this) {
 			
 			TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
-	        String imei=mngr.getDeviceId(); 
+	        String imei = mngr.getDeviceId(); 
 			
 			upload(this, imei);
 		}

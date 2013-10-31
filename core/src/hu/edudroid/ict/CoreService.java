@@ -66,8 +66,7 @@ public class CoreService extends Service implements PluginListener {
 	private HashMap<String, TimeServiceInterface> timers = new HashMap<String, TimeServiceInterface>();
 	
 	public static File getDescriptorFolder(Context context) {
-		// TODO Itt van egy hiba, mivel a .desc fileok nem a CoreService.DESCRIPTOR_FOLDER-ben vannak....
-		return new File(context.getFilesDir(), CoreService.JAR_FOLDER);
+		return new File(context.getFilesDir(), CoreService.DESCRIPTOR_FOLDER);
 	}
 
 	
@@ -152,6 +151,10 @@ public class CoreService extends Service implements PluginListener {
 		moduleListeners.remove(listener);
 	}
 
+	/**
+	 * Returns modules currently loaded to the system
+	 * @return
+	 */
 	public List<ModuleDescriptor> getLoadedModules() {
 		List<ModuleDescriptor> ret = new ArrayList<ModuleDescriptor>();
 		for (String moduleClass : modules.keySet()) {
@@ -171,15 +174,16 @@ public class CoreService extends Service implements PluginListener {
 			Module module = loadModule(new File(jarFolder, moduleDescriptor.getJarFile()).getAbsolutePath(), moduleDescriptor.getClassName());
 			modules.put(moduleDescriptor.getClassName(), module);
 			this.descriptors.put(moduleDescriptor.getClassName(), moduleDescriptor);
-			module.init();
+			try {
+				module.init();
+			} catch (Exception e){
+				Log.e(TAG, "Error initializing module " + moduleDescriptor.getModuleName() + " : " + e.getMessage());
+				e.printStackTrace();
+			}
 			for (ModuleSetListener listener : moduleListeners) {
 				listener.moduleAdded(moduleDescriptor);
 			}
 			return true;
-		} catch (NullPointerException e) {
-			Log.e(TAG, "Couldn't load module " + e);
-			e.printStackTrace();
-			return false;
 		} catch (SecurityException e) {
 			Log.e(TAG, "Couldn't load module " + e);
 			e.printStackTrace();
@@ -193,6 +197,10 @@ public class CoreService extends Service implements PluginListener {
 			e.printStackTrace();
 			return false;
 		} catch (InvocationTargetException e) {
+			Log.e(TAG, "Couldn't load module " + e);
+			e.printStackTrace();
+			return false;
+		} catch (Exception e) {
 			Log.e(TAG, "Couldn't load module " + e);
 			e.printStackTrace();
 			return false;

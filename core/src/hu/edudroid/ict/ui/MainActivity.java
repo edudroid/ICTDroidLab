@@ -74,18 +74,12 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 			} else {
 				showPlugins.setText(R.string.noPlugins);
 			}
-			List<ModuleDescriptor> modules = new ArrayList<ModuleDescriptor>();
-			try {
-				modules.addAll(ModuleUtils.processModules(service.getLoadedModules(), ModuleLoader.readModulesFromAssets(this, getAssets())));
-				showModules.setText(getString(R.string.showModules, modules.size()));
-			} catch (IOException e) {
-				e.printStackTrace();
-				Log.e(TAG, "Error loading modules " + e);
-				showModules.setText("Error loading modules");
-			}
 		} else {
 			showPlugins.setText(R.string.noPlugins);
 		}
+		List<ModuleDescriptor> modules = new ArrayList<ModuleDescriptor>();
+		modules.addAll(ModuleUtils.processModules(service.getLoadedModules(), ModuleLoader.getAvailableModuls(this)));
+		showModules.setText(getString(R.string.showModules, modules.size()));
 	}
 
 	@Override
