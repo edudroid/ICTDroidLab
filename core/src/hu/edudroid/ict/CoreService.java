@@ -19,6 +19,7 @@ import hu.edudroid.module.SharedPrefs;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -115,6 +116,14 @@ public class CoreService extends Service implements PluginListener {
 			startService(uploadLogs);
 			
 			// Process descriptor files
+			// Copy modules from assets at startup.
+			try {
+				ModuleLoader.copyAssetsToInternalStorage(this);
+			} catch (IOException e) {
+				Log.e(TAG, "Couldn't copy assets to internal storage.", e);
+				e.printStackTrace();
+			}
+
 			File descriptorFolder = getDescriptorFolder(this);
 			String[] descriptors = descriptorFolder.list(new FilenameFilter() {
 				@Override
@@ -122,7 +131,7 @@ public class CoreService extends Service implements PluginListener {
 					return filename.endsWith("desc");
 				}
 			});
-			//Log.i(TAG, "Loading " + descriptors.length + " module(s).");
+			Log.i(TAG, "Loading " + descriptors.length + " module(s).");
 			if(descriptors!=null){
 				for (String descriptor : descriptors) {
 					ModuleDescriptor moduleDescriptor = ModuleLoader.parseModuleDescriptor(new File(descriptorFolder,descriptor));
@@ -164,6 +173,11 @@ public class CoreService extends Service implements PluginListener {
 		return ret;
 	}
 	
+	/**
+	 * Adds a module to the core. Module will be part of the running system.
+	 * @param moduleDescriptor The descriptor of the module
+	 * @return True if module was started successfully, false otherwise.
+	 */
 	public boolean addModule(ModuleDescriptor moduleDescriptor) {
 		if (modules.containsKey(moduleDescriptor.getClassName())) {
 			Log.w(TAG, "Module " + moduleDescriptor.getClassName() + " already loaded.");
@@ -171,7 +185,44 @@ public class CoreService extends Service implements PluginListener {
 		}
 		try {
 			File jarFolder = getJarFolder(this);
-			Module module = loadModule(new File(jarFolder, moduleDescriptor.getJarFile()).getAbsolutePath(), moduleDescriptor.getClassName());
+			String dexedJavaFile = new File(jarFolder, moduleDescriptor.getJarFile()).getAbsolutePath();
+			String className = moduleDescriptor.getClassName();
+			Log.i(TAG, "Loading module " + className + " from file " + dexedJavaFile);
+			Module module = null; 
+			File dexOptimizedFolder = new File(getFilesDir(), TEMP_DIR);
+			dexOptimizedFolder.mkdirs();
+			DexClassLoader dexLoader = new DexClassLoader(dexedJavaFile, 
+															dexOptimizedFolder.getAbsolutePath(), 
+															null, 
+															getClassLoader());
+			try {
+				Class<?> dexLoadedClass = dexLoader.loadClass(className);
+				@SuppressWarnings("unchecked")
+				Constructor<Module> constructor = (Constructor<Module>) dexLoadedClass.getConstructor(Preferences.class, Logger.class, PluginCollection.class, TimeServiceInterface.class);
+				if (constructor == null) {
+					throw new NoSuchMethodException("Couldn't find proper consturctor.");
+				}
+				TimeServiceInterface timeService = new ModuleTimeService();
+				timers.put(className, timeService);
+				Log.i(TAG,"Calling module constructor");
+				module = constructor.newInstance(new SharedPrefs(this, className),
+						new AndroidLogger(className),
+						pluginCollection,
+						timeService);
+			} catch (ClassNotFoundException e) {
+				Log.e(TAG, "Error loading module.", e);
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				Log.e(TAG, "Error loading module.", e);
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				Log.e(TAG, "Error loading module.", e);
+				e.printStackTrace();
+			}
+			if (module == null) {
+				Log.e(TAG, "Module couldn't be loaded.");
+				return false;
+			}
 			modules.put(moduleDescriptor.getClassName(), module);
 			this.descriptors.put(moduleDescriptor.getClassName(), moduleDescriptor);
 			try {
@@ -207,6 +258,11 @@ public class CoreService extends Service implements PluginListener {
 		}
 	}
 	
+	/**
+	 * Remove a module from the core, module will stop running.
+	 * @param moduleName The name of the module
+	 * @return True if module was successfully removed, false otherwise.
+	 */
 	public boolean removeModule(String moduleName) {
 		Log.w(TAG, "Removing module " + moduleName);
 		Module module = modules.remove(moduleName);
@@ -224,40 +280,6 @@ public class CoreService extends Service implements PluginListener {
 		}
 		Log.e(TAG, "Couldn't remove module " + moduleName);		
 		return false;
-	}
-	
-	@SuppressWarnings("unchecked")
-	private Module loadModule(String dexedJavaFile, String className) throws SecurityException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
-		Log.i(TAG, "Loading module " + className + " from file " + dexedJavaFile);
-		File dexOptimizedFolder = new File(getFilesDir(), TEMP_DIR);
-		dexOptimizedFolder.mkdirs();
-		DexClassLoader dexLoader = new DexClassLoader(dexedJavaFile, 
-														dexOptimizedFolder.getAbsolutePath(), 
-														null, 
-														getClassLoader());
-		try {
-			Class<?> dexLoadedClass = dexLoader.loadClass(className);
-			Module module = null; 
-			Constructor<Module> constructor = (Constructor<Module>) dexLoadedClass.getConstructor(Preferences.class, Logger.class, PluginCollection.class, TimeServiceInterface.class);
-			if (constructor == null) {
-				throw new NoSuchMethodException("Couldn't find proper consturctor.");
-			}
-			TimeServiceInterface timeService = new ModuleTimeService();
-			timers.put(className, timeService);
-			Log.i(TAG,"Calling module constructor");
-			module = constructor.newInstance(new SharedPrefs(this, className),
-					new AndroidLogger(className),
-					pluginCollection,
-					timeService);
-			return module;
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 	
 	@Override

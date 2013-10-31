@@ -6,7 +6,6 @@ import hu.edudroid.interfaces.ModuleDescriptor;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.module.ModuleLoader;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +13,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -40,12 +38,6 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 		stats.setOnClickListener(this);
 		manageLocalStorage = (Button)findViewById(R.id.manageLocalStorageButton);
 		manageLocalStorage.setOnClickListener(this);
-		try {
-			ModuleLoader.copyAssetsToInternalStorage(this);
-		} catch (IOException e) {
-			Log.e(TAG, "Couldn't copy assets to internal storage.", e);
-			e.printStackTrace();
-		}
 	}
 
 	@Override
