@@ -1,31 +1,30 @@
 package hu.edudroid.ict.ui;
 
 import hu.edudroid.ict.R;
-import hu.edudroid.interfaces.Plugin;
+import hu.edudroid.ict.plugins.PluginDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
-import android.content.Context;
 import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
 public class PluginListAdapter implements ListAdapter {
 
-	private ArrayList<Plugin> mPlugins;
+	private ArrayList<PluginDescriptor> mPlugins = new ArrayList<PluginDescriptor>();
 
-	private Context mContext = null;
+	private PluginListActivity activity = null;
 	private LayoutInflater mInflater = null;
 	private DataSetObserver mObserver = null;
+	
 
-	public PluginListAdapter(Activity activity) {
-		mPlugins = new ArrayList<Plugin>();
-		mContext = activity.getApplicationContext();
+	public PluginListAdapter(PluginListActivity activity) {
+		this.activity = activity;
 		mInflater = activity.getLayoutInflater();
 	}
 
@@ -34,7 +33,7 @@ public class PluginListAdapter implements ListAdapter {
 		onChanged();
 	}
 
-	public void setPlugins(List<Plugin> plugins) {
+	public void setPlugins(List<PluginDescriptor> plugins) {
 		mPlugins.clear();
 		mPlugins.addAll(plugins);
 		onChanged();
@@ -53,7 +52,7 @@ public class PluginListAdapter implements ListAdapter {
 	}
 
 	@Override
-	public Plugin getItem(int position) {
+	public PluginDescriptor getItem(int position) {
 		if (mPlugins == null)
 			return null;
 		return (mPlugins.get(position));
@@ -71,30 +70,29 @@ public class PluginListAdapter implements ListAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		if (convertView == null)
-			convertView = mInflater.inflate(R.layout.view_listitem_plugins,
-					parent, false);
-
-		generateView(convertView, mContext, getItem(position));
-
-		return convertView;
-	}
-
-	public View generateView(final View root, final Context context,
-			Plugin plugin) {
-		try {
-			final String author = context.getString(R.string.created_by,
-					plugin.getAuthor());
-			((TextView) root.findViewById(R.id.plugin_title)).setText(plugin
-					.getName() + " (version " + plugin.getVersionCode() + ")");
-			((TextView) root.findViewById(R.id.plugin_author)).setText(author);
-			((TextView) root.findViewById(R.id.plugin_description))
-					.setText(plugin.getDescription());
-
-			return root;
-		} catch (Exception ex) {
-			throw new IllegalArgumentException();
+		if (convertView == null) {
+			convertView = mInflater.inflate(R.layout.listitem_plugins, null);
 		}
+		PluginDescriptor plugin = getItem(position);
+		TextView authorText = (TextView)convertView.findViewById(R.id.plugin_author);
+		TextView titleView = (TextView) convertView.findViewById(R.id.plugin_title);
+		TextView descView = (TextView) convertView.findViewById(R.id.plugin_description);
+		Button installButton = (Button) convertView.findViewById(R.id.installPluginButton);
+		if (plugin.isDownloaded()) {
+			titleView.setText(plugin.getPlugin().getName() + " (version " + plugin.getPlugin().getVersionCode() + ")");
+			authorText.setText(activity.getString(R.string.created_by, plugin.getPlugin().getAuthor()));
+			authorText.setVisibility(View.VISIBLE);
+			descView.setText(plugin.getPlugin().getDescription());
+			installButton.setVisibility(View.GONE);
+		} else {
+			titleView.setText(plugin.getName());
+			authorText.setVisibility(View.GONE);
+			descView.setText(plugin.getDescription());
+			installButton.setTag(plugin);
+			installButton.setOnClickListener(activity);
+			installButton.setVisibility(View.VISIBLE);
+		}
+		return convertView;
 	}
 
 	@Override

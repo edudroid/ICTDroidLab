@@ -3,6 +3,8 @@ package hu.edudroid.ict.ui;
 import hu.edudroid.ict.CoreService;
 import hu.edudroid.ict.R;
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
+import hu.edudroid.ict.plugins.PluginDescriptor;
+import hu.edudroid.ict.plugins.PluginManager;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginListener;
@@ -11,6 +13,7 @@ import java.util.List;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -48,8 +51,9 @@ public class PluginListActivity extends ActivityBase implements PluginListener,
 	private void refreshPluginlist() {
 		if (service != null) {
 			List<Plugin> plugins = service.getPlugins();
-			if (plugins != null && plugins.size() > 0) {
-				mAdapter.setPlugins(plugins);
+			List<PluginDescriptor> descriptors = PluginManager.getAvailablePlugins(plugins);
+			if (descriptors != null && descriptors.size() > 0) {
+				mAdapter.setPlugins(descriptors);
 				findViewById(R.id.no_plugins).setVisibility(View.GONE);
 			} else {
 				mAdapter.clearPlugins();
@@ -70,21 +74,31 @@ public class PluginListActivity extends ActivityBase implements PluginListener,
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
-		case R.id.btn_refresh:
-			refreshPluginlist();
-			Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
-			sendBroadcast(mIntent);
-			break;
+			case R.id.btn_refresh: {
+				refreshPluginlist();
+				Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
+				sendBroadcast(intent);
+				break;
+			}
+			case R.id.installPluginButton: {
+				PluginDescriptor descriptor = (PluginDescriptor)view.getTag();
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+				intent.setData(Uri.parse("market://details?id=" + descriptor.getPackageName()));
+				startActivity(intent);
+				break;
+			}
 		}
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		Plugin plugin = mAdapter.getItem(arg2);
+		PluginDescriptor plugin = mAdapter.getItem(arg2);
 		Log.i(TAG, "Plugin " + plugin.getName() + " selected.");
-		Intent mIntent = new Intent(this, PluginDetailsActivity.class);
-		mIntent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, plugin.getName());
-		startActivity(mIntent);
+		if (plugin.isDownloaded()) {
+			Intent mIntent = new Intent(this, PluginDetailsActivity.class);
+			mIntent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, plugin.getName());
+			startActivity(mIntent);
+		}
 	}
 	
 	@Override

@@ -46,5 +46,9 @@
     <string name="options_unregister">Unregister</string>
     <string name="options_clear">Clear</string>
     <string name="options_exit">Exit</string>
-    <string name="remove">Remove</string>   
+    <string name="remove">Remove</string>
+    <string name="pluginTitle">Plugin title</string>
+    <string name="pluginDescription">Plugin description</string>
+    <string name="pluginAuthor">Plugin author</string>
+    <string name="installPlugin">Install plugin</string>   
 </resources>

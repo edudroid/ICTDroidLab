@@ -61,7 +61,7 @@ public class ModuleListAdapter implements ListAdapter, OnClickListener {
 	public View getView(int arg0, View arg1, ViewGroup arg2) {
 		ModuleDescriptor module = modules.get(arg0);
 		if (arg1 == null) {
-			arg1 = inflater.inflate(R.layout.view_module_list_item, null);
+			arg1 = inflater.inflate(R.layout.listitem_module, null);
 		}
 		((TextView)arg1.findViewById(R.id.moduleNameLable)).setText(module.getModuleName());
 		if (module.isLoaded()) {
