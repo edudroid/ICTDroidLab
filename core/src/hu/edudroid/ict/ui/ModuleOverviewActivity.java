@@ -5,7 +5,6 @@ import hu.edudroid.ict.R;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.module.ModuleLoader;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -40,6 +40,12 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 		stats.setOnClickListener(this);
 		manageLocalStorage = (Button)findViewById(R.id.manageLocalStorageButton);
 		manageLocalStorage.setOnClickListener(this);
+		try {
+			ModuleLoader.copyAssetsToInternalStorage(this);
+		} catch (IOException e) {
+			Log.e(TAG, "Couldn't copy assets to internal storage.", e);
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -67,6 +73,7 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 	}
 
 	private void refreshUI() {
+		List<ModuleDescriptor> modules = new ArrayList<ModuleDescriptor>();
 		if (service != null) {
 			List<Plugin> plugins = service.getPlugins();
 			if (plugins!=null && plugins.size() > 0) {
@@ -74,12 +81,11 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 			} else {
 				showPlugins.setText(R.string.noPlugins);
 			}
+			modules.addAll(ModuleUtils.processModules(service.getLoadedModules(), ModuleLoader.getAvailableModuls(this)));
+			showModules.setText(getString(R.string.showModules, modules.size()));
 		} else {
 			showPlugins.setText(R.string.noPlugins);
 		}
-		List<ModuleDescriptor> modules = new ArrayList<ModuleDescriptor>();
-		modules.addAll(ModuleUtils.processModules(service.getLoadedModules(), ModuleLoader.getAvailableModuls(this)));
-		showModules.setText(getString(R.string.showModules, modules.size()));
 	}
 
 	@Override
