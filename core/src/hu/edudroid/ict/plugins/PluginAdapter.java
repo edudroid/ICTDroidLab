@@ -4,16 +4,16 @@ import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginResultListener;
-
+import hu.edudroid.interfaces.Quota;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import android.content.Context;
 import android.content.Intent;
 
@@ -23,10 +23,10 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	private final String					mAuthor;
 	private final String					mDescription;
 	private final String					mVersionCode;
-	private final PluginIntentReceiver 	mBroadcast;
+	private final PluginIntentReceiver 		mBroadcast;
 
 	private Context							mContext;
-	private List<String>					mPluginMethods;
+	private List<String>				mPluginMethods;
 	private List<String>					mEvents;
 	
 	
@@ -75,10 +75,28 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	public String getVersionCode() {
 		return mVersionCode;
 	}
-
+	
 	@Override
-	public List<String> getMethodNames() {
+	public List<String> getMethodNames(){
 		return mPluginMethods;
+	}
+	
+	@Override
+	public List<Quota> getQuotas(){
+		final ArrayList<Quota> quotas = new ArrayList<Quota>();
+		for (int i = 0; i < mPluginMethods.size(); i++){
+			final String method = mPluginMethods.get(i);
+			final Quota quota = getQuotaForMethod(method);
+			if (quota != null)
+				quotas.add(quota);
+		}
+		
+		return quotas;
+	}
+	
+	@Override
+	public Quota getQuotaForMethod(String method){
+		return null;
 	}
 
 	@Override

@@ -10,6 +10,8 @@ public interface Plugin {
 	String getVersionCode();
 	List<String> getAllEvents();
 	List<String> getMethodNames();
+	List<Quota> getQuotas();
+	Quota getQuotaForMethod(String method);
 	long callMethodAsync(String method, List<Object> parameters,PluginResultListener listener);
 	List<String> callMethodSync(long callId, String method, List<Object> parameters) throws AsyncMethodException;
 	void registerEventListener(String eventName, PluginEventListener listener);

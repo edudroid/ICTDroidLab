@@ -5,6 +5,7 @@ import hu.edudroid.interfaces.AsyncMethodException;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginResultListener;
+import hu.edudroid.interfaces.Quota;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -195,5 +196,17 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 	@Override
 	public void cancelCallsForListener(PluginResultListener listener) {
 		throw new UnsupportedOperationException("Can't cancel a call here.");
+	}
+
+	@Override
+	public List<Quota> getQuotas(){
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Quota getQuotaForMethod(String method){
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
