@@ -1,5 +1,6 @@
 package hu.edudroid.ict.plugins;
 
+import hu.edudroid.interfaces.AsyncMethodException;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;
@@ -105,11 +106,31 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	}
 	
 	@Override
-	public long callMethodAsync(String method, List<Object> params, PluginResultListener listener){		
+	public boolean validateQuota(Quota quota){
+		return true;
+	}
+	
+	@Override
+	public void consumeQuota(int identifier, int quantity){
+	}
+	
+	public long callMethodAsync(String method, List<Object> params, PluginResultListener listener){
+		return callMethodAsync(method, params, listener, 0);
+	}
+	
+	@Override
+	public long callMethodAsync(String method, List<Object> params, PluginResultListener listener, int quotaQuantity){		
 		
 		mBroadcast.registerResultListener(this);
 		
 		mCallBackIdentification.put(mCallMethodID, listener);
+		
+		if (quotaQuantity != 0){
+			final Quota quota = getQuotaForMethod(method);
+			if (!validateQuota(quota))
+				return -1;
+			consumeQuota(quota.getQuotaIdentifier(), quotaQuantity);
+		}
 		
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		ObjectOutputStream stream = null;
@@ -150,9 +171,14 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	public void onError(long id, String plugin, String pluginVersion, String methodName,
 			String errorMessage) {
 	}
+	
+	@Override
+	public List<String> callMethodSync(long callId, String method, List<Object> parameters) throws AsyncMethodException{
+		return callMethodSync(callId, method, parameters, 0);
+	}
 
 	@Override
-	public List<String> callMethodSync(long callId, String method, List<Object> parameters) {
+	public List<String> callMethodSync(long callId, String method, List<Object> parameters, int quotaQuantity) {
 		throw new UnsupportedOperationException("Can't call sync methods on stub.");
 	}
 

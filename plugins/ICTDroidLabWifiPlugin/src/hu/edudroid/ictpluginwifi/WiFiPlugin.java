@@ -77,7 +77,12 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 	}
 	
 	@Override
-	public List<String> callMethodSync(long callId, String method, List<Object> parameters) throws AsyncMethodException {
+	public List<String> callMethodSync(long callId, String method, List<Object> parameters) throws AsyncMethodException{
+		return callMethodSync(callId, method, parameters, 0);
+	}
+	
+	@Override
+	public List<String> callMethodSync(long callId, String method, List<Object> parameters, int quotaQuantity) throws AsyncMethodException {
 		mWifiManager=(WifiManager)this.getContext().getSystemService(Context.WIFI_SERVICE);
 		mWifiInfo=mWifiManager.getConnectionInfo();
 		List<String> answer=new ArrayList<String>();
@@ -165,7 +170,12 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 	}
 	
 	@Override
-	public long callMethodAsync(String method, List<Object> parameters, PluginResultListener listener) {
+	public long callMethodAsync(String method, List<Object> parameters, PluginResultListener listener){
+		return callMethodAsync(method, parameters, listener, 0);
+	}
+	
+	@Override
+	public long callMethodAsync(String method, List<Object> parameters, PluginResultListener listener, int quotaQuantity) {
 		throw new UnsupportedOperationException("Can't call async method on plugin.");
 	}
 
@@ -208,5 +218,16 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 	public Quota getQuotaForMethod(String method){
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean validateQuota(Quota quota){
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	@Override
+	public void consumeQuota(int identifier, int quantity){
+		// TODO Auto-generated method stub	
 	}
 }
