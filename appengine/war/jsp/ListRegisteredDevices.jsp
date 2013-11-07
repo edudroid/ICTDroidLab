@@ -32,7 +32,7 @@
     <h2>Registered Devices:</h2>
     <table border="1">
     	<tr>
-    		<th>Imei</th><th>Sdk version</th><th>Cellular</th><th>Bluetooth</th><th>Wifi</th><th>Gps</th>
+    		<th>Imei</th><th>Sdk version</th><th>Cellular</th><th>Bluetooth</th><th>Wifi</th><th>Gps</th><th>Last update</th>
     	</tr>
 			    <%
 			    for(Entity device : devices){
@@ -42,7 +42,8 @@
 			    	out.println(device.getProperty("cellular"));%></td><td><%
 			    	out.println(device.getProperty("bluetooth"));%></td><td><%
 			    	out.println(device.getProperty("wifi"));%></td><td><%
-			    	out.println(device.getProperty("gps"));%></td></tr>
+			    	out.println(device.getProperty("gps"));%></td><td><%
+			    	out.println(device.getProperty("date"));%></td></tr>
 			    	<%
 			    }
 			    %>

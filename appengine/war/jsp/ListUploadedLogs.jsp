@@ -1,3 +1,4 @@
+<%@page import="com.google.appengine.api.datastore.Query.SortDirection"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 
@@ -18,7 +19,7 @@
     // Run an ancestor query to ensure we see the most up-to-date
     // view of the Greetings belonging to the selected Guestbook.
     Query query = new Query("Logs");
-    query.addSort("date");
+    query.addSort("date",SortDirection.DESCENDING);
     List<Entity> logs = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 %>
 

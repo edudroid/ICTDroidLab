@@ -1,6 +1,7 @@
 package ict.edudroid.appengine;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ public class RegisterDeviceServlet extends HttpServlet {
 		registereddevice.setProperty("wifi", req.getParameter("wifi"));
 		registereddevice.setProperty("bluetooth", req.getParameter("bluetooth"));
 		registereddevice.setProperty("gps", req.getParameter("gps"));
+		registereddevice.setProperty("date", new Date());
         
         DatastoreService datastore =
                 DatastoreServiceFactory.getDatastoreService();
