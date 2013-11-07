@@ -6,7 +6,6 @@ import hu.edudroid.interfaces.ModuleDescriptor;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.module.ModuleLoader;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +13,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -67,6 +65,7 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 	}
 
 	private void refreshUI() {
+		List<ModuleDescriptor> modules = new ArrayList<ModuleDescriptor>();
 		if (service != null) {
 			List<Plugin> plugins = service.getPlugins();
 			if (plugins!=null && plugins.size() > 0) {
@@ -74,15 +73,8 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 			} else {
 				showPlugins.setText(R.string.noPlugins);
 			}
-			List<ModuleDescriptor> modules = new ArrayList<ModuleDescriptor>();
-			try {
-				modules.addAll(ModuleUtils.processModules(service.getLoadedModules(), ModuleLoader.readModulesFromAssets(this, getAssets())));
-				showModules.setText(getString(R.string.showModules, modules.size()));
-			} catch (IOException e) {
-				e.printStackTrace();
-				Log.e(TAG, "Error loading modules " + e);
-				showModules.setText("Error loading modules");
-			}
+			modules.addAll(ModuleUtils.processModules(service.getLoadedModules(), ModuleLoader.getAvailableModuls(this)));
+			showModules.setText(getString(R.string.showModules, modules.size()));
 		} else {
 			showPlugins.setText(R.string.noPlugins);
 		}

@@ -1,19 +1,20 @@
 package hu.edudroid.ict.plugins;
 
+import hu.edudroid.interfaces.AsyncMethodException;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginResultListener;
-
+import hu.edudroid.interfaces.Quota;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import android.content.Context;
 import android.content.Intent;
 
@@ -23,10 +24,10 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	private final String					mAuthor;
 	private final String					mDescription;
 	private final String					mVersionCode;
-	private final PluginIntentReceiver 	mBroadcast;
+	private final PluginIntentReceiver 		mBroadcast;
 
 	private Context							mContext;
-	private List<String>					mPluginMethods;
+	private List<String>				mPluginMethods;
 	private List<String>					mEvents;
 	
 	
@@ -75,10 +76,28 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	public String getVersionCode() {
 		return mVersionCode;
 	}
-
+	
 	@Override
-	public List<String> getMethodNames() {
+	public List<String> getMethodNames(){
 		return mPluginMethods;
+	}
+	
+	@Override
+	public List<Quota> getQuotas(){
+		final ArrayList<Quota> quotas = new ArrayList<Quota>();
+		for (int i = 0; i < mPluginMethods.size(); i++){
+			final String method = mPluginMethods.get(i);
+			final Quota quota = getQuotaForMethod(method);
+			if (quota != null)
+				quotas.add(quota);
+		}
+		
+		return quotas;
+	}
+	
+	@Override
+	public Quota getQuotaForMethod(String method){
+		return null;
 	}
 
 	@Override
@@ -87,11 +106,31 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	}
 	
 	@Override
-	public long callMethodAsync(String method, List<Object> params, PluginResultListener listener){		
+	public boolean validateQuota(Quota quota){
+		return true;
+	}
+	
+	@Override
+	public void consumeQuota(int identifier, int quantity){
+	}
+	
+	public long callMethodAsync(String method, List<Object> params, PluginResultListener listener){
+		return callMethodAsync(method, params, listener, 0);
+	}
+	
+	@Override
+	public long callMethodAsync(String method, List<Object> params, PluginResultListener listener, int quotaQuantity){		
 		
 		mBroadcast.registerResultListener(this);
 		
 		mCallBackIdentification.put(mCallMethodID, listener);
+		
+		if (quotaQuantity != 0){
+			final Quota quota = getQuotaForMethod(method);
+			if (!validateQuota(quota))
+				return -1;
+			consumeQuota(quota.getQuotaIdentifier(), quotaQuantity);
+		}
 		
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		ObjectOutputStream stream = null;
@@ -132,9 +171,14 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	public void onError(long id, String plugin, String pluginVersion, String methodName,
 			String errorMessage) {
 	}
+	
+	@Override
+	public List<String> callMethodSync(long callId, String method, List<Object> parameters) throws AsyncMethodException{
+		return callMethodSync(callId, method, parameters, 0);
+	}
 
 	@Override
-	public List<String> callMethodSync(long callId, String method, List<Object> parameters) {
+	public List<String> callMethodSync(long callId, String method, List<Object> parameters, int quotaQuantity) {
 		throw new UnsupportedOperationException("Can't call sync methods on stub.");
 	}
 

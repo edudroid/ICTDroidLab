@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Piecemaker>
+  <Contents>
+    <Image Source="img/slider/01.jpg" Title="Image 1"></Image>
+    <Image Source="img/slider/02.jpg" Title="Image 2">
+      <Text>&lt;h1&gt;Curabitur bibendum neque&lt;/h1&gt;&lt;p&gt;Vestibulum semper eleifend metus, sed sollicitudin diam sollicitudin sit amet. Vivamus placerat diam sit amet leo vehicula imperdiet. Donec pellentesque sagittis dolor non lobortis.&lt;/p&gt;</Text>
+      <Hyperlink URL="#" Target="_blank" />
+    </Image>
+    <Image Source="img/slider/03.jpg" Title="Image 3"></Image>
+    <Image Source="img/slider/04.jpg" Title="Image 4">
+      <Text>&lt;h1&gt;Mauris imperdiet, lacus&lt;/h1&gt;&lt;p&gt;Proin ac dictum tortor. Nunc vel enim erat. Suspendisse sagittis gravida augue, vitae pellentesque nibh auctor a. In id libero sem, nec semper est. Nulla volutpat metus ullamcorper augue ultrices ut laoreet nibh dictum. Nam feugiat rhoncus vulputate. Vestibulum facilisis facilisis egestas. In non ipsum tellus. &lt;/p&gt;</Text>
+      <Hyperlink URL="#" Target="_blank" />
+    </Image>
+  </Contents>
+  <Settings 
+  ImageWidth="960" 
+  ImageHeight="300" 
+  LoaderColor="0x333333" 
+  InnerSideColor="0x222222" 
+  SideShadowAlpha="0.6" 
+  DropShadowAlpha="0.2" 
+  DropShadowDistance="10" 
+  DropShadowScale="0.95" 
+  DropShadowBlurX="20" 
+  DropShadowBlurY="4" 
+  MenuDistanceX="20" 
+  MenuDistanceY="50" 
+  MenuColor1="0xFFFFFF" 
+  MenuColor2="0xFFFFFF" 
+  MenuColor3="0xFFFFFF" 
+  ControlSize="50" 
+  ControlDistance="20" 
+  ControlColor1="0x5e7c88" 
+  ControlColor2="0xFFFFFF" 
+  ControlAlpha="0.8" 
+  ControlAlphaOver="0.95" 
+  ControlsX="350" 
+  ControlsY="250&#xD;&#xA;" 
+  ControlsAlign="center" 
+  InfoWidth="400" 
+  InfoBackground="0xFFFFFF" 
+  InfoBackgroundAlpha="0.95" 
+  InfoMargin="55" 
+  InfoSharpness="0" 
+  InfoThickness="0" 
+  Autoplay="2" 
+  FieldOfView="45">
+  </Settings>
+  <Transitions>
+    <Transition Pieces="9" Time="1.2" Transition="easeInOutBack" Delay="0.05" DepthOffset="300" CubeDistance="10"></Transition>
+    <Transition Pieces="15" Time="3" Transition="easeInOutElastic" Delay="0.03" DepthOffset="200" CubeDistance="10"></Transition>
+    <Transition Pieces="12" Time="1.4" Transition="easeInOutElastic" Delay="0.02" DepthOffset="300" CubeDistance="5"></Transition>
+  </Transitions>
+</Piecemaker>

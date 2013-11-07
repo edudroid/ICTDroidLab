@@ -1,0 +1,158 @@
+@charset "UTF-8";
+/* CSS Document */
+
+/*
+ * jQuery Nivo Slider v2.6
+ * http://nivo.dev7studios.com
+ *
+ * Copyright 2011, Gilbert Pellegrom
+ * Free to use and abuse under the MIT license.
+ * http://www.opensource.org/licenses/mit-license.php
+ * 
+ * March 2010
+ */
+ 
+ 
+/* The Nivo Slider styles */
+.nivoSlider {
+	position: relative;
+}
+.nivoSlider img {
+	position:absolute;
+	top:0px;
+	left:0px;
+}
+/* If an image is wrapped in a link */
+.nivoSlider a.nivo-imageLink {
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:100%;
+	height:100%;
+	border:0;
+	padding:0;
+	margin:0;
+	z-index:6;
+	display:none;
+}
+/* The slices and boxes in the Slider */
+.nivo-slice {
+	display:block;
+	position:absolute;
+	z-index:5;
+	height:100%;
+}
+.nivo-box {
+	display:block;
+	position:absolute;
+	z-index:5;
+}
+/* Caption styles */
+.nivo-caption {
+	position:absolute;
+	right:0px;
+	top:0px;
+	background-color:#19b5bd;
+	opacity:0.8; /* Overridden by captionOpacity setting */
+	width:240px;
+	height:100%;
+	z-index:8;
+	border-left:solid 2px white;
+}
+.nivo-caption p {
+	padding-left:10px;
+	margin-top:270px;
+	font-size:12px;
+	color:white;
+}
+.nivo-caption a {
+	display:inline !important;
+}
+.nivo-html-caption {
+	display:none;
+}
+/* Direction nav styles (e.g. Next & Prev) */
+.nivo-directionNav a {
+	position:absolute;
+	top:45%;
+	z-index:9;
+	cursor:pointer;
+}
+.nivo-prevNav {
+	left:0px;
+}
+.nivo-nextNav {
+	right:0px;
+}
+/* Control nav styles (e.g. 1,2,3...) */
+.nivo-controlNav a {
+	position:relative;
+	z-index:9;
+	cursor:pointer;
+}
+.nivo-controlNav a.active {
+	font-weight:bold;
+}
+/* CUSTOM SLIDER ------------------------------------------------------------*/
+#slider-block {
+	background: url(../img/sliderbbox.png) no-repeat;
+	width:960px;
+	height:300px;
+}
+#slider-holder {
+	width:960px;
+	height:300px;
+	margin:0 auto;
+}
+#slider {
+	position:relative;
+	width:960px;
+	height:300px;
+}
+div#slider img {
+	display:none;
+	width:960px; /* Make sure your images are the same size */
+	height:300px; /* Make sure your images are the same size */
+}
+#slider a {
+	border:0;
+	display:block;
+}
+.nivo-controlNav {
+	height:40px;
+	position:absolute;
+	left:-70px; /* Tweak this to center bullets */
+	bottom:-20px;
+	margin-top:40px;
+	padding:8px 0 0 90px;
+	z-index:20;
+}
+.nivo-controlNav a {
+	display:block;
+	width:24px;
+	background:url(../img/nivoslider/bullets.png) no-repeat;
+	text-indent:-9999px;
+	border:0;
+	float:left;
+}
+.nivo-controlNav a.active {
+	background-position:0px -32px;
+}
+.nivo-directionNav a {
+	display:block;
+	width:24px;
+	height:200px;
+	background:url(../img/nivoslider/arrows1.png) no-repeat 0% 50%;
+	text-indent:-9999px;
+	border:0;
+	top:55px;
+}
+a.nivo-nextNav {
+	background-position:100% 50%;
+	right:10px;
+	padding-right:25px;
+}
+a.nivo-prevNav {
+	left:10px;
+	padding-left:25px;
+}

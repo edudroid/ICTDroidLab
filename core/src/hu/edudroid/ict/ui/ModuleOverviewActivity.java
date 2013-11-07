@@ -5,7 +5,6 @@ import hu.edudroid.ict.R;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.module.ModuleLoader;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,13 +55,8 @@ public class ModuleOverviewActivity extends ActivityBase implements OnItemClickL
 	
 	private void refreshModuleList() {
 		final List<ModuleDescriptor> orderedModules = new ArrayList<ModuleDescriptor>();
-		try {
-			orderedModules.addAll(ModuleUtils.processModules(service.getLoadedModules(), ModuleLoader.readModulesFromAssets(this, getAssets())));
-			Log.i(TAG, "Found " + orderedModules.size() + " module(s).");
-		} catch (IOException e) {
-			e.printStackTrace();
-			Log.e(TAG, "Error retrieving modules " + e);
-		}
+		orderedModules.addAll(ModuleUtils.processModules(service.getLoadedModules(), ModuleLoader.getAvailableModuls(this)));
+		Log.i(TAG, "Found " + orderedModules.size() + " module(s).");
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {

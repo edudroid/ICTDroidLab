@@ -7,5 +7,4 @@ public interface ModuleSetListener {
 	void moduleAdded(ModuleDescriptor moduleDescriptor);
 	void moduleRemoved(ModuleDescriptor moduleDescriptor);
 	
-
 }

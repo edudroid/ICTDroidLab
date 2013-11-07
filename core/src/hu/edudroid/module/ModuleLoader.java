@@ -21,6 +21,11 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
 
+/**
+ * Responsible for storing modules coming from assets or the Internet in internal storage. 
+ * @author lajthabalazs
+ *
+ */
 public class ModuleLoader {
 	private static final String JAR_FILE_KEY = "jar_file";
 	private static final String CLASS_NAME_KEY = "class_name";
@@ -65,8 +70,14 @@ public class ModuleLoader {
 		}
 	}
 	
-	public static List<ModuleDescriptor> readModulesFromAssets(Context context, AssetManager assetManager) throws IOException {
-		ArrayList<ModuleDescriptor> modulesInAssets = new ArrayList<ModuleDescriptor>();
+	/**
+	 * Copies jars and descriptors from assets to internal storage. Parses descriptors from assets and returns them.
+	 * @param context Application context to be used for asset management and file storage.
+	 * @return The list of descriptors available in assets.
+	 * @throws IOException
+	 */
+	public static void copyAssetsToInternalStorage(Context context) throws IOException {
+		AssetManager assetManager = context.getAssets();
 		String[] descriptors = assetManager.list(DESCRIPTOR_ASSET_FOLDER);
 		String[] jars = assetManager.list(JAR_ASSET_FOLDER);
 		for (String jar : jars) {
@@ -74,15 +85,16 @@ public class ModuleLoader {
 			AssetReader.copyAsset(assetPath, CoreService.getJarFolder(context), context);
 		}
 		for (String descriptor : descriptors) {
-			File descriptorFile = AssetReader.copyAsset(new File(DESCRIPTOR_ASSET_FOLDER, descriptor).getAbsolutePath(), new File(context.getFilesDir(), CoreService.DESCRIPTOR_FOLDER), context);
-			ModuleDescriptor moduleDescriptor = ModuleLoader.parseModuleDescriptor(descriptorFile);
-			if (moduleDescriptor != null) {
-				modulesInAssets.add(moduleDescriptor);
-			}
+			String descriptorAssetPath = new File(DESCRIPTOR_ASSET_FOLDER, descriptor).getAbsolutePath();
+			AssetReader.copyAsset(descriptorAssetPath, CoreService.getDescriptorFolder(context), context);
 		}
-		return modulesInAssets;
 	}
 	
+	/**
+	 * Download a module's JAR file from the given URL and store it in internal storage.
+	 * @param context The application context to be used
+	 * @param fileUrl URL of the file on the web
+	 */
 	public static void downloadModule(Context context,String fileUrl){
 		final int TIMEOUT_CONNECTION = 5000;//5sec
 		final int TIMEOUT_SOCKET = 30000;//30sec
@@ -103,7 +115,7 @@ public class ModuleLoader {
 			BufferedInputStream inStream = new BufferedInputStream(is, 1024 * 5);
 			String[] splitString=fileUrl.split("/");
 			String filename=splitString[splitString.length-1];
-			File file=new File(context.getFilesDir()+"/"+ CoreService.JAR_FOLDER,filename);
+			File file=new File(CoreService.getJarFolder(context),filename);
 			FileOutputStream outStream = new FileOutputStream(file);
 			byte[] buff = new byte[5 * 1024];
 	
@@ -122,5 +134,23 @@ public class ModuleLoader {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Returns modules available in internal storage
+	 * @param context
+	 * @return
+	 */
+	public static List<ModuleDescriptor> getAvailableModuls(Context context) {
+		ArrayList<ModuleDescriptor> descriptors = new ArrayList<ModuleDescriptor>();
+		File descriptorFolder = CoreService.getDescriptorFolder(context);
+		String[] descriptorFileNames = descriptorFolder.list();
+		for (String descriptorFileName : descriptorFileNames) {
+			ModuleDescriptor descriptor = ModuleLoader.parseModuleDescriptor(new File(descriptorFolder, descriptorFileName));
+			if (descriptor != null) {
+				descriptors.add(descriptor);
+			}
+		}
+		return descriptors;
 	}
 }
