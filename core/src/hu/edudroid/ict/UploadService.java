@@ -1,5 +1,6 @@
 package hu.edudroid.ict;
 
+import hu.edudroid.ict.utils.HttpUtils;
 import hu.edudroid.ict.utils.ServerUtilities;
 
 import java.io.File;

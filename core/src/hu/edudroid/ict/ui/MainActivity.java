@@ -13,6 +13,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -28,6 +29,7 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.e(TAG, "Created");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		showModules = (Button)findViewById(R.id.showModules);

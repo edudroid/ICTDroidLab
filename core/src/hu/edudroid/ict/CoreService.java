@@ -1,7 +1,9 @@
 package hu.edudroid.ict;
 
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
+import hu.edudroid.ict.plugins.PluginDescriptor;
 import hu.edudroid.ict.plugins.PluginIntentReceiver;
+import hu.edudroid.ict.utils.HttpUtils;
 import hu.edudroid.ict.utils.ServerUtilities;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Logger;
@@ -65,6 +67,7 @@ public class CoreService extends Service implements PluginListener {
 	private HashSet<ModuleSetListener> moduleListeners = new HashSet<ModuleSetListener>();
 	private boolean started = false;
 	private HashMap<String, TimeServiceInterface> timers = new HashMap<String, TimeServiceInterface>();
+	private List<PluginDescriptor> availablePlugins;
 	
 	public static File getDescriptorFolder(Context context) {
 		return new File(context.getFilesDir(), CoreService.DESCRIPTOR_FOLDER);
@@ -89,10 +92,23 @@ public class CoreService extends Service implements PluginListener {
 	@Override
 	public void onStart(Intent intent, int startId) {
 		if (!started) {
-			started = true;
-			
 			Log.i(TAG, "Starting CoreService!");
-			
+			started = true;
+			// Download available plugin list
+			new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					// TODO get URL for this get
+					String availablePluginsString = HttpUtils.get(ServerUtilities.SERVER_URL);
+					// TODO parse available plugin list
+					availablePlugins = new ArrayList<PluginDescriptor>();
+					PluginDescriptor wifi = new PluginDescriptor("WiFi plugin", "hu.edudroid.ictpluginwifi", "A plugin for WiFi.");
+					PluginDescriptor social = new PluginDescriptor("Social plugin", "hu.edudroid.ictpluginsocial", "A plugin for social stuff.");
+					availablePlugins.add(wifi);
+					availablePlugins.add(social);		
+				}
+			}).start();			
 			mBroadcast = new PluginIntentReceiver();
 			pluginCollection = new AndroidPluginCollection();
 			
@@ -302,6 +318,10 @@ public class CoreService extends Service implements PluginListener {
 
 	public List<Plugin> getPlugins() {
 		return pluginCollection.getAllPlugins();
+	}
+	
+	public List<PluginDescriptor> getAvailablePlugins() {
+		return availablePlugins;
 	}
 	
 	public void registeringGCM(){
