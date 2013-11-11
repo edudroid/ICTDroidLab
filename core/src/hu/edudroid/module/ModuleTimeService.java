@@ -25,24 +25,16 @@ public class ModuleTimeService implements TimeServiceInterface {
 	}
 	
 	public void runAt(final Date when, final ModuleTimerListener listener){
-		TimerTask tTask=new TimerTask() {
-			
-			@Override
-			public void run() {
-				listener.onTimerEvent();
-			}
-		};
-		
-		timer.schedule(tTask, when);
+		runAt((int)(when.getTime() - System.currentTimeMillis()), listener);
 	}
 	
 	public void runPeriodic(final int delay, final int periodicity, final int tickCount, final ModuleTimerListener listener){
 		TimerTask tTask=new TimerTask() {
-			int count=tickCount;
+			int count = tickCount;
 			
 			@Override
-			public void run() {
-				if(count==0){
+			public void run() {				
+				if(count==0 && tickCount != 0){
 					timer.purge();
 				}
 				else{
@@ -56,22 +48,7 @@ public class ModuleTimeService implements TimeServiceInterface {
 	}
 	
 	public void runPeriodic(final Date when, final int periodicity, final int tickCount, final ModuleTimerListener listener){
-		TimerTask tTask=new TimerTask() {
-			int count=tickCount;
-			
-			@Override
-			public void run() {
-				if(count==0){
-					timer.purge();
-				}
-				else{
-					listener.onTimerEvent();
-					count--;
-				}
-			}
-		};
-		
-		timer.scheduleAtFixedRate(tTask, when, periodicity);
+		runPeriodic((int)(when.getTime() - System.currentTimeMillis()), periodicity, tickCount, listener);
 	}
 
 	@Override
