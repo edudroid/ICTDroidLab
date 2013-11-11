@@ -3,13 +3,13 @@ package hu.edudroid.ictplugin;
 import hu.edudroid.interfaces.AsyncMethodException;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
-
+import hu.edudroid.interfaces.Quota;
+import hu.edudroid.interfaces.QuotaFactory;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +22,22 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver im
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		this.context = context;
+		
+		if (intent.getAction().equals(Constants.INTENT_ACTION_PLUGIN_QUOTAS)) {
+			Intent response = new Intent(Constants.INTENT_ACTION_QUOTA_DESCRIPTION);
+			response.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, getName());
+			
+			String quotaDescr = "";
+			final List<Quota> quotas = getQuotas();
+			for (int i = 0; i < quotas.size(); i++){
+				quotaDescr += QuotaFactory.codeQuota(quotas.get(i));
+				if (i != quotas.size() - 1)
+					quotaDescr += "||";
+			}
+			response.putExtra(Constants.INTENT_EXTRA_KEY_QUOTAS, quotaDescr);			
+			context.sendBroadcast(response);
+		}
+		
 		if (intent.getAction().equals(Constants.INTENT_ACTION_PLUGIN_POLL)) {
 			
 			Intent response = new Intent();

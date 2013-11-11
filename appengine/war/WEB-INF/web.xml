@@ -36,6 +36,14 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
     	<servlet-name>GCMBroadcast</servlet-name>
     	<servlet-class>ict.edudroid.appengine.GCMBroadcast</servlet-class>
   	</servlet>
+  	<servlet>
+    	<servlet-name>RegisterNewPluginServlet</servlet-name>
+    	<servlet-class>ict.edudroid.appengine.RegisterNewPluginServlet</servlet-class>
+  	</servlet>
+  	<servlet>
+    	<servlet-name>GetRegisteredPluginsServlet</servlet-name>
+    	<servlet-class>ict.edudroid.appengine.GetRegisteredPluginsServlet</servlet-class>
+  	</servlet>
   	
  	<servlet-mapping>
 		<servlet-name>RegisterDeviceServlet</servlet-name>
@@ -68,6 +76,14 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
   	<servlet-mapping>
     	<servlet-name>GCMBroadcast</servlet-name>
     	<url-pattern>/GCMBroadcast</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
+    	<servlet-name>RegisterNewPluginServlet</servlet-name>
+    	<url-pattern>/registerPlugin</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
+    	<servlet-name>GetRegisteredPluginsServlet</servlet-name>
+    	<url-pattern>/getRegisteredPlugins</url-pattern>
   	</servlet-mapping>	
   	
   	<security-constraint>
