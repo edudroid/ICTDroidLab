@@ -2,24 +2,23 @@ package hu.edudroid.ict.sample_project;
 
 import hu.edudroid.interfaces.Logger;
 import hu.edudroid.interfaces.Module;
-import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginCollection;
 import hu.edudroid.interfaces.Preferences;
 import hu.edudroid.interfaces.TimeServiceInterface;
 
-import java.util.Arrays;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 public class ModulExample extends Module {
 	
+	SimpleDateFormat dateFormatter = new SimpleDateFormat("YYYY/MM/dd");
+	
 	public ModulExample(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice) {
 		super(prefs, logger, pluginCollection, timeservice);
 	}
 	
-	private static final String 	TAG			 	= "ModuleExample";
-	
-	private Plugin plugin2;
+	private static final String TAG = "ModuleExample";
 	
 	@Override
 	public void init(){
@@ -28,7 +27,7 @@ public class ModulExample extends Module {
 	}
 	
 	public void run(){
-		mLogger.i(TAG, "Module example run at " + new Date());
+		mLogger.i(TAG, "Module example run at " + dateFormatter.format(new Date()));
 	}
 
 	@Override
