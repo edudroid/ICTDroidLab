@@ -1,6 +1,7 @@
 package hu.edudroid.module;
 
-import hu.edudroid.ict.HttpUtils;
+import hu.edudroid.ict.utils.HttpUtils;
+
 import java.io.File;
 import java.util.LinkedList;
 import org.apache.http.message.BasicNameValuePair;

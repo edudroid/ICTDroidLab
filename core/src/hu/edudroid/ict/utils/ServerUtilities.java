@@ -160,11 +160,11 @@ public final class ServerUtilities {
 			HttpEntity ent=response.getEntity();
 			result=EntityUtils.toString(ent);
 		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 		return result;
 	}
