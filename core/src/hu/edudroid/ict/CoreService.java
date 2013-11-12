@@ -100,7 +100,8 @@ public class CoreService extends Service implements PluginListener {
 				@Override
 				public void run() {
 					// TODO get URL for this get
-					String availablePluginsString = HttpUtils.get(ServerUtilities.SERVER_URL);
+					String availablePluginsString = HttpUtils.get(ServerUtilities.SERVER_URL + "/jsp/ListRegisteredPlugins.jsp");
+					Log.e(TAG, "Plugin string " + availablePluginsString);
 					// TODO parse available plugin list
 					availablePlugins = new ArrayList<PluginDescriptor>();
 					PluginDescriptor wifi = new PluginDescriptor("WiFi plugin", "hu.edudroid.ictpluginwifi", "A plugin for WiFi.");
