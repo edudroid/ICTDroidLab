@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ModulExample extends Module {
 	
-	SimpleDateFormat dateFormatter = new SimpleDateFormat("YYYY/MM/dd");
+	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SSS");
 	
 	public ModulExample(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice) {
 		super(prefs, logger, pluginCollection, timeservice);
