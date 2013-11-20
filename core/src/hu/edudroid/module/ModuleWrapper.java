@@ -41,10 +41,10 @@ public class ModuleWrapper extends Module implements Preferences, Logger, Plugin
 	public ModuleWrapper(String className, Constructor<Module> constructor, Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeService, Context context) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
 		super(prefs, logger, pluginCollection, timeService);
 		Log.i(TAG,"Calling module constructor");
-		module = constructor.newInstance(new SharedPrefs(context, className),
-				new AndroidLogger(className),
-				pluginCollection,
-				timeService);
+		module = constructor.newInstance(this,
+				this,
+				this,
+				this);
 		statPrefs = context.getSharedPreferences(SHARED_PREF_PREFIX + className, Context.MODE_PRIVATE);
 		this.className = className;
 	}
@@ -60,6 +60,7 @@ public class ModuleWrapper extends Module implements Preferences, Logger, Plugin
 	}
 
 	private void statsChangted() {
+		Log.e(TAG, "Stats changed");
 		Map<String, String> unmodifiableStats = Collections.unmodifiableMap(getStats());
 		for (ModuleStatsListener listener : moduleStatsListeners) {
 			listener.moduleSTatsChanged(className, unmodifiableStats);
@@ -114,24 +115,24 @@ public class ModuleWrapper extends Module implements Preferences, Logger, Plugin
 
 	@Override
 	public void runAt(int delay, ModuleTimerListener listener) {
-		mTimeService.runAt(delay, listener);
+		mTimeService.runAt(delay, this);
 	}
 
 	@Override
 	public void runAt(Date when, ModuleTimerListener listener) {
-		mTimeService.runAt(when, listener);
+		mTimeService.runAt(when, this);
 	}
 
 	@Override
 	public void runPeriodic(int delay, int periodicity, int tickCount,
 			ModuleTimerListener listener) {
-		mTimeService.runPeriodic(delay, periodicity, tickCount, listener);
+		mTimeService.runPeriodic(delay, periodicity, tickCount, this);
 	}
 
 	@Override
 	public void runPeriodic(Date when, int periodicity, int tickCount,
 			ModuleTimerListener listener) {
-		mTimeService.runPeriodic(when, periodicity, tickCount, listener);
+		mTimeService.runPeriodic(when, periodicity, tickCount, this);
 	}
 
 	@Override

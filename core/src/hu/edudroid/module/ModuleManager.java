@@ -56,6 +56,7 @@ public class ModuleManager implements ModuleStatsListener{
 	}
 
 	public boolean addModule(ModuleDescriptor moduleDescriptor, PluginCollection pluginCollection) {
+		Log.e(TAG, "Adding module");
 		if (moduleWrappers.containsKey(moduleDescriptor.getClassName())) {
 			Log.w(TAG, "Module " + moduleDescriptor.getClassName() + " already loaded.");
 			return false;
@@ -86,6 +87,7 @@ public class ModuleManager implements ModuleStatsListener{
 						pluginCollection,
 						timeService, coreService);
 				moduleWrapper.registerModuleStatsListener(this);
+				Log.e(TAG, "Module added");
 			} catch (ClassNotFoundException e) {
 				Log.e(TAG, "Error loading module.", e);
 				e.printStackTrace();
@@ -158,7 +160,7 @@ public class ModuleManager implements ModuleStatsListener{
 		moduleSetListeners.add(listener);
 	}
 
-	public void unregisterModuleSetListenerListener(ModuleSetListener listener) {
+	public void unregisterModuleSetListener(ModuleSetListener listener) {
 		moduleSetListeners.remove(listener);
 	}
 
@@ -166,7 +168,7 @@ public class ModuleManager implements ModuleStatsListener{
 		moduleStatsListeners.add(listener);
 	}
 
-	public void unregisterModuleStatsListenerListener(ModuleStatsListener listener) {
+	public void unregisterModuleStatsListener(ModuleStatsListener listener) {
 		moduleStatsListeners.remove(listener);
 	}
 
@@ -177,6 +179,7 @@ public class ModuleManager implements ModuleStatsListener{
 	@Override
 	public void moduleSTatsChanged(String className,
 			Map<String, String> stats) {
+		Log.e(TAG, "Stats changed");
 		for (ModuleStatsListener listener : moduleStatsListeners) {
 			listener.moduleSTatsChanged(className, stats);
 		}

@@ -50,5 +50,8 @@
     <string name="pluginTitle">Plugin title</string>
     <string name="pluginDescription">Plugin description</string>
     <string name="pluginAuthor">Plugin author</string>
-    <string name="installPlugin">Install plugin</string>   
+    <string name="installPlugin">Install plugin</string>
+    <string name="defaultDate">2013-11-19</string>
+    <string name="defaultShortTime">11-19 12:10:11</string>
+    <string name="defaultNumber">42</string>   
 </resources>

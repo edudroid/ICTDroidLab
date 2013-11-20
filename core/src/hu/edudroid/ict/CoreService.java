@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import android.app.Service;
 import android.content.Context;
@@ -158,8 +159,16 @@ public class CoreService extends Service implements PluginListener {
 		moduleManager.registerModuleSetListener(listener);
 	}
 
-	public void unregisterModuleSetListenerListener(ModuleSetListener listener) {
-		moduleManager.unregisterModuleSetListenerListener(listener);
+	public void unregisterModuleSetListener(ModuleSetListener listener) {
+		moduleManager.unregisterModuleSetListener(listener);
+	}
+
+	public void registerModuleStatsListener(ModuleStatsListener listener) {
+		moduleManager.registerModuleStatsListener(listener);
+	}
+
+	public void unregisterModuleStatsListener(ModuleStatsListener listener) {
+		moduleManager.unregisterModuleStatsListener(listener);
 	}
 
 	/**
@@ -168,6 +177,10 @@ public class CoreService extends Service implements PluginListener {
 	 */
 	public List<ModuleDescriptor> getLoadedModules() {
 		return moduleManager.getLoadedModules();
+	}
+	
+	public Map<String, String> getModuleStats(String className) {
+		return moduleManager.getModuleStats(className);
 	}
 	
 	/**

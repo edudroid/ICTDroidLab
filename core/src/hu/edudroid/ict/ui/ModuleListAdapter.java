@@ -1,29 +1,37 @@
 package hu.edudroid.ict.ui;
 
+import hu.edudroid.ict.CoreService;
+import hu.edudroid.ict.ModuleStatsListener;
 import hu.edudroid.ict.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import android.database.DataSetObserver;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-public class ModuleListAdapter implements ListAdapter, OnClickListener {
+public class ModuleListAdapter implements ListAdapter {
 	
+	private static final String TAG = ModuleListAdapter.class.getName();
 	private List<ModuleDescriptor> modules;
 	private List<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 	private LayoutInflater inflater;
-	private ModuleOverviewActivity activity;
+	private CoreService coreService;
+	private SimpleDateFormat dateFormatter = new SimpleDateFormat("MM'-'dd HH':'mm':'ss", Locale.getDefault());
 
-	public ModuleListAdapter(List<ModuleDescriptor> modules, ModuleOverviewActivity activity, LayoutInflater inflater) {
+	public ModuleListAdapter(List<ModuleDescriptor> modules, LayoutInflater inflater, CoreService coreService) {
 		this.modules = modules;
 		this.inflater = inflater;
-		this.activity = activity;
+		this.coreService = coreService;
 	}
 	
 	public void setModules(List<ModuleDescriptor> modules){
@@ -58,27 +66,46 @@ public class ModuleListAdapter implements ListAdapter, OnClickListener {
 	}
 
 	@Override
-	public View getView(int arg0, View arg1, ViewGroup arg2) {
-		ModuleDescriptor module = modules.get(arg0);
-		if (arg1 == null) {
-			arg1 = inflater.inflate(R.layout.listitem_module, null);
+	public View getView(int position, View convertView, ViewGroup parent) {
+		ModuleDescriptor module = modules.get(position);
+		if (convertView == null) {
+			convertView = inflater.inflate(R.layout.listitem_module, null);
 		}
-		((TextView)arg1.findViewById(R.id.moduleNameLable)).setText(module.getModuleName());
+		TextView nameLabel = (TextView)(convertView.findViewById(R.id.listItemModuleNameLable));
+		TextView stateLabel = (TextView)(convertView.findViewById(R.id.listItemModuleStateLabel));
+		TextView lastRunLabel = (TextView)(convertView.findViewById(R.id.listItemModuleLastRunLabel));
+		TextView totalRunsLabel = (TextView)(convertView.findViewById(R.id.listItemModuleNumberOfRunsLabel));
+		
+		nameLabel.setText(module.getModuleName());
 		if (module.isLoaded()) {
-			arg1.findViewById(R.id.loadModuleButton).setVisibility(View.GONE);
-			arg1.findViewById(R.id.loadedLabel).setVisibility(View.VISIBLE);
-			arg1.findViewById(R.id.removeModule).setVisibility(View.VISIBLE);
-			arg1.findViewById(R.id.removeModule).setOnClickListener(this);
-			arg1.findViewById(R.id.removeModule).setTag(module);
+			stateLabel.setVisibility(View.VISIBLE);
+			if (coreService != null) {
+				lastRunLabel.setVisibility(View.VISIBLE);
+				totalRunsLabel.setVisibility(View.VISIBLE);
+				Map<String, String> values = coreService.getModuleStats(module.getClassName());
+				String numberString = "N/A";
+				try {
+					numberString = "" + Integer.parseInt(values.get(ModuleStatsListener.STAT_KEY_TIMERS_FIRED));
+				} catch (Exception e) {
+					Log.e(TAG, "Error rendering module list item " + e, e);
+					e.printStackTrace();
+				}
+				totalRunsLabel.setText(numberString);
+				String dateString = "N/A";
+				try {
+					dateString = dateFormatter.format(new Date(Long.parseLong(values.get(ModuleStatsListener.STAT_KEY_LAST_TIMER_EVENT))));
+				} catch (Exception e) {
+					Log.e(TAG, "Error rendering module list item " + e, e);
+					e.printStackTrace();
+				}
+				lastRunLabel.setText(dateString);
+			}
 		} else {
-			arg1.findViewById(R.id.removeModule).setVisibility(View.GONE);
-			arg1.findViewById(R.id.loadedLabel).setVisibility(View.GONE);
-			arg1.findViewById(R.id.loadModuleButton).setVisibility(View.VISIBLE);
-			arg1.findViewById(R.id.loadModuleButton).setOnClickListener(this);
-			arg1.findViewById(R.id.loadModuleButton).setTag(module);
+			stateLabel.setVisibility(View.GONE);
+			lastRunLabel.setVisibility(View.GONE);
+			totalRunsLabel.setVisibility(View.GONE);
 		}
-		arg1.setTag(module);
-		return arg1;
+		return convertView;
 	}
 
 	@Override
@@ -116,15 +143,7 @@ public class ModuleListAdapter implements ListAdapter, OnClickListener {
 		return true;
 	}
 
-	@Override
-	public void onClick(View arg0) {
-		switch(arg0.getId()) {
-		case R.id.removeModule: 
-			activity.removeModule((ModuleDescriptor)arg0.getTag());
-			break;
-		case R.id.loadModuleButton:
-			activity.loadModule((ModuleDescriptor)arg0.getTag());
-			break;
-		}
+	public void setService(CoreService service) {
+		this.coreService = service;
 	}
 }
