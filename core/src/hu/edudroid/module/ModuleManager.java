@@ -2,6 +2,7 @@ package hu.edudroid.module;
 
 import hu.edudroid.ict.CoreService;
 import hu.edudroid.ict.ModuleSetListener;
+import hu.edudroid.ict.ModuleStatsListener;
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.interfaces.Logger;
 import hu.edudroid.interfaces.Module;
@@ -17,16 +18,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import android.util.Log;
 import dalvik.system.DexClassLoader;
 
-public class ModuleManager {
+public class ModuleManager implements ModuleStatsListener{
 	private static final String TAG = null;
 	private HashMap<String, ModuleWrapper> moduleWrappers = new HashMap<String, ModuleWrapper>(); // Modules by class name
 	private HashMap<String, ModuleDescriptor> descriptors = new HashMap<String, ModuleDescriptor>(); // Descriptors by class name
 	private HashMap<String, TimeServiceInterface> timers = new HashMap<String, TimeServiceInterface>();
-	private HashSet<ModuleSetListener> moduleListeners = new HashSet<ModuleSetListener>();
+	private HashSet<ModuleSetListener> moduleSetListeners = new HashSet<ModuleSetListener>();
+	private HashSet<ModuleStatsListener> moduleStatsListeners = new HashSet<ModuleStatsListener>();
 	
 	private CoreService coreService;
 	
@@ -41,6 +44,15 @@ public class ModuleManager {
 			ret.add(descriptor);
 		}
 		return ret;
+	}
+	
+	public Map<String, String> getModuleStats(String className) {
+		ModuleWrapper wrapper = moduleWrappers.get(className);
+		if (wrapper != null) {
+			 return wrapper.getStats();
+		} else {
+			return null;
+		}
 	}
 
 	public boolean addModule(ModuleDescriptor moduleDescriptor, PluginCollection pluginCollection) {
@@ -73,6 +85,7 @@ public class ModuleManager {
 						new AndroidLogger(className),
 						pluginCollection,
 						timeService, coreService);
+				moduleWrapper.registerModuleStatsListener(this);
 			} catch (ClassNotFoundException e) {
 				Log.e(TAG, "Error loading module.", e);
 				e.printStackTrace();
@@ -95,7 +108,7 @@ public class ModuleManager {
 				Log.e(TAG, "Error initializing module " + moduleDescriptor.getModuleName() + " : " + e.getMessage());
 				e.printStackTrace();
 			}
-			for (ModuleSetListener listener : moduleListeners) {
+			for (ModuleSetListener listener : moduleSetListeners) {
 				listener.moduleAdded(moduleDescriptor);
 			}
 			return true;
@@ -131,7 +144,7 @@ public class ModuleManager {
 			timer.cancelAll();
 			pluginCollection.removeEventListener(module);
 			pluginCollection.removeResultListener(module);
-			for (ModuleSetListener listener : moduleListeners) {
+			for (ModuleSetListener listener : moduleSetListeners) {
 				listener.moduleRemoved(descriptor);
 			}
 			Log.w(TAG, "Module removed " + moduleName);
@@ -142,15 +155,31 @@ public class ModuleManager {
 	}
 
 	public void registerModuleSetListener(ModuleSetListener listener) {
-		moduleListeners.add(listener);
+		moduleSetListeners.add(listener);
 	}
 
 	public void unregisterModuleSetListenerListener(ModuleSetListener listener) {
-		moduleListeners.remove(listener);
+		moduleSetListeners.remove(listener);
+	}
+
+	public void registerModuleStatsListener(ModuleStatsListener listener) {
+		moduleStatsListeners.add(listener);
+	}
+
+	public void unregisterModuleStatsListenerListener(ModuleStatsListener listener) {
+		moduleStatsListeners.remove(listener);
 	}
 
 	public ModuleDescriptor getModule(String moduleName) {
 		return descriptors.get(moduleName);
+	}
+
+	@Override
+	public void moduleSTatsChanged(String className,
+			Map<String, String> stats) {
+		for (ModuleStatsListener listener : moduleStatsListeners) {
+			listener.moduleSTatsChanged(className, stats);
+		}
 	}
 
 }

@@ -2,12 +2,19 @@ package hu.edudroid.module;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
+import hu.edudroid.ict.ModuleStatsListener;
 import hu.edudroid.interfaces.Logger;
 import hu.edudroid.interfaces.Module;
 import hu.edudroid.interfaces.ModuleTimerListener;
@@ -25,8 +32,11 @@ import hu.edudroid.interfaces.TimeServiceInterface;
 public class ModuleWrapper extends Module implements Preferences, Logger, PluginCollection, TimeServiceInterface {
 	
 	private static final String TAG = ModuleWrapper.class.getName();
-	private final Context context;
+	private static final String SHARED_PREF_PREFIX = "STATS_";
 	private final Module module;
+	private HashSet<ModuleStatsListener> moduleStatsListeners = new HashSet<ModuleStatsListener>();
+	private SharedPreferences statPrefs;
+	private String className;
 	
 	public ModuleWrapper(String className, Constructor<Module> constructor, Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeService, Context context) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
 		super(prefs, logger, pluginCollection, timeService);
@@ -35,9 +45,28 @@ public class ModuleWrapper extends Module implements Preferences, Logger, Plugin
 				new AndroidLogger(className),
 				pluginCollection,
 				timeService);
-		this.context = context;
+		statPrefs = context.getSharedPreferences(SHARED_PREF_PREFIX + className, Context.MODE_PRIVATE);
+		this.className = className;
 	}
-	
+
+	public Map<String, String> getStats() {
+		int timerEventCount = statPrefs.getInt(ModuleStatsListener.STAT_KEY_TIMERS_FIRED, 0);
+		long lastTimerEvent = statPrefs.getLong(ModuleStatsListener.STAT_KEY_LAST_TIMER_EVENT, 0);
+		
+		Map<String, String> stats = new HashMap<String, String>();
+		stats.put(ModuleStatsListener.STAT_KEY_TIMERS_FIRED, Integer.toString(timerEventCount));
+		stats.put(ModuleStatsListener.STAT_KEY_LAST_TIMER_EVENT, Long.toString(lastTimerEvent));
+		return stats;
+	}
+
+	private void statsChangted() {
+		Map<String, String> unmodifiableStats = Collections.unmodifiableMap(getStats());
+		for (ModuleStatsListener listener : moduleStatsListeners) {
+			listener.moduleSTatsChanged(className, unmodifiableStats);
+		}
+	}
+
+
 	@Override
 	public void onResult(long id, String plugin, String pluginVersion,
 			String methodName, List<String> result) {
@@ -58,14 +87,21 @@ public class ModuleWrapper extends Module implements Preferences, Logger, Plugin
 
 	@Override
 	public void onTimerEvent() {
-		module.onTimerEvent();
+		int timerEventCount = statPrefs.getInt(ModuleStatsListener.STAT_KEY_TIMERS_FIRED, 0);
+		timerEventCount ++;
+		Editor editor = statPrefs.edit();
+		editor.putLong(ModuleStatsListener.STAT_KEY_LAST_TIMER_EVENT, System.currentTimeMillis());
+		editor.putInt(ModuleStatsListener.STAT_KEY_TIMERS_FIRED, timerEventCount);
+		editor.commit();
+		statsChangted();
+		try {
+			module.onTimerEvent();
+		} catch (Exception e) {
+			Log.e(TAG, "Error running timer event " + e, e);
+			e.printStackTrace();
+		}
 	}
-
-	@Override
-	public void run() {
-		module.run();
-	}
-
+	
 	@Override
 	public void init() {
 		module.init();
@@ -161,5 +197,14 @@ public class ModuleWrapper extends Module implements Preferences, Logger, Plugin
 	@Override
 	public void putBoolean(String key, boolean value) {
 	}
+	
+	public void registerModuleStatsListener(ModuleStatsListener listener) {
+		moduleStatsListeners.add(listener);
+	}
+
+	public void unregisterModuleStatsListenerListener(ModuleStatsListener listener) {
+		moduleStatsListeners.remove(listener);
+	}
+
 
 }

@@ -15,6 +15,5 @@ public abstract class Module implements PluginResultListener, PluginEventListene
 		mTimeService = timeservice;
 	}
 	
-	public abstract void run();
 	public abstract void init();
 }

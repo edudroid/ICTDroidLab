@@ -7,7 +7,6 @@ import hu.edudroid.module.ModuleLoader;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import android.content.ComponentName;
 import android.os.Bundle;
