@@ -36,19 +36,19 @@ public class AndroidLogger implements Logger {
 	@Override
 	public void e(String tag, String message) {
 		Log.e(TAG+":"+tag, message);
-		saveLogLine(moduleName, System.currentTimeMillis(), "error: "+message);
+		saveLogLine(moduleName, System.currentTimeMillis(), "error: "+ message);
 	}
 
 	@Override
 	public void d(String tag, String message) {
 		Log.d(TAG+":"+tag, message);
-		saveLogLine(moduleName, System.currentTimeMillis(), "debug: "+message);
+		saveLogLine(moduleName, System.currentTimeMillis(), "debug: "+ message);
 	}
 
 	@Override
 	public void i(String tag, String message) {
 		Log.i(TAG+":"+tag, message);
-		saveLogLine(moduleName, System.currentTimeMillis(), "info: "+message);
+		saveLogLine(moduleName, System.currentTimeMillis(), "info: "+ message);
 	}
 	
 	public void saveLogLine(String task, long timestamp, String message) {
