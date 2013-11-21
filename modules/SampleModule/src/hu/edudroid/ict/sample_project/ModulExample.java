@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ModulExample extends Module {
 	
-	SimpleDateFormat dateFormatter = new SimpleDateFormat("YYYY/MM/dd");
+	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SSS");
 	
 	public ModulExample(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice) {
 		super(prefs, logger, pluginCollection, timeservice);
@@ -26,10 +26,6 @@ public class ModulExample extends Module {
 		mTimeService.runPeriodic(1000, 5000, 0, this);
 	}
 	
-	public void run(){
-		mLogger.i(TAG, "Module example run at " + dateFormatter.format(new Date()));
-	}
-
 	@Override
 	public void onResult(long id, String plugin, String pluginVersion,
 			String methodName, List<String> result) {
@@ -48,6 +44,6 @@ public class ModulExample extends Module {
 	@Override
 	public void onTimerEvent() {
 		mLogger.d(TAG, "timer event");
-		this.run();		
+		mLogger.i(TAG, "Module example run at " + dateFormatter.format(new Date()));
 	}
 } 

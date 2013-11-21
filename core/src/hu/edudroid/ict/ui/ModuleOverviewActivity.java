@@ -1,12 +1,14 @@
 package hu.edudroid.ict.ui;
 
 import hu.edudroid.ict.ModuleSetListener;
+import hu.edudroid.ict.ModuleStatsListener;
 import hu.edudroid.ict.R;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.module.ModuleLoader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import android.content.ComponentName;
 import android.os.Bundle;
@@ -16,9 +18,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
-public class ModuleOverviewActivity extends ActivityBase implements OnItemClickListener, ModuleSetListener {
+public class ModuleOverviewActivity extends ActivityBase implements OnItemClickListener, ModuleSetListener, ModuleStatsListener {
 	private static final String TAG = "ModuleOverviewActivity";
 	private ListView moduleList;
 	private ModuleListAdapter moduleListAdapter;
@@ -29,14 +30,15 @@ public class ModuleOverviewActivity extends ActivityBase implements OnItemClickL
 		setContentView(R.layout.activity_modules_overview);
 		moduleList = (ListView)findViewById(R.id.moduleList);
 		moduleList.setOnItemClickListener(this);
-		moduleListAdapter = new ModuleListAdapter(new ArrayList<ModuleDescriptor>(), this, getLayoutInflater());
+		moduleListAdapter = new ModuleListAdapter(new ArrayList<ModuleDescriptor>(), getLayoutInflater(), service);
 		moduleList.setAdapter(moduleListAdapter);
 	}
 	
 	@Override
 	protected void onPause() {
 		if (service != null) {
-			service.unregisterModuleSetListenerListener(this);
+			service.unregisterModuleSetListener(this);
+			service.unregisterModuleStatsListener(this);
 		}
 		super.onPause();
 	}
@@ -50,6 +52,8 @@ public class ModuleOverviewActivity extends ActivityBase implements OnItemClickL
 	public void onServiceConnected(ComponentName arg0, IBinder arg1) {
 		super.onServiceConnected(arg0, arg1);
 		service.registerModuleSetListener(this);
+		service.registerModuleStatsListener(this);
+		moduleListAdapter.setService(service);
 		refreshModuleList();
 	}
 	
@@ -65,30 +69,6 @@ public class ModuleOverviewActivity extends ActivityBase implements OnItemClickL
 		});
 	}
 
-	public void loadModule(ModuleDescriptor moduleDescriptor) {
-		if (service != null) {
-			boolean success = service.addModule(moduleDescriptor);
-			if (success) {
-				refreshModuleList();
-				Toast.makeText(this, "Module " + moduleDescriptor.getModuleName() + " loaded successfully!", Toast.LENGTH_LONG).show();
-			} else {
-				Toast.makeText(this, "Module " + moduleDescriptor.getModuleName() + " couldn't be loaded.", Toast.LENGTH_LONG).show();
-			}
-		}		
-	}
-
-	public void removeModule(ModuleDescriptor moduleDescriptor) {
-		if (service != null) {
-			boolean success = service.removeModule(moduleDescriptor.getClassName());
-			if (success) {
-				refreshModuleList();
-				Toast.makeText(this, "Module " + moduleDescriptor.getModuleName() + " loaded successfully!", Toast.LENGTH_LONG).show();
-			} else {
-				Toast.makeText(this, "Module " + moduleDescriptor.getModuleName() + " couldn't be loaded.", Toast.LENGTH_LONG).show();
-			}
-		}
-	}
-
 	@Override
 	public boolean newPlugin(Plugin plugin) {
 		return false;
@@ -101,6 +81,13 @@ public class ModuleOverviewActivity extends ActivityBase implements OnItemClickL
 
 	@Override
 	public void moduleRemoved(hu.edudroid.interfaces.ModuleDescriptor moduleDescriptor) {
+		refreshModuleList();
+	}
+
+	@Override
+	public void moduleSTatsChanged(String moduleClassName,
+			Map<String, String> stats) {
+		Log.e(TAG, "Stats changed");
 		refreshModuleList();
 	}
 }

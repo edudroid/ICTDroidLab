@@ -54,7 +54,7 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 	@Override
 	protected void onPause() {
 		if (service != null) {
-			service.unregisterModuleSetListenerListener(this);
+			service.unregisterModuleSetListener(this);
 		}
 		super.onPause();
 	}
@@ -117,5 +117,4 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 			hu.edudroid.interfaces.ModuleDescriptor moduleDescriptor) {
 		refreshUI();
 	}
-
 }
