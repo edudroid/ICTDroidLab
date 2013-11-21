@@ -30,8 +30,7 @@
     </head>
     <body>
     <h2>Registered Devices</h2>
-    <div class="CSSTableGenerator" >
-    <table border="1">
+    <table>
     	<tr>
     		<th>Imei</th><th>Sdk version</th><th>Cellular</th><th>Bluetooth</th><th>Wifi</th><th>Gps</th><th>Last update</th>
     	</tr>

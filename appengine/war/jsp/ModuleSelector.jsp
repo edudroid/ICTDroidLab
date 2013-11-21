@@ -28,7 +28,7 @@
 <html>
     <head>
         <title>Module Selector</title>
-        <link rel="stylesheet" type="text/css" href="http://ictdroidlab.appspot.com/tablestyle.css" media="screen" />
+
 	        <script type="text/javascript"> 
 			
 			function moduleSelected(Index) {
@@ -43,9 +43,10 @@
     </head>
     <body>
     <h2>Module Selector</h2>
-    <div class="CSSTableGenerator" >
     <table>
         <form action="/GCMBroadcast" method="post">
+		
+		<th>Module Name</th><th>IMEI</th>
 		<tr>
 			<td>
 				<select name="modules" onchange="moduleSelected(this.selectedIndex);">
@@ -81,6 +82,5 @@
         </tr>
     	</form>
     </table>
-    </div>
     </body>
 </html>

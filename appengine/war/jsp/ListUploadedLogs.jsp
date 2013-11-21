@@ -32,14 +32,15 @@
     </head>
     <body>
     <h2>Uploaded Logs</h2>
-    <div class="CSSTableGenerator" >
-    <table border="1">
-    	<th>IMEI</th><th>Date</th>
+    <table>
+    	<th>IMEI</th><th>Date</th><th>-></th>
 			    <%
 			    for(Entity log : logs){
 			    	%>
 			    	<tr>
-			    	<td><a href='http://ictdroidlab.appspot.com/serveLog?blob-key=<%= log.getProperty("logFileBlobKey") %>'><%= log.getProperty("imei") %></a></td><td><%= log.getProperty("date") %></td>
+			    	<td><%= log.getProperty("imei") %></td>
+			    	<td><%= log.getProperty("date") %></td>
+			    	<td><a href='http://ictdroidlab.appspot.com/serveLog?blob-key=<%= log.getProperty("logFileBlobKey") %>'>Download</a></td>
 			    	</tr>
 			    	<%
 			    }

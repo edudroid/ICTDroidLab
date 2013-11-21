@@ -14,6 +14,7 @@
         <title>Register Plugin</title>
     </head>
     <body>
+    <h2>Register Plugin</h2>
     <table>
         <form action="/registerPlugin" method="post">
 		<tr>
