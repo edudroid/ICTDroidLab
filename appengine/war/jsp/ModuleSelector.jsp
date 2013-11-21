@@ -27,8 +27,8 @@
 
 <html>
     <head>
-        <title>Send GCM</title>
-        
+        <title>Module Selector</title>
+        <link rel="stylesheet" type="text/css" href="http://ictdroidlab.appspot.com/tablestyle.css" media="screen" />
 	        <script type="text/javascript"> 
 			
 			function moduleSelected(Index) {
@@ -42,6 +42,8 @@
         
     </head>
     <body>
+    <h2>Module Selector</h2>
+    <div class="CSSTableGenerator" >
     <table>
         <form action="/GCMBroadcast" method="post">
 		<tr>
@@ -79,5 +81,6 @@
         </tr>
     	</form>
     </table>
+    </div>
     </body>
 </html>

@@ -26,10 +26,11 @@
 <html>
     <head>
         <title>Registered Plugins</title>
-        
+        <link rel="stylesheet" type="text/css" href="http://ictdroidlab.appspot.com/tablestyle.css" media="screen" />
     </head>
     <body>
-    <h2>Registered Devices:</h2>
+    <h2>Registered Devices</h2>
+    <div class="CSSTableGenerator" >
     <table border="1">
     	<tr>
     		<th>Name</th><th>Class</th><th>Version</th><th>Description</th><th>Date</th>
@@ -46,5 +47,6 @@
 			    }
 			    %>
     </table>
+    </div>
     </body>
 </html>

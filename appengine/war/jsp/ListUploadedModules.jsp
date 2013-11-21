@@ -28,10 +28,11 @@
 <html>
     <head>
         <title>Uploaded Modules</title>
-        
+        <link rel="stylesheet" type="text/css" href="http://ictdroidlab.appspot.com/tablestyle.css" media="screen" />
     </head>
     <body>
-    <h2>Uploaded Modules:</h2>
+    <h2>Uploaded Modules</h2>
+    <div class="CSSTableGenerator" >
     <table border="1">
     	<tr>
     		<th>Modul name</th><th>Jar file</th><th>Class name</th><th>Date</th><th>User</th><th>Email</th>
@@ -49,5 +50,6 @@
 			    }
 			    %>
     </table>
+    </div>
     </body>
 </html>
