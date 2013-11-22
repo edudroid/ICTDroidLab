@@ -1,0 +1,20 @@
+{
+	"module_name" : "TMIT BatteryExample",
+	"author": "Lantha Balázs",
+	"description": "This measurement will help us better understand how users charge their phones. We will be monitoring the battery level of your device for 30 days, each 2 minutes. The data will be used for scientific purposes, only. Thank you for your help!",
+	"website":"http://batteryresearch.tmit.bme.hu",
+	"jar_file" : "BatteryModule.jar",
+	"class_name" : "hu.edudroid.ict.battery.BatteryModul",
+	"used_plugins": [
+		"BatterPlugin"
+	],
+	"permissions": [
+		"READ_CHARGING_LEVEL",
+		"READ_CHARGER_TYPE",
+		"LISTEN_BATTERY_STATE"
+	],
+	"quotas": [
+		{"quota" : "BATTERY_DATA", "limit" : 720}
+	],
+	"measurement_length": 43200
+}
