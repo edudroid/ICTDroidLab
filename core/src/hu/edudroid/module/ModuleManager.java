@@ -6,7 +6,6 @@ import hu.edudroid.ict.ModuleStatsListener;
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.interfaces.Logger;
 import hu.edudroid.interfaces.Module;
-import hu.edudroid.interfaces.ModuleDescriptor;
 import hu.edudroid.interfaces.PluginCollection;
 import hu.edudroid.interfaces.Preferences;
 import hu.edudroid.interfaces.TimeServiceInterface;
@@ -57,14 +56,14 @@ public class ModuleManager implements ModuleStatsListener{
 
 	public boolean addModule(ModuleDescriptor moduleDescriptor, PluginCollection pluginCollection) {
 		Log.e(TAG, "Adding module");
-		if (moduleWrappers.containsKey(moduleDescriptor.getClassName())) {
-			Log.w(TAG, "Module " + moduleDescriptor.getClassName() + " already loaded.");
+		if (moduleWrappers.containsKey(moduleDescriptor.className)) {
+			Log.w(TAG, "Module " + moduleDescriptor.className + " already loaded.");
 			return false;
 		}
 		try {
 			File jarFolder = CoreService.getJarFolder(coreService);
-			String dexedJavaFile = new File(jarFolder, moduleDescriptor.getJarFile()).getAbsolutePath();
-			String className = moduleDescriptor.getClassName();
+			String dexedJavaFile = new File(jarFolder, moduleDescriptor.jarFile).getAbsolutePath();
+			String className = moduleDescriptor.className;
 			Log.i(TAG, "Loading module " + className + " from file " + dexedJavaFile);
 			ModuleWrapper moduleWrapper = null; 
 			File dexOptimizedFolder = new File(coreService.getFilesDir(), CoreService.TEMP_DIR);
@@ -102,12 +101,12 @@ public class ModuleManager implements ModuleStatsListener{
 				Log.e(TAG, "Module couldn't be loaded.");
 				return false;
 			}
-			moduleWrappers.put(moduleDescriptor.getClassName(), moduleWrapper);
-			this.descriptors.put(moduleDescriptor.getClassName(), moduleDescriptor);
+			moduleWrappers.put(moduleDescriptor.className, moduleWrapper);
+			this.descriptors.put(moduleDescriptor.className, moduleDescriptor);
 			try {
 				moduleWrapper.init();
 			} catch (Exception e){
-				Log.e(TAG, "Error initializing module " + moduleDescriptor.getModuleName() + " : " + e.getMessage());
+				Log.e(TAG, "Error initializing module " + moduleDescriptor.moduleName + " : " + e.getMessage());
 				e.printStackTrace();
 			}
 			for (ModuleSetListener listener : moduleSetListeners) {

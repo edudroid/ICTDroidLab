@@ -6,9 +6,9 @@ import hu.edudroid.ict.plugins.PluginIntentReceiver;
 import hu.edudroid.ict.utils.HttpUtils;
 import hu.edudroid.ict.utils.ServerUtilities;
 import hu.edudroid.interfaces.Constants;
-import hu.edudroid.interfaces.ModuleDescriptor;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginListener;
+import hu.edudroid.module.ModuleDescriptor;
 import hu.edudroid.module.ModuleLoader;
 import hu.edudroid.module.ModuleManager;
 

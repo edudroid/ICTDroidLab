@@ -3,8 +3,7 @@
 	"author": "Lantha Balázs",
 	"description": "This measurement will help us better understand how users charge their phones. We will be monitoring the battery level of your device for 30 days, each 2 minutes. The data will be used for scientific purposes, only. Thank you for your help!",
 	"website":"http://batteryresearch.tmit.bme.hu",
-	"jar_file" : "BatteryModule.jar",
-	"class_name" : "hu.edudroid.ict.battery.BatteryModul",
+	"measurement_length": 43200,
 	"used_plugins": [
 		"BatterPlugin"
 	],
@@ -16,5 +15,7 @@
 	"quotas": [
 		{"quota" : "BATTERY_DATA", "limit" : 720}
 	],
-	"measurement_length": 43200
+	"jar_file" : "BatteryModule.jar",
+	"class_name" : "hu.edudroid.ict.battery.BatteryModul",
+	"instance_id" : "1",
 }

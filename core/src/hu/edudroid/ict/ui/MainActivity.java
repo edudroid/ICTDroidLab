@@ -2,8 +2,8 @@ package hu.edudroid.ict.ui;
 
 import hu.edudroid.ict.ModuleSetListener;
 import hu.edudroid.ict.R;
-import hu.edudroid.interfaces.ModuleDescriptor;
 import hu.edudroid.interfaces.Plugin;
+import hu.edudroid.module.ModuleDescriptor;
 import hu.edudroid.module.ModuleLoader;
 
 import java.util.ArrayList;
@@ -75,7 +75,6 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 			} else {
 				showPlugins.setText(R.string.noPlugins);
 			}
-			modules.addAll(ModuleUtils.processModules(service.getLoadedModules(), ModuleLoader.getAvailableModuls(this)));
 			showModules.setText(getString(R.string.showModules, modules.size()));
 		} else {
 			showPlugins.setText(R.string.noPlugins);
@@ -108,13 +107,13 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 
 	@Override
 	public void moduleAdded(
-			hu.edudroid.interfaces.ModuleDescriptor moduleDescriptor) {
+			ModuleDescriptor moduleDescriptor) {
 		refreshUI();
 	}
 
 	@Override
 	public void moduleRemoved(
-			hu.edudroid.interfaces.ModuleDescriptor moduleDescriptor) {
+			ModuleDescriptor moduleDescriptor) {
 		refreshUI();
 	}
 }

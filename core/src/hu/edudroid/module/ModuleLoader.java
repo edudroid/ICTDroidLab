@@ -2,7 +2,6 @@ package hu.edudroid.module;
 
 import hu.edudroid.ict.CoreService;
 import hu.edudroid.ict.FileUtils;
-import hu.edudroid.interfaces.ModuleDescriptor;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -27,9 +26,6 @@ import android.util.Log;
  *
  */
 public class ModuleLoader {
-	private static final String JAR_FILE_KEY = "jar_file";
-	private static final String CLASS_NAME_KEY = "class_name";
-	private static final String MODULE_NAME_KEY = "module_name";
 	private static final String TAG = "ModuleLoader";
 	private static final String DESCRIPTOR_ASSET_FOLDER = "descriptors";
 	private static final String JAR_ASSET_FOLDER = "jars";
@@ -46,11 +42,7 @@ public class ModuleLoader {
 		String className = null;
 		try {
 			String fileContent = FileUtils.readFile(descriptorPath);
-			json = new JSONObject(fileContent);
-			jarFile = json.getString(JAR_FILE_KEY);
-			className = json.getString(CLASS_NAME_KEY);
-			moduleName = json.getString(MODULE_NAME_KEY);
-			return new ModuleDescriptor(moduleName, className, jarFile);
+			return new ModuleDescriptor(fileContent);
 		} catch (JSONException e) {
 			Log.e(TAG, "Couldn't load parameters from descriptor " + descriptorPath);
 			e.printStackTrace();

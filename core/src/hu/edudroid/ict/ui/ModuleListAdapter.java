@@ -3,6 +3,7 @@ package hu.edudroid.ict.ui;
 import hu.edudroid.ict.CoreService;
 import hu.edudroid.ict.ModuleStatsListener;
 import hu.edudroid.ict.R;
+import hu.edudroid.module.ModuleDescriptor;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -76,30 +77,28 @@ public class ModuleListAdapter implements ListAdapter {
 		TextView lastRunLabel = (TextView)(convertView.findViewById(R.id.listItemModuleLastRunLabel));
 		TextView totalRunsLabel = (TextView)(convertView.findViewById(R.id.listItemModuleNumberOfRunsLabel));
 		
-		nameLabel.setText(module.getModuleName());
-		if (module.isLoaded()) {
-			stateLabel.setVisibility(View.VISIBLE);
-			if (coreService != null) {
-				lastRunLabel.setVisibility(View.VISIBLE);
-				totalRunsLabel.setVisibility(View.VISIBLE);
-				Map<String, String> values = coreService.getModuleStats(module.getClassName());
-				String numberString = "N/A";
-				try {
-					numberString = "" + Integer.parseInt(values.get(ModuleStatsListener.STAT_KEY_TIMERS_FIRED));
-				} catch (Exception e) {
-					Log.e(TAG, "Error rendering module list item " + e, e);
-					e.printStackTrace();
-				}
-				totalRunsLabel.setText(numberString);
-				String dateString = "N/A";
-				try {
-					dateString = dateFormatter.format(new Date(Long.parseLong(values.get(ModuleStatsListener.STAT_KEY_LAST_TIMER_EVENT))));
-				} catch (Exception e) {
-					Log.e(TAG, "Error rendering module list item " + e, e);
-					e.printStackTrace();
-				}
-				lastRunLabel.setText(dateString);
+		nameLabel.setText(module.moduleName);
+		stateLabel.setVisibility(View.VISIBLE);
+		if (coreService != null) {
+			lastRunLabel.setVisibility(View.VISIBLE);
+			totalRunsLabel.setVisibility(View.VISIBLE);
+			Map<String, String> values = coreService.getModuleStats(module.className);
+			String numberString = "N/A";
+			try {
+				numberString = "" + Integer.parseInt(values.get(ModuleStatsListener.STAT_KEY_TIMERS_FIRED));
+			} catch (Exception e) {
+				Log.e(TAG, "Error rendering module list item " + e, e);
+				e.printStackTrace();
 			}
+			totalRunsLabel.setText(numberString);
+			String dateString = "N/A";
+			try {
+				dateString = dateFormatter.format(new Date(Long.parseLong(values.get(ModuleStatsListener.STAT_KEY_LAST_TIMER_EVENT))));
+			} catch (Exception e) {
+				Log.e(TAG, "Error rendering module list item " + e, e);
+				e.printStackTrace();
+			}
+			lastRunLabel.setText(dateString);
 		} else {
 			stateLabel.setVisibility(View.GONE);
 			lastRunLabel.setVisibility(View.GONE);
