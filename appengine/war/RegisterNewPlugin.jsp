@@ -11,10 +11,10 @@
 
 <html>
     <head>
-        <title>Upload Module</title>
+        <title>Register Plugin</title>
     </head>
     <body>
-    <h2>Welcome <%= userService.getCurrentUser().getNickname() %>!</h2>
+    <h2>Register Plugin</h2>
     <table>
         <form action="/registerPlugin" method="post">
 		<tr>

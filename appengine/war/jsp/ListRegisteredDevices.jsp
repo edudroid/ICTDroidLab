@@ -26,11 +26,11 @@
 <html>
     <head>
         <title>Registered Devices</title>
-        
+        <link rel="stylesheet" type="text/css" href="http://ictdroidlab.appspot.com/tablestyle.css" media="screen" />
     </head>
     <body>
-    <h2>Registered Devices:</h2>
-    <table border="1">
+    <h2>Registered Devices</h2>
+    <table>
     	<tr>
     		<th>Imei</th><th>Sdk version</th><th>Cellular</th><th>Bluetooth</th><th>Wifi</th><th>Gps</th><th>Last update</th>
     	</tr>
@@ -48,5 +48,6 @@
 			    }
 			    %>
     </table>
+    </div>
     </body>
 </html>

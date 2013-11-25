@@ -28,21 +28,24 @@
 <html>
     <head>
         <title>Uploaded Logs</title>
-        
+        <link rel="stylesheet" type="text/css" href="http://ictdroidlab.appspot.com/tablestyle.css" media="screen" />
     </head>
     <body>
-    <h2>Uploaded logs:</h2>
-    <table border="1">
-    	
+    <h2>Uploaded Logs</h2>
+    <table>
+    	<th>IMEI</th><th>Date</th><th>-></th>
 			    <%
 			    for(Entity log : logs){
 			    	%>
 			    	<tr>
-			    	<td><a href='http://ictdroidlab.appspot.com/serveLog?blob-key=<%= log.getProperty("logFileBlobKey") %>'>IMEI: <%= log.getProperty("imei") %> - DATE: <%= log.getProperty("date") %></a></td>
+			    	<td><%= log.getProperty("imei") %></td>
+			    	<td><%= log.getProperty("date") %></td>
+			    	<td><a href='http://ictdroidlab.appspot.com/serveLog?blob-key=<%= log.getProperty("logFileBlobKey") %>'>Download</a></td>
 			    	</tr>
 			    	<%
 			    }
 			    %>
     </table>
+    </div>
     </body>
 </html>

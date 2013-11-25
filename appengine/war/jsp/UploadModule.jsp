@@ -12,9 +12,10 @@
 <html>
     <head>
         <title>Upload Module</title>
+        
     </head>
     <body>
-    <h2>Welcome <%= userService.getCurrentUser().getNickname() %>, please upload the module!</h2>
+    <h2>Upload Module</h2>
     <table>
         <form action="<%= blobstoreService.createUploadUrl("/uploadModule") %>" method="post" enctype="multipart/form-data">
 		<tr>
@@ -36,5 +37,6 @@
         </tr>
     	</form>
     </table>
+    <div class="CSSTableGenerator" >
     </body>
 </html>

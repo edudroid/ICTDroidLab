@@ -27,8 +27,8 @@
 
 <html>
     <head>
-        <title>Send GCM</title>
-        
+        <title>Module Selector</title>
+
 	        <script type="text/javascript"> 
 			
 			function moduleSelected(Index) {
@@ -42,8 +42,11 @@
         
     </head>
     <body>
+    <h2>Module Selector</h2>
     <table>
         <form action="/GCMBroadcast" method="post">
+		
+		<th>Module Name</th><th>IMEI</th>
 		<tr>
 			<td>
 				<select name="modules" onchange="moduleSelected(this.selectedIndex);">

@@ -1,0 +1,6 @@
+<!-- CSS goes in the document HEAD or added to your external stylesheet -->
+<style type="text/css">
+table { font-family: sans-serif; 1em; border-collapse: collapse; }
+td, th { padding: .3em; border: 1px #ccc solid; }
+th { background: #dedede; }
+</style>
