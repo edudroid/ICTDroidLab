@@ -3,6 +3,8 @@ package hu.edudroid.ictplugin;
 import hu.edudroid.interfaces.AsyncMethodException;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
+import hu.edudroid.interfaces.PluginEventListener;
+import hu.edudroid.interfaces.PluginResultListener;
 import hu.edudroid.interfaces.Quota;
 import hu.edudroid.interfaces.QuotaFactory;
 import java.io.ByteArrayInputStream;
@@ -17,11 +19,10 @@ import android.util.Log;
 
 public  abstract class PluginCommunicationInterface extends BroadcastReceiver implements Plugin {
 	
-	private Context context = null;
+	private static final String TAG = PluginCommunicationInterface.class.getName();
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		this.context = context;
 		
 		if (intent.getAction().equals(Constants.INTENT_ACTION_PLUGIN_QUOTAS)) {
 			Intent response = new Intent(Constants.INTENT_ACTION_QUOTA_DESCRIPTION);
@@ -67,37 +68,73 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver im
 				for (int i = 0; i < paramsCount; i++)
 					params[i] = ois.readObject();
 				try {
-					List<String> result = callMethodSync(callId, methodName, Arrays.asList(params));
-					reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, this.getName(), this.getVersionCode(), methodName, result, context);
+					List<String> result = callMethodSync(callId, methodName, Arrays.asList(params), context);
+					reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, methodName, result, context);
 				} 
 				catch (AsyncMethodException a){
-					Log.i("Async method call","handled");
+					Log.i(TAG,"This is an async method.");
 				}
 				catch (Exception e) {
 					List<String> result = new ArrayList<String>();
 					result.add(e.getMessage());
-					reportResult(callId, Constants.INTENT_EXTRA_VALUE_ERROR, this.getName(), this.getVersionCode(), methodName, result, context);
+					reportResult(callId, Constants.INTENT_EXTRA_VALUE_ERROR, methodName, result, context);
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				return;
 			}
 		}
-		this.context = null;
 	}
 	
-	protected Context getContext() {
-		return context;
-	}
-
-	public static void reportResult(long callId, String resultCode, String pluginName, String pluginVersion, String method, List<String> result, Context context) {
+	public void reportResult(long callId, String resultCode, String method, List<String> result, Context context) {
 				
 		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER);
 		intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, callId);
-		intent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, pluginName);
-		intent.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, pluginVersion);
+		intent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, getName());
+		intent.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, getVersionCode());
 		intent.putExtra(Constants.INTENT_EXTRA_METHOD_NAME, method);
 		intent.putStringArrayListExtra(Constants.INTENT_EXTRA_VALUE_RESULT, new ArrayList<String>(result));
 		context.sendBroadcast(intent);
-	}	
+	}
+
+	public void fireEvent(String eventName, List<String> result, Context context) {
+		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_EVENT);
+		intent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, getName());
+		intent.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, getVersionCode());
+		intent.putExtra(Constants.INTENT_EXTRA_KEY_EVENT_NAME, eventName);
+		intent.putStringArrayListExtra(Constants.INTENT_EXTRA_VALUE_RESULT, new ArrayList<String>(result));
+		context.sendBroadcast(intent);
+	}
+
+	@Override
+	public long callMethodAsync(String method, List<Object> parameters, PluginResultListener listener){
+		throw new UnsupportedOperationException("Can't call async method on plugin.");
+	}
+	
+	@Override
+	public long callMethodAsync(String method, List<Object> parameters, PluginResultListener listener, int quotaQuantity) {
+		throw new UnsupportedOperationException("Can't call async method on plugin.");
+	}
+
+	@Override
+	public void registerEventListener(String eventName, PluginEventListener listener) {
+		throw new UnsupportedOperationException("You have to register the listener on PluginAdapter...");
+	}
+	
+	@Override
+	public void unregisterEventListener(String eventName,
+			PluginEventListener listener) {
+		throw new UnsupportedOperationException("You have to register the listener on PluginAdapter.");
+		
+	}
+
+	@Override
+	public void unregisterEventListener(PluginEventListener listener) {
+		throw new UnsupportedOperationException("You have to unregister the listener on PluginAdapter.");
+	}
+
+	@Override
+	public void cancelCallsForListener(PluginResultListener listener) {
+		throw new UnsupportedOperationException("Can't cancel a call here.");
+	}
 }

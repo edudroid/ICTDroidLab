@@ -77,13 +77,13 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 	}
 	
 	@Override
-	public List<String> callMethodSync(long callId, String method, List<Object> parameters) throws AsyncMethodException{
+	public List<String> callMethodSync(long callId, String method, List<Object> parameters, Object context) throws AsyncMethodException{
 		return callMethodSync(callId, method, parameters, 0);
 	}
 	
 	@Override
-	public List<String> callMethodSync(long callId, String method, List<Object> parameters, int quotaQuantity) throws AsyncMethodException {
-		mWifiManager=(WifiManager)this.getContext().getSystemService(Context.WIFI_SERVICE);
+	public List<String> callMethodSync(long callId, String method, List<Object> parameters, int quotaQuantity, Object context) throws AsyncMethodException {
+		mWifiManager=(WifiManager)((Context)context).getSystemService(Context.WIFI_SERVICE);
 		mWifiInfo=mWifiManager.getConnectionInfo();
 		List<String> answer=new ArrayList<String>();
 		if(method.equals("getIpAddress")){
@@ -122,7 +122,7 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 				extras.put("periodicity", (String)parameters.get(1));
 				extras.put("count", (String)parameters.get(2));
 				
-				callingServiceMethod(callId, WiFiPluginScanningService.class, extras);
+				callingServiceMethod(callId, WiFiPluginScanningService.class, extras, (Context)context);
 			}
 			else{
 				Log.e("WiFiPlugin","Missing parameters for scanning!");
@@ -135,7 +135,7 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 				extras.put("ip", (String)parameters.get(0));
 				extras.put("count", (String)parameters.get(1));
 				
-				callingServiceMethod(callId, WiFiPluginPingService.class, extras);
+				callingServiceMethod(callId, WiFiPluginPingService.class, extras, (Context)context);
 			}
 			else{
 				Log.e("WiFiPlugin","Missing IP and count parameters for ping!");
@@ -147,7 +147,7 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 				
 				extras.put("ip", (String)parameters.get(0));
 				
-				callingServiceMethod(callId, WiFiPluginTracerouteService.class, extras);
+				callingServiceMethod(callId, WiFiPluginTracerouteService.class, extras, (Context)context);
 			}
 			else{
 				Log.e("WiFiPlugin","Missing IP parameter for traceroute!");
@@ -158,14 +158,14 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 		return answer;				
 	}
 	
-	public void callingServiceMethod(long callId, Class<?> c, Map<String, String> extras) throws AsyncMethodException{
+	public void callingServiceMethod(long callId, Class<?> c, Map<String, String> extras, Context context) throws AsyncMethodException{
 		
-		Intent serviceIntent=new Intent(getContext(), c);
+		Intent serviceIntent=new Intent(context, c);
 		serviceIntent.putExtra(Constants.INTENT_EXTRA_CALL_ID, String.valueOf(callId));
 		for (Map.Entry<String, String> entry : extras.entrySet()) {
 			serviceIntent.putExtra(entry.getKey(), entry.getValue());		    
 		}
-		getContext().startService(serviceIntent);
+		context.startService(serviceIntent);
 		throw new AsyncMethodException();
 	}
 	

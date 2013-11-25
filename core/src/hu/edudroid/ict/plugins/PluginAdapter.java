@@ -173,12 +173,12 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	}
 	
 	@Override
-	public List<String> callMethodSync(long callId, String method, List<Object> parameters) throws AsyncMethodException{
-		return callMethodSync(callId, method, parameters, 0);
+	public List<String> callMethodSync(long callId, String method, List<Object> parameters, Object context) throws AsyncMethodException{
+		throw new UnsupportedOperationException("Can't call sync methods on stub.");
 	}
 
 	@Override
-	public List<String> callMethodSync(long callId, String method, List<Object> parameters, int quotaQuantity) {
+	public List<String> callMethodSync(long callId, String method, List<Object> parameters, int quotaQuantity, Object context) {
 		throw new UnsupportedOperationException("Can't call sync methods on stub.");
 	}
 
