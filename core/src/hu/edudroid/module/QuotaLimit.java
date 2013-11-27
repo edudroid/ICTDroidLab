@@ -16,5 +16,10 @@ public class QuotaLimit {
 		this.quota = quota;
 		this.limit = limit;
 	}
+	
+	@Override
+	public String toString() {
+		return quota + " [" + limit + "]";
+	}
 
 }

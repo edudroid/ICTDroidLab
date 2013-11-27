@@ -84,19 +84,23 @@ public class ModuleListAdapter implements ListAdapter {
 			totalRunsLabel.setVisibility(View.VISIBLE);
 			Map<String, String> values = coreService.getModuleStats(module.className);
 			String numberString = "N/A";
-			try {
-				numberString = "" + Integer.parseInt(values.get(ModuleStatsListener.STAT_KEY_TIMERS_FIRED));
-			} catch (Exception e) {
-				Log.e(TAG, "Error rendering module list item " + e, e);
-				e.printStackTrace();
+			if (values != null) {
+				try {
+					numberString = "" + Integer.parseInt(values.get(ModuleStatsListener.STAT_KEY_TIMERS_FIRED));
+				} catch (Exception e) {
+					Log.e(TAG, "Error rendering module list item " + e, e);
+					e.printStackTrace();
+				}
 			}
 			totalRunsLabel.setText(numberString);
 			String dateString = "N/A";
-			try {
-				dateString = dateFormatter.format(new Date(Long.parseLong(values.get(ModuleStatsListener.STAT_KEY_LAST_TIMER_EVENT))));
-			} catch (Exception e) {
-				Log.e(TAG, "Error rendering module list item " + e, e);
-				e.printStackTrace();
+			if (values != null) {
+				try {
+					dateString = dateFormatter.format(new Date(Long.parseLong(values.get(ModuleStatsListener.STAT_KEY_LAST_TIMER_EVENT))));
+				} catch (Exception e) {
+					Log.e(TAG, "Error rendering module list item " + e, e);
+					e.printStackTrace();
+				}
 			}
 			lastRunLabel.setText(dateString);
 		} else {

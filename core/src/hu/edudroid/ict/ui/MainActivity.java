@@ -6,7 +6,6 @@ import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.module.ModuleDescriptor;
 import hu.edudroid.module.ModuleLoader;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ComponentName;
@@ -67,7 +66,6 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 	}
 
 	private void refreshUI() {
-		List<ModuleDescriptor> modules = new ArrayList<ModuleDescriptor>();
 		if (service != null) {
 			List<Plugin> plugins = service.getPlugins();
 			if (plugins!=null && plugins.size() > 0) {
@@ -75,9 +73,15 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 			} else {
 				showPlugins.setText(R.string.noPlugins);
 			}
-			showModules.setText(getString(R.string.showModules, modules.size()));
+			List<ModuleDescriptor> modules = ModuleLoader.getAllModules(this);
+			if (modules.size() > 0) {
+				showModules.setText(getString(R.string.showModules, modules.size()));
+			} else {
+				showModules.setText(R.string.noModules);
+			}
 		} else {
 			showPlugins.setText(R.string.noPlugins);
+			showModules.setText(R.string.noModules);
 		}
 	}
 
@@ -88,7 +92,7 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 				Toast.makeText(this, "Under development...", Toast.LENGTH_LONG).show();
 				break;
 			case R.id.manageLocalStorageButton:
-				Toast.makeText(this, "Under development...", Toast.LENGTH_LONG).show();
+				startActivity(new Intent(this, DataStoreDetailsActivity.class));
 				break;
 			case R.id.showPlugins:
 				startActivity(new Intent(this, PluginListActivity.class));

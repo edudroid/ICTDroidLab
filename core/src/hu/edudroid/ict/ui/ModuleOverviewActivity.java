@@ -5,7 +5,6 @@ import hu.edudroid.ict.ModuleStatsListener;
 import hu.edudroid.ict.R;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.module.ModuleDescriptor;
-import hu.edudroid.module.ModuleLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,9 +59,8 @@ public class ModuleOverviewActivity extends ActivityBase implements OnItemClickL
 	}
 	
 	private void refreshModuleList() {
-		TreeSet<ModuleDescriptor> orderer = new TreeSet<ModuleDescriptor>(service.getLoadedModules());
+		TreeSet<ModuleDescriptor> orderer = new TreeSet<ModuleDescriptor>(service.getAllModules());
 		final List<ModuleDescriptor> orderedModules = new ArrayList<ModuleDescriptor>(orderer);
-		Log.e(TAG, "Loaded modules " + service.getLoadedModules());
 		Log.i(TAG, "Found " + orderedModules.size() + " module(s).");
 		runOnUiThread(new Runnable() {
 			@Override
@@ -88,7 +86,7 @@ public class ModuleOverviewActivity extends ActivityBase implements OnItemClickL
 	}
 
 	@Override
-	public void moduleSTatsChanged(String moduleClassName,
+	public void moduleStatsChanged(String moduleId,
 			Map<String, String> stats) {
 		Log.e(TAG, "Stats changed");
 		refreshModuleList();

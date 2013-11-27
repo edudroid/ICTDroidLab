@@ -6,15 +6,13 @@ import hu.edudroid.ict.FileUtils;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -35,28 +33,12 @@ public class ModuleLoader {
 	 * @param descriptorPath Path to the JSON descriptor file.
 	 * @return The descriptor of the parsed module, or null if parsing was unsuccessful.
 	 */
-	public static ModuleDescriptor parseModuleDescriptor(File descriptorPath) {
-		JSONObject json = null;
-		String moduleName = null;
-		String jarFile = null;
-		String className = null;
+	public static ModuleDescriptor parseModuleDescriptor(File descriptorPath, Context context) {
 		try {
 			String fileContent = FileUtils.readFile(descriptorPath);
-			return new ModuleDescriptor(fileContent);
-		} catch (JSONException e) {
-			Log.e(TAG, "Couldn't load parameters from descriptor " + descriptorPath);
-			e.printStackTrace();
-			return null;
-		} catch (SecurityException e) {
-			Log.e(TAG, "Couldn't load " + className + " from " + jarFile + " : " + e.getMessage());
-			e.printStackTrace();
-			return null;
-		} catch (IllegalArgumentException e) {
-			Log.e(TAG, "Couldn't load " + className + " from " + jarFile + " : " + e.getMessage());
-			e.printStackTrace();
-			return null;
+			return new ModuleDescriptor(fileContent, context);
 		} catch (Exception e) {
-			Log.e(TAG, "Couldn't load " + className + " from " + jarFile + " : " + e.getMessage());
+			Log.e(TAG, "Couldn't load parameters from descriptor " + descriptorPath + " : " + e, e);
 			e.printStackTrace();
 			return null;
 		}
@@ -122,27 +104,30 @@ public class ModuleLoader {
 			outStream.close();
 			inStream.close();
 			
-			Log.i(TAG,"Module has been downloaded succesfully from: "+fileUrl);
+			Log.i(TAG,"Module has been downloaded succesfully from: " + fileUrl);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 	}
 	
-	/**
-	 * Returns modules available in internal storage
-	 * @param context
-	 * @return
-	 */
-	public static List<ModuleDescriptor> getAvailableModuls(Context context) {
-		ArrayList<ModuleDescriptor> descriptors = new ArrayList<ModuleDescriptor>();
+	public static List<ModuleDescriptor> getAllModules(Context context) {
+		List<ModuleDescriptor> ret = new ArrayList<ModuleDescriptor>();
 		File descriptorFolder = CoreService.getDescriptorFolder(context);
-		String[] descriptorFileNames = descriptorFolder.list();
-		for (String descriptorFileName : descriptorFileNames) {
-			ModuleDescriptor descriptor = ModuleLoader.parseModuleDescriptor(new File(descriptorFolder, descriptorFileName));
-			if (descriptor != null) {
-				descriptors.add(descriptor);
+		String[] descriptorFiles = descriptorFolder.list(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String filename) {
+				return filename.endsWith("desc");
+			}
+		});
+		Log.i(TAG, "Loading " + descriptorFiles.length + " module(s).");
+		if(descriptorFiles!=null){
+			for (String fileName : descriptorFiles) {
+				ModuleDescriptor descriptor = ModuleLoader.parseModuleDescriptor(new File(descriptorFolder,fileName), context);
+				if (descriptor != null) {
+					ret.add(descriptor);
+				}
 			}
 		}
-		return descriptors;
+		return ret;
 	}
 }

@@ -19,6 +19,12 @@
         android:layout_height="wrap_content"
         android:text="@string/moduleAuthorString" />
 
+	<TextView
+        android:id="@+id/moduleId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/moduleIdString" />
+    
     <TextView
         android:id="@+id/moduleDescription"
         android:layout_width="wrap_content"
@@ -37,7 +43,13 @@
         android:layout_height="wrap_content"
         android:text="@string/requiredPlugins"
         android:textAppearance="?android:attr/textAppearanceMedium" />
-
+    
+    <TextView
+        android:id="@+id/modulePluginList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholderPlugins" />
+    
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,9 +57,29 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
+        android:id="@+id/modulePermissions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholderPermissions" />
+    
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/requiredQuotas"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <TextView
+        android:id="@+id/moduleQuotas"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/placeholderQuotas" />
+
+    <Button
+        android:id="@+id/moduleDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="@string/deleteModule" />
     
 </LinearLayout>

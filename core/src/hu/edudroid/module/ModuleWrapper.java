@@ -36,17 +36,17 @@ public class ModuleWrapper extends Module implements Preferences, Logger, Plugin
 	private final Module module;
 	private HashSet<ModuleStatsListener> moduleStatsListeners = new HashSet<ModuleStatsListener>();
 	private SharedPreferences statPrefs;
-	private String className;
+	private ModuleDescriptor descriptor;
 	
-	public ModuleWrapper(String className, Constructor<Module> constructor, Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeService, Context context) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
+	public ModuleWrapper(ModuleDescriptor descriptor, Constructor<Module> constructor, Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeService, Context context) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
 		super(prefs, logger, pluginCollection, timeService);
 		Log.i(TAG,"Calling module constructor");
 		module = constructor.newInstance(this,
 				this,
 				this,
 				this);
-		statPrefs = context.getSharedPreferences(SHARED_PREF_PREFIX + className, Context.MODE_PRIVATE);
-		this.className = className;
+		statPrefs = context.getSharedPreferences(SHARED_PREF_PREFIX + descriptor.moduleId, Context.MODE_PRIVATE);
+		this.descriptor = descriptor;
 	}
 
 	public Map<String, String> getStats() {
@@ -63,7 +63,7 @@ public class ModuleWrapper extends Module implements Preferences, Logger, Plugin
 		Log.e(TAG, "Stats changed");
 		Map<String, String> unmodifiableStats = Collections.unmodifiableMap(getStats());
 		for (ModuleStatsListener listener : moduleStatsListeners) {
-			listener.moduleSTatsChanged(className, unmodifiableStats);
+			listener.moduleStatsChanged(descriptor.moduleId, unmodifiableStats);
 		}
 	}
 
@@ -205,6 +205,10 @@ public class ModuleWrapper extends Module implements Preferences, Logger, Plugin
 
 	public void unregisterModuleStatsListenerListener(ModuleStatsListener listener) {
 		moduleStatsListeners.remove(listener);
+	}
+
+	public ModuleDescriptor getDescriptor() {
+		return descriptor;
 	}
 
 

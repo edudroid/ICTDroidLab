@@ -2,6 +2,7 @@ package hu.edudroid.ict;
 
 import hu.edudroid.ict.utils.HttpUtils;
 import hu.edudroid.ict.utils.ServerUtilities;
+import hu.edudroid.module.FileManager;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -22,18 +23,15 @@ import android.util.Log;
 
 public class UploadService extends IntentService { 
 
-	private static final String TAG = "UploadService"; 
+	private static final String TAG = UploadService.class.getName(); 
 	private static final String TMP_FOLDER = "capture_compressed_tmp";
-	public static final String INPROGRESS_SUFFIX = "inprogress";
 	private static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss_SSS", Locale.UK);
 	
-	public static final File OUTPUT_FOLDER = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/ictdroidlab_log");
-
 	private static final FilenameFilter progressFilter = new FilenameFilter() {
 		
 		@Override
 		public boolean accept(File dir, String filename) {
-			return !filename.endsWith(INPROGRESS_SUFFIX);
+			return !filename.endsWith(FileManager.INPROGRESS_SUFFIX);
 		}
 	};
 
@@ -42,15 +40,16 @@ public class UploadService extends IntentService {
 	}
 	
 	public static int getFileCount(){
-		if (!OUTPUT_FOLDER.exists()) {
+		File baseFolder = FileManager.BASE_FOLDER;
+		if (!baseFolder.exists()) {
 			return -1;
 		}
-		File[] files = OUTPUT_FOLDER.listFiles(progressFilter);
+		File[] files = baseFolder.listFiles(progressFilter);
 		return files.length;
 	}
 	
 	public static void upload(Context context, String imei) {
-		
+		File baseFolder = FileManager.BASE_FOLDER;
 		try {
 			synchronized (context) {
 				boolean isSDPresent = android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
@@ -59,17 +58,17 @@ public class UploadService extends IntentService {
 				}
 				
 				try {
-					if (!OUTPUT_FOLDER.exists()) {
-						Log.e(TAG, "Path " + OUTPUT_FOLDER.getAbsolutePath() + " does not exist.");
+					if (!baseFolder.exists()) {
+						Log.e(TAG, "Path " + baseFolder.getAbsolutePath() + " does not exist.");
 						return;
-					}else if (!OUTPUT_FOLDER.isDirectory()) {
-						Log.e(TAG, "Path " + OUTPUT_FOLDER.getAbsolutePath() + " is not a directory.");
+					}else if (!baseFolder.isDirectory()) {
+						Log.e(TAG, "Path " + baseFolder.getAbsolutePath() + " is not a directory.");
 						return;
-					} else if (OUTPUT_FOLDER.listFiles().length == 0) {
-						Log.e(TAG, "Folder " + OUTPUT_FOLDER.getAbsolutePath() + " is empty.");
+					} else if (baseFolder.listFiles().length == 0) {
+						Log.e(TAG, "Folder " + baseFolder.getAbsolutePath() + " is empty.");
 						return;
 					} else {
-						Log.d(TAG, OUTPUT_FOLDER.listFiles().length + " files found.");
+						Log.d(TAG, baseFolder.listFiles().length + " files found.");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -84,7 +83,7 @@ public class UploadService extends IntentService {
 				String deviceName = "ICTDroidLab";
 				String fileName = deviceName + "_" +  formatter.format(new Date(System.currentTimeMillis())) + ".zip";
 				File zip = new File(tmpFolder, fileName);
-				File[] files = OUTPUT_FOLDER.listFiles(progressFilter);
+				File[] files = baseFolder.listFiles(progressFilter);
 				try {
 					if ((files!=null) && (files.length > 0)) {
 						ZipExporter.compress(files, zip);

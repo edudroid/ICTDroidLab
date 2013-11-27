@@ -1,6 +1,5 @@
 package hu.edudroid.ictpluginwifi;
 
-import hu.edudroid.ictplugin.PluginCommunicationInterface;
 import hu.edudroid.interfaces.Constants;
 
 import java.io.BufferedReader;
