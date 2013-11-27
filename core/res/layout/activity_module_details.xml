@@ -24,7 +24,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/moduleIdString" />
-    
+
+	<TextView
+        android:id="@+id/moduleState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholderModuleState" />
+	
+	<TextView
+        android:id="@+id/moduleStartTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/moduleStartedString"/>
+	
+	<TextView
+        android:id="@+id/moduleEndTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/moduleEndedString"/>
+			
     <TextView
         android:id="@+id/moduleDescription"
         android:layout_width="wrap_content"
@@ -75,8 +93,14 @@
         android:layout_weight="1"
         android:text="@string/placeholderQuotas" />
 
+	<Button
+        android:id="@+id/moduleStartButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="@string/startModule" />
     <Button
-        android:id="@+id/moduleDelete"
+        android:id="@+id/moduleDeleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"

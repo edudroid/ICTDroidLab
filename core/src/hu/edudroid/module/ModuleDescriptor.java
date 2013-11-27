@@ -47,7 +47,7 @@ public class ModuleDescriptor implements Comparable<ModuleDescriptor>{
 	public final String jarFile;
 	
 	private ModuleState moduleState;
-	private long installDate;
+	private long installDate = -1;
 	
 	public ModuleDescriptor(String jsonString, Context context) throws JSONException {
 		JSONObject json = new JSONObject(jsonString);
@@ -135,6 +135,10 @@ public class ModuleDescriptor implements Comparable<ModuleDescriptor>{
 		editor.commit();
 	}
 	
+	public long getInstallDate() {
+		return installDate;
+	}
+	
 	public int compareTo(ModuleDescriptor another) {
 		if (moduleName == null) {
 			return -1;
@@ -183,5 +187,12 @@ public class ModuleDescriptor implements Comparable<ModuleDescriptor>{
 			}
 		}
 		return moduleState;
+	}
+
+	public long getEndDate() {
+		if (installDate != -1) {
+			return installDate + 1000l * measurementLength;
+		}
+		return -1;
 	}
 }

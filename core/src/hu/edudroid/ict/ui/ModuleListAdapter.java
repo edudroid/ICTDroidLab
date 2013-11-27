@@ -82,7 +82,7 @@ public class ModuleListAdapter implements ListAdapter {
 		if (coreService != null) {
 			lastRunLabel.setVisibility(View.VISIBLE);
 			totalRunsLabel.setVisibility(View.VISIBLE);
-			Map<String, String> values = coreService.getModuleStats(moduleDescriptor.className);
+			Map<String, String> values = coreService.getModuleStats(moduleDescriptor.moduleId);
 			String numberString = "N/A";
 			if (values != null) {
 				try {

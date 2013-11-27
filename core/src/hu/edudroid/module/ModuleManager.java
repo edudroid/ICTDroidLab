@@ -76,6 +76,7 @@ public class ModuleManager implements ModuleStatsListener{
 			File jarFolder = CoreService.getJarFolder(coreService);
 			String dexedJavaFile = new File(jarFolder, moduleDescriptor.jarFile).getAbsolutePath();
 			String className = moduleDescriptor.className;
+			String moduleId = moduleDescriptor.moduleId;
 			Log.i(TAG, "Loading module " + className + " from file " + dexedJavaFile);
 			ModuleWrapper moduleWrapper = null; 
 			File dexOptimizedFolder = new File(coreService.getFilesDir(), CoreService.TEMP_DIR);
@@ -91,9 +92,9 @@ public class ModuleManager implements ModuleStatsListener{
 				throw new NoSuchMethodException("Couldn't find proper consturctor.");
 			}
 			TimeServiceInterface timeService = new ModuleTimeService();
-			timers.put(className, timeService);
-			moduleWrapper = new ModuleWrapper(moduleDescriptor, constructor, new SharedPrefs(coreService, className),
-					new AndroidLogger(className),
+			timers.put(moduleId, timeService);
+			moduleWrapper = new ModuleWrapper(moduleDescriptor, constructor, new SharedPrefs(coreService, moduleId),
+					new AndroidLogger(moduleId),
 					pluginCollection,
 					timeService, coreService);
 			moduleWrapper.registerModuleStatsListener(this);
