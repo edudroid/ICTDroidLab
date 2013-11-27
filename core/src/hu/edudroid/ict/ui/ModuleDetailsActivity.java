@@ -24,12 +24,14 @@ public class ModuleDetailsActivity extends ActivityBase implements OnClickListen
 	private TextView moduleQuotasText;
 	private Button deleteButton;
 	private ModuleDescriptor moduleDescriptor;
+	private TextView moduleIdText;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_module_details);
 		moduleNameText = (TextView) findViewById(R.id.moduleName);
+		moduleIdText = (TextView) findViewById(R.id.moduleId);
 		moduleAuthorText = (TextView) findViewById(R.id.moduleAuthor);
 		moduleDescriptionText = (TextView) findViewById(R.id.moduleDescription);
 		moduleWebText = (TextView) findViewById(R.id.moduleWebsite);
@@ -53,6 +55,7 @@ public class ModuleDetailsActivity extends ActivityBase implements OnClickListen
 		Intent intent = getIntent();
 		String moduleId = intent.getStringExtra(INTENT_EXTRA_MODULE_ID);
 		moduleDescriptor = service.getModule(moduleId);
+		moduleIdText.setText(getString(R.string.moduleIdString, moduleId));
 		deleteButton.setEnabled(true);
 		moduleNameText.setText(moduleDescriptor.moduleName);
 		moduleAuthorText.setText(moduleDescriptor.author);

@@ -70,4 +70,9 @@
     <string name="deleteLogs">Delete logs</string>
     <string name="placeholderDataVolume">Calculating used space...</string>
     <string name="dataStoreTotalLogSize">Total size of log files: %1$.2f MB</string>
+    
+    <string name="moduleStateAvailable">Available</string>
+    <string name="moduleStateInstalled">Installed</string>
+    <string name="moduleStateTerminated">Terminated</string>
+    <string name="moduleStateBanned">Banned</string>
 </resources>

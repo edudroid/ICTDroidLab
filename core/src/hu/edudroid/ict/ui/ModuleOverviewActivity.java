@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.TreeSet;
 
 import android.content.ComponentName;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -21,7 +22,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 public class ModuleOverviewActivity extends ActivityBase implements OnItemClickListener, ModuleSetListener, ModuleStatsListener {
-	private static final String TAG = "ModuleOverviewActivity";
+	private static final String TAG = ModuleOverviewActivity.class.getName();
 	private ListView moduleList;
 	private ModuleListAdapter moduleListAdapter;
 
@@ -45,8 +46,12 @@ public class ModuleOverviewActivity extends ActivityBase implements OnItemClickL
 	}
 	
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		Log.e("ModuleOverview","OnClicked");
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		ModuleDescriptor descriptor = (ModuleDescriptor)(moduleListAdapter.getItem(position));
+		String moduleId = descriptor.moduleId;
+		Intent intent = new Intent(this, ModuleDetailsActivity.class);
+		intent.putExtra(ModuleDetailsActivity.INTENT_EXTRA_MODULE_ID, moduleId);
+		startActivity(intent);
 	}
 
 	@Override

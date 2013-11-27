@@ -1,13 +1,16 @@
 package hu.edudroid.module;
 
-public enum ModuleState {
-	AVAILABLE(0, "AVAILABLE"), INSTALLED(1, "INSTALLED"), TERMINATED(2, "TERMINATED"), BANNED(3, "BANNED");
-	private int stateValue;
-	private String stringValue;
+import android.content.Context;
+import hu.edudroid.ict.R;
 
-	private ModuleState(int stateValue, String stringValue) {
+public enum ModuleState {
+	AVAILABLE(0, R.string.moduleStateAvailable), INSTALLED(1, R.string.moduleStateInstalled), TERMINATED(2, R.string.moduleStateTerminated), BANNED(3, R.string.moduleStateBanned);
+	private int stateValue;
+	private int stateString;
+
+	private ModuleState(int stateValue, int stateString) {
 		this.stateValue = stateValue;
-		this.stringValue = stringValue;
+		this.stateString = stateString;
 	}
 	
 	public static ModuleState getModuleState(int stateValue){
@@ -21,7 +24,11 @@ public enum ModuleState {
 	
 	@Override
 	public String toString() {
-		return stringValue;
+		return "State_" + stateString;
+	}
+
+	public String toString(Context context) {
+		return context.getString(stateString);
 	}
 
 	public int getValue() {

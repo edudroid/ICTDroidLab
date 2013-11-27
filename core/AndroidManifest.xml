@@ -89,6 +89,7 @@
             android:name="hu.edudroid.ict.CoreService"
             android:label="@string/core_service_name" />
         <activity android:name=".ui.DataStoreDetailsActivity"></activity>
+        <activity android:name=".ui.ModuleDetailsActivity"></activity>
         
         
     </application>

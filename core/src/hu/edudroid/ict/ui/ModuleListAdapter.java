@@ -23,20 +23,20 @@ import android.widget.TextView;
 public class ModuleListAdapter implements ListAdapter {
 	
 	private static final String TAG = ModuleListAdapter.class.getName();
-	private List<ModuleDescriptor> modules;
+	private List<ModuleDescriptor> moduleDescriptors;
 	private List<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 	private LayoutInflater inflater;
 	private CoreService coreService;
 	private SimpleDateFormat dateFormatter = new SimpleDateFormat("MM'-'dd HH':'mm':'ss", Locale.getDefault());
 
 	public ModuleListAdapter(List<ModuleDescriptor> modules, LayoutInflater inflater, CoreService coreService) {
-		this.modules = modules;
+		this.moduleDescriptors = modules;
 		this.inflater = inflater;
 		this.coreService = coreService;
 	}
 	
 	public void setModules(List<ModuleDescriptor> modules){
-		this.modules = modules;
+		this.moduleDescriptors = modules;
 		notifyObservers();
 	}
 	
@@ -48,12 +48,12 @@ public class ModuleListAdapter implements ListAdapter {
 
 	@Override
 	public int getCount() {
-		return modules.size();
+		return moduleDescriptors.size();
 	}
 
 	@Override
-	public Object getItem(int arg0) {
-		return modules.get(arg0);
+	public Object getItem(int position) {
+		return moduleDescriptors.get(position);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class ModuleListAdapter implements ListAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		ModuleDescriptor module = modules.get(position);
+		ModuleDescriptor moduleDescriptor = moduleDescriptors.get(position);
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.listitem_module, null);
 		}
@@ -77,12 +77,12 @@ public class ModuleListAdapter implements ListAdapter {
 		TextView lastRunLabel = (TextView)(convertView.findViewById(R.id.listItemModuleLastRunLabel));
 		TextView totalRunsLabel = (TextView)(convertView.findViewById(R.id.listItemModuleNumberOfRunsLabel));
 		
-		nameLabel.setText(module.moduleName);
+		nameLabel.setText(moduleDescriptor.moduleName);
 		stateLabel.setVisibility(View.VISIBLE);
 		if (coreService != null) {
 			lastRunLabel.setVisibility(View.VISIBLE);
 			totalRunsLabel.setVisibility(View.VISIBLE);
-			Map<String, String> values = coreService.getModuleStats(module.className);
+			Map<String, String> values = coreService.getModuleStats(moduleDescriptor.className);
 			String numberString = "N/A";
 			if (values != null) {
 				try {
@@ -103,6 +103,7 @@ public class ModuleListAdapter implements ListAdapter {
 				}
 			}
 			lastRunLabel.setText(dateString);
+			stateLabel.setText(moduleDescriptor.getState(coreService).toString(coreService));
 		} else {
 			stateLabel.setVisibility(View.GONE);
 			lastRunLabel.setVisibility(View.GONE);
@@ -123,7 +124,7 @@ public class ModuleListAdapter implements ListAdapter {
 
 	@Override
 	public boolean isEmpty() {
-		return modules.isEmpty();
+		return moduleDescriptors.isEmpty();
 	}
 
 	@Override

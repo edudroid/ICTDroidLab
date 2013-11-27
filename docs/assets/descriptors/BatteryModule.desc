@@ -1,7 +1,7 @@
 {
 	"module_id":"1"
 	"module_name" : "TMIT BatteryExample",
-	"author": "Lantha Balázs",
+	"author": "Lajtha Balázs",
 	"description": "This measurement will help us better understand how users charge their phones. We will be monitoring the battery level of your device for 30 days, each 2 minutes. The data will be used for scientific purposes, only. Thank you for your help!",
 	"website":"http://batteryresearch.tmit.bme.hu",
 	"measurement_length": 43200,

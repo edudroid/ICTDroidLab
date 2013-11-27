@@ -182,7 +182,17 @@ public class ModuleManager implements ModuleStatsListener{
 	}
 
 	public ModuleDescriptor getModule(String moduleId) {
-		return moduleWrappers.get(moduleId).getDescriptor();
+		if (moduleWrappers.containsKey(moduleId)) {
+			return moduleWrappers.get(moduleId).getDescriptor();
+		} else {
+			List<ModuleDescriptor> moduleDescriptors = ModuleLoader.getAllModules(coreService);
+			for (ModuleDescriptor descriptor : moduleDescriptors) {
+				if (descriptor.moduleId.equals(moduleId)) {
+					return descriptor;
+				}
+			}
+		}
+		return null;
 	}
 
 	@Override
