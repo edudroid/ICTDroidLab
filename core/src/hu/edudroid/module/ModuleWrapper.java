@@ -41,9 +41,9 @@ public class ModuleWrapper extends Module implements Preferences, Logger,
 	private final Module module;
 	private HashSet<ModuleStatsListener> moduleStatsListeners = new HashSet<ModuleStatsListener>();
 	private SharedPreferences statPrefs;
-	private String className;
+	private ModuleDescriptor descriptor;
 
-	public ModuleWrapper(String className, Constructor<Module> constructor,
+	public ModuleWrapper(ModuleDescriptor descriptor, Constructor<Module> constructor,
 			Preferences prefs, Logger logger,
 			PluginCollection pluginCollection,
 			TimeServiceInterface timeService,ThreadSemaphore threadsemaphore, Context context)
@@ -52,9 +52,8 @@ public class ModuleWrapper extends Module implements Preferences, Logger,
 		super(prefs, logger, pluginCollection, timeService, threadsemaphore);
 		Log.i(TAG, "Calling module constructor");
 		module = constructor.newInstance(this, this, this, this, this);
-		statPrefs = context.getSharedPreferences(
-				SHARED_PREF_PREFIX + className, Context.MODE_PRIVATE);
-		this.className = className;
+		statPrefs = context.getSharedPreferences(SHARED_PREF_PREFIX + descriptor.moduleId, Context.MODE_PRIVATE);
+		this.descriptor = descriptor;
 	}
 
 	public Map<String, String> getStats() {
@@ -76,7 +75,7 @@ public class ModuleWrapper extends Module implements Preferences, Logger,
 		Map<String, String> unmodifiableStats = Collections
 				.unmodifiableMap(getStats());
 		for (ModuleStatsListener listener : moduleStatsListeners) {
-			listener.moduleSTatsChanged(className, unmodifiableStats);
+			listener.moduleStatsChanged(descriptor.moduleId, unmodifiableStats);
 		}
 	}
 
@@ -225,57 +224,52 @@ public class ModuleWrapper extends Module implements Preferences, Logger,
 
 	@Override
 	public void aquirePermit() {
-		// TODO Auto-generated method stub
 		mThreadSemaphore.aquirePermit();
 	}
 
 	@Override
 	public void releasePermit() {
-		// TODO Auto-generated method stub
 		mThreadSemaphore.releasePermit();
 	}
 
 	@Override
 	public int availablePermits() {
-		// TODO Auto-generated method stub
 		return mThreadSemaphore.availablePermits();
 	}
 
 	@Override
 	public void setThreadId() {
-		// TODO Auto-generated method stub
 		mThreadSemaphore.setThreadId();
 		
 	}
 
 	@Override
 	public int getThreadId() {
-		// TODO Auto-generated method stub
 		return mThreadSemaphore.getThreadId();
 	}
 
 	@Override
 	public void addtoList(float item) {
-		// TODO Auto-generated method stub
 		mThreadSemaphore.addtoList(item);
 	}
 
 	@Override
 	public void removefromList() {
-		// TODO Auto-generated method stub
 		mThreadSemaphore.removefromList();
 	}
 
 	@Override
 	public int sizeofList() {
-		// TODO Auto-generated method stub
 		return mThreadSemaphore.sizeofList();
 	}
 
 	@Override
 	public float getObjectfromList(int index) {
-		// TODO Auto-generated method stub
 		return mThreadSemaphore.getObjectfromList(index);
+	}
+
+	public ModuleDescriptor getDescriptor() {
+		return descriptor;
 	}
 
 }

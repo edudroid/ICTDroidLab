@@ -8,6 +8,7 @@
     
     <!-- Plugins -->
     <string name="noPlugins">You have not installed any plugins yet.</string>
+    <string name="noModules">No available modules found.</string>
     <string name="plugins_count">%1$s plugin%2$s found.</string>
     <string name="created_by">Created by %1$s.</string>
     <string name="refresh">Refresh</string>
@@ -53,5 +54,29 @@
     <string name="installPlugin">Install plugin</string>
     <string name="defaultDate">2013-11-19</string>
     <string name="defaultShortTime">11-19 12:10:11</string>
-    <string name="defaultNumber">42</string>   
+    <string name="defaultNumber">42</string>
+    <string name="placeholderModuleName">Sample module</string>
+    <string name="placeholderModuleState">Installed</string>
+    <string name="moduleStartedString">Started on %1$s</string>
+    <string name="moduleEndedString">Finished on %1$s</string>
+    <string name="moduleAuthorString">By %1$s</string>
+    <string name="moduleIdString">#%1$s</string>
+    <string name="placeholderModuleDescription">This is a great module, you should definitly install it! Thank you for your help!</string>
+    <string name="placeholderWebsite">http://tmit.bme.hu</string>
+    <string name="placeholderPlugins">WiFi, Battery, Bluetooth</string>
+    <string name="placeholderPermissions">WiFi.NETWORK_STATE, WiFi.INTERNET, Battery.READ, Battery.ALERT, Bluetooth.SCAN</string>
+    <string name="placeholderQuotas">Download: 10kByte/day, Upload 10kByte/day</string>
+    <string name="requiredPlugins">Required Plugins</string>
+    <string name="requiredPermissions">Required Permissions</string>
+    <string name="requiredQuotas">Required Quotas</string>
+    <string name="startModule">Start module</string>
+    <string name="deleteModule">Delete module</string>
+    <string name="deleteLogs">Delete logs</string>
+    <string name="placeholderDataVolume">Calculating used space...</string>
+    <string name="dataStoreTotalLogSize">Total size of log files: %1$.2f MB</string>
+    
+    <string name="moduleStateAvailable">Available</string>
+    <string name="moduleStateInstalled">Installed</string>
+    <string name="moduleStateTerminated">Terminated</string>
+    <string name="moduleStateBanned">Banned</string>
 </resources>

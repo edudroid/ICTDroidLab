@@ -4,13 +4,15 @@ import hu.edudroid.ict.ModuleSetListener;
 import hu.edudroid.ict.ModuleStatsListener;
 import hu.edudroid.ict.R;
 import hu.edudroid.interfaces.Plugin;
-import hu.edudroid.module.ModuleLoader;
+import hu.edudroid.module.ModuleDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 import android.content.ComponentName;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -20,7 +22,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 public class ModuleOverviewActivity extends ActivityBase implements OnItemClickListener, ModuleSetListener, ModuleStatsListener {
-	private static final String TAG = "ModuleOverviewActivity";
+	private static final String TAG = ModuleOverviewActivity.class.getName();
 	private ListView moduleList;
 	private ModuleListAdapter moduleListAdapter;
 
@@ -44,8 +46,12 @@ public class ModuleOverviewActivity extends ActivityBase implements OnItemClickL
 	}
 	
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		Log.e("ModuleOverview","OnClicked");
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		ModuleDescriptor descriptor = (ModuleDescriptor)(moduleListAdapter.getItem(position));
+		String moduleId = descriptor.moduleId;
+		Intent intent = new Intent(this, ModuleDetailsActivity.class);
+		intent.putExtra(ModuleDetailsActivity.INTENT_EXTRA_MODULE_ID, moduleId);
+		startActivity(intent);
 	}
 
 	@Override
@@ -58,8 +64,8 @@ public class ModuleOverviewActivity extends ActivityBase implements OnItemClickL
 	}
 	
 	private void refreshModuleList() {
-		final List<ModuleDescriptor> orderedModules = new ArrayList<ModuleDescriptor>();
-		orderedModules.addAll(ModuleUtils.processModules(service.getLoadedModules(), ModuleLoader.getAvailableModuls(this)));
+		TreeSet<ModuleDescriptor> orderer = new TreeSet<ModuleDescriptor>(service.getAllModules());
+		final List<ModuleDescriptor> orderedModules = new ArrayList<ModuleDescriptor>(orderer);
 		Log.i(TAG, "Found " + orderedModules.size() + " module(s).");
 		runOnUiThread(new Runnable() {
 			@Override
@@ -75,17 +81,17 @@ public class ModuleOverviewActivity extends ActivityBase implements OnItemClickL
 	}
 
 	@Override
-	public void moduleAdded(hu.edudroid.interfaces.ModuleDescriptor moduleDescriptor) {
+	public void moduleAdded(ModuleDescriptor moduleDescriptor) {
 		refreshModuleList();
 	}
 
 	@Override
-	public void moduleRemoved(hu.edudroid.interfaces.ModuleDescriptor moduleDescriptor) {
+	public void moduleRemoved(ModuleDescriptor moduleDescriptor) {
 		refreshModuleList();
 	}
 
 	@Override
-	public void moduleSTatsChanged(String moduleClassName,
+	public void moduleStatsChanged(String moduleId,
 			Map<String, String> stats) {
 		Log.e(TAG, "Stats changed");
 		refreshModuleList();

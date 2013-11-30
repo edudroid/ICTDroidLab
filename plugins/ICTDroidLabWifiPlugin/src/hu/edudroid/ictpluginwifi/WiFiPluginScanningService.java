@@ -1,5 +1,4 @@
 package hu.edudroid.ictpluginwifi;
-import hu.edudroid.ictplugin.PluginCommunicationInterface;
 import hu.edudroid.interfaces.Constants;
 
 import java.util.ArrayList;
@@ -82,7 +81,7 @@ public class WiFiPluginScanningService extends Service {
 			    		
 			            List<String> res=new ArrayList<String>();
 			            res.add(wifiScanningResult);
-		                PluginCommunicationInterface.reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, PLUGIN_NAME, VERSION_CODE, SCAN_METHOD_NAME, res, getApplicationContext());
+			         // TODO figure out another way to report the result! PluginCommunicationInterface.reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, PLUGIN_NAME, VERSION_CODE, SCAN_METHOD_NAME, res, getApplicationContext());
 	            	}
 	            	scanned=true;
 				}

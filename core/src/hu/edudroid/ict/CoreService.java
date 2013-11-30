@@ -6,16 +6,16 @@ import hu.edudroid.ict.plugins.PluginIntentReceiver;
 import hu.edudroid.ict.utils.HttpUtils;
 import hu.edudroid.ict.utils.ServerUtilities;
 import hu.edudroid.interfaces.Constants;
-import hu.edudroid.interfaces.ModuleDescriptor;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginListener;
-import hu.edudroid.interfaces.ThreadSemaphore;
+import hu.edudroid.module.ModuleDescriptor;
 import hu.edudroid.module.ModuleLoader;
 import hu.edudroid.module.ModuleManager;
+import hu.edudroid.module.ModuleState;
+import hu.edudroid.interfaces.ThreadSemaphore;
 import hu.edudroid.ict.FileUtils;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -136,22 +136,10 @@ public class CoreService extends Service implements PluginListener {
 				e.printStackTrace();
 			}
 
-			File descriptorFolder = getDescriptorFolder(this);
-			String[] descriptors = descriptorFolder.list(new FilenameFilter() {
-				@Override
-				public boolean accept(File dir, String filename) {
-					return filename.endsWith("desc");
-				}
-			});
-			Log.i(TAG, "Loading " + descriptors.length + " module(s).");
-			if (descriptors != null) {
-				for (String descriptor : descriptors) {
-					ModuleDescriptor moduleDescriptor = ModuleLoader
-							.parseModuleDescriptor(new File(descriptorFolder,
-									descriptor));
-					if (moduleDescriptor != null) {
-						addModule(moduleDescriptor);
-					}
+			List<ModuleDescriptor> moduleDescriptors = ModuleLoader.getAllModules(this);
+			for (ModuleDescriptor moduleDescriptor : moduleDescriptors) {
+				if (moduleDescriptor.getState(this) == ModuleState.INSTALLED) {
+					moduleManager.startModule(moduleDescriptor, pluginCollection);
 				}
 			}
 
@@ -206,9 +194,9 @@ public class CoreService extends Service implements PluginListener {
 				}
 			}).start();
 
-		}
+		}		
 	}
-
+	
 	public void registerPluginDetailsListener(PluginListener listener) {
 		pluginListeners.add(listener);
 	}
@@ -242,42 +230,57 @@ public class CoreService extends Service implements PluginListener {
 		return moduleManager.getLoadedModules();
 	}
 
-	public Map<String, String> getModuleStats(String className) {
-		return moduleManager.getModuleStats(className);
+	public List<ModuleDescriptor> getAllModules() {
+		List<ModuleDescriptor> ret = moduleManager.getLoadedModules();
+		HashSet<String> moduleIds = new HashSet<String>();
+		for (ModuleDescriptor descriptor : ret) {
+			moduleIds.add(descriptor.moduleId);
+		}
+		List<ModuleDescriptor> available = ModuleLoader.getAllModules(this);
+		for (ModuleDescriptor descriptor : available) {
+			if (!moduleIds.contains(descriptor.moduleId)) {
+				ret.add(descriptor);
+			}
+		}
+		return ret;
+	}
+
+	public Map<String, String> getModuleStats(String moduleId) {
+		return moduleManager.getModuleStats(moduleId);
+	}
+
+	public ModuleDescriptor getModule(String moduleId) {
+		return moduleManager.getModule(moduleId);
 	}
 
 	/**
 	 * Adds a module to the core. Module will be part of the running system.
-	 * 
-	 * @param moduleDescriptor
-	 *            The descriptor of the module
+	 * @param moduleDescriptor The descriptor of the module
 	 * @return True if module was started successfully, false otherwise.
 	 */
-	public boolean addModule(ModuleDescriptor moduleDescriptor) {
-		return moduleManager.addModule(moduleDescriptor, pluginCollection);
+	public boolean installModule(ModuleDescriptor moduleDescriptor) {
+		return moduleManager.installModule(moduleDescriptor, pluginCollection, this);
 	}
-
+	
 	/**
 	 * Remove a module from the core, module will stop running.
-	 * 
-	 * @param moduleName
-	 *            The name of the module
+	 * @param moduleId The id of the module
 	 * @return True if module was successfully removed, false otherwise.
 	 */
-	public boolean removeModule(String moduleName) {
-		return moduleManager.removeModule(moduleName, pluginCollection);
+	public boolean removeModule(String moduleId) {
+		return moduleManager.removeModule(moduleId, pluginCollection);
 	}
-
+	
 	@Override
 	public void onDestroy() {
-
+		
 		Log.e(TAG, "Service destroyed");
 		super.onDestroy();
 	}
 
 	@Override
 	public boolean newPlugin(Plugin plugin) {
-		Log.i(TAG, "newPlugin: " + plugin.getName());
+		Log.i(TAG,"newPlugin: "+plugin.getName());
 		pluginCollection.newPlugin(plugin);
 		for (PluginListener listener : pluginListeners) {
 			listener.newPlugin(plugin);
@@ -285,50 +288,46 @@ public class CoreService extends Service implements PluginListener {
 		return true;
 	}
 
+
 	public List<Plugin> getPlugins() {
 		return pluginCollection.getAllPlugins();
 	}
-
+	
 	public List<PluginDescriptor> getAvailablePlugins() {
 		return availablePlugins;
 	}
+	
+	public void registeringGCM(){
+        GCMRegistrar.checkDevice(this);
+        GCMRegistrar.checkManifest(this);
 
-	public void registeringGCM() {
-		GCMRegistrar.checkDevice(this);
-		GCMRegistrar.checkManifest(this);
-
-		registration_ID = GCMRegistrar.getRegistrationId(this);
-
-		if (registration_ID.equals("")) {
-			Log.i("GCM registration",
-					"Registration is not present, register now with GCM!");
-			GCMRegistrar.register(this, SENDER_ID);
-		} else {
-			Log.i("GCM registration", "Device is already registered on GCM: "
-					+ registration_ID);
-			if (!GCMRegistrar.isRegisteredOnServer(this)) {
-				registeringGCMonServer();
-			}
-		}
+        registration_ID = GCMRegistrar.getRegistrationId(this);
+ 
+        if (registration_ID.equals("")) {
+            Log.i("GCM registration","Registration is not present, register now with GCM!");          
+            GCMRegistrar.register(this, SENDER_ID);
+        } else {
+        	Log.i("GCM registration","Device is already registered on GCM: " +registration_ID);
+            if (!GCMRegistrar.isRegisteredOnServer(this)) {
+            	registeringGCMonServer();
+            }
+        }
 	}
-
-	public void registeringGCMonServer() {
-		TelephonyManager mngr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-		String imei = mngr.getDeviceId();
-		String sdk_version = String.valueOf(android.os.Build.VERSION.SDK_INT);
+	
+	public void registeringGCMonServer(){
+		TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
+        String imei=mngr.getDeviceId(); 
+        String sdk_version=String.valueOf(android.os.Build.VERSION.SDK_INT);
 		PackageManager pm = this.getPackageManager();
-
-		boolean cellular = pm
-				.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
+		
+		boolean cellular = pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
 		boolean wifi = pm.hasSystemFeature(PackageManager.FEATURE_WIFI);
-		boolean bluetooth = pm
-				.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH);
+		boolean bluetooth = pm.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH);
 		boolean gps = pm.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
-
-		RegisterToServer regTask = new RegisterToServer(this, imei,
-				registration_ID, sdk_version, cellular, wifi, bluetooth, gps);
-		Thread thread = new Thread(regTask, "RegisterToServer");
-		thread.start();
+    	
+        RegisterToServer regTask = new RegisterToServer(this,imei,registration_ID,sdk_version,cellular,wifi,bluetooth,gps);
+        Thread thread = new Thread(regTask, "RegisterToServer");
+        thread.start();
 	}
 
 	public static float totalRunTime(int pid, int tid) {

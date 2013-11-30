@@ -1,6 +1,5 @@
 package hu.edudroid.module;
 
-import hu.edudroid.ict.UploadService;
 import hu.edudroid.interfaces.Logger;
 
 import java.io.File;
@@ -11,14 +10,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
-import android.os.Environment;
 import android.util.Log;
 
 public class AndroidLogger implements Logger {
 
-	public final static String TAG = "Android Logger";
+	public final static String TAG = AndroidLogger.class.getName();
 	private static final long FILE_TIME = 60000;
-	private static final File OUTPUT_FOLDER=new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/ictdroidlab_log");
 	
 	private Date date = new Date();
 	private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss_SSS", Locale.UK);
@@ -53,12 +50,12 @@ public class AndroidLogger implements Logger {
 	
 	public void saveLogLine(String task, long timestamp, String message) {
 		
-		File base_folder=new File(Environment.getExternalStorageDirectory()+"/ictdroidlab_log");
-		if(!base_folder.isDirectory()){
-			base_folder.mkdir();
+		File baseFolder = FileManager.BASE_FOLDER;
+		if(!baseFolder.exists()){
+			baseFolder.mkdir();
 		}
 		
-		File file = new File(OUTPUT_FOLDER, task + "." + UploadService.INPROGRESS_SUFFIX);
+		File file = new File(baseFolder, task + FileManager.INPROGRESS_SUFFIX);
 		date.setTime(timestamp);
 		timeLabel = formatter.format(date);
 		// Find writer
@@ -94,11 +91,9 @@ public class AndroidLogger implements Logger {
 				e.printStackTrace();
 			}
 			writers.remove(task);
-			File oldFile = new File(OUTPUT_FOLDER, task + "_" +timeLabel + ".log"); 
+			File oldFile = new File(baseFolder, task + FileManager.SEPARATOR + timeLabel + FileManager.LOG_SUFFIX); 
 			file.renameTo(oldFile);
-			File newOldFile = new File(OUTPUT_FOLDER, task + "_" +timeLabel + ".log");
-			newOldFile.exists();
-			file = new File(OUTPUT_FOLDER, task + "." + UploadService.INPROGRESS_SUFFIX);
+			file = new File(baseFolder, task + FileManager.INPROGRESS_SUFFIX);
 			fileStartTimes.put(task, System.currentTimeMillis());
 			try {
 				writer = new FileWriter(file);
