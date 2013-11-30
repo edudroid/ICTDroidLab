@@ -10,6 +10,7 @@ import hu.edudroid.interfaces.ModuleDescriptor;
 import hu.edudroid.interfaces.PluginCollection;
 import hu.edudroid.interfaces.Preferences;
 import hu.edudroid.interfaces.TimeServiceInterface;
+import hu.edudroid.interfaces.ThreadSemaphore;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -31,6 +32,8 @@ public class ModuleManager implements ModuleStatsListener{
 	private HashSet<ModuleSetListener> moduleSetListeners = new HashSet<ModuleSetListener>();
 	private HashSet<ModuleStatsListener> moduleStatsListeners = new HashSet<ModuleStatsListener>();
 	
+	private HashMap<String, ThreadSemaphore> semaphores = new HashMap<String, ThreadSemaphore>();
+	
 	private CoreService coreService;
 	
 	public ModuleManager(CoreService coreService) {
@@ -42,6 +45,15 @@ public class ModuleManager implements ModuleStatsListener{
 		for (String moduleClass : moduleWrappers.keySet()) {
 			ModuleDescriptor descriptor = descriptors.get(moduleClass);
 			ret.add(descriptor);
+		}
+		return ret;
+	}
+	
+	public List<ThreadSemaphore> getLoadedModuleSemaphores() {
+		List<ThreadSemaphore> ret = new ArrayList<ThreadSemaphore>();
+		for (String moduleClass : moduleWrappers.keySet()) {
+			ThreadSemaphore semaphore = semaphores.get(moduleClass);
+			ret.add(semaphore);
 		}
 		return ret;
 	}
@@ -76,16 +88,18 @@ public class ModuleManager implements ModuleStatsListener{
 			try {
 				Class<?> dexLoadedClass = dexLoader.loadClass(className);
 				@SuppressWarnings("unchecked")
-				Constructor<Module> constructor = (Constructor<Module>) dexLoadedClass.getConstructor(Preferences.class, Logger.class, PluginCollection.class, TimeServiceInterface.class);
+				Constructor<Module> constructor = (Constructor<Module>) dexLoadedClass.getConstructor(Preferences.class, Logger.class, PluginCollection.class, TimeServiceInterface.class, ThreadSemaphore.class);
 				if (constructor == null) {
 					throw new NoSuchMethodException("Couldn't find proper consturctor.");
 				}
 				TimeServiceInterface timeService = new ModuleTimeService();
 				timers.put(className, timeService);
+				ThreadSemaphore threadSemaphore = new ModuleSemaphore();
+				semaphores.put(className, threadSemaphore);
 				moduleWrapper = new ModuleWrapper(className, constructor, new SharedPrefs(coreService, className),
 						new AndroidLogger(className),
 						pluginCollection,
-						timeService, coreService);
+						timeService, threadSemaphore, coreService);
 				moduleWrapper.registerModuleStatsListener(this);
 				Log.e(TAG, "Module added");
 			} catch (ClassNotFoundException e) {
