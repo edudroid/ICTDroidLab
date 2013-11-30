@@ -22,51 +22,63 @@ import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginCollection;
 import hu.edudroid.interfaces.Preferences;
 import hu.edudroid.interfaces.TimeServiceInterface;
+import hu.edudroid.interfaces.ThreadSemaphore;
 
 /**
- * ModuleWrapper collects and stores information about the wrapped module's operation. In order to do that, inserts itself as a proxy between the 
- * module and the framework. Only module manager has to be modified in order to use the ModuleWrapper's features.
+ * ModuleWrapper collects and stores information about the wrapped module's
+ * operation. In order to do that, inserts itself as a proxy between the module
+ * and the framework. Only module manager has to be modified in order to use the
+ * ModuleWrapper's features.
+ * 
  * @author lajthabalazs
- *
+ * 
  */
-public class ModuleWrapper extends Module implements Preferences, Logger, PluginCollection, TimeServiceInterface {
-	
+public class ModuleWrapper extends Module implements Preferences, Logger,
+		PluginCollection, TimeServiceInterface, ThreadSemaphore {
+
 	private static final String TAG = ModuleWrapper.class.getName();
 	private static final String SHARED_PREF_PREFIX = "STATS_";
 	private final Module module;
 	private HashSet<ModuleStatsListener> moduleStatsListeners = new HashSet<ModuleStatsListener>();
 	private SharedPreferences statPrefs;
 	private String className;
-	
-	public ModuleWrapper(String className, Constructor<Module> constructor, Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeService, Context context) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
-		super(prefs, logger, pluginCollection, timeService);
-		Log.i(TAG,"Calling module constructor");
-		module = constructor.newInstance(this,
-				this,
-				this,
-				this);
-		statPrefs = context.getSharedPreferences(SHARED_PREF_PREFIX + className, Context.MODE_PRIVATE);
+
+	public ModuleWrapper(String className, Constructor<Module> constructor,
+			Preferences prefs, Logger logger,
+			PluginCollection pluginCollection,
+			TimeServiceInterface timeService,ThreadSemaphore threadsemaphore, Context context)
+			throws IllegalArgumentException, InstantiationException,
+			IllegalAccessException, InvocationTargetException {
+		super(prefs, logger, pluginCollection, timeService, threadsemaphore);
+		Log.i(TAG, "Calling module constructor");
+		module = constructor.newInstance(this, this, this, this, this);
+		statPrefs = context.getSharedPreferences(
+				SHARED_PREF_PREFIX + className, Context.MODE_PRIVATE);
 		this.className = className;
 	}
 
 	public Map<String, String> getStats() {
-		int timerEventCount = statPrefs.getInt(ModuleStatsListener.STAT_KEY_TIMERS_FIRED, 0);
-		long lastTimerEvent = statPrefs.getLong(ModuleStatsListener.STAT_KEY_LAST_TIMER_EVENT, 0);
-		
+		int timerEventCount = statPrefs.getInt(
+				ModuleStatsListener.STAT_KEY_TIMERS_FIRED, 0);
+		long lastTimerEvent = statPrefs.getLong(
+				ModuleStatsListener.STAT_KEY_LAST_TIMER_EVENT, 0);
+
 		Map<String, String> stats = new HashMap<String, String>();
-		stats.put(ModuleStatsListener.STAT_KEY_TIMERS_FIRED, Integer.toString(timerEventCount));
-		stats.put(ModuleStatsListener.STAT_KEY_LAST_TIMER_EVENT, Long.toString(lastTimerEvent));
+		stats.put(ModuleStatsListener.STAT_KEY_TIMERS_FIRED,
+				Integer.toString(timerEventCount));
+		stats.put(ModuleStatsListener.STAT_KEY_LAST_TIMER_EVENT,
+				Long.toString(lastTimerEvent));
 		return stats;
 	}
 
 	private void statsChangted() {
 		Log.e(TAG, "Stats changed");
-		Map<String, String> unmodifiableStats = Collections.unmodifiableMap(getStats());
+		Map<String, String> unmodifiableStats = Collections
+				.unmodifiableMap(getStats());
 		for (ModuleStatsListener listener : moduleStatsListeners) {
 			listener.moduleSTatsChanged(className, unmodifiableStats);
 		}
 	}
-
 
 	@Override
 	public void onResult(long id, String plugin, String pluginVersion,
@@ -88,11 +100,14 @@ public class ModuleWrapper extends Module implements Preferences, Logger, Plugin
 
 	@Override
 	public void onTimerEvent() {
-		int timerEventCount = statPrefs.getInt(ModuleStatsListener.STAT_KEY_TIMERS_FIRED, 0);
-		timerEventCount ++;
+		int timerEventCount = statPrefs.getInt(
+				ModuleStatsListener.STAT_KEY_TIMERS_FIRED, 0);
+		timerEventCount++;
 		Editor editor = statPrefs.edit();
-		editor.putLong(ModuleStatsListener.STAT_KEY_LAST_TIMER_EVENT, System.currentTimeMillis());
-		editor.putInt(ModuleStatsListener.STAT_KEY_TIMERS_FIRED, timerEventCount);
+		editor.putLong(ModuleStatsListener.STAT_KEY_LAST_TIMER_EVENT,
+				System.currentTimeMillis());
+		editor.putInt(ModuleStatsListener.STAT_KEY_TIMERS_FIRED,
+				timerEventCount);
 		editor.commit();
 		statsChangted();
 		try {
@@ -102,7 +117,7 @@ public class ModuleWrapper extends Module implements Preferences, Logger, Plugin
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void init() {
 		module.init();
@@ -198,14 +213,69 @@ public class ModuleWrapper extends Module implements Preferences, Logger, Plugin
 	@Override
 	public void putBoolean(String key, boolean value) {
 	}
-	
+
 	public void registerModuleStatsListener(ModuleStatsListener listener) {
 		moduleStatsListeners.add(listener);
 	}
 
-	public void unregisterModuleStatsListenerListener(ModuleStatsListener listener) {
+	public void unregisterModuleStatsListenerListener(
+			ModuleStatsListener listener) {
 		moduleStatsListeners.remove(listener);
 	}
 
+	@Override
+	public void aquirePermit() {
+		// TODO Auto-generated method stub
+		mThreadSemaphore.aquirePermit();
+	}
+
+	@Override
+	public void releasePermit() {
+		// TODO Auto-generated method stub
+		mThreadSemaphore.releasePermit();
+	}
+
+	@Override
+	public int availablePermits() {
+		// TODO Auto-generated method stub
+		return mThreadSemaphore.availablePermits();
+	}
+
+	@Override
+	public void setThreadId() {
+		// TODO Auto-generated method stub
+		mThreadSemaphore.setThreadId();
+		
+	}
+
+	@Override
+	public int getThreadId() {
+		// TODO Auto-generated method stub
+		return mThreadSemaphore.getThreadId();
+	}
+
+	@Override
+	public void addtoList(float item) {
+		// TODO Auto-generated method stub
+		mThreadSemaphore.addtoList(item);
+	}
+
+	@Override
+	public void removefromList() {
+		// TODO Auto-generated method stub
+		mThreadSemaphore.removefromList();
+	}
+
+	@Override
+	public int sizeofList() {
+		// TODO Auto-generated method stub
+		return mThreadSemaphore.sizeofList();
+	}
+
+	@Override
+	public float getObjectfromList(int index) {
+		// TODO Auto-generated method stub
+		return mThreadSemaphore.getObjectfromList(index);
+	}
 
 }
