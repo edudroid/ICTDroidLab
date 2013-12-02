@@ -1,23 +1,17 @@
 package ict.edudroid.appengine;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONException;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.appengine.api.blobstore.BlobKey;
-import com.google.appengine.api.blobstore.BlobstoreService;
-import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
