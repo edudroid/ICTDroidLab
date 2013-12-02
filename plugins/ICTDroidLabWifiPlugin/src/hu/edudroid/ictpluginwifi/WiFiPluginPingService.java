@@ -1,6 +1,5 @@
 package hu.edudroid.ictpluginwifi;
 
-import hu.edudroid.ictplugin.PluginCommunicationInterface;
 import hu.edudroid.interfaces.Constants;
 
 import java.io.BufferedReader;
@@ -44,7 +43,7 @@ public class WiFiPluginPingService extends Service {
                     }
                     lineCount--;
                 }
-                PluginCommunicationInterface.reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, PLUGIN_NAME, VERSION_CODE, PING_METHOD_NAME, res, getApplicationContext());
+                // TODO figure out another way to report the result! PluginCommunicationInterface.reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, PLUGIN_NAME, VERSION_CODE, PING_METHOD_NAME, res, getApplicationContext());
                 reader.close();
             } catch (IOException e) {
                 e.printStackTrace();

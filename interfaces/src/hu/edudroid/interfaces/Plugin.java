@@ -14,8 +14,25 @@ public interface Plugin {
 	Quota getQuotaForMethod(String method);
 	long callMethodAsync(String method, List<Object> parameters,PluginResultListener listener);
 	long callMethodAsync(String method, List<Object> parameters,PluginResultListener listener, int quotaQuantity);
-	List<String> callMethodSync(long callId, String method, List<Object> parameters) throws AsyncMethodException;
-	List<String> callMethodSync(long callId, String method, List<Object> parameters, int quotaQuantity) throws AsyncMethodException;
+	/**
+	 * 
+	 * @param callId
+	 * @param method
+	 * @param parameters
+	 * @return
+	 * @throws AsyncMethodException If method is an async method, throw exception, and send intent when you're done.
+	 */
+	List<String> callMethodSync(long callId, String method, List<Object> parameters, Object context) throws AsyncMethodException;
+	/**
+	 * 
+	 * @param callId
+	 * @param method
+	 * @param parameters
+	 * @param quotaQuantity
+	 * @return
+	 * @throws AsyncMethodException If method is an async method, throw exception, and send intent when you're done.
+	 */
+	List<String> callMethodSync(long callId, String method, List<Object> parameters, int quotaQuantity, Object context) throws AsyncMethodException;
 	void registerEventListener(String eventName, PluginEventListener listener);
 	void unregisterEventListener(String eventName, PluginEventListener listener);
 	void unregisterEventListener(PluginEventListener listener);

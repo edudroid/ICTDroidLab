@@ -102,6 +102,5 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 				listener.onEvent(plugin, version, eventName, result);
 			}
 		}
-		
 	}
 }

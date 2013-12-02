@@ -3,6 +3,7 @@ package hu.edudroid.ict.ui;
 import hu.edudroid.ict.CoreService;
 import hu.edudroid.ict.ModuleStatsListener;
 import hu.edudroid.ict.R;
+import hu.edudroid.module.ModuleDescriptor;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,20 +23,20 @@ import android.widget.TextView;
 public class ModuleListAdapter implements ListAdapter {
 	
 	private static final String TAG = ModuleListAdapter.class.getName();
-	private List<ModuleDescriptor> modules;
+	private List<ModuleDescriptor> moduleDescriptors;
 	private List<DataSetObserver> observers = new ArrayList<DataSetObserver>();
 	private LayoutInflater inflater;
 	private CoreService coreService;
 	private SimpleDateFormat dateFormatter = new SimpleDateFormat("MM'-'dd HH':'mm':'ss", Locale.getDefault());
 
 	public ModuleListAdapter(List<ModuleDescriptor> modules, LayoutInflater inflater, CoreService coreService) {
-		this.modules = modules;
+		this.moduleDescriptors = modules;
 		this.inflater = inflater;
 		this.coreService = coreService;
 	}
 	
 	public void setModules(List<ModuleDescriptor> modules){
-		this.modules = modules;
+		this.moduleDescriptors = modules;
 		notifyObservers();
 	}
 	
@@ -47,12 +48,12 @@ public class ModuleListAdapter implements ListAdapter {
 
 	@Override
 	public int getCount() {
-		return modules.size();
+		return moduleDescriptors.size();
 	}
 
 	@Override
-	public Object getItem(int arg0) {
-		return modules.get(arg0);
+	public Object getItem(int position) {
+		return moduleDescriptors.get(position);
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class ModuleListAdapter implements ListAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		ModuleDescriptor module = modules.get(position);
+		ModuleDescriptor moduleDescriptor = moduleDescriptors.get(position);
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.listitem_module, null);
 		}
@@ -76,30 +77,33 @@ public class ModuleListAdapter implements ListAdapter {
 		TextView lastRunLabel = (TextView)(convertView.findViewById(R.id.listItemModuleLastRunLabel));
 		TextView totalRunsLabel = (TextView)(convertView.findViewById(R.id.listItemModuleNumberOfRunsLabel));
 		
-		nameLabel.setText(module.getModuleName());
-		if (module.isLoaded()) {
-			stateLabel.setVisibility(View.VISIBLE);
-			if (coreService != null) {
-				lastRunLabel.setVisibility(View.VISIBLE);
-				totalRunsLabel.setVisibility(View.VISIBLE);
-				Map<String, String> values = coreService.getModuleStats(module.getClassName());
-				String numberString = "N/A";
+		nameLabel.setText(moduleDescriptor.moduleName);
+		stateLabel.setVisibility(View.VISIBLE);
+		if (coreService != null) {
+			lastRunLabel.setVisibility(View.VISIBLE);
+			totalRunsLabel.setVisibility(View.VISIBLE);
+			Map<String, String> values = coreService.getModuleStats(moduleDescriptor.moduleId);
+			String numberString = "N/A";
+			if (values != null) {
 				try {
 					numberString = "" + Integer.parseInt(values.get(ModuleStatsListener.STAT_KEY_TIMERS_FIRED));
 				} catch (Exception e) {
 					Log.e(TAG, "Error rendering module list item " + e, e);
 					e.printStackTrace();
 				}
-				totalRunsLabel.setText(numberString);
-				String dateString = "N/A";
+			}
+			totalRunsLabel.setText(numberString);
+			String dateString = "N/A";
+			if (values != null) {
 				try {
 					dateString = dateFormatter.format(new Date(Long.parseLong(values.get(ModuleStatsListener.STAT_KEY_LAST_TIMER_EVENT))));
 				} catch (Exception e) {
 					Log.e(TAG, "Error rendering module list item " + e, e);
 					e.printStackTrace();
 				}
-				lastRunLabel.setText(dateString);
 			}
+			lastRunLabel.setText(dateString);
+			stateLabel.setText(moduleDescriptor.getState(coreService).toString(coreService));
 		} else {
 			stateLabel.setVisibility(View.GONE);
 			lastRunLabel.setVisibility(View.GONE);
@@ -120,7 +124,7 @@ public class ModuleListAdapter implements ListAdapter {
 
 	@Override
 	public boolean isEmpty() {
-		return modules.isEmpty();
+		return moduleDescriptors.isEmpty();
 	}
 
 	@Override
