@@ -79,4 +79,15 @@
     <string name="moduleStateInstalled">Installed</string>
     <string name="moduleStateTerminated">Terminated</string>
     <string name="moduleStateBanned">Banned</string>
+    
+    <!-- Settings -->
+    <string name="menu_settings">Settings</string>
+    <string name="slider_title">Cpu Usage Controller</string>
+    <string-array name="slider_summaries">
+        <item>Low</item> <!-- 0.00 to 0.3-->
+        <item>Medium</item> <!-- 0.3 to 0.7 -->
+        <item>High</item> <!-- 0.7 to 1.00 -->
+    </string-array>
+    <item name="slider_default" format="float" type="string">0.5</item>
+    <string name="slider_message">Please set up the maximum value(from 0 to 100 in percent),that you allow for running modules. </string>
 </resources>
