@@ -27,9 +27,11 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -58,7 +60,7 @@ public class CoreService extends Service implements PluginListener {
 	private List<PluginDescriptor> availablePlugins;
 	private ModuleManager moduleManager;
 
-	private float cpulimit = 50f;
+	private float cpulimit;
 
 	public static File getDescriptorFolder(Context context) {
 		return new File(context.getFilesDir(), CoreService.DESCRIPTOR_FOLDER);
@@ -153,6 +155,7 @@ public class CoreService extends Service implements PluginListener {
 					float avgrunning_time;
 					while (true) {
 						try {
+							cpulimit = getCpuUserSettings();
 							list = moduleManager.getLoadedModuleSemaphores();
 							for (int i = 0; i < list.size(); i++) {
 								ThreadSemaphore thrs = list.get(i);
@@ -177,7 +180,6 @@ public class CoreService extends Service implements PluginListener {
 									}
 									
 									avgrunning_time = avgrunning_time/denominator;
-
 									if (avgrunning_time > cpulimit && thrs.availablePermits() != 0) {
 										thrs.aquirePermit();
 									} else if (thrs.availablePermits() == 0) {
@@ -360,6 +362,14 @@ public class CoreService extends Service implements PluginListener {
 
 		return total_time;
 	}
+	
+	public float getCpuUserSettings() {
+        SharedPreferences sharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        float value = sharedPrefs.getFloat("my_slider", 0.5f);
+        float cpulimit = value*100f;
+        return cpulimit;
+    }
 
 	public class RegisterToServer implements Runnable {
 
