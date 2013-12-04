@@ -90,4 +90,8 @@
     </string-array>
     <item name="slider_default" format="float" type="string">0.5</item>
     <string name="slider_message">Please set up the maximum value(from 0 to 100 in percent),that you allow for running modules. </string>
+	<string name="limitcheckbox_title">Individual limit</string>
+    <string name="limitcheckbox_summary">If it checked, your limit will be checked per installed module.</string>
+    <string name="profilingcheckbox_title">Profiling Mode</string>
+    <string name="profilingcheckbox_summary">You can switch off the limits to measure module resource requirements.</string>
 </resources>

@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
  	
+ <PreferenceCategory
+            android:title="User Settings">
+
 	<net.jayschwa.android.preference.SliderPreference
-    android:key="my_slider"
-    android:title="@string/slider_title"
-    android:summary="@array/slider_summaries"
-    android:defaultValue="@string/slider_default"
-    android:dialogMessage="@string/slider_message" />
+    			android:key="my_slider"
+    			android:title="@string/slider_title"
+    			android:summary="@array/slider_summaries"
+    			android:defaultValue="@string/slider_default"
+    			android:dialogMessage="@string/slider_message" />
+	
+	<CheckBoxPreference
+                android:key="limit_mode"
+                android:title="@string/limitcheckbox_title"
+                android:summary="@string/limitcheckbox_summary"
+                android:defaultValue="true" />
+ </PreferenceCategory>
+
+ <PreferenceCategory
+            android:title="Developer Settings">
+
+        <CheckBoxPreference
+                android:key="profiling_mode"
+                android:title="@string/profilingcheckbox_title"
+                android:summary="@string/profilingcheckbox_summary"
+                android:defaultValue="false" />
+
+ </PreferenceCategory>
 
 </PreferenceScreen>
