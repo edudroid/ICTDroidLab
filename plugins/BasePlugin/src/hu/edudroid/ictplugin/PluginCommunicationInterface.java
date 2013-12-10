@@ -23,7 +23,7 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver im
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		
+		Log.d(TAG, "Intent received " + intent.getAction());
 		if (intent.getAction().equals(Constants.INTENT_ACTION_PLUGIN_QUOTAS)) {
 			Intent response = new Intent(Constants.INTENT_ACTION_QUOTA_DESCRIPTION);
 			response.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, getName());

@@ -74,6 +74,8 @@
     <string name="deleteLogs">Delete logs</string>
     <string name="placeholderDataVolume">Calculating used space...</string>
     <string name="dataStoreTotalLogSize">Total size of log files: %1$.2f MB</string>
+    <string name="dataStoreTotalZipSize">Total size of zips files: %1$.2f MB</string>
+    <string name="dataStoreModuleCount"> %1$d module(s) stored on the system.</string>
     
     <string name="moduleStateAvailable">Available</string>
     <string name="moduleStateInstalled">Installed</string>

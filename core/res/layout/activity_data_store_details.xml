@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/dataStoreDetailsText"
+        android:id="@+id/dataStoreLogDetailsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/placeholderDataVolume" />
@@ -16,4 +16,27 @@
         android:layout_height="wrap_content"
         android:text="@string/deleteLogs" />
 
+	<TextView
+        android:id="@+id/dataStoreZipDetailsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholderDataVolume" />
+
+    <Button
+        android:id="@+id/dataStoreDeleteZips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/deleteLogs" />
+    
+    <TextView
+        android:id="@+id/dataStoreModuleDetailsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholderDataVolume" />
+
+    <Button
+        android:id="@+id/dataStoreDeleteModules"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/deleteLogs" />
 </LinearLayout>

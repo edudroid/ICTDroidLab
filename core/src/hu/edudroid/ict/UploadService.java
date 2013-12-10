@@ -24,7 +24,6 @@ import android.util.Log;
 public class UploadService extends IntentService { 
 
 	private static final String TAG = UploadService.class.getName(); 
-	private static final String TMP_FOLDER = "capture_compressed_tmp";
 	private static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss_SSS", Locale.UK);
 	
 	private static final FilenameFilter progressFilter = new FilenameFilter() {
@@ -40,7 +39,7 @@ public class UploadService extends IntentService {
 	}
 	
 	public static int getFileCount(){
-		File baseFolder = FileManager.BASE_FOLDER;
+		File baseFolder = FileManager.LOG_FOLDER;
 		if (!baseFolder.exists()) {
 			return -1;
 		}
@@ -49,7 +48,7 @@ public class UploadService extends IntentService {
 	}
 	
 	public static void upload(Context context, String imei) {
-		File baseFolder = FileManager.BASE_FOLDER;
+		File baseFolder = FileManager.LOG_FOLDER;
 		try {
 			synchronized (context) {
 				boolean isSDPresent = android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
@@ -75,11 +74,7 @@ public class UploadService extends IntentService {
 					return;
 				}
 				
-				String sdPath = Environment.getExternalStorageDirectory().toString();		
-				File tmpFolder = new File(sdPath, TMP_FOLDER);
-				if (!tmpFolder.exists()){
-					tmpFolder.mkdirs();
-				}
+				File tmpFolder = FileManager.TMP_FOLDER;
 				String deviceName = "ICTDroidLab";
 				String fileName = deviceName + "_" +  formatter.format(new Date(System.currentTimeMillis())) + ".zip";
 				File zip = new File(tmpFolder, fileName);

@@ -1,0 +1,9 @@
+Modules are uploaded to the device in one of two ways. Either from the back-end, or
+in case of local development through Android assets.
+
+To include your test module in the ICTDroidLab core, you have to first rename
+vars.bat.template to vars.bat set the module's name and specify the core 
+project's root folder. You'll find detailed instructions in the template.
+
+Than you have to rename module.desc.template to module.desc and fill in the
+proper values. Build using ant and voilá, you have your module up and running.
