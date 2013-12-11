@@ -85,7 +85,24 @@ public class SamplePlugin extends PluginCommunicationInterface {
 	
 	@Override
 	public List<String> callMethodSync(long callId, String method, List<Object> parameters, Object context) throws AsyncMethodException{
-		return callMethodSync(callId, method, parameters, 0);
+		if (method.equals(FIRST_SAMPLE_METHOD_NAME)) {			
+			Log.d(TAG, "First sample method called");
+			List<String> ret = new ArrayList<String>();
+			ret.add("First sample method result");
+			return ret;
+		} else if (method.equals(SECOND_SAMPLE_METHOD_NAME)) {
+			Log.d(TAG, "Second sample method called");
+			List<String> ret = new ArrayList<String>();
+			ret.add("Second sample method result");
+			return ret;
+		} else if (method.equals(THIRD_SAMPLE_METHOD_NAME)) {
+			Log.d(TAG, "Third sample method called");
+			List<String> ret = new ArrayList<String>();
+			ret.add("Third sample method result");
+			return ret;
+		} else {
+			return null;
+		}
 	}
 	
 	@Override
