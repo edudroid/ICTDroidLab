@@ -41,6 +41,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <service android:name="EventService"></service>
+        <service android:name="hu.edudroid.ictpluginsample.EventService"></service>
+        <activity android:name="hu.edudroid.ictpluginsample.LimitSettingActivity"></activity>
     </application>
 </manifest>

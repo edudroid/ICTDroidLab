@@ -3,5 +3,18 @@
 
     <string name="app_name">SamplePlugin</string>
     <string name="hello_world">Hello, this is an ICT sample plugin!</string>
+    
+    <string name="firstMethodLimit">First Method Limit</string>
+    <string name="firstMethodLimit_summary">Set your preferred limit</string>
+    
+    <string name="secondMethodLimit">Second Method Limit</string>
+    <string name="secondMethodLimit_summary">Set your preferred limit</string>
+    
+    <string name="thirdMethodLimit">Third Method Limit</string>
+    <string name="thirdMethodLimit_summary">Set your preferred limit</string>
+    
+    <string name="resetFrequency">Limit Reset Frequency</string>
+    <string name="resetFrequency_summary">Set the reset frequency</string>
 
+     <string name="menu_settings">Limit Settings</string>
 </resources>

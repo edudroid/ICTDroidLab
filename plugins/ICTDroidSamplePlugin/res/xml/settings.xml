@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+ 	
+ <PreferenceCategory
+            android:title="Method Limit Settings">
+
+	<ListPreference
+            android:key="firstMethodLimit"
+            android:entries="@array/firstMethodLimit"
+            android:summary="@string/firstMethodLimit_summary"
+            android:entryValues="@array/firstMethodLimitValues"
+            android:title="@string/firstMethodLimit" />
+	
+	<ListPreference
+            android:key="secondMethodLimit"
+            android:entries="@array/secondMethodLimit"
+            android:summary="@string/secondMethodLimit_summary"
+            android:entryValues="@array/secondMethodLimitValues"
+            android:title="@string/secondMethodLimit" />
+	
+	<ListPreference
+            android:key="thirdMethodLimit"
+            android:entries="@array/thirdMethodLimit"
+            android:summary="@string/thirdMethodLimit_summary"
+            android:entryValues="@array/thirdMethodLimitValues"
+            android:title="@string/thirdMethodLimit" />
+	
+    </PreferenceCategory>
+ <PreferenceCategory
+            android:title="Frecvency Settings">
+
+       <ListPreference
+            android:key="resetFrequency"
+            android:entries="@array/resetFrequency"
+            android:summary="@string/resetFrequency_summary"
+            android:entryValues="@array/resetFrequencyValues"
+            android:title="@string/resetFrequency" />
+ </PreferenceCategory>
+
+</PreferenceScreen>

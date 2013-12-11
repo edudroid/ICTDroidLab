@@ -34,6 +34,7 @@ public class EventService extends Service {
 		if (!started) {
 			SamplePlugin samplePlugin = SamplePlugin.getInstance();
 			started = true;
+			Log.d(TAG, "Plugin event fired.");
 			while(true) {
 				try {
 					Thread.sleep((long)(Math.random() * 1000));
