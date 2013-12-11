@@ -19,6 +19,18 @@
         		<action android:name="android.intent.action.BOOT_COMPLETED" />  
     		</intent-filter>  
 		</receiver>
+
+		<receiver
+            android:name="hu.edudroid.ictpluginsample.SamplePlugin"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="hu.edudroid.ict.plugin_polling_question"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="hu.edudroid.ict.plugin.callmethod" />
+            </intent-filter>
+        </receiver>
         
         
         <activity

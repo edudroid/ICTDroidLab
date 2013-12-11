@@ -110,6 +110,14 @@ public class ModuleLoader {
 		}
 	}
 	
+	public static void deleteAllModules(Context context) {
+		File descriptorFolder = CoreService.getDescriptorFolder(context);
+		File[] files = descriptorFolder.listFiles();
+		for (File file : files) {
+			file.delete();
+		}
+	}
+	
 	public static List<ModuleDescriptor> getAllModules(Context context) {
 		List<ModuleDescriptor> ret = new ArrayList<ModuleDescriptor>();
 		File descriptorFolder = CoreService.getDescriptorFolder(context);

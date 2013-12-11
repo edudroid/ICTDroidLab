@@ -50,7 +50,7 @@ public class AndroidLogger implements Logger {
 	
 	public void saveLogLine(String task, long timestamp, String message) {
 		
-		File baseFolder = FileManager.BASE_FOLDER;
+		File baseFolder = FileManager.LOG_FOLDER;
 		if(!baseFolder.exists()){
 			baseFolder.mkdir();
 		}

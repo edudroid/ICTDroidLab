@@ -79,6 +79,7 @@ public class PluginListActivity extends ActivityBase implements PluginListener,
 				refreshPluginlist();
 				Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
 				sendBroadcast(intent);
+				Log.d(TAG, "Sent broadcast intent " + intent);
 				break;
 			}
 			case R.id.installPluginButton: {

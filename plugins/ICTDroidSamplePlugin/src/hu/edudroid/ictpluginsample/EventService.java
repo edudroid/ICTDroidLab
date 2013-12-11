@@ -4,8 +4,10 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 
 public class EventService extends Service {
+	private static final String TAG = EventService.class.getName();
 
 	public static final String PLUGIN_NAME="WiFi Plugin";
 	public static final String PING_METHOD_NAME="ping";
@@ -36,8 +38,10 @@ public class EventService extends Service {
 				try {
 					Thread.sleep((long)(Math.random() * 1000));
 					samplePlugin.event(SamplePlugin.FIRST_SAMPLE_EVENT_NAME, null, this);
+					Log.d(TAG, "First event fired.");
 					Thread.sleep((long)(Math.random() * 1000));
 					samplePlugin.event(SamplePlugin.SECOND_SAMPLE_EVENT_NAME, null, this);
+					Log.d(TAG, "Second event fired.");
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
