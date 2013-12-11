@@ -8,19 +8,20 @@ import hu.edudroid.ict.utils.ServerUtilities;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginListener;
+import hu.edudroid.interfaces.ThreadSemaphore;
 import hu.edudroid.module.ModuleDescriptor;
 import hu.edudroid.module.ModuleLoader;
 import hu.edudroid.module.ModuleManager;
 import hu.edudroid.module.ModuleState;
-import hu.edudroid.interfaces.ThreadSemaphore;
-import hu.edudroid.ict.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.PatternSyntaxException;
 
 import android.app.Service;
@@ -61,6 +62,10 @@ public class CoreService extends Service implements PluginListener {
 	private ModuleManager moduleManager;
 
 	private float cpulimit;
+	SharedPreferences spprofiling;
+	private float avgrunning_time;
+	private float sumavgrunning_time;
+	private float maxavgrunning_time = 0;
 
 	public static File getDescriptorFolder(Context context) {
 		return new File(context.getFilesDir(), CoreService.DESCRIPTOR_FOLDER);
@@ -154,8 +159,6 @@ public class CoreService extends Service implements PluginListener {
 
 				@Override
 				public void run() {
-					float avgrunning_time;
-					float sumavgrunning_time;
 					while (true) {
 						try {
 							sumavgrunning_time = 0;
@@ -166,8 +169,6 @@ public class CoreService extends Service implements PluginListener {
 								if (thrs.getThreadId() != 0) {
 									running_time = totalRunTime(processid,
 											thrs.getThreadId());
-									Log.d("cpucontrol", Integer.toString(thrs
-											.getThreadId()));
 									if (thrs.sizeofList() == 15) {
 										thrs.removefromList();
 									}
@@ -187,9 +188,10 @@ public class CoreService extends Service implements PluginListener {
 										}
 									}
 
-									avgrunning_time = avgrunning_time
-											/ denominator;
+									avgrunning_time = avgrunning_time / denominator;
 									sumavgrunning_time += avgrunning_time;
+									if (maxavgrunning_time < avgrunning_time)
+										maxavgrunning_time = avgrunning_time; 
 									if (getProfilingMode() == false) {
 										if (avgrunning_time > cpulimit
 												&& thrs.availablePermits() != 0) {
@@ -220,6 +222,15 @@ public class CoreService extends Service implements PluginListener {
 								}
 							}
 							if (getProfilingMode() == true) {
+								
+								spprofiling = getSharedPreferences("profilepref",Context.MODE_WORLD_WRITEABLE);
+								Map<String,?> methodcalls = spprofiling.getAll();
+								Set<String> methods = methodcalls.keySet();
+								for (Iterator<String> i = methods.iterator(); i.hasNext();){
+									String method = (String) i.next();
+									Integer number = (Integer) methodcalls.get(method);
+									Log.d("profilingfromcs", method +" , "+ number.toString());
+								}
 								for (int l = 0; l < list.size(); l++) {
 									ThreadSemaphore thrs = list.get(l);
 									if (thrs.availablePermits() == 0) {

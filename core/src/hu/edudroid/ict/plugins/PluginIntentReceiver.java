@@ -5,18 +5,23 @@ import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginListener;
 import hu.edudroid.interfaces.PluginResultListener;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
 public class PluginIntentReceiver extends BroadcastReceiver {
 	
 	private final String TAG = PluginIntentReceiver.class.getName();
+	
+	private final HashMap<String, Integer> profiling = new HashMap<String, Integer>();
+	SharedPreferences spprofiling;
 
 	private final HashSet<PluginListener> pluginListeners = new HashSet<PluginListener>();
 	private final HashSet<PluginResultListener> mResultListeners = new HashSet<PluginResultListener>();
@@ -49,6 +54,8 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent){
 		
+		spprofiling = context.getSharedPreferences("profilepref",Context.MODE_WORLD_WRITEABLE);
+		
 		Log.d(TAG, "onReceive: " + intent.getAction());
 		
 		final Bundle extras = intent.getExtras();
@@ -65,6 +72,13 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 
 			for ( PluginResultListener listener : mResultListeners) {
 				listener.onResult(id,	plugin,version, method, result);
+				
+				SharedPreferences.Editor editor = spprofiling.edit();
+				
+				int number = getCalledMethodNumber(method) + 1;
+				profiling.put(method, number);
+				editor.putInt(method, number);
+				editor.commit();				
 			}
 		}
 		if(intent.getAction().equals(Constants.INTENT_ACTION_DESCRIBE)){
@@ -100,7 +114,17 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 			final List<String> result = extras.getStringArrayList(Constants.INTENT_EXTRA_VALUE_RESULT);
 			for (PluginEventListener listener : mPluginEventListeners){
 				listener.onEvent(plugin, version, eventName, result);
+				int number = getCalledMethodNumber(eventName) + 1;
+				profiling.put(eventName, number);
 			}
 		}
+	}
+	
+	private int getCalledMethodNumber(String method){
+		int number = 0;
+		if(profiling.containsKey(method)){
+			number = profiling.get(method);
+		}		
+		return number;
 	}
 }
