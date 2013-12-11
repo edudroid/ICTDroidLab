@@ -2,13 +2,15 @@ package hu.edudroid.module;
 
 import hu.edudroid.interfaces.ThreadSemaphore;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 
 public class ModuleSemaphore implements ThreadSemaphore {
 	
 	private final Semaphore threadsemaphore = new Semaphore(1);
 	private int threadid = 0;
-	private CircularArrayList<Float> threadcpubuffer = new CircularArrayList<Float>(15);
+	private List<Float> threadcpubuffer = new ArrayList<Float>(15);
 
 	@Override
 	public void aquirePermit() {
@@ -56,7 +58,11 @@ public class ModuleSemaphore implements ThreadSemaphore {
 	@Override
 	public void removefromList() {
 		// TODO Auto-generated method stub
-		threadcpubuffer.remove(0);
+		List<Float> templist = new ArrayList<Float>(15);
+		for(int i= 0; i < 14; i++){
+			templist.add(threadcpubuffer.get(i+1));
+		}
+		threadcpubuffer = templist;
 	}
 
 	@Override
