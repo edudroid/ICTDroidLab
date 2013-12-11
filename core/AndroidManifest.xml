@@ -90,6 +90,7 @@
             android:label="@string/core_service_name" />
         <activity android:name=".ui.DataStoreDetailsActivity"></activity>
         <activity android:name=".ui.ModuleDetailsActivity"></activity>
+        <activity android:name=".ui.UserSettingActivity"></activity>
         
         
     </application>
