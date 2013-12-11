@@ -32,7 +32,7 @@
     <h2>Registered Plugins</h2>
     <table>
     	<tr>
-    		<th>Name</th><th>Class</th><th>Version</th><th>Description</th><th>Date</th>
+    		<th>Name</th><th>Class</th><th>Ver.</th><th>Descr.</th><th>Date</th>
     	</tr>
 			    <%
 			    for(Entity plugin : plugins){
