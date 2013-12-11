@@ -16,6 +16,6 @@
 	"quotas": [
 		{"quota" : "BATTERY_DATA", "limit" : 720}
 	],
-	"jar_file" : "BatteryModule.jar",
-	"class_name" : "hu.edudroid.ict.battery.BatteryModul"
+	"jar_file" : "SampleModule.jar",
+	"class_name" : "hu.edudroid.ict.sample_module.ModuleExample"
 }

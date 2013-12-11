@@ -1,4 +1,4 @@
-package hu.edudroid.ict.sample_project;
+package hu.edudroid.ict.sample_module;
 
 import hu.edudroid.interfaces.Logger;
 import hu.edudroid.interfaces.Module;
@@ -10,11 +10,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class ModulExample extends Module {
+public class ModuleExample extends Module {
 	
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SSS");
 	
-	public ModulExample(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice) {
+	public ModuleExample(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice) {
 		super(prefs, logger, pluginCollection, timeservice);
 	}
 	
