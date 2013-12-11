@@ -60,15 +60,20 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver im
 			final String methodName = intent.getExtras().getString(Constants.INTENT_EXTRA_METHOD_NAME);
 			final byte[] parameters = intent.getExtras().getByteArray(Constants.INTENT_EXTRA_METHOD_PARAMETERS);
 			try {
-				ByteArrayInputStream bis = new ByteArrayInputStream(parameters);
-				ObjectInputStream ois = new ObjectInputStream(bis);
-
-				Integer paramsCount = (Integer) ois.readObject();
-				Object[] params = new Object[paramsCount];
-				for (int i = 0; i < paramsCount; i++)
-					params[i] = ois.readObject();
+				List<Object> paramList = new ArrayList<Object>();
+				if (parameters != null) {
+					ByteArrayInputStream bis = new ByteArrayInputStream(parameters);
+					ObjectInputStream ois = new ObjectInputStream(bis);
+	
+					Integer paramsCount = (Integer) ois.readObject();
+					Object[] params = new Object[paramsCount];
+					for (int i = 0; i < paramsCount; i++) {
+						params[i] = ois.readObject();
+					}
+					paramList.addAll(Arrays.asList(params));
+				}
 				try {
-					List<String> result = callMethodSync(callId, methodName, Arrays.asList(params), context);
+					List<String> result = callMethodSync(callId, methodName, paramList, context);
 					reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, methodName, result, context);
 				} 
 				catch (AsyncMethodException a){

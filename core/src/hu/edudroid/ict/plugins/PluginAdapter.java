@@ -135,16 +135,19 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		ObjectOutputStream stream = null;
 		try{
-			stream = new ObjectOutputStream(bytes);
-			stream.writeObject(Integer.valueOf(params.size()));
-			for (int i = 0; i < params.size(); i++)
-				stream.writeObject(params.get(i));
-			byte[] parameters = bytes.toByteArray();
-
 			Intent intent = new Intent(Constants.INTENT_ACTION_CALL_METHOD);
 			intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, mCallMethodID);
 			intent.putExtra(Constants.INTENT_EXTRA_METHOD_NAME, method);
-			intent.putExtra(Constants.INTENT_EXTRA_METHOD_PARAMETERS, parameters);
+			// Write parameters
+			stream = new ObjectOutputStream(bytes);
+			if (params != null) {
+				stream.writeObject(Integer.valueOf(params.size()));
+				for (int i = 0; i < params.size(); i++) {
+					stream.writeObject(params.get(i));
+				}
+				byte[] parameters = bytes.toByteArray();
+				intent.putExtra(Constants.INTENT_EXTRA_METHOD_PARAMETERS, parameters);
+			}			
 			mContext.sendBroadcast(intent);
 
 			bytes.close();

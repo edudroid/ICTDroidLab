@@ -85,7 +85,7 @@ public class SamplePlugin extends PluginCommunicationInterface {
 	
 	@Override
 	public List<String> callMethodSync(long callId, String method, List<Object> parameters, Object context) throws AsyncMethodException{
-		return callMethodSync(callId, method, parameters, 0);
+		return callMethodSync(callId, method, parameters, 0, context);
 	}
 	
 	@Override
