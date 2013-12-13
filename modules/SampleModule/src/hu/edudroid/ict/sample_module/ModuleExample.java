@@ -9,7 +9,7 @@ import hu.edudroid.interfaces.TimeServiceInterface;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
+import java.util.Map;
 
 public class ModuleExample extends Module {
 	
@@ -33,7 +33,7 @@ public class ModuleExample extends Module {
 	
 	@Override
 	public void onResult(long id, String plugin, String pluginVersion,
-			String methodName, List<String> result) {
+			String methodName, Map<String, Object> result) {
 		if (result != null) {
 			mLogger.i(TAG, "Result received " + result.size() + " " + result.toString());
 		} else {
@@ -49,7 +49,7 @@ public class ModuleExample extends Module {
 	}
 
 	@Override
-	public void onEvent(String plugin, String version, String eventName, List<String> extras) {
+	public void onEvent(String plugin, String version, String eventName, Map<String, Object> extras) {
 		mLogger.i(TAG, "Event received");
 	}
 

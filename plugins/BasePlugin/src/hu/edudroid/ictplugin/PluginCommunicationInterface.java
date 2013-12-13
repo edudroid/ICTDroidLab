@@ -7,11 +7,14 @@ import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginResultListener;
 import hu.edudroid.interfaces.Quota;
 import hu.edudroid.interfaces.QuotaFactory;
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
+import hu.edudroid.utils.Utils;
+
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -45,6 +48,8 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver im
 			response = new Intent(Constants.INTENT_ACTION_DESCRIBE);
 			response.putExtra(Constants.INTENT_EXTRA_KEY_DESCRIBE_TYPE, Constants.INTENT_EXTRA_VALUE_REPORT);
 			response.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, getName());
+			response.putExtra(Constants.INTENT_EXTRA_KEY_PACKAGE_NAME, getPackageName());
+			response.putExtra(Constants.INTENT_EXTRA_KEY_RECEIVER_CLASS_NAME, getReceiverClassName());
 			response.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_AUTHOR, getAuthor());
 			response.putExtra(Constants.INTENT_EXTRA_KEY_DESCRIPTION, getDescription());
 			response.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, getVersionCode());
@@ -58,66 +63,63 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver im
 		if (intent.getAction().equals(Constants.INTENT_ACTION_CALL_METHOD)) {
 			final long callId = intent.getExtras().getLong(Constants.INTENT_EXTRA_CALL_ID);
 			final String methodName = intent.getExtras().getString(Constants.INTENT_EXTRA_METHOD_NAME);
-			final byte[] parameters = intent.getExtras().getByteArray(Constants.INTENT_EXTRA_METHOD_PARAMETERS);
+			final byte[] bytes = intent.getExtras().getByteArray(Constants.INTENT_EXTRA_METHOD_PARAMETERS);
+			Map<String, Object> params;
 			try {
-				List<Object> paramList = new ArrayList<Object>();
-				if (parameters != null) {
-					ByteArrayInputStream bis = new ByteArrayInputStream(parameters);
-					ObjectInputStream ois = new ObjectInputStream(bis);
-	
-					Integer paramsCount = (Integer) ois.readObject();
-					Object[] params = new Object[paramsCount];
-					for (int i = 0; i < paramsCount; i++) {
-						params[i] = ois.readObject();
-					}
-					paramList.addAll(Arrays.asList(params));
-				}
+				params = Utils.byteArrayToMap(bytes);
 				try {
-					List<String> result = callMethodSync(callId, methodName, paramList, context);
+					Map<String, Object> result = callMethodSync(callId, methodName, params, context);
 					reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, methodName, result, context);
 				} 
 				catch (AsyncMethodException a){
 					Log.i(TAG,"This is an async method.");
 				}
 				catch (Exception e) {
-					List<String> result = new ArrayList<String>();
-					result.add(e.getMessage());
-					reportResult(callId, Constants.INTENT_EXTRA_VALUE_ERROR, methodName, result, context);
+					Map<String,Object> error = new HashMap<String, Object>();
+					error.put(Constants.ERROR_MESSAGE_KEY, e.getMessage());
+					reportResult(callId, Constants.INTENT_EXTRA_VALUE_ERROR, methodName, error, context);
 				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				return;
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				Log.e(TAG, "Error parsing params.", e1);
 			}
 		}
 	}
 	
-	public void reportResult(long callId, String resultCode, String method, List<String> result, Context context) {
+	public void reportResult(long callId, String resultCode, String method, Map<String, Object> results, Context context) {
 				
 		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER);
 		intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, callId);
 		intent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, getName());
 		intent.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, getVersionCode());
 		intent.putExtra(Constants.INTENT_EXTRA_METHOD_NAME, method);
-		intent.putStringArrayListExtra(Constants.INTENT_EXTRA_VALUE_RESULT, new ArrayList<String>(result));
+		byte[] resultArray = Utils.mapToByteArray(results);
+		if (resultArray != null) {
+			intent.putExtra(Constants.INTENT_EXTRA_VALUE_RESULT, resultArray);
+		}
+
 		context.sendBroadcast(intent);
 	}
 
-	public void fireEvent(String eventName, List<String> result, Context context) {
+	public void fireEvent(String eventName, Map<String, Object> result, Context context) {
 		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_EVENT);
 		intent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, getName());
 		intent.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, getVersionCode());
 		intent.putExtra(Constants.INTENT_EXTRA_KEY_EVENT_NAME, eventName);
-		intent.putStringArrayListExtra(Constants.INTENT_EXTRA_VALUE_RESULT, new ArrayList<String>(result));
+		byte[] resultArray = Utils.mapToByteArray(result);
+		if (resultArray != null) {
+			intent.putExtra(Constants.INTENT_EXTRA_VALUE_RESULT, resultArray);
+		}
 		context.sendBroadcast(intent);
 	}
 
 	@Override
-	public long callMethodAsync(String method, List<Object> parameters, PluginResultListener listener){
+	public long callMethodAsync(String method, Map<String, Object> parameters, PluginResultListener listener){
 		throw new UnsupportedOperationException("Can't call async method on plugin.");
 	}
-	
+
 	@Override
-	public long callMethodAsync(String method, List<Object> parameters, PluginResultListener listener, int quotaQuantity) {
+	public long callMethodAsync(String method, Map<String, Object> parameters, PluginResultListener listener, int quotaQuantity) {
 		throw new UnsupportedOperationException("Can't call async method on plugin.");
 	}
 
@@ -125,7 +127,7 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver im
 	public void registerEventListener(String eventName, PluginEventListener listener) {
 		throw new UnsupportedOperationException("You have to register the listener on PluginAdapter...");
 	}
-	
+
 	@Override
 	public void unregisterEventListener(String eventName,
 			PluginEventListener listener) {

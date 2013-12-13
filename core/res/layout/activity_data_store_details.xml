@@ -26,7 +26,7 @@
         android:id="@+id/dataStoreDeleteZips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/deleteLogs" />
+        android:text="@string/deleteZips" />
     
     <TextView
         android:id="@+id/dataStoreModuleDetailsText"
@@ -38,5 +38,5 @@
         android:id="@+id/dataStoreDeleteModules"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/deleteLogs" />
+        android:text="@string/deleteModules" />
 </LinearLayout>

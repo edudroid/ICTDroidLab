@@ -1,7 +1,7 @@
 package hu.edudroid.interfaces;
 
-import java.util.List;
+import java.util.Map;
 
 public interface PluginEventListener {
-	void onEvent(String plugin, String version, String eventName, List<String> extras);
+	void onEvent(String plugin, String version, String eventName, Map<String, Object> extras);
 }

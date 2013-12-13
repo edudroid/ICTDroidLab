@@ -70,7 +70,7 @@ public class ModuleWrapper extends Module implements Preferences, Logger, Plugin
 
 	@Override
 	public void onResult(long id, String plugin, String pluginVersion,
-			String methodName, List<String> result) {
+			String methodName, Map<String, Object> result) {
 		module.onResult(id, plugin, pluginVersion, methodName, result);
 	}
 
@@ -82,7 +82,7 @@ public class ModuleWrapper extends Module implements Preferences, Logger, Plugin
 
 	@Override
 	public void onEvent(String plugin, String version, String eventName,
-			List<String> extras) {
+			Map<String, Object> extras) {
 		module.onEvent(plugin, version, eventName, extras);
 	}
 

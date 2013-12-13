@@ -29,4 +29,7 @@ public class Constants {
 	public static final String	INTENT_EXTRA_VALUE_ERROR				= "report error";
 	public static final String	INTENT_EXTRA_VALUE_REPORT				= "report self";
 	public static final String	INTENT_EXTRA_VALUE_EVENT				= "report event";
+	public static final String ERROR_MESSAGE_KEY = "Error message";
+	public static final String INTENT_EXTRA_KEY_RECEIVER_CLASS_NAME = "receiver class name";
+	public static final String INTENT_EXTRA_KEY_PACKAGE_NAME = "package name";
 }

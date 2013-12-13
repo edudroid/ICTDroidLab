@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ICT Droidlab Battery plugin</string>
+    <string name="hello_world">Hello, this is an ICT battery plugin!</string>
+
+</resources>

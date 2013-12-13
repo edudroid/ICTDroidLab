@@ -81,4 +81,6 @@
     <string name="moduleStateInstalled">Installed</string>
     <string name="moduleStateTerminated">Terminated</string>
     <string name="moduleStateBanned">Banned</string>
+    <string name="deleteZips">Delete temporary files</string>
+    <string name="deleteModules">Delete modules</string>
 </resources>

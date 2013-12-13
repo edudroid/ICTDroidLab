@@ -27,7 +27,7 @@ public class PluginListActivity extends ActivityBase implements PluginListener,
 		OnClickListener, OnItemClickListener {
 
 	private PluginListAdapter mAdapter = null;
-	private static final String TAG = "PluginListActivity";
+	private static final String TAG = PluginListActivity.class.getName();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,10 @@ public class PluginListActivity extends ActivityBase implements PluginListener,
 	private void refreshPluginlist() {
 		if (service != null) {
 			List<Plugin> plugins = service.getPlugins();
+			Log.d(TAG, "Loaded plugins from service " + plugins.toString());
 			List<PluginDescriptor> availablePlugins = service.getAvailablePlugins();
+			Log.d(TAG, "Available plugins from service " + availablePlugins.toString());
+			// TODO add plugins that are already installed
 			List<PluginDescriptor> descriptors = PluginManager.getAvailablePlugins(availablePlugins, plugins);
 			if (descriptors != null && descriptors.size() > 0) {
 				mAdapter.setPlugins(descriptors);

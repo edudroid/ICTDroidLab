@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.database.DataSetObserver;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 public class PluginListAdapter implements ListAdapter {
+
+	private static final String TAG = PluginListAdapter.class.getName();
 
 	private ArrayList<PluginDescriptor> mPlugins = new ArrayList<PluginDescriptor>();
 
@@ -34,6 +37,7 @@ public class PluginListAdapter implements ListAdapter {
 	}
 
 	public void setPlugins(List<PluginDescriptor> plugins) {
+		Log.d(TAG, "Plugin descriptors received " + plugins.size());
 		mPlugins.clear();
 		mPlugins.addAll(plugins);
 		onChanged();

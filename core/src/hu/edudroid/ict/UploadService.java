@@ -17,7 +17,6 @@ import org.apache.http.message.BasicNameValuePair;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Environment;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 

@@ -16,6 +16,7 @@ import hu.edudroid.module.ModuleState;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -93,7 +94,8 @@ public class CoreService extends Service implements PluginListener {
 					PluginDescriptor wifi = new PluginDescriptor("WiFi plugin", "hu.edudroid.ictpluginwifi", "A plugin for WiFi.");
 					PluginDescriptor social = new PluginDescriptor("Social plugin", "hu.edudroid.ictpluginsocial", "A plugin for social stuff.");
 					availablePlugins.add(wifi);
-					availablePlugins.add(social);		
+					availablePlugins.add(social);
+					availablePlugins = Collections.unmodifiableList(availablePlugins);
 				}
 			}).start();			
 			mBroadcast = new PluginIntentReceiver();
@@ -231,6 +233,10 @@ public class CoreService extends Service implements PluginListener {
 		return pluginCollection.getAllPlugins();
 	}
 	
+	/**
+	 * Returns available plugins, including those already downloaded
+	 * @return
+	 */
 	public List<PluginDescriptor> getAvailablePlugins() {
 		return availablePlugins;
 	}

@@ -6,8 +6,9 @@ import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginListener;
 import hu.edudroid.interfaces.PluginResultListener;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.ComponentName;
 import android.os.Bundle;
@@ -81,14 +82,14 @@ public class PluginDetailsActivity extends ActivityBase implements PluginListene
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		String methodName = (String)arg0.getItemAtPosition(arg2);
 		if (this.plugin != null) {
-			long callId = plugin.callMethodAsync(methodName, new ArrayList<Object>(), this);
+			long callId = plugin.callMethodAsync(methodName, new HashMap<String, Object>(), this);
 			Toast.makeText(this, "Called method " + methodName + ", call id: " + callId, Toast.LENGTH_SHORT).show();
 		}
 	}
 
 	@Override
 	public void onResult(long id, String plugin, String pluginVersion,
-			String methodName, List<String> result) {
+			String methodName, Map<String, Object> result) {
 		final String message = "Method call " + id + " (" + methodName + ") returned " + result.toString();
 		runOnUiThread(new Runnable() {
 			

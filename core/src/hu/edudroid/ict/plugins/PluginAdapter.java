@@ -6,21 +6,26 @@ import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginResultListener;
 import hu.edudroid.interfaces.Quota;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import hu.edudroid.utils.Utils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 public class PluginAdapter implements Plugin, PluginResultListener, PluginEventListener {
 
+	private static final String TAG = PluginAdapter.class.getName();
 	private final String					mName;
+	private final String					mPackage;
+	private final String					mReceiverClassName;
 	private final String					mAuthor;
 	private final String					mDescription;
 	private final String					mVersionCode;
@@ -37,6 +42,8 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	private static long mCallMethodID = 0;
 
 	public PluginAdapter(final String name,
+					final String packageName,
+					final String className,
 					final String author,
 					final String description,
 					final String versionCode,
@@ -45,6 +52,8 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 					PluginIntentReceiver broadcast,
 					final Context context) {
 		mName = name;
+		mPackage = packageName;
+		mReceiverClassName = className;
 		mAuthor = author;
 		mDescription = description;
 		mVersionCode = versionCode;
@@ -61,6 +70,16 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	public String getName() {
 		return mName;
 	}
+
+	@Override
+	public String getPackageName() {
+		return mPackage;
+	}
+
+	@Override
+	public String getReceiverClassName() {
+		return mReceiverClassName;
+	};
 
 	@Override
 	public String getAuthor() {
@@ -114,12 +133,12 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	public void consumeQuota(int identifier, int quantity){
 	}
 	
-	public long callMethodAsync(String method, List<Object> params, PluginResultListener listener){
+	public long callMethodAsync(String method, Map<String, Object> params, PluginResultListener listener){
 		return callMethodAsync(method, params, listener, 0);
 	}
 	
 	@Override
-	public long callMethodAsync(String method, List<Object> params, PluginResultListener listener, int quotaQuantity){		
+	public long callMethodAsync(String method, Map<String, Object> params, PluginResultListener listener, int quotaQuantity){		
 		
 		mBroadcast.registerResultListener(this);
 		
@@ -131,42 +150,30 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 				return -1;
 			consumeQuota(quota.getQuotaIdentifier(), quotaQuantity);
 		}
-		
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		ObjectOutputStream stream = null;
-		try{
-			Intent intent = new Intent(Constants.INTENT_ACTION_CALL_METHOD);
-			intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, mCallMethodID);
-			intent.putExtra(Constants.INTENT_EXTRA_METHOD_NAME, method);
-			// Write parameters
-			stream = new ObjectOutputStream(bytes);
-			if (params != null) {
-				stream.writeObject(Integer.valueOf(params.size()));
-				for (int i = 0; i < params.size(); i++) {
-					stream.writeObject(params.get(i));
-				}
-				byte[] parameters = bytes.toByteArray();
-				intent.putExtra(Constants.INTENT_EXTRA_METHOD_PARAMETERS, parameters);
-			}			
-			mContext.sendBroadcast(intent);
+		Intent intent = new Intent(Constants.INTENT_ACTION_CALL_METHOD);
+		intent.setComponent(new ComponentName(mPackage, mReceiverClassName));
+		intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, mCallMethodID);
+		intent.putExtra(Constants.INTENT_EXTRA_METHOD_NAME, method);
+		byte[] paramBytes = Utils.mapToByteArray(params);
+		if (paramBytes != null) {
+			intent.putExtra(Constants.INTENT_EXTRA_METHOD_PARAMETERS, paramBytes);
+		}
+		mContext.sendBroadcast(intent);
 
-			bytes.close();
-			stream.close();
-			return mCallMethodID++;
-		}
-		catch (IOException e){
-			e.printStackTrace();
-		}
-		return -1;
+		return mCallMethodID++;
 	}
 
 	@Override
 	public void onResult(long id, String plugin, String pluginVersion,
-			String methodName, List<String> result) {
-		try{
-			mCallBackIdentification.remove(id).onResult(id, plugin, pluginVersion, methodName, result);
-		} catch(NullPointerException e){
-			e.printStackTrace();
+			String methodName, Map<String, Object> result) {
+		if (plugin.equals(mName)) {
+			Log.d(TAG, "Received result from " + plugin + " for the callId " + id);
+			try{
+				mCallBackIdentification.remove(id).onResult(id, plugin, pluginVersion, methodName, result);
+			} catch(NullPointerException e){
+				Log.e(TAG, "Call id " + id + " doesn't exist.");
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -176,17 +183,17 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	}
 	
 	@Override
-	public List<String> callMethodSync(long callId, String method, List<Object> parameters, Object context) throws AsyncMethodException{
+	public Map<String, Object> callMethodSync(long callId, String method, Map<String, Object> parameters, Object context) throws AsyncMethodException{
 		throw new UnsupportedOperationException("Can't call sync methods on stub.");
 	}
 
 	@Override
-	public List<String> callMethodSync(long callId, String method, List<Object> parameters, int quotaQuantity, Object context) {
+	public Map<String, Object> callMethodSync(long callId, String method, Map<String, Object> parameters, int quotaQuantity, Object context) {
 		throw new UnsupportedOperationException("Can't call sync methods on stub.");
 	}
 
 	@Override
-	public void onEvent(String plugin, String version, String eventName, List<String> extras) {
+	public void onEvent(String plugin, String version, String eventName, Map<String, Object> extras) {
 		if (plugin.equals(getName())) {
 			HashSet<PluginEventListener> listeners = mEventListeners.get(eventName);
 			if (listeners != null) {

@@ -49,7 +49,7 @@ public class FileManager {
 	}
 
 	public static float getTotalZipFileSize() {
-		File[] files = LOG_FOLDER.listFiles();
+		File[] files = TMP_FOLDER.listFiles();
 		long total = 0;
 		for (File file : files) {
 			total += file.length();
