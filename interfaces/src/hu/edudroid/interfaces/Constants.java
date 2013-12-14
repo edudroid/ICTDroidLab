@@ -9,6 +9,13 @@ public class Constants {
 	public static final String	INTENT_ACTION_PLUGIN_EVENT				= "hu.edudroid.ict.plugin_event";
 	public static final String	INTENT_ACTION_PLUGIN_QUOTAS				= "hu.edudroid.ict.plugin_quotas";
 	public static final String	INTENT_ACTION_QUOTA_DESCRIPTION			= "hu.edudroid.ict.plugin_quota_description";
+	
+	public static final String	INTENT_ACTION_PLUGIN_LIMITS				= "hu.edudroid.ict.plugin_limits";
+	public static final String	INTENT_ACTION_LIMIT_RESET				= "hu.edudroid.ict.limit_reset";
+	public static final String	INTENT_ACTION_PROFILING_RESET			= "hu.edudroid.ict.profiling_reset";
+	
+	public static final String	INTENT_EXTRA_KEY_METHOD_LIMIT			= "method limit";
+	public static final String	INTENT_EXTRA_KEY_METHOD_NAME				= "method";
 
 	public static final String	INTENT_EXTRA_KEY_DESCRIBE_TYPE			= "describe type";
 	public static final String	INTENT_EXTRA_KEY_PLUGIN_ID				= "plugin";
