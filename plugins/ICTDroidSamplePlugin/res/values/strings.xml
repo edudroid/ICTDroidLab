@@ -13,8 +13,5 @@
     <string name="thirdMethodLimit">Third Method Limit</string>
     <string name="thirdMethodLimit_summary">Set your preferred limit</string>
     
-    <string name="resetFrequency">Limit Reset Frequency</string>
-    <string name="resetFrequency_summary">Set the reset frequency</string>
-
      <string name="menu_settings">Limit Settings</string>
 </resources>

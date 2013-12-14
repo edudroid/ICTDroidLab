@@ -5,36 +5,29 @@
             android:title="Method Limit Settings">
 
 	<ListPreference
-            android:key="firstMethodLimit"
+            android:key="First sample method"
             android:entries="@array/firstMethodLimit"
             android:summary="@string/firstMethodLimit_summary"
             android:entryValues="@array/firstMethodLimitValues"
-            android:title="@string/firstMethodLimit" />
+            android:title="@string/firstMethodLimit"
+            android:defaultValue="50" />
 	
 	<ListPreference
-            android:key="secondMethodLimit"
+            android:key="Second sample method"
             android:entries="@array/secondMethodLimit"
             android:summary="@string/secondMethodLimit_summary"
             android:entryValues="@array/secondMethodLimitValues"
-            android:title="@string/secondMethodLimit" />
+            android:title="@string/secondMethodLimit"
+            android:defaultValue="50" />
 	
 	<ListPreference
-            android:key="thirdMethodLimit"
+            android:key="Third sample method"
             android:entries="@array/thirdMethodLimit"
             android:summary="@string/thirdMethodLimit_summary"
             android:entryValues="@array/thirdMethodLimitValues"
-            android:title="@string/thirdMethodLimit" />
+            android:title="@string/thirdMethodLimit"
+            android:defaultValue="50" />
 	
     </PreferenceCategory>
- <PreferenceCategory
-            android:title="Frecvency Settings">
-
-       <ListPreference
-            android:key="resetFrequency"
-            android:entries="@array/resetFrequency"
-            android:summary="@string/resetFrequency_summary"
-            android:entryValues="@array/resetFrequencyValues"
-            android:title="@string/resetFrequency" />
- </PreferenceCategory>
 
 </PreferenceScreen>
