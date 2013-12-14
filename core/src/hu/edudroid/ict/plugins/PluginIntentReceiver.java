@@ -5,9 +5,11 @@ import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginListener;
 import hu.edudroid.interfaces.PluginResultListener;
 
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -20,8 +22,7 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 	
 	private final String TAG = PluginIntentReceiver.class.getName();
 	
-	private final HashMap<String, Integer> profiling = new HashMap<String, Integer>();
-	SharedPreferences spprofiling;
+	SharedPreferences profiling;
 
 	private final HashSet<PluginListener> pluginListeners = new HashSet<PluginListener>();
 	private final HashSet<PluginResultListener> mResultListeners = new HashSet<PluginResultListener>();
@@ -54,7 +55,7 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent){
 		
-		spprofiling = context.getSharedPreferences("profilepref",Context.MODE_WORLD_WRITEABLE);
+		profiling = context.getSharedPreferences("profilepref",Context.MODE_WORLD_READABLE);
 		
 		Log.d(TAG, "onReceive: " + intent.getAction());
 		
@@ -62,7 +63,19 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 
 		if (extras == null)
 			return;
-
+		
+		if(intent.getAction().equals(Constants.INTENT_ACTION_PROFILING_RESET)){
+			Map<String,?> profileddatas = profiling.getAll();
+			Set<String> keys = profileddatas.keySet();
+			for (Iterator<String> i = keys.iterator(); i.hasNext();){
+				String data = (String) i.next();
+				SharedPreferences.Editor editor = profiling.edit();
+				editor.putInt(data, 0);
+				editor.commit();
+			}
+			
+		}
+		
 		if(intent.getAction().equals(Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER)){
 			final long id = extras.getLong(Constants.INTENT_EXTRA_CALL_ID);
 			final String plugin = extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_ID);
@@ -73,10 +86,9 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 			for ( PluginResultListener listener : mResultListeners) {
 				listener.onResult(id,	plugin,version, method, result);
 				
-				SharedPreferences.Editor editor = spprofiling.edit();
+				SharedPreferences.Editor editor = profiling.edit();
 				
 				int number = getCalledMethodNumber(method) + 1;
-				profiling.put(method, number);
 				editor.putInt(method, number);
 				editor.commit();				
 			}
@@ -114,16 +126,19 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 			final List<String> result = extras.getStringArrayList(Constants.INTENT_EXTRA_VALUE_RESULT);
 			for (PluginEventListener listener : mPluginEventListeners){
 				listener.onEvent(plugin, version, eventName, result);
+				SharedPreferences.Editor editor = profiling.edit();
+				
 				int number = getCalledMethodNumber(eventName) + 1;
-				profiling.put(eventName, number);
+				editor.putInt(eventName, number);
+				editor.commit();	
 			}
 		}
 	}
 	
 	private int getCalledMethodNumber(String method){
 		int number = 0;
-		if(profiling.containsKey(method)){
-			number = profiling.get(method);
+		if(profiling.contains(method)){
+			number = profiling.getInt(method, 0);
 		}		
 		return number;
 	}
