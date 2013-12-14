@@ -15,6 +15,8 @@ import hu.edudroid.module.ModuleManager;
 import hu.edudroid.module.ModuleState;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -62,10 +64,12 @@ public class CoreService extends Service implements PluginListener {
 	private ModuleManager moduleManager;
 
 	private float cpulimit;
-	SharedPreferences spprofiling;
+	SharedPreferences profiling;
 	private float avgrunning_time;
 	private float sumavgrunning_time;
 	private float maxavgrunning_time = 0;
+	
+	File profilingfile;
 
 	public static File getDescriptorFolder(Context context) {
 		return new File(context.getFilesDir(), CoreService.DESCRIPTOR_FOLDER);
@@ -189,15 +193,49 @@ public class CoreService extends Service implements PluginListener {
 									}
 
 									avgrunning_time = avgrunning_time / denominator;
-									sumavgrunning_time += avgrunning_time;
-									if (maxavgrunning_time < avgrunning_time)
-										maxavgrunning_time = avgrunning_time; 
+									sumavgrunning_time += avgrunning_time; 
+									
 									if (getProfilingMode() == false) {
 										if (avgrunning_time > cpulimit
 												&& thrs.availablePermits() != 0) {
 											thrs.aquirePermit();
 										} else if (thrs.availablePermits() == 0) {
 											thrs.releasePermit();
+										}
+									} else {
+										File root = android.os.Environment.getExternalStorageDirectory();
+										File dir = new File (root.getAbsolutePath() + "/profiling");
+									    dir.mkdirs();
+									   	profilingfile = new File(dir, "ProfiledData.txt");;
+										FileOutputStream dest = null;
+										try {
+											dest = new FileOutputStream(profilingfile);
+											StringBuilder sb = new StringBuilder();
+											float sumscheduledtime = totalRunTime(processid,thrs.getThreadId());
+											sb.append("Summa scheduled time: "+Float.toString(sumscheduledtime)+ "\n");
+											if (maxavgrunning_time < avgrunning_time){
+												maxavgrunning_time = avgrunning_time;
+											}
+											sb.append("Max CPU usage: "+Float.toString(maxavgrunning_time)+ "%\n");		
+											profiling = getSharedPreferences("profilepref",Context.MODE_PRIVATE);
+											Map<String,?> methodcalls = profiling.getAll();
+											Set<String> methods = methodcalls.keySet();
+											for (Iterator<String> j = methods.iterator(); j.hasNext();){
+												String method = (String) j.next();
+												Integer number = (Integer) methodcalls.get(method);
+												sb.append(method + " called " + Integer.toString(number) + " times.\n");
+											}
+											dest.write((sb.toString()).getBytes());
+											dest.close();	
+										} catch (FileNotFoundException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										} catch (IOException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										} catch (Exception e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
 										}
 									}
 								}
@@ -222,15 +260,6 @@ public class CoreService extends Service implements PluginListener {
 								}
 							}
 							if (getProfilingMode() == true) {
-								
-								spprofiling = getSharedPreferences("profilepref",Context.MODE_WORLD_WRITEABLE);
-								Map<String,?> methodcalls = spprofiling.getAll();
-								Set<String> methods = methodcalls.keySet();
-								for (Iterator<String> i = methods.iterator(); i.hasNext();){
-									String method = (String) i.next();
-									Integer number = (Integer) methodcalls.get(method);
-									Log.d("profilingfromcs", method +" , "+ number.toString());
-								}
 								for (int l = 0; l < list.size(); l++) {
 									ThreadSemaphore thrs = list.get(l);
 									if (thrs.availablePermits() == 0) {
@@ -246,7 +275,33 @@ public class CoreService extends Service implements PluginListener {
 					}
 				}
 			}).start();
-
+			
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					
+					while(true){
+						try {
+							long resettime = getResetTime();
+							if (resettime != 0){
+								Intent intent = new Intent();
+								intent = new Intent(Constants.INTENT_ACTION_LIMIT_RESET);
+								sendBroadcast(intent);
+								Thread.sleep(resettime);
+							} else{
+								Intent intent = new Intent();
+								intent = new Intent(Constants.INTENT_ACTION_LIMIT_RESET);
+								sendBroadcast(intent);
+								Thread.sleep(36000);
+							}
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+				
+			}).start();
 		}
 	}
 
@@ -435,6 +490,17 @@ public class CoreService extends Service implements PluginListener {
 				.getDefaultSharedPreferences(this);
 		boolean value = sharedPrefs.getBoolean("limit_mode", true);
 		return value;
+	}
+	
+	public long getResetTime(){
+		SharedPreferences sharedPrefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		String value = sharedPrefs.getString("resetFrequency", null);
+		long time = 0;
+		if(value != null){
+		time = Long.parseLong(value);
+		}
+		return time;
 	}
 
 	public boolean getProfilingMode() {
