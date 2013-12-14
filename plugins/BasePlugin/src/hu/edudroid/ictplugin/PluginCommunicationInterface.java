@@ -7,23 +7,61 @@ import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginResultListener;
 import hu.edudroid.interfaces.Quota;
 import hu.edudroid.interfaces.QuotaFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 public  abstract class PluginCommunicationInterface extends BroadcastReceiver implements Plugin {
 	
 	private static final String TAG = PluginCommunicationInterface.class.getName();
-	
+	SharedPreferences userlimits;
+	SharedPreferences methodcounter;
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Log.d(TAG, "Intent received " + intent.getAction());
+		
+		userlimits = context.getSharedPreferences("userlimits",Context.MODE_PRIVATE);
+		methodcounter = context.getSharedPreferences("methodcounter",Context.MODE_PRIVATE);
+		
+		if (intent.getAction().equals(Constants.INTENT_ACTION_LIMIT_RESET)) {
+			Map<String,?> methodcalls = methodcounter.getAll();
+			Set<String> methods = methodcalls.keySet();
+			for (Iterator<String> i = methods.iterator(); i.hasNext();){
+				String method = (String) i.next();
+				SharedPreferences.Editor editor = methodcounter.edit();
+				editor.putInt(method, 0);
+				editor.commit();
+			}
+			
+		}
+		
+		if (intent.getAction().equals(Constants.INTENT_ACTION_PLUGIN_LIMITS)) {
+			final String methodName = intent.getExtras().getString(Constants.INTENT_EXTRA_KEY_METHOD_NAME);
+			final String methodLimit = intent.getExtras().getString(Constants.INTENT_EXTRA_KEY_METHOD_LIMIT);
+			int limitnumber = Integer.parseInt(methodLimit);
+			SharedPreferences.Editor editor1 = userlimits.edit();
+			editor1.putInt(methodName, limitnumber);
+			editor1.commit();
+			if(methodcounter.contains(methodName)== false){
+			SharedPreferences.Editor editor2 = methodcounter.edit();
+			editor2.putInt(methodName, 0);
+			editor2.commit();	
+			}
+	
+		}
+		
 		if (intent.getAction().equals(Constants.INTENT_ACTION_PLUGIN_QUOTAS)) {
 			Intent response = new Intent(Constants.INTENT_ACTION_QUOTA_DESCRIPTION);
 			response.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, getName());
@@ -67,8 +105,20 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver im
 				Object[] params = new Object[paramsCount];
 				for (int i = 0; i < paramsCount; i++)
 					params[i] = ois.readObject();
-				try {
-					List<String> result = callMethodSync(callId, methodName, Arrays.asList(params), context);
+				try {List<String> result;
+					if(userlimits.contains(methodName) && userlimits.getInt(methodName, -1)== 0 || methodcounter.getInt(methodName, -1) < userlimits.getInt(methodName, -1)){
+						result = callMethodSync(callId, methodName, Arrays.asList(params), context);
+						int temp = methodcounter.getInt(methodName, -1);
+						SharedPreferences.Editor editor = methodcounter.edit();
+						editor.putInt(methodName, temp + 1);
+						editor.commit();
+					}else if (!userlimits.contains(methodName)){
+						result = callMethodSync(callId, methodName, Arrays.asList(params), context);	
+					}
+					else{
+						result = new ArrayList<String>();
+						result.add(methodName + " methodcall reached its limit");
+					}
 					reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, methodName, result, context);
 				} 
 				catch (AsyncMethodException a){
