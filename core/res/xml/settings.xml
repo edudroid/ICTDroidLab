@@ -17,6 +17,18 @@
                 android:summary="@string/limitcheckbox_summary"
                 android:defaultValue="true" />
  </PreferenceCategory>
+ 
+ <PreferenceCategory
+            android:title="Frequency Settings">
+
+       <ListPreference
+            android:key="resetFrequency"
+            android:entries="@array/resetFrequency"
+            android:summary="@string/resetFrequency_summary"
+            android:entryValues="@array/resetFrequencyValues"
+            android:title="@string/resetFrequency"
+            android:defaultValue="60000"  />
+ </PreferenceCategory>
 
  <PreferenceCategory
             android:title="Developer Settings">

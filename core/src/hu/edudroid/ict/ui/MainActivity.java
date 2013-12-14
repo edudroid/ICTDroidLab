@@ -2,6 +2,7 @@ package hu.edudroid.ict.ui;
 
 import hu.edudroid.ict.ModuleSetListener;
 import hu.edudroid.ict.R;
+import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.module.ModuleDescriptor;
 import hu.edudroid.module.ModuleLoader;
@@ -120,6 +121,10 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 		case R.id.menu_settings:
 			Intent i = new Intent(this, UserSettingActivity.class);
 			startActivityForResult(i, RESULT_SETTINGS);
+			break;
+		case R.id.menu_profiling_reset:
+			Intent j = new Intent(Constants.INTENT_ACTION_PROFILING_RESET);
+			this.sendBroadcast(j);
 			break;
 		}
 		return true;

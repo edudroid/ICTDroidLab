@@ -84,6 +84,7 @@
     
     <!-- Settings -->
     <string name="menu_settings">Settings</string>
+    <string name="menu_profiling_reset">Reset Profiling</string>
     <string name="slider_title">Cpu Usage Controller</string>
     <string-array name="slider_summaries">
         <item>Low</item> <!-- 0.00 to 0.3-->
@@ -92,6 +93,8 @@
     </string-array>
     <item name="slider_default" format="float" type="string">0.5</item>
     <string name="slider_message">Please set up the maximum value(from 0 to 100 in percent),that you allow for running modules. </string>
+	<string name="resetFrequency">Limit Reset Frequency</string>
+    <string name="resetFrequency_summary">Set the reset frequency</string>
 	<string name="limitcheckbox_title">Individual limit</string>
     <string name="limitcheckbox_summary">If it checked, your limit will be checked per installed module.</string>
     <string name="profilingcheckbox_title">Profiling Mode</string>
