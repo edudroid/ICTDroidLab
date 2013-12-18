@@ -22,7 +22,8 @@ public class WiFiPluginTracerouteService extends Service {
 	public class LogStreamReader implements Runnable {
 
         private BufferedReader reader;
-        private long callId;
+        @SuppressWarnings("unused")
+		private long callId;
 
         public LogStreamReader(long callId, InputStream is) {
             this.reader = new BufferedReader(new InputStreamReader(is));

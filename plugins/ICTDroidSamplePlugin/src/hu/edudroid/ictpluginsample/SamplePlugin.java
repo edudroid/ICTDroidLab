@@ -6,7 +6,9 @@ import hu.edudroid.interfaces.Quota;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.util.Log;
@@ -64,6 +66,17 @@ public class SamplePlugin extends PluginCommunicationInterface {
 	}
 	
 	@Override
+	public String getPackageName() {
+		return SamplePlugin.class.getPackage().getName();
+	}
+
+	
+	@Override
+	public String getReceiverClassName() {
+		return SamplePlugin.class.getName();
+	}
+	
+	@Override
 	public List<String> getMethodNames() {
 		return mMethods;
 	}
@@ -84,33 +97,33 @@ public class SamplePlugin extends PluginCommunicationInterface {
 	}
 	
 	@Override
-	public List<String> callMethodSync(long callId, String method, List<Object> parameters, Object context) throws AsyncMethodException{
-		return callMethodSync(callId, method, parameters, 0);
+	public Map<String, Object> callMethodSync(long callId, String method, Map<String, Object> parameters, Object context) throws AsyncMethodException{
+		return callMethodSync(callId, method, parameters, 0, context);
 	}
 	
 	@Override
-	public List<String> callMethodSync(long callId, String method, List<Object> parameters, int quotaQuantity, Object context) throws AsyncMethodException {
+	public Map<String, Object> callMethodSync(long callId, String method, Map<String, Object> parameters, int quotaQuantity, Object context) throws AsyncMethodException {
 		if (method.equals(FIRST_SAMPLE_METHOD_NAME)) {			
 			Log.d(TAG, "First sample method called");
-			List<String> ret = new ArrayList<String>();
-			ret.add("First sample method result");
+			Map<String, Object> ret = new HashMap<String, Object>();
+			ret.put("Value","First sample method result");
 			return ret;
 		} else if (method.equals(SECOND_SAMPLE_METHOD_NAME)) {
 			Log.d(TAG, "Second sample method called");
-			List<String> ret = new ArrayList<String>();
-			ret.add("Second sample method result");
+			Map<String, Object> ret = new HashMap<String, Object>();
+			ret.put("Value","Second sample method result");
 			return ret;
 		} else if (method.equals(THIRD_SAMPLE_METHOD_NAME)) {
 			Log.d(TAG, "Third sample method called");
-			List<String> ret = new ArrayList<String>();
-			ret.add("Third sample method result");
+			Map<String, Object> ret = new HashMap<String, Object>();
+			ret.put("Value","Third sample method result");
 			return ret;
 		} else {
 			return null;
 		}
 	}
 	
-	protected void event(String eventName, List<String> result, Context context) {
+	protected void event(String eventName, Map<String, Object> result, Context context) {
 		super.fireEvent(eventName, result, context);
 	}
 		

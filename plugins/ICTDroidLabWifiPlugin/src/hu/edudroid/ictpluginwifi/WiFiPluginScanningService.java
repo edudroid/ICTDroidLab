@@ -40,7 +40,8 @@ public class WiFiPluginScanningService extends Service {
     	final int delay = Integer.parseInt(intent.getExtras().getString("delay"));
     	final int periodicity = Integer.parseInt(intent.getExtras().getString("periodicity"));
     	final int count = Integer.parseInt(intent.getExtras().getString("count"));
-    	final long callId = Long.parseLong(intent.getExtras().getString(Constants.INTENT_EXTRA_CALL_ID));
+    	@SuppressWarnings("unused")
+		final long callId = Long.parseLong(intent.getExtras().getString(Constants.INTENT_EXTRA_CALL_ID));
     	
 		try{
 			BroadcastReceiver wifi_scan = new BroadcastReceiver()

@@ -19,6 +19,8 @@ import android.net.wifi.WifiManager;
 import android.util.Log;
 
 public class WiFiPlugin extends PluginCommunicationInterface {
+	
+	public static final String VALUE_KEY = "value";
 
 	private static final List<String> mMethods = new ArrayList<String>();
 	static {
@@ -55,6 +57,16 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 	public String getName() {
 		return "WiFi Plugin";
 	}
+
+	@Override
+	public String getPackageName() {
+		return WiFiPlugin.class.getPackage().getName();
+	}
+
+	@Override
+	public String getReceiverClassName() {
+		return WiFiPlugin.class.getName();
+	}
 	
 	@Override
 	public List<String> getMethodNames() {
@@ -77,42 +89,41 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 	}
 	
 	@Override
-	public List<String> callMethodSync(long callId, String method, List<Object> parameters, Object context) throws AsyncMethodException{
+	public Map<String, Object> callMethodSync(long callId, String method, Map<String, Object> parameters, Object context) throws AsyncMethodException{
 		return callMethodSync(callId, method, parameters, 0);
 	}
 	
 	@Override
-	public List<String> callMethodSync(long callId, String method, List<Object> parameters, int quotaQuantity, Object context) throws AsyncMethodException {
+	public Map<String, Object> callMethodSync(long callId, String method, Map<String, Object> parameters, int quotaQuantity, Object context) throws AsyncMethodException {
 		mWifiManager=(WifiManager)((Context)context).getSystemService(Context.WIFI_SERVICE);
 		mWifiInfo=mWifiManager.getConnectionInfo();
-		List<String> answer=new ArrayList<String>();
+		Map<String, Object> answer = new HashMap<String, Object>();
 		if(method.equals("getIpAddress")){
-			Log.e("WifiPlugin","2");
-			answer.add(intToIP(mWifiInfo.getIpAddress()));
+			answer.put(VALUE_KEY, intToIP(mWifiInfo.getIpAddress()));
 		}
 		if(method.equals("getMacAddress")){
-			answer.add(mWifiInfo.getMacAddress());
+			answer.put(VALUE_KEY, mWifiInfo.getMacAddress());
 		}
 		if(method.equals("getLinkSpeed")){
-			answer.add(String.valueOf(mWifiInfo.getLinkSpeed())+" Mbps");
+			answer.put(VALUE_KEY, String.valueOf(mWifiInfo.getLinkSpeed())+" Mbps");
 		}
 		if(method.equals("getBSSID")){
-			answer.add(mWifiInfo.getBSSID());
+			answer.put(VALUE_KEY, mWifiInfo.getBSSID());
 		}
 		if(method.equals("getSSID")){
-			answer.add(mWifiInfo.getSSID());
+			answer.put(VALUE_KEY, mWifiInfo.getSSID());
 		}
 		if(method.equals("getNetworkId")){
-			answer.add(String.valueOf(mWifiInfo.getNetworkId()));
+			answer.put(VALUE_KEY, String.valueOf(mWifiInfo.getNetworkId()));
 		}
 		if(method.equals("getRssi")){
-			answer.add(String.valueOf(mWifiInfo.getRssi()));
+			answer.put(VALUE_KEY, String.valueOf(mWifiInfo.getRssi()));
 		}
 		if(method.equals("isHiddenSSID")){
-			answer.add(String.valueOf(mWifiInfo.getHiddenSSID()));
+			answer.put(VALUE_KEY, String.valueOf(mWifiInfo.getHiddenSSID()));
 		}
 		if(method.equals("getDescribeContents")){
-			answer.add(String.valueOf(mWifiInfo.describeContents()));
+			answer.put(VALUE_KEY, String.valueOf(mWifiInfo.describeContents()));
 		}
 		if(method.equals("scanning")){
 			if(parameters.get(0)!=null && parameters.get(1)!=null && parameters.get(2)!=null){				
@@ -154,7 +165,7 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 			}
 			
 		}
-		Log.e("WifiPlugin",answer.get(0));
+		Log.e("WifiPlugin",answer.get(VALUE_KEY).toString());
 		return answer;				
 	}
 	
@@ -170,12 +181,12 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 	}
 	
 	@Override
-	public long callMethodAsync(String method, List<Object> parameters, PluginResultListener listener){
+	public long callMethodAsync(String method, Map<String,Object> parameters, PluginResultListener listener){
 		return callMethodAsync(method, parameters, listener, 0);
 	}
 	
 	@Override
-	public long callMethodAsync(String method, List<Object> parameters, PluginResultListener listener, int quotaQuantity) {
+	public long callMethodAsync(String method, Map<String, Object> parameters, PluginResultListener listener, int quotaQuantity) {
 		throw new UnsupportedOperationException("Can't call async method on plugin.");
 	}
 
@@ -210,24 +221,20 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 
 	@Override
 	public List<Quota> getQuotas(){
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Quota getQuotaForMethod(String method){
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean validateQuota(Quota quota){
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
 	@Override
 	public void consumeQuota(int identifier, int quantity){
-		// TODO Auto-generated method stub	
 	}
 }

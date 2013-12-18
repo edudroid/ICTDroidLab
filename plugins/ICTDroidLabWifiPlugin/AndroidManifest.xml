@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="15"
+        android:minSdkVersion="8"
         android:targetSdkVersion="15" />
     
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -42,6 +42,7 @@
         <receiver
             android:name="hu.edudroid.ictpluginwifi.WiFiPlugin"
             android:enabled="true"
+			android:permission="hu.edudroid.CALL_PLUGIN"
             android:exported="true">
             <intent-filter >
                 <action android:name="hu.edudroid.ict.plugin_polling_question"/>
