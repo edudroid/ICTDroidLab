@@ -124,6 +124,7 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 			break;
 		case R.id.menu_profiling_reset:
 			Intent j = new Intent(Constants.INTENT_ACTION_PROFILING_RESET);
+			j.putExtra(Constants.INTENT_EXTRA_KEY_METHOD_NAME,"0");
 			this.sendBroadcast(j);
 			break;
 		}

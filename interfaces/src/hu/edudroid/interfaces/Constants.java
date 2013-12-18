@@ -16,6 +16,7 @@ public class Constants {
 	
 	public static final String	INTENT_EXTRA_KEY_METHOD_LIMIT			= "method limit";
 	public static final String	INTENT_EXTRA_KEY_METHOD_NAME				= "method";
+	public static final String	INTENT_EXTRA_KEY_PROFILING_RESET			= "profiling reset";
 
 	public static final String	INTENT_EXTRA_KEY_DESCRIBE_TYPE			= "describe type";
 	public static final String	INTENT_EXTRA_KEY_PLUGIN_ID				= "plugin";

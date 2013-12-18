@@ -126,6 +126,8 @@ public class CoreService extends Service implements PluginListener {
 					Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER));
 			registerReceiver(mBroadcast, new IntentFilter(
 					Constants.INTENT_ACTION_PLUGIN_EVENT));
+			registerReceiver(mBroadcast, new IntentFilter(
+					Constants.INTENT_ACTION_PROFILING_RESET));
 			Log.i(TAG, "Receivers are registered!");
 
 			mBroadcast.registerPluginDetailsListener(this);
@@ -196,6 +198,7 @@ public class CoreService extends Service implements PluginListener {
 									sumavgrunning_time += avgrunning_time; 
 									
 									if (getProfilingMode() == false) {
+										maxavgrunning_time = 0;
 										if (avgrunning_time > cpulimit
 												&& thrs.availablePermits() != 0) {
 											thrs.aquirePermit();
@@ -223,6 +226,7 @@ public class CoreService extends Service implements PluginListener {
 											for (Iterator<String> j = methods.iterator(); j.hasNext();){
 												String method = (String) j.next();
 												Integer number = (Integer) methodcalls.get(method);
+												Log.d(TAG, method +" , "+ profiling.getInt(method, -1));
 												sb.append(method + " called " + Integer.toString(number) + " times.\n");
 											}
 											dest.write((sb.toString()).getBytes());

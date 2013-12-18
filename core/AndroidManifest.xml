@@ -93,12 +93,6 @@
         <activity android:name=".ui.DataStoreDetailsActivity"></activity>
         <activity android:name=".ui.ModuleDetailsActivity"></activity>
         <activity android:name=".ui.UserSettingActivity"></activity>
-        <receiver android:name=".plugins.PluginIntentReceiver">
-            <intent-filter>
-                <action android:name= "hu.edudroid.ict.profiling_reset" />
-            </intent-filter>
-        </receiver>
-        
         
     </application>
 

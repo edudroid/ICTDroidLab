@@ -65,6 +65,7 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 			return;
 		
 		if(intent.getAction().equals(Constants.INTENT_ACTION_PROFILING_RESET)){
+			intent.getExtras().getString(Constants.INTENT_EXTRA_KEY_PROFILING_RESET);
 			Map<String,?> profileddatas = profiling.getAll();
 			Set<String> keys = profileddatas.keySet();
 			for (Iterator<String> i = keys.iterator(); i.hasNext();){
@@ -72,6 +73,7 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 				SharedPreferences.Editor editor = profiling.edit();
 				editor.putInt(data, 0);
 				editor.commit();
+				
 			}
 			
 		}
