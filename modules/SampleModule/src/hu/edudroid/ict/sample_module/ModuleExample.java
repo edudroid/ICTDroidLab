@@ -58,6 +58,8 @@ public class ModuleExample extends Module {
 		mLogger.d(TAG, "timer event");
 		mLogger.i(TAG, "Module example run at " + dateFormatter.format(new Date()));
 		Plugin plugin = mPluginCollection.getPluginByName(SAMPLE_PLUGIN_NAME);
-		plugin.callMethodAsync(FIRST_METHOD, null, this);
+		if (plugin != null) {
+			plugin.callMethodAsync(FIRST_METHOD, null, this);
+		}
 	}
 } 
