@@ -7,6 +7,7 @@ core/assets/jars/
 core/assets/descriptors/
 modules/SampleModule/classes.dex
 modules/SampleModule/vars.bat
+modules/SampleModule/module.desc
 *.ucls
 *.docx#
 *.odt#

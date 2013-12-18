@@ -1,19 +1,23 @@
 package hu.edudroid.interfaces;
 
 import java.util.List;
+import java.util.Map;
 
 public interface Plugin {
 
-	String getAuthor();
 	String getName();
+	String getPackageName();
+	String getReceiverClassName();
+	String getAuthor();
 	String getDescription();
 	String getVersionCode();
 	List<String> getAllEvents();
 	List<String> getMethodNames();
 	List<Quota> getQuotas();
 	Quota getQuotaForMethod(String method);
-	long callMethodAsync(String method, List<Object> parameters,PluginResultListener listener);
-	long callMethodAsync(String method, List<Object> parameters,PluginResultListener listener, int quotaQuantity);
+	long callMethodAsync(String method, Map<String, Object> parameters,PluginResultListener listener);
+	long callMethodAsync(String method, Map<String, Object> parameters,PluginResultListener listener, int quotaQuantity);
+
 	/**
 	 * 
 	 * @param callId
@@ -22,7 +26,7 @@ public interface Plugin {
 	 * @return
 	 * @throws AsyncMethodException If method is an async method, throw exception, and send intent when you're done.
 	 */
-	List<String> callMethodSync(long callId, String method, List<Object> parameters, Object context) throws AsyncMethodException;
+	Map<String, Object> callMethodSync(long callId, String method, Map<String, Object> parameters, Object context) throws AsyncMethodException;
 	/**
 	 * 
 	 * @param callId
@@ -32,7 +36,7 @@ public interface Plugin {
 	 * @return
 	 * @throws AsyncMethodException If method is an async method, throw exception, and send intent when you're done.
 	 */
-	List<String> callMethodSync(long callId, String method, List<Object> parameters, int quotaQuantity, Object context) throws AsyncMethodException;
+	Map<String, Object> callMethodSync(long callId, String method, Map<String, Object> parameters, int quotaQuantity, Object context) throws AsyncMethodException;
 	void registerEventListener(String eventName, PluginEventListener listener);
 	void unregisterEventListener(String eventName, PluginEventListener listener);
 	void unregisterEventListener(PluginEventListener listener);

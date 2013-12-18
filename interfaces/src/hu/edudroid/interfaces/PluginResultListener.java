@@ -1,6 +1,6 @@
 package hu.edudroid.interfaces;
 
-import java.util.List;
+import java.util.Map;
 
 public interface PluginResultListener {
 
@@ -8,7 +8,7 @@ public interface PluginResultListener {
 						final String plugin,
 						final String pluginVersion,
 						final String methodName,
-						final List<String> result);
+						final Map<String, Object> result);
 
 	public void onError(final long id,
 						final String plugin,

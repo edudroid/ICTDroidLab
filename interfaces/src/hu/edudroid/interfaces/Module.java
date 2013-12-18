@@ -6,15 +6,13 @@ public abstract class Module implements PluginResultListener, PluginEventListene
 	protected final Logger 					mLogger;
 	protected final PluginCollection 			mPluginCollection;
 	protected final TimeServiceInterface		mTimeService;
-	protected final ThreadSemaphore			mThreadSemaphore;
 	
 	
-	public Module(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice, ThreadSemaphore threadsemaphore) {
+	public Module(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice) {
 		mPrefs = prefs;
 		mLogger = logger;
 		mPluginCollection = pluginCollection;
 		mTimeService = timeservice;
-		mThreadSemaphore = threadsemaphore;
 	}
 	
 	public abstract void init();
