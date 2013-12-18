@@ -4,9 +4,10 @@ import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginListener;
 import hu.edudroid.interfaces.PluginResultListener;
+import hu.edudroid.utils.Utils;
 
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,7 +17,7 @@ import android.util.Log;
 
 public class PluginIntentReceiver extends BroadcastReceiver {
 	
-	private final String TAG = "PluginIntentReceiver";
+	private final String TAG = PluginIntentReceiver.class.getName();
 
 	private final HashSet<PluginListener> pluginListeners = new HashSet<PluginListener>();
 	private final HashSet<PluginResultListener> mResultListeners = new HashSet<PluginResultListener>();
@@ -49,7 +50,7 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent){
 		
-		Log.i(TAG,"onReceive: "+intent.getAction());
+		Log.d(TAG, "onReceive: " + intent.getAction());
 		
 		final Bundle extras = intent.getExtras();
 
@@ -61,10 +62,15 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 			final String plugin = extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_ID);
 			final String version = extras.getString(Constants.INTENT_EXTRA_KEY_VERSION);
 			final String method = extras.getString(Constants.INTENT_EXTRA_METHOD_NAME);
-			final List<String> result = extras.getStringArrayList(Constants.INTENT_EXTRA_VALUE_RESULT);
-
-			for ( PluginResultListener listener : mResultListeners) {
-				listener.onResult(id,	plugin,version, method, result);
+			byte[] bytes = extras.getByteArray(Constants.INTENT_EXTRA_VALUE_RESULT);
+			try {
+				Log.d(TAG, "Received plugin call result " + plugin + " " + method);
+				Map<String, Object> result = Utils.byteArrayToMap(bytes);
+				for ( PluginResultListener listener : mResultListeners) {
+					listener.onResult(id, plugin,version, method, result);
+				}
+			} catch (Exception e) {
+				Log.e(TAG, "Error parsing parameters", e);
 			}
 		}
 		if(intent.getAction().equals(Constants.INTENT_ACTION_DESCRIBE)){
@@ -72,6 +78,8 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 				for (PluginListener listener: pluginListeners) {
 				listener.newPlugin(new PluginAdapter(
 							extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_ID),
+							extras.getString(Constants.INTENT_EXTRA_KEY_PACKAGE_NAME),
+							extras.getString(Constants.INTENT_EXTRA_KEY_RECEIVER_CLASS_NAME),
 							extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_AUTHOR),
 							extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIPTION),
 							extras.getString(Constants.INTENT_EXTRA_KEY_VERSION),
@@ -97,9 +105,19 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 			final String plugin = extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_ID);
 			final String version = extras.getString(Constants.INTENT_EXTRA_KEY_VERSION);
 			final String eventName = extras.getString(Constants.INTENT_EXTRA_KEY_EVENT_NAME);
-			final List<String> result = extras.getStringArrayList(Constants.INTENT_EXTRA_VALUE_RESULT);
-			for (PluginEventListener listener : mPluginEventListeners){
-				listener.onEvent(plugin, version, eventName, result);
+			byte[] bytes = extras.getByteArray(Constants.INTENT_EXTRA_VALUE_RESULT);
+			try {
+				Map<String, Object> data = Utils.byteArrayToMap(bytes);
+				if (data != null) {
+					Log.i(TAG, "Plugin event received " + plugin + " " + eventName + " data: " + data.toString());
+				} else {
+					Log.i(TAG, "Plugin event received " + plugin + " " + eventName + " with no data.");
+				}
+				for (PluginEventListener listener : mPluginEventListeners){
+					listener.onEvent(plugin, version, eventName, data);
+				}
+			} catch (Exception e) {
+				Log.e(TAG, "Error parsing parameters", e);
 			}
 		}
 	}

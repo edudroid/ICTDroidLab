@@ -21,7 +21,7 @@ public class PluginDescriptor implements Comparable<PluginDescriptor> {
 
 	public PluginDescriptor(Plugin plugin) {
 		this.name = plugin.getName();
-		this.packageName = plugin.getClass().getPackage().getName();
+		this.packageName = plugin.getPackageName();
 		this.description = plugin.getDescription();
 		this.plugin = plugin;
 	}
@@ -34,6 +34,14 @@ public class PluginDescriptor implements Comparable<PluginDescriptor> {
 		return packageName;
 	}
 
+	public String getReceiverClassName() {
+		if (plugin == null) {
+			return null;
+		} else {
+			return plugin.getReceiverClassName();
+		}
+	}
+	
 	public String getDescription() {
 		return description;
 	}
@@ -52,13 +60,13 @@ public class PluginDescriptor implements Comparable<PluginDescriptor> {
 
 	@Override
 	public int hashCode() {
-		return packageName.hashCode();
+		return name.hashCode();
 	}
 	
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof PluginDescriptor) {
-			return packageName.equals(((PluginDescriptor)o).getPackageName());
+			return name.equals(((PluginDescriptor)o).getName());
 		} else {
 			return false;
 		}

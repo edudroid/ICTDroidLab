@@ -9,7 +9,6 @@ import hu.edudroid.interfaces.Module;
 import hu.edudroid.interfaces.PluginCollection;
 import hu.edudroid.interfaces.Preferences;
 import hu.edudroid.interfaces.TimeServiceInterface;
-import hu.edudroid.interfaces.ThreadSemaphore;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -32,7 +31,6 @@ public class ModuleManager implements ModuleStatsListener{
 	private HashSet<ModuleSetListener> moduleSetListeners = new HashSet<ModuleSetListener>();
 	private HashSet<ModuleStatsListener> moduleStatsListeners = new HashSet<ModuleStatsListener>();
 	
-	private HashMap<String, ThreadSemaphore> semaphores = new HashMap<String, ThreadSemaphore>();
 	
 	private CoreService coreService;
 	
@@ -48,19 +46,9 @@ public class ModuleManager implements ModuleStatsListener{
 		}
 		return ret;
 	}
-	
-	public List<ThreadSemaphore> getLoadedModuleSemaphores() {
-		List<ThreadSemaphore> ret = new ArrayList<ThreadSemaphore>();
-		for (String moduleClass : moduleWrappers.keySet()) {
-			ThreadSemaphore semaphore = semaphores.get(moduleClass);
-			ret.add(semaphore);
-		}
-		return ret;
-	}
 
 	public Map<String, String> getModuleStats(String moduleId) {
 		ModuleWrapper wrapper = moduleWrappers.get(moduleId);
-
 		if (wrapper != null) {
 			 return wrapper.getStats();
 		} else {
@@ -97,69 +85,66 @@ public class ModuleManager implements ModuleStatsListener{
 															dexOptimizedFolder.getAbsolutePath(), 
 															null, 
 															coreService.getClassLoader());
-
-				Class<?> dexLoadedClass = dexLoader.loadClass(className);
-				@SuppressWarnings("unchecked")
-				Constructor<Module> constructor = (Constructor<Module>) dexLoadedClass.getConstructor(Preferences.class, Logger.class, PluginCollection.class, TimeServiceInterface.class, ThreadSemaphore.class);
-				if (constructor == null) {
-					throw new NoSuchMethodException("Couldn't find proper consturctor.");
-				}
-				TimeServiceInterface timeService = new ModuleTimeService();
-				timers.put(moduleId, timeService);
-				ThreadSemaphore threadSemaphore = new ModuleSemaphore();
-				semaphores.put(moduleId, threadSemaphore);
-				moduleWrapper = new ModuleWrapper(moduleDescriptor, constructor, new SharedPrefs(coreService, moduleId),
-                        new AndroidLogger(moduleId),
-                        pluginCollection,
-						timeService, threadSemaphore, coreService);
-				moduleWrapper.registerModuleStatsListener(this);
-				moduleWrappers.put(moduleDescriptor.moduleId, moduleWrapper);
-                Log.e(TAG, "Module added");
-                // Initializing module
-                try {
-                        moduleWrapper.init();
-                } catch (Exception e){
-                        Log.e(TAG, "Error initializing module " + moduleDescriptor.moduleName + " : " + e.getMessage());
-                        e.printStackTrace();
-                }
-                for (ModuleSetListener listener : moduleSetListeners) {
-                        listener.moduleAdded(moduleDescriptor);
-                }
-                return true;
-        } catch (ClassNotFoundException e) {
-                Log.e(TAG, "Error loading module.", e);
-                e.printStackTrace();
-                return false;
-        } catch (InstantiationException e) {
-                Log.e(TAG, "Error loading module.", e);
-                e.printStackTrace();
-                return false;
-        } catch (IllegalAccessException e) {
-                Log.e(TAG, "Error loading module.", e);
-                e.printStackTrace();
-                return false;
-        } catch (SecurityException e) {
-                Log.e(TAG, "Couldn't load module " + e);
-                e.printStackTrace();
-                return false;
-        } catch (IllegalArgumentException e) {
-                Log.e(TAG, "Couldn't load module " + e);
-                e.printStackTrace();
-                return false;
-        } catch (NoSuchMethodException e) {
-                Log.e(TAG, "Couldn't load module " + e);
-                e.printStackTrace();
-                return false;
-        } catch (InvocationTargetException e) {
-                Log.e(TAG, "Couldn't load module " + e);
-                e.printStackTrace();
-                return false;
-        } catch (Exception e) {
-                Log.e(TAG, "Couldn't load module " + e);
-                e.printStackTrace();
-                return false;
-        }
-}
+			Class<?> dexLoadedClass = dexLoader.loadClass(className);
+			@SuppressWarnings("unchecked")
+			Constructor<Module> constructor = (Constructor<Module>) dexLoadedClass.getConstructor(Preferences.class, Logger.class, PluginCollection.class, TimeServiceInterface.class);
+			if (constructor == null) {
+				throw new NoSuchMethodException("Couldn't find proper consturctor.");
+			}
+			TimeServiceInterface timeService = new ModuleTimeService();
+			timers.put(moduleId, timeService);
+			moduleWrapper = new ModuleWrapper(moduleDescriptor, constructor, new SharedPrefs(coreService, moduleId),
+					new AndroidLogger(moduleId),
+					pluginCollection,
+					timeService, coreService);
+			moduleWrapper.registerModuleStatsListener(this);
+			moduleWrappers.put(moduleDescriptor.moduleId, moduleWrapper);
+			Log.e(TAG, "Module added");
+			// Initializing module
+			try {
+				moduleWrapper.init();
+			} catch (Exception e){
+				Log.e(TAG, "Error initializing module " + moduleDescriptor.moduleName + " : " + e.getMessage());
+				e.printStackTrace();
+			}
+			for (ModuleSetListener listener : moduleSetListeners) {
+				listener.moduleAdded(moduleDescriptor);
+			}
+			return true;
+		} catch (ClassNotFoundException e) {
+			Log.e(TAG, "Error loading module.", e);
+			e.printStackTrace();
+			return false;
+		} catch (InstantiationException e) {
+			Log.e(TAG, "Error loading module.", e);
+			e.printStackTrace();
+			return false;
+		} catch (IllegalAccessException e) {
+			Log.e(TAG, "Error loading module.", e);
+			e.printStackTrace();
+			return false;
+		} catch (SecurityException e) {
+			Log.e(TAG, "Couldn't load module " + e);
+			e.printStackTrace();
+			return false;
+		} catch (IllegalArgumentException e) {
+			Log.e(TAG, "Couldn't load module " + e);
+			e.printStackTrace();
+			return false;
+		} catch (NoSuchMethodException e) {
+			Log.e(TAG, "Couldn't load module " + e);
+			e.printStackTrace();
+			return false;
+		} catch (InvocationTargetException e) {
+			Log.e(TAG, "Couldn't load module " + e);
+			e.printStackTrace();
+			return false;
+		} catch (Exception e) {
+			Log.e(TAG, "Couldn't load module " + e);
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	public boolean removeModule(String moduleId, AndroidPluginCollection pluginCollection) {
 		Log.w(TAG, "Removing module " + moduleId);

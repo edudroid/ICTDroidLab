@@ -32,6 +32,7 @@ public class AndroidPluginCollection implements PluginCollection, PluginListener
 	
 	@Override
 	public List<Plugin> getAllPlugins() {
+		Log.d(TAG, "Returning " + mPlugins.values().size() + " plugins.");
 		return new ArrayList<Plugin>(mPlugins.values());
 	}
 

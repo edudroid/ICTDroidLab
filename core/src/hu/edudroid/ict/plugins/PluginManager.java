@@ -16,22 +16,21 @@ public class PluginManager {
 	 */
 	public static List<PluginDescriptor> getAvailablePlugins(List<PluginDescriptor> availablePlugins, List<Plugin> downloadedPlugins) {
 		HashMap<String,PluginDescriptor> plugins = new HashMap<String, PluginDescriptor>();
-		HashMap<String,PluginDescriptor> availablePluginsHash = new HashMap<String, PluginDescriptor>();
 		if (availablePlugins != null) {
 			for (PluginDescriptor descr : availablePlugins) {
-				availablePluginsHash.put(descr.getPackageName(), descr);
+				plugins.put(descr.getName(), descr);
 			}
 		}
 		if (downloadedPlugins != null) {
 			for (Plugin downloadedPlugin : downloadedPlugins) {
-				if (plugins.containsKey(downloadedPlugin.getClass().getPackage().getName())) {
-					plugins.get(downloadedPlugin.getClass().getPackage().getName()).setPlugin(downloadedPlugin);
+				if (plugins.containsKey(downloadedPlugin.getName())) {
+					plugins.get(downloadedPlugin.getName()).setPlugin(downloadedPlugin);
 				} else {
-					plugins.put(downloadedPlugin.getClass().getPackage().getName(), new PluginDescriptor(downloadedPlugin));
+					plugins.put(downloadedPlugin.getName(), new PluginDescriptor(downloadedPlugin));
 				}
 			}
 		}
 		List<PluginDescriptor> ret = new ArrayList<PluginDescriptor>(plugins.values());
 		return ret;
-	}
+	}	
 }
