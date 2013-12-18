@@ -296,7 +296,7 @@ public class CoreService extends Service implements PluginListener {
 								Intent intent = new Intent();
 								intent = new Intent(Constants.INTENT_ACTION_LIMIT_RESET);
 								sendBroadcast(intent);
-								Thread.sleep(36000);
+								Thread.sleep(60000);
 							}
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block

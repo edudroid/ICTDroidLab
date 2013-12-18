@@ -29,7 +29,7 @@ public class ModulExample extends Module {
 	@Override
 	public void init() {
 		mLogger.e(TAG, "Module init...");
-		mTimeService.runPeriodic(500, 1000, 0, this);
+		mTimeService.runPeriodic(0, 4000, 0, this);
 		mLogger.e(TAG, "Getting plugin...");
 		plugin = mPluginCollection.getPluginByName("Sample plugin");
 		mLogger.e(TAG, "Plugin: " + plugin.getName());
