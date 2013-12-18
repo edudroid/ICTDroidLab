@@ -13,8 +13,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -22,8 +20,6 @@ import android.widget.Toast;
 
 public class MainActivity extends ActivityBase implements OnClickListener, ModuleSetListener {
 
-	private static final int RESULT_SETTINGS = 1;
-	
 	private static final String TAG = "MainActivity";
 	private Button showModules;
 	private Button showPlugins;
@@ -105,24 +101,6 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 				startActivity(new Intent(this, ModuleOverviewActivity.class));
 				break;
 		}
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.settings, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.menu_settings:
-			Intent i = new Intent(this, UserSettingActivity.class);
-			startActivityForResult(i, RESULT_SETTINGS);
-			break;
-		}
-		return true;
 	}
 
 	@Override
