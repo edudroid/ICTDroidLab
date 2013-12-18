@@ -1,0 +1,17 @@
+{	
+	"module_id":"2",
+	"module_name" : "ModulExample2",
+	"author": "Kiss Gabor",
+	"description": "CPU limit tester modul!",
+	"website":"",
+	"measurement_length": 43200,
+	"used_plugins": [
+		""
+	],
+	"permissions": [
+	],
+	"quotas": [
+	],
+	"jar_file" : "SampleModule2.jar",
+	"class_name" : "hu.edudroid.ict.sample_project2.ModulExample2"
+}
