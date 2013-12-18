@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+     <string-array name="resetFrequency">
+        <item name="1">per second</item>
+        <item name="60">per minute</item>
+        <item name="3600">per hour</item>
+        <item name="24">per day</item>
+    </string-array>
+    <string-array name="resetFrequencyValues">
+        <item name="1">1000</item>
+        <item name="60">60000</item>
+        <item name="3600">3600000</item>
+        <item name="24">86400000</item>
+    </string-array>
+    
+</resources>
