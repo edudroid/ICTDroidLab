@@ -21,7 +21,7 @@
 		</receiver>
 
 		<receiver
-            android:name="hu.edudroid.ictpluginsample.SamplePlugin"
+            android:name="hu.edudroid.ictdroidlocationplugin.SamplePlugin"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -34,7 +34,7 @@
         
         
         <activity
-            android:name="hu.edudroid.ictpluginsample.MainActivity"
+            android:name="hu.edudroid.ictdroidlocationplugin.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
