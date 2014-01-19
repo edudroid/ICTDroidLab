@@ -4,6 +4,7 @@ import hu.edudroid.interfaces.AsyncMethodException;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;
+import hu.edudroid.interfaces.PluginResult;
 import hu.edudroid.interfaces.PluginResultListener;
 import hu.edudroid.interfaces.Quota;
 import hu.edudroid.utils.Utils;
@@ -63,11 +64,12 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver im
 			final long callId = intent.getExtras().getLong(Constants.INTENT_EXTRA_CALL_ID);
 			final String methodName = intent.getExtras().getString(Constants.INTENT_EXTRA_METHOD_NAME);
 			final byte[] bytes = intent.getExtras().getByteArray(Constants.INTENT_EXTRA_METHOD_PARAMETERS);
+			final HashMap<Long, Double> quotaLimits = null; // TODO get quota limits
 			Map<String, Object> params;
 			try {
 				params = Utils.byteArrayToMap(bytes);
 				try {
-					Map<String, Object> result = callMethodSync(callId, methodName, params, context);
+					PluginResult result = callMethodSync(callId, methodName, params, quotaLimits, context);
 					reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, methodName, result, context);
 				} 
 				catch (AsyncMethodException a){
@@ -76,7 +78,7 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver im
 				catch (Exception e) {
 					Map<String,Object> error = new HashMap<String, Object>();
 					error.put(Constants.ERROR_MESSAGE_KEY, e.getMessage());
-					reportResult(callId, Constants.INTENT_EXTRA_VALUE_ERROR, methodName, error, context);
+					reportResult(callId, Constants.INTENT_EXTRA_VALUE_ERROR, methodName, new PluginResult(error, null), context);
 				}
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -85,14 +87,15 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver im
 		}
 	}
 	
-	public void reportResult(long callId, String resultCode, String method, Map<String, Object> results, Context context) {
+	public void reportResult(long callId, String resultCode, String method, PluginResult results, Context context) {
 				
 		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER);
 		intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, callId);
 		intent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, getName());
 		intent.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, getVersionCode());
 		intent.putExtra(Constants.INTENT_EXTRA_METHOD_NAME, method);
-		byte[] resultArray = Utils.mapToByteArray(results);
+		byte[] resultArray = Utils.mapToByteArray(results.getResult());
+		// TODO send back quota consumption
 		if (resultArray != null) {
 			intent.putExtra(Constants.INTENT_EXTRA_VALUE_RESULT, resultArray);
 		}
@@ -118,7 +121,7 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver im
 	}
 
 	@Override
-	public long callMethodAsync(String method, Map<String, Object> parameters, PluginResultListener listener, int quotaQuantity) {
+	public long callMethodAsync(String method, Map<String, Object> parameters, PluginResultListener listener, Map<Long, Double> quotaLimits) {
 		throw new UnsupportedOperationException("Can't call async method on plugin.");
 	}
 

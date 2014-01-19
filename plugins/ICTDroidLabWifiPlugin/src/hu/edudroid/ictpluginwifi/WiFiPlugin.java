@@ -4,6 +4,7 @@ import hu.edudroid.ictplugin.PluginCommunicationInterface;
 import hu.edudroid.interfaces.AsyncMethodException;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.PluginEventListener;
+import hu.edudroid.interfaces.PluginResult;
 import hu.edudroid.interfaces.PluginResultListener;
 import hu.edudroid.interfaces.Quota;
 
@@ -89,12 +90,7 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 	}
 	
 	@Override
-	public Map<String, Object> callMethodSync(long callId, String method, Map<String, Object> parameters, Object context) throws AsyncMethodException{
-		return callMethodSync(callId, method, parameters, 0);
-	}
-	
-	@Override
-	public Map<String, Object> callMethodSync(long callId, String method, Map<String, Object> parameters, int quotaQuantity, Object context) throws AsyncMethodException {
+	public PluginResult callMethodSync(long callId, String method, Map<String, Object> parameters, Map<Long, Double> quotaQuantity, Object context) throws AsyncMethodException {
 		mWifiManager=(WifiManager)((Context)context).getSystemService(Context.WIFI_SERVICE);
 		mWifiInfo=mWifiManager.getConnectionInfo();
 		Map<String, Object> answer = new HashMap<String, Object>();
@@ -166,7 +162,7 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 			
 		}
 		Log.e("WifiPlugin",answer.get(VALUE_KEY).toString());
-		return answer;				
+		return new PluginResult(answer, null); // TODO add consumed quota				
 	}
 	
 	public void callingServiceMethod(long callId, Class<?> c, Map<String, String> extras, Context context) throws AsyncMethodException{
@@ -181,12 +177,7 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 	}
 	
 	@Override
-	public long callMethodAsync(String method, Map<String,Object> parameters, PluginResultListener listener){
-		return callMethodAsync(method, parameters, listener, 0);
-	}
-	
-	@Override
-	public long callMethodAsync(String method, Map<String, Object> parameters, PluginResultListener listener, int quotaQuantity) {
+	public long callMethodAsync(String method, Map<String, Object> parameters, PluginResultListener listener, Map<Long, Double> quotaLimits) {
 		throw new UnsupportedOperationException("Can't call async method on plugin.");
 	}
 
@@ -225,16 +216,9 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 	}
 
 	@Override
-	public Quota getQuotaForMethod(String method){
+	public Map<Long, Double> getCostOfMethod(String method,
+			Map<String, Object> parameters) {
+		// TODO Determine quota consumption
 		return null;
-	}
-
-	@Override
-	public boolean validateQuota(Quota quota){
-		return false;
-	}
-	
-	@Override
-	public void consumeQuota(int identifier, int quantity){
 	}
 }

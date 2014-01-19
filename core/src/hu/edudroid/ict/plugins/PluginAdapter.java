@@ -1,9 +1,9 @@
 package hu.edudroid.ict.plugins;
 
-import hu.edudroid.interfaces.AsyncMethodException;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;
+import hu.edudroid.interfaces.PluginResult;
 import hu.edudroid.interfaces.PluginResultListener;
 import hu.edudroid.interfaces.Quota;
 import hu.edudroid.utils.Utils;
@@ -104,52 +104,29 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	@Override
 	public List<Quota> getQuotas(){
 		final ArrayList<Quota> quotas = new ArrayList<Quota>();
-		for (int i = 0; i < mPluginMethods.size(); i++){
-			final String method = mPluginMethods.get(i);
-			final Quota quota = getQuotaForMethod(method);
-			if (quota != null)
-				quotas.add(quota);
-		}
-		
+		// TODO retrieve quotas
 		return quotas;
 	}
 	
-	@Override
-	public Quota getQuotaForMethod(String method){
-		return null;
-	}
-
 	@Override
 	public List<String> getAllEvents() {
 		return mEvents;
 	}
 	
-	@Override
-	public boolean validateQuota(Quota quota){
-		return true;
-	}
-	
-	@Override
-	public void consumeQuota(int identifier, int quantity){
-	}
-	
 	public long callMethodAsync(String method, Map<String, Object> params, PluginResultListener listener){
-		return callMethodAsync(method, params, listener, 0);
+		return callMethodAsync(method, params, listener, null);
 	}
 	
 	@Override
-	public long callMethodAsync(String method, Map<String, Object> params, PluginResultListener listener, int quotaQuantity){		
+	public long callMethodAsync(String method, Map<String, Object> params, PluginResultListener listener, Map<Long, Double> quotaLimits){		
 		
 		mBroadcast.registerResultListener(this);
 		
 		mCallBackIdentification.put(mCallMethodID, listener);
+
+		// TODO check quota limits
+		// TODO if no limits are set, retrieve max limit from system
 		
-		if (quotaQuantity != 0){
-			final Quota quota = getQuotaForMethod(method);
-			if (!validateQuota(quota))
-				return -1;
-			consumeQuota(quota.getQuotaIdentifier(), quotaQuantity);
-		}
 		Intent intent = new Intent(Constants.INTENT_ACTION_CALL_METHOD);
 		intent.setComponent(new ComponentName(mPackage, mReceiverClassName));
 		intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, mCallMethodID);
@@ -181,14 +158,9 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	public void onError(long id, String plugin, String pluginVersion, String methodName,
 			String errorMessage) {
 	}
-	
-	@Override
-	public Map<String, Object> callMethodSync(long callId, String method, Map<String, Object> parameters, Object context) throws AsyncMethodException{
-		throw new UnsupportedOperationException("Can't call sync methods on stub.");
-	}
 
 	@Override
-	public Map<String, Object> callMethodSync(long callId, String method, Map<String, Object> parameters, int quotaQuantity, Object context) {
+	public PluginResult callMethodSync(long callId, String method, Map<String, Object> parameters, Map<Long, Double> quotaLimits, Object context) {
 		throw new UnsupportedOperationException("Can't call sync methods on stub.");
 	}
 
@@ -248,5 +220,11 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 		for (Long callId : callsToRemove){
 			mCallBackIdentification.remove(callId);
 		}
+	}
+
+	@Override
+	public HashMap<Long, Double> getCostOfMethod(String method,
+			Map<String, Object> parameters) {
+		throw new UnsupportedOperationException("Can't call sync methods on stub.");
 	}
 }

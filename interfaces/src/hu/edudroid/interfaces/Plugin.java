@@ -14,19 +14,10 @@ public interface Plugin {
 	List<String> getAllEvents();
 	List<String> getMethodNames();
 	List<Quota> getQuotas();
-	Quota getQuotaForMethod(String method);
+	Map<Long, Double> getCostOfMethod(String method, Map<String, Object> parameters);
 	long callMethodAsync(String method, Map<String, Object> parameters,PluginResultListener listener);
-	long callMethodAsync(String method, Map<String, Object> parameters,PluginResultListener listener, int quotaQuantity);
+	long callMethodAsync(String method, Map<String, Object> parameters,PluginResultListener listener, Map<Long, Double> quotaLimits);
 
-	/**
-	 * 
-	 * @param callId
-	 * @param method
-	 * @param parameters
-	 * @return
-	 * @throws AsyncMethodException If method is an async method, throw exception, and send intent when you're done.
-	 */
-	Map<String, Object> callMethodSync(long callId, String method, Map<String, Object> parameters, Object context) throws AsyncMethodException;
 	/**
 	 * 
 	 * @param callId
@@ -36,11 +27,9 @@ public interface Plugin {
 	 * @return
 	 * @throws AsyncMethodException If method is an async method, throw exception, and send intent when you're done.
 	 */
-	Map<String, Object> callMethodSync(long callId, String method, Map<String, Object> parameters, int quotaQuantity, Object context) throws AsyncMethodException;
+	PluginResult callMethodSync(long callId, String method, Map<String, Object> parameters, Map<Long, Double> quotaLimits, Object context) throws AsyncMethodException;
 	void registerEventListener(String eventName, PluginEventListener listener);
 	void unregisterEventListener(String eventName, PluginEventListener listener);
 	void unregisterEventListener(PluginEventListener listener);
 	void cancelCallsForListener(PluginResultListener listener);
-	boolean validateQuota(Quota quota);
-	void consumeQuota(int identifier, int quantity);
 }

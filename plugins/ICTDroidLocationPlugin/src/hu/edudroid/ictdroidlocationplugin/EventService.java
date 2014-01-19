@@ -32,15 +32,15 @@ public class EventService extends Service {
 	@Override
     public void onStart(Intent intent, int startId) {
 		if (!started) {
-			SamplePlugin samplePlugin = SamplePlugin.getInstance();
+			LocationPlugin samplePlugin = LocationPlugin.getInstance();
 			started = true;
 			while(true) {
 				try {
 					Thread.sleep((long)(Math.random() * 1000));
-					samplePlugin.event(SamplePlugin.FIRST_SAMPLE_EVENT_NAME, null, this);
+					samplePlugin.event(LocationPlugin.FIRST_SAMPLE_EVENT_NAME, null, this);
 					Log.d(TAG, "First event fired.");
 					Thread.sleep((long)(Math.random() * 1000));
-					samplePlugin.event(SamplePlugin.SECOND_SAMPLE_EVENT_NAME, null, this);
+					samplePlugin.event(LocationPlugin.SECOND_SAMPLE_EVENT_NAME, null, this);
 					Log.d(TAG, "Second event fired.");
 				} catch (InterruptedException e) {
 					e.printStackTrace();

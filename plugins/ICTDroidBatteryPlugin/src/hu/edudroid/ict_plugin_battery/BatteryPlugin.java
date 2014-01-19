@@ -2,6 +2,7 @@ package hu.edudroid.ict_plugin_battery;
 
 import hu.edudroid.ictplugin.PluginCommunicationInterface;
 import hu.edudroid.interfaces.AsyncMethodException;
+import hu.edudroid.interfaces.PluginResult;
 import hu.edudroid.interfaces.Quota;
 
 import java.util.ArrayList;
@@ -101,22 +102,16 @@ public class BatteryPlugin extends PluginCommunicationInterface {
 		return events;
 	}
 
-	@Override
-	public Map<String, Object> callMethodSync(long callId, String method,
-			Map<String, Object> parameters, Object context)
-			throws AsyncMethodException {
-		return callMethodSync(callId, method, parameters, 0, context);
-	}
 
 	@Override
-	public Map<String, Object> callMethodSync(long callId, String method,
-			Map<String, Object> parameters, int quotaQuantity, Object context)
+	public PluginResult callMethodSync(long callId, String method,
+			Map<String, Object> parameters, Map<Long, Double> quotaLimits, Object context)
 			throws AsyncMethodException {
 		if (method.equals(GET_BATTERY_STATUS)) {
 			// Requesting battery status
 			IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
 			Intent batteryStatus = ((Context) context).registerReceiver(null, ifilter);
-			return processIntent(batteryStatus);
+			return new PluginResult(processIntent(batteryStatus), null); // TODO return quota consumption
 		} else {
 			return null;
 		}
@@ -131,20 +126,6 @@ public class BatteryPlugin extends PluginCommunicationInterface {
 		List<Quota> quotas = new ArrayList<Quota>();
 		// TODO add quotas
 		return quotas;
-	}
-
-	@Override
-	public Quota getQuotaForMethod(String method) {
-		return null;
-	}
-
-	@Override
-	public boolean validateQuota(Quota quota) {
-		return true;
-	}
-
-	@Override
-	public void consumeQuota(int identifier, int quantity) {
 	}
 
 	public static Map<String, Object> processIntent(Intent intent) {
@@ -163,5 +144,11 @@ public class BatteryPlugin extends PluginCommunicationInterface {
 			values.put(BatteryPlugin.CHARGER_TYPE, BatteryPlugin.CHARGER_TYPE_AC);
 		}
 		return values;
+	}
+
+	@Override
+	public Map<Long, Double> getCostOfMethod(String method,
+			Map<String, Object> parameters) {
+		return null;
 	}
 }

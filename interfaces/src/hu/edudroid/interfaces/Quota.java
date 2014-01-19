@@ -2,18 +2,18 @@ package hu.edudroid.interfaces;
 
 public class Quota {
 
-	private int quotaIdentifier;
+	private long quotaIdentifier;
 	private String quotaName;
 	private int[] quotaLevels;
 	private long regenerationPeriod;
 	
-	public Quota(int quotaIdentifier, String quotaName, long regenerationPeriod, int[] quotaLevels) {
+	public Quota(long quotaIdentifier, String quotaName, long regenerationPeriod, int[] quotaLevels) {
 		this.quotaIdentifier = quotaIdentifier;
 		this.quotaName = quotaName;
 		this.quotaLevels = quotaLevels;
 	}
 	
-	public int getQuotaIdentifier() {
+	public long getQuotaIdentifier() {
 		return quotaIdentifier;
 	}
 	public String getQuotaName() {

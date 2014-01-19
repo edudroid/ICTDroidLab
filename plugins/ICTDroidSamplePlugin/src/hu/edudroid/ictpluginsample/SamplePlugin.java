@@ -2,6 +2,7 @@ package hu.edudroid.ictpluginsample;
 
 import hu.edudroid.ictplugin.PluginCommunicationInterface;
 import hu.edudroid.interfaces.AsyncMethodException;
+import hu.edudroid.interfaces.PluginResult;
 import hu.edudroid.interfaces.Quota;
 
 import java.util.ArrayList;
@@ -97,27 +98,22 @@ public class SamplePlugin extends PluginCommunicationInterface {
 	}
 	
 	@Override
-	public Map<String, Object> callMethodSync(long callId, String method, Map<String, Object> parameters, Object context) throws AsyncMethodException{
-		return callMethodSync(callId, method, parameters, 0, context);
-	}
-	
-	@Override
-	public Map<String, Object> callMethodSync(long callId, String method, Map<String, Object> parameters, int quotaQuantity, Object context) throws AsyncMethodException {
+	public PluginResult callMethodSync(long callId, String method, Map<String, Object> parameters, Map<Long, Double> quotaQuantity, Object context) throws AsyncMethodException {
 		if (method.equals(FIRST_SAMPLE_METHOD_NAME)) {			
 			Log.d(TAG, "First sample method called");
 			Map<String, Object> ret = new HashMap<String, Object>();
 			ret.put("Value","First sample method result");
-			return ret;
+			return new PluginResult(ret, null);
 		} else if (method.equals(SECOND_SAMPLE_METHOD_NAME)) {
 			Log.d(TAG, "Second sample method called");
 			Map<String, Object> ret = new HashMap<String, Object>();
 			ret.put("Value","Second sample method result");
-			return ret;
+			return new PluginResult(ret, null);
 		} else if (method.equals(THIRD_SAMPLE_METHOD_NAME)) {
 			Log.d(TAG, "Third sample method called");
 			Map<String, Object> ret = new HashMap<String, Object>();
 			ret.put("Value","Third sample method result");
-			return ret;
+			return new PluginResult(ret, null);
 		} else {
 			return null;
 		}
@@ -136,16 +132,9 @@ public class SamplePlugin extends PluginCommunicationInterface {
 	}
 
 	@Override
-	public Quota getQuotaForMethod(String method){
+	public Map<Long, Double> getCostOfMethod(String method,
+			Map<String, Object> parameters) {
+		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public boolean validateQuota(Quota quota){
-		return true;
-	}
-	
-	@Override
-	public void consumeQuota(int identifier, int quantity){
 	}
 }
