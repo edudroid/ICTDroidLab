@@ -130,8 +130,8 @@ public class SamplePlugin extends PluginCommunicationInterface {
 	@Override
 	public List<Quota> getQuotas(){
 		List<Quota> quotas = new ArrayList<Quota>();
-		quotas.add(new FirstSampleQuota());
-		quotas.add(new SecondSampleQuota());
+		quotas.add(new Quota(0, "First sample quota", 3600, new int[]{100, 200, 500, 1000, 10000} ));
+		quotas.add(new Quota(1, "Second sample quota", 86400, new int[]{10, 20, 50, 100} ));
 		return quotas;
 	}
 

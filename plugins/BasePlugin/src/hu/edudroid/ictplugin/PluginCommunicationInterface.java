@@ -6,7 +6,6 @@ import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginResultListener;
 import hu.edudroid.interfaces.Quota;
-import hu.edudroid.interfaces.QuotaFactory;
 import hu.edudroid.utils.Utils;
 
 import java.io.IOException;
@@ -34,7 +33,7 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver im
 			String quotaDescr = "";
 			final List<Quota> quotas = getQuotas();
 			for (int i = 0; i < quotas.size(); i++){
-				quotaDescr += QuotaFactory.codeQuota(quotas.get(i));
+				quotaDescr += Quota.codeQuota(quotas.get(i));
 				if (i != quotas.size() - 1)
 					quotaDescr += "||";
 			}
