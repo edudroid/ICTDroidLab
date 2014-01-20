@@ -26,8 +26,9 @@ public interface Plugin {
 	 * @param quotaQuantity
 	 * @return
 	 * @throws AsyncMethodException If method is an async method, throw exception, and send intent when you're done.
+	 * @throws MethodNotSupportedException 
 	 */
-	PluginResult callMethodSync(long callId, String method, Map<String, Object> parameters, Map<Long, Double> quotaLimits, Object context) throws AsyncMethodException;
+	PluginResult callMethodSync(long callId, String method, Map<String, Object> parameters, Map<Long, Double> quotaLimits, Object context) throws AsyncMethodException, MethodNotSupportedException;
 	void registerEventListener(String eventName, PluginEventListener listener);
 	void unregisterEventListener(String eventName, PluginEventListener listener);
 	void unregisterEventListener(PluginEventListener listener);

@@ -3,6 +3,7 @@ package hu.edudroid.ictpluginwifi;
 import hu.edudroid.ictplugin.PluginCommunicationInterface;
 import hu.edudroid.interfaces.AsyncMethodException;
 import hu.edudroid.interfaces.Constants;
+import hu.edudroid.interfaces.MethodNotSupportedException;
 import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginResult;
 import hu.edudroid.interfaces.PluginResultListener;
@@ -22,29 +23,30 @@ import android.util.Log;
 public class WiFiPlugin extends PluginCommunicationInterface {
 	
 	public static final String VALUE_KEY = "value";
+	
+	public static final String METHOD_NAME_GET_STATE = "getState";
+	public static final String METHOD_NAME_SCAN = "scan";
+	public static final String METHOD_NAME_PING = "ping";
+	public static final String METHOD_NAME_TRACEROUTE = "traceroute";
+
+	public static final String IP_ADDRESS = "ip address";
+	public static final String MAC_ADDRESS = "mac address";
+	public static final String LINK_SPEED = "link speed";
+	public static final String NETWORK_ID = "network id";
+	public static final String BSSID = "BSSID";
+	public static final String SSID = "SSID";
+	public static final String HIDDEN_SSID = "hidden SSID";
+	public static final String RSSI = "RSSI";
+	public static final String CONTENT_DESCRIPTION = "content description";
 
 	private static final List<String> mMethods = new ArrayList<String>();
 	static {
-		mMethods.add("getIpAddress");
-		mMethods.add("getMacAddress");
-		mMethods.add("getLinkSpeed");
-		mMethods.add("getNetworkId");
-		mMethods.add("getBSSID");
-		mMethods.add("getSSID");
-		mMethods.add("isHiddenSSID");
-		mMethods.add("getRssi");
-		mMethods.add("getDescribeContents");
-		mMethods.add("scanning");
-		mMethods.add("ping");
-		mMethods.add("traceroute");
+		mMethods.add(METHOD_NAME_GET_STATE);
+		mMethods.add(METHOD_NAME_SCAN);
+		mMethods.add(METHOD_NAME_PING);
+		mMethods.add(METHOD_NAME_TRACEROUTE);
 	}
 	private static final List<String> mEvents = new ArrayList<String>();
-	static{
-		mEvents.add("empty event");
-		mEvents.add("scanned networks");
-		mEvents.add("ping");
-		mEvents.add("traceroute");
-	}
 	
 	private WifiManager mWifiManager;
 	private WifiInfo mWifiInfo;
@@ -90,38 +92,23 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 	}
 	
 	@Override
-	public PluginResult callMethodSync(long callId, String method, Map<String, Object> parameters, Map<Long, Double> quotaQuantity, Object context) throws AsyncMethodException {
+	public PluginResult callMethodSync(long callId, String method, Map<String, Object> parameters, Map<Long, Double> quotaQuantity, Object context) throws AsyncMethodException, MethodNotSupportedException {
 		mWifiManager=(WifiManager)((Context)context).getSystemService(Context.WIFI_SERVICE);
 		mWifiInfo=mWifiManager.getConnectionInfo();
-		Map<String, Object> answer = new HashMap<String, Object>();
-		if(method.equals("getIpAddress")){
-			answer.put(VALUE_KEY, intToIP(mWifiInfo.getIpAddress()));
+		if (method.equals(METHOD_NAME_GET_STATE)) {
+			Map<String, Object> answer = new HashMap<String, Object>();
+			answer.put(IP_ADDRESS, intToIP(mWifiInfo.getIpAddress()));
+			answer.put(MAC_ADDRESS, mWifiInfo.getMacAddress());
+			answer.put(LINK_SPEED, String.valueOf(mWifiInfo.getLinkSpeed())+" Mbps");
+			answer.put(BSSID, mWifiInfo.getBSSID());
+			answer.put(SSID, mWifiInfo.getSSID());
+			answer.put(NETWORK_ID, String.valueOf(mWifiInfo.getNetworkId()));
+			answer.put(RSSI, String.valueOf(mWifiInfo.getRssi()));
+			answer.put(HIDDEN_SSID, String.valueOf(mWifiInfo.getHiddenSSID()));
+			answer.put(CONTENT_DESCRIPTION, String.valueOf(mWifiInfo.describeContents()));
+			return new PluginResult(answer, null);				
 		}
-		if(method.equals("getMacAddress")){
-			answer.put(VALUE_KEY, mWifiInfo.getMacAddress());
-		}
-		if(method.equals("getLinkSpeed")){
-			answer.put(VALUE_KEY, String.valueOf(mWifiInfo.getLinkSpeed())+" Mbps");
-		}
-		if(method.equals("getBSSID")){
-			answer.put(VALUE_KEY, mWifiInfo.getBSSID());
-		}
-		if(method.equals("getSSID")){
-			answer.put(VALUE_KEY, mWifiInfo.getSSID());
-		}
-		if(method.equals("getNetworkId")){
-			answer.put(VALUE_KEY, String.valueOf(mWifiInfo.getNetworkId()));
-		}
-		if(method.equals("getRssi")){
-			answer.put(VALUE_KEY, String.valueOf(mWifiInfo.getRssi()));
-		}
-		if(method.equals("isHiddenSSID")){
-			answer.put(VALUE_KEY, String.valueOf(mWifiInfo.getHiddenSSID()));
-		}
-		if(method.equals("getDescribeContents")){
-			answer.put(VALUE_KEY, String.valueOf(mWifiInfo.describeContents()));
-		}
-		if(method.equals("scanning")){
+		else if(method.equals("scanning")){
 			if(parameters.get(0)!=null && parameters.get(1)!=null && parameters.get(2)!=null){				
 				Map<String,String> extras = new HashMap<String, String>();
 				
@@ -130,12 +117,14 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 				extras.put("count", (String)parameters.get(2));
 				
 				callingServiceMethod(callId, WiFiPluginScanningService.class, extras, (Context)context);
+				throw new AsyncMethodException();
 			}
 			else{
 				Log.e("WiFiPlugin","Missing parameters for scanning!");
+				throw new IllegalArgumentException("Missing parameters for scanning!");
 			}
 		}
-		if(method.equals("ping")){
+		else if(method.equals("ping")){
 			if(parameters.get(0)!=null && parameters.get(1)!=null){
 				Map<String,String> extras = new HashMap<String, String>();
 				
@@ -143,29 +132,32 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 				extras.put("count", (String)parameters.get(1));
 				
 				callingServiceMethod(callId, WiFiPluginPingService.class, extras, (Context)context);
+				throw new AsyncMethodException();
 			}
 			else{
 				Log.e("WiFiPlugin","Missing IP and count parameters for ping!");
+				throw new IllegalArgumentException("Missing parameters for ping!");
 			}
 		}
-		if(method.equals("traceroute")){
+		else if(method.equals("traceroute")){
 			if(parameters.get(0)!=null){
 				Map<String,String> extras = new HashMap<String, String>();
 				
 				extras.put("ip", (String)parameters.get(0));
 				
 				callingServiceMethod(callId, WiFiPluginTracerouteService.class, extras, (Context)context);
+				throw new AsyncMethodException();
 			}
 			else{
 				Log.e("WiFiPlugin","Missing IP parameter for traceroute!");
+				throw new IllegalArgumentException("Missing parameters for traceroute!");
 			}
-			
+		} else {
+			throw new MethodNotSupportedException("Missing parameters for traceroute!");
 		}
-		Log.e("WifiPlugin",answer.get(VALUE_KEY).toString());
-		return new PluginResult(answer, null); // TODO add consumed quota				
 	}
 	
-	public void callingServiceMethod(long callId, Class<?> c, Map<String, String> extras, Context context) throws AsyncMethodException{
+	public void callingServiceMethod(long callId, Class<?> c, Map<String, String> extras, Context context){
 		
 		Intent serviceIntent=new Intent(context, c);
 		serviceIntent.putExtra(Constants.INTENT_EXTRA_CALL_ID, String.valueOf(callId));
@@ -173,7 +165,6 @@ public class WiFiPlugin extends PluginCommunicationInterface {
 			serviceIntent.putExtra(entry.getKey(), entry.getValue());		    
 		}
 		context.startService(serviceIntent);
-		throw new AsyncMethodException();
 	}
 	
 	@Override
