@@ -117,9 +117,6 @@ public class CoreService extends Service implements PluginListener {
 			Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
 			sendBroadcast(mIntent);
 			
-			Intent uploadLogs = new Intent(this,UploadService.class);
-			startService(uploadLogs);
-			
 			// Process descriptor files
 			// Copy modules from assets at startup.
 			try {

@@ -3,30 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
-    <TextView
-        android:id="@+id/dataStoreLogDetailsText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/placeholderDataVolume" />
-
-    <Button
-        android:id="@+id/dataStoreDeleteLogs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/deleteLogs" />
-
-	<TextView
-        android:id="@+id/dataStoreZipDetailsText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/placeholderDataVolume" />
-
-    <Button
-        android:id="@+id/dataStoreDeleteZips"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/deleteZips" />
     
     <TextView
         android:id="@+id/dataStoreModuleDetailsText"
