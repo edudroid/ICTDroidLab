@@ -1,4 +1,4 @@
-package hu.edudroid.module;
+package hu.edudroid.ict.logs;
 
 import hu.edudroid.interfaces.Logger;
 
@@ -40,6 +40,7 @@ public class AndroidLogger implements Logger {
 	}
 	
 	private void log(String task, long timestamp, String message) {
+		// TODO Try uploading log line
 		
 	}
 

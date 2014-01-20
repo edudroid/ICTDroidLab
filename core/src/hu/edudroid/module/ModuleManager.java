@@ -3,6 +3,7 @@ package hu.edudroid.module;
 import hu.edudroid.ict.CoreService;
 import hu.edudroid.ict.ModuleSetListener;
 import hu.edudroid.ict.ModuleStatsListener;
+import hu.edudroid.ict.logs.AndroidLogger;
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.interfaces.Logger;
 import hu.edudroid.interfaces.Module;
