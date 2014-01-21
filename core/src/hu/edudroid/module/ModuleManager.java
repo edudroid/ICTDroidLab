@@ -63,7 +63,7 @@ public class ModuleManager implements ModuleStatsListener{
 	 * @param pluginCollection
 	 * @return
 	 */
-	public boolean startModule(ModuleDescriptor moduleDescriptor, PluginCollection pluginCollection) {
+	public boolean startModule(ModuleDescriptor moduleDescriptor, PluginCollection pluginCollection, Context context) {
 		Log.e(TAG, "Adding module");
 		if (moduleWrappers.containsKey(moduleDescriptor.moduleId)) {
 			Log.w(TAG, "Module " + moduleDescriptor.moduleId + " already loaded.");
@@ -95,7 +95,7 @@ public class ModuleManager implements ModuleStatsListener{
 			TimeServiceInterface timeService = new ModuleTimeService();
 			timers.put(moduleId, timeService);
 			moduleWrapper = new ModuleWrapper(moduleDescriptor, constructor, new SharedPrefs(coreService, moduleId),
-					new AndroidLogger(moduleId),
+					new AndroidLogger(moduleId, context),
 					pluginCollection,
 					timeService, coreService);
 			moduleWrapper.registerModuleStatsListener(this);
@@ -212,7 +212,7 @@ public class ModuleManager implements ModuleStatsListener{
 			return false;
 		}
 		moduleDescriptor.setSate(ModuleState.INSTALLED, context);
-		return startModule(moduleDescriptor, pluginCollection);
+		return startModule(moduleDescriptor, pluginCollection, context.getApplicationContext());
 	}
 
 }

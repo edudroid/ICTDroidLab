@@ -111,7 +111,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         }
 
         public void run() {
-        	ServerUtilities.register(mContext, mIMEI, mGcmId,mSdk_version,mCellular,mWifi,mBluetooth,mGps);
+        	ServerUtilities.register(mContext, mIMEI, mGcmId, mSdk_version, null);
         }
     }
     

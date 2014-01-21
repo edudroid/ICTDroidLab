@@ -83,4 +83,12 @@
     <string name="moduleStateBanned">Banned</string>
     <string name="deleteZips">Delete temporary files</string>
     <string name="deleteModules">Delete modules</string>
+    <string name="loginOrRegister">Login or Register</string>
+    <string name="passwordHint">Password</string>
+    <string name="userNameHint">Username</string>
+    <string name="loginText">Login</string>
+    <string name="registerText">Register</string>
+    <string name="confirmPassword">Confirm password</string>
+    <string name="welcome">Welcome to DroidLab!</string>
+    <string name="registerTitle">Register to DroidLab!</string>
 </resources>

@@ -129,7 +129,7 @@ public class CoreService extends Service implements PluginListener {
 			List<ModuleDescriptor> moduleDescriptors = ModuleLoader.getAllModules(this);
 			for (ModuleDescriptor moduleDescriptor : moduleDescriptors) {
 				if (moduleDescriptor.getState(this) == ModuleState.INSTALLED) {
-					moduleManager.startModule(moduleDescriptor, pluginCollection);
+					moduleManager.startModule(moduleDescriptor, pluginCollection, getApplicationContext());
 				}
 			}
 		}		
@@ -294,7 +294,7 @@ public class CoreService extends Service implements PluginListener {
         }
 
         public void run() {
-        	ServerUtilities.register(mContext, mIMEI, mGcmId,mSdk_version,mCellular,mWifi,mBluetooth,mGps);
+        	ServerUtilities.register(mContext, mIMEI, mGcmId, mSdk_version, null);
         }
     }	
 	

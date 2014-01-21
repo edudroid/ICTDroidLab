@@ -2,46 +2,50 @@ package hu.edudroid.ict.logs;
 
 import hu.edudroid.interfaces.Logger;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 public class AndroidLogger implements Logger {
 
 	public final static String TAG = AndroidLogger.class.getName();
-	
-	private Date date = new Date();
-	private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss_SSS", Locale.UK);
+
+	private static final String INFO = "i";
+	private static final String DEBUG = "d";
+	private static final String ERROR = "e";
 	
 	private String moduleName;
+	private Context context;
 	
-	public AndroidLogger(String moduleName){
+	public AndroidLogger(String moduleName, Context context){
 		this.moduleName = moduleName;
+		this.context = context;
 	}
 	
 	@Override
 	public void e(String tag, String message) {
 		Log.e(TAG+":"+tag, message);
-		log(moduleName, System.currentTimeMillis(), "error: "+ message);
+		log(ERROR, System.currentTimeMillis(), "error: "+ message);
 	}
 
 	@Override
 	public void d(String tag, String message) {
 		Log.d(TAG+":"+tag, message);
-		log(moduleName, System.currentTimeMillis(), "debug: "+ message);
+		log(DEBUG, System.currentTimeMillis(), "debug: "+ message);
 	}
 
 	@Override
 	public void i(String tag, String message) {
 		Log.i(TAG+":"+tag, message);
-		log(moduleName, System.currentTimeMillis(), "info: "+ message);
+		log(INFO, System.currentTimeMillis(), "info: "+ message);
 	}
 	
-	private void log(String task, long timestamp, String message) {
-		// TODO Try uploading log line
-		
+	private void log(String level, long timestamp, String message) {
+		Intent intent = new Intent(context, UploadService.class);
+		intent.putExtra(LogRecord.COLUMN_NAME_MODULE, moduleName);
+		intent.putExtra(LogRecord.COLUMN_NAME_LOG_LEVEL, level);
+		intent.putExtra(LogRecord.COLUMN_NAME_DATE, timestamp);
+		intent.putExtra(LogRecord.COLUMN_NAME_MESSAGE, message);
+		context.startService(intent);	
 	}
-
 }

@@ -2,6 +2,7 @@ package hu.edudroid.ict.ui;
 
 import hu.edudroid.ict.CoreService;
 import hu.edudroid.ict.CoreService.CoreBinder;
+import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginListener;
 import android.app.Activity;
 import android.content.ComponentName;
@@ -49,5 +50,8 @@ public abstract class ActivityBase extends Activity implements ServiceConnection
 		this.service = null;
 	}
 	
-
+	@Override
+	public boolean newPlugin(Plugin plugin) {
+		return false;
+	}
 }
