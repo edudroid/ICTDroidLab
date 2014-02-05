@@ -10,11 +10,17 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class LoginActivity extends ActivityBase implements OnClickListener {
 
 	private static final String TAG = LoginActivity.class.getName();
 	private LoginManager loginManager;
+	private Button loginButton;
+	private Button registerButton;
+	private EditText userEdit;
+	private EditText passwordEdit;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +28,12 @@ public class LoginActivity extends ActivityBase implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		loginManager = new LoginManager(this);
+		loginButton = (Button) findViewById(R.id.loginButton);
+		loginButton.setOnClickListener(this);
+		registerButton = (Button) findViewById(R.id.registerButton);
+		registerButton.setOnClickListener(this);
+		userEdit = (EditText) findViewById(R.id.username);
+		passwordEdit = (EditText) findViewById(R.id.password);
 	}
 
 	@Override
@@ -31,6 +43,13 @@ public class LoginActivity extends ActivityBase implements OnClickListener {
 			Intent intent = new Intent(this, MainActivity.class);
 			startActivity(intent);
 			finish();
+		} else {
+			String userName = loginManager.getUserName();
+			if (userName != null) {
+				userEdit.setText(userName);
+			} else {
+				userEdit.setText("");
+			}
 		}
 	}
 	
@@ -47,8 +66,11 @@ public class LoginActivity extends ActivityBase implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-			case R.id.showModules:
-				startActivity(new Intent(this, ModuleOverviewActivity.class));
+			case R.id.registerButton:
+				startActivity(new Intent(this, RegisterActivity.class));
+				break;
+			case R.id.loginButton:
+				// TODO log user in: show progress dialog, start background task...
 				break;
 		}
 	}

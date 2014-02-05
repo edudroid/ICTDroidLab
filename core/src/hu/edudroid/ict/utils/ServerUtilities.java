@@ -50,8 +50,10 @@ public final class ServerUtilities {
 		params.put("imei", imei);
 		params.put("gcm_id", gcmId);
 		params.put("androidVersion", androidVersion);
-		for (Entry<String, Integer> pluginVersion : pluginVersions.entrySet()) {
-			
+		if (pluginVersions != null) {
+			for (Entry<String, Integer> pluginVersion : pluginVersions.entrySet()) {
+				params.put(pluginVersion.getKey(), pluginVersion.getValue().toString());
+			}
 		}
 
 		long backoff = BACKOFF_MILLI_SECONDS + random.nextInt(1000);
