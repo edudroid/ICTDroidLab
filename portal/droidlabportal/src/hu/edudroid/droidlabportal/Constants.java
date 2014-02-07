@@ -9,6 +9,7 @@ public class Constants {
 	public static final String PROFILE = "profile";
 	public static final String DEVICE = "device";
 	public static final String DEVICES = "devices";
+	public static final String LOGIN = "login";
 	
 	public static final String EMAIL = "email";
 	public static final String PASSWORD = "pass";

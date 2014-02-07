@@ -56,6 +56,7 @@ boolean loggedIn = email != null;
 <% if (request.getParameter("selected").equals(Constants.REG_FORM)||
 		request.getParameter("selected").equals(Constants.PROFILE)||
 		request.getParameter("selected").equals(Constants.DEVICES)||
+		request.getParameter("selected").equals(Constants.LOGIN)||
 		request.getParameter("selected").equals(Constants.DEVICE)) { %>
 				<li class="active">
 <% } else { %>
@@ -68,7 +69,7 @@ boolean loggedIn = email != null;
 	<% 
 } else {
 	%>
-					<a href="/regform">Register</a>
+					<a href="/loginform">Log in</a>
 	<%
 }
 %>

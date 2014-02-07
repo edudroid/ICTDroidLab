@@ -17,7 +17,7 @@
 			<h2>Create, deploy, evaluate.</h2>
 			<p>
 				DroidLab is an open crowdsourcing platform for mobile sensing. Create measurement tasks, deploy them on a large device pool, hang back and wait for the results! 
-				<span><a href="/portal" class="btn">Sign me up!</a>
+				<span><a href="/regform" class="btn">Sign me up!</a>
 				<b>Don’t worry it’s for free</b></span>
 			</p>
 		</div>

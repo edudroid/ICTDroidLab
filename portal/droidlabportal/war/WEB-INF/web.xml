@@ -14,6 +14,16 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet>
 	
 	<servlet>
+		<servlet-name>WebLogin</servlet-name>
+		<servlet-class>hu.edudroid.droidlabportal.WebLoginServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>WebSignOut</servlet-name>
+		<servlet-class>hu.edudroid.droidlabportal.WebSignOutServlet</servlet-class>
+	</servlet>
+	
+	<servlet>
 	    <servlet-name>index</servlet-name>
 	    <jsp-file>/jsp/index.jsp</jsp-file>
 	</servlet>
@@ -38,6 +48,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	    <jsp-file>/jsp/regform.jsp</jsp-file>
 	</servlet>
 	<servlet>
+	    <servlet-name>loginform</servlet-name>
+	    <jsp-file>/jsp/loginform.jsp</jsp-file>
+	</servlet>
+		<servlet>
 	    <servlet-name>userhome</servlet-name>
 	    <jsp-file>/jsp/userhome.jsp</jsp-file>
 	</servlet>
@@ -54,8 +68,16 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>RegisterUser</servlet-name>
 		<url-pattern>/registeruser</url-pattern>
 	</servlet-mapping>
-		<servlet-mapping>
-	    <servlet-name>index</servlet-name>
+	<servlet-mapping>
+		<servlet-name>WebLogin</servlet-name>
+		<url-pattern>/weblogin</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>WebSignOut</servlet-name>
+		<url-pattern>/websignout</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>index</servlet-name>
 	    <url-pattern>/index</url-pattern>   
 	</servlet-mapping>
 	<servlet-mapping>
@@ -79,6 +101,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	    <url-pattern>/regform</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
+	    <servlet-name>loginform</servlet-name>
+	    <url-pattern>/loginform</url-pattern>
+	</servlet-mapping>
+		<servlet-mapping>
 	    <servlet-name>userhome</servlet-name>
 	    <url-pattern>/userhome</url-pattern>
 	</servlet-mapping>

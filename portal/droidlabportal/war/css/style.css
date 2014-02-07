@@ -102,6 +102,36 @@ img {
 #navigation li.active a {
 	color: #f99600;
 }
+/** User box **/
+#userbox {
+	display: inline-block;
+	list-style: none;
+	line-height: 50px;
+	margin: 0;
+	margin-left: -42px;
+	padding: 0;
+}
+#userbox ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+#userbox li {
+	width: 120px;
+	background-color: #ddd;
+	text-align: center;
+}
+#userbox li a {
+	color: #818181;
+	font-size: 15px;
+	text-decoration: none;
+}
+#userbox li a:hover {
+	color: #000;
+}
+#userbox li.active a {
+	color: #f99600;
+}
 #adbox {
 	background: url(../images/bg-adbox.jpg) repeat-x left top;
 	padding: 60px 0px 0px 0px;
