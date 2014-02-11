@@ -10,20 +10,17 @@
 	<jsp:param name="selected" value="<%=Constants.PROFILE %>" />
 </jsp:include>
 <%
-	String firstName = "";
 	String email = (String)session.getAttribute(Constants.EMAIL);
+	if (email == null) {
+		response.sendRedirect("/loginform");
+		return;
+	}
 %>
 <div id="contents">
-<div style="float: right; margin-top: -40px; margin-right: 60px;">
-<%= email %>, <a href="/websignout">sign out</a>
-</div>
 	<div id="tagline" class="clearfix">
-		<div>
-			<ul id="userbox">
-			<li><a>Devices</a></li>
-			<li><a>Profile</a></li>
-			</ul>
-		</div>
+<jsp:include page="/jsp/usersidemenu.jsp">
+	<jsp:param name="selected" value="<%=Constants.USER_ROOT %>" />
+</jsp:include>
 		<div>
 			<h1>
 				Welcome to your lab!

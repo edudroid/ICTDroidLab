@@ -24,6 +24,7 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 @SuppressWarnings("serial")
 public class RegisterUserServlet extends HttpServlet {
 
+	@SuppressWarnings("finally")
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		String email = req.getParameter(Constants.EMAIL);
 		String password = req.getParameter(Constants.PASSWORD);
@@ -47,6 +48,8 @@ public class RegisterUserServlet extends HttpServlet {
 			} catch (ServletException e) {
 				resp.sendError(503);
 				return;
+			} finally {
+				return;
 			}
 		}
 		// Check for password in datastore
@@ -66,16 +69,23 @@ public class RegisterUserServlet extends HttpServlet {
 			} catch (ServletException e) {
 				resp.sendError(503);
 				return;
+			} finally {
+				return;
 			}
+		}
+		// Add user
+        Entity user = new Entity(Constants.USER_TABLE_NAME, userRootKey);
+        user.setProperty(Constants.USER_EMAIL_COLUMN, email);
+        user.setProperty(Constants.USER_PASS_COLUMN, password);
+        user.setProperty(Constants.USER_REGISTRATION_DATE_COLUMN, new Date());	        
+        Key userKey = datastore.put(user);
+        req.getSession().setAttribute(Constants.USER_KEY, userKey);
+        req.getSession().setAttribute(Constants.EMAIL, email);
+		if (req.getParameterMap().containsKey(Constants.WEB)) {
+			resp.sendRedirect("/userhome");
 		} else {
-			// Add user
-	        Entity user = new Entity(Constants.USER_TABLE_NAME, userRootKey);
-	        user.setProperty(Constants.USER_EMAIL_COLUMN, email);
-	        user.setProperty(Constants.USER_PASS_COLUMN, password);
-	        user.setProperty(Constants.USER_REGISTRATION_DATE_COLUMN, new Date());	        
-	        datastore.put(user);
-	        req.getSession().setAttribute(Constants.EMAIL, email);
-	        resp.sendRedirect("/userhome");
+			resp.setContentType("text/plain");
+			resp.getWriter().println("REGISTERED");
 		}
 	}
 }

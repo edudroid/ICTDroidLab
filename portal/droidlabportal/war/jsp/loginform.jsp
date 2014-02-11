@@ -23,9 +23,10 @@ if (request.getAttribute(Constants.ERROR) != null){
 	<%
 }
 %>
-		<form action="/weblogin" method="post" class="register">
+		<form action="/login" method="post" class="register">
 			<input type="text" name="<%= Constants.EMAIL %>" id="<%= Constants.EMAIL %>" placeholder="Email" onFocus="this.select();" onMouseOut="javascript:return false;"/>
 			<input type="password" name="<%= Constants.PASSWORD %>" id="<%= Constants.PASSWORD %>" placeholder="Password" onFocus="this.select();" onMouseOut="javascript:return false;"/>
+			<input type="hidden" name="<%= Constants.WEB %>" id="<%= Constants.WEB %>" value="true">
 			<input type="submit" value="Login"/>
 		</form>
 		<p style="margin-top: 40px">

@@ -5,22 +5,23 @@ xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet>
-		<servlet-name>Droidlabportal</servlet-name>
-		<servlet-class>hu.edudroid.droidlabportal.DroidlabportalServlet</servlet-class>
-	</servlet>
-	<servlet>
 		<servlet-name>RegisterUser</servlet-name>
 		<servlet-class>hu.edudroid.droidlabportal.RegisterUserServlet</servlet-class>
 	</servlet>
 	
 	<servlet>
-		<servlet-name>WebLogin</servlet-name>
-		<servlet-class>hu.edudroid.droidlabportal.WebLoginServlet</servlet-class>
+		<servlet-name>RegisterDevice</servlet-name>
+		<servlet-class>hu.edudroid.droidlabportal.RegisterDeviceServlet</servlet-class>
+	</servlet>
+		
+	<servlet>
+		<servlet-name>Login</servlet-name>
+		<servlet-class>hu.edudroid.droidlabportal.LoginServlet</servlet-class>
 	</servlet>
 
 	<servlet>
-		<servlet-name>WebSignOut</servlet-name>
-		<servlet-class>hu.edudroid.droidlabportal.WebSignOutServlet</servlet-class>
+		<servlet-name>SignOut</servlet-name>
+		<servlet-class>hu.edudroid.droidlabportal.SignOutServlet</servlet-class>
 	</servlet>
 	
 	<servlet>
@@ -51,30 +52,39 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	    <servlet-name>loginform</servlet-name>
 	    <jsp-file>/jsp/loginform.jsp</jsp-file>
 	</servlet>
-		<servlet>
+	<servlet>
 	    <servlet-name>userhome</servlet-name>
 	    <jsp-file>/jsp/userhome.jsp</jsp-file>
 	</servlet>
-		<servlet>
+	<servlet>
+	    <servlet-name>devices</servlet-name>
+	    <jsp-file>/jsp/devices.jsp</jsp-file>
+	</servlet>
+	<servlet>
+	    <servlet-name>profile</servlet-name>
+	    <jsp-file>/jsp/profile.jsp</jsp-file>
+	</servlet>
+	<servlet>
 	    <servlet-name>post</servlet-name>
 	    <jsp-file>/jsp/post.jsp</jsp-file>
 	</servlet>
 			<!--mapping-->
 	<servlet-mapping>
-		<servlet-name>Droidlabportal</servlet-name>
-		<url-pattern>/droidlabportal</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
 		<servlet-name>RegisterUser</servlet-name>
 		<url-pattern>/registeruser</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>WebLogin</servlet-name>
-		<url-pattern>/weblogin</url-pattern>
+		<servlet-name>RegisterDevice</servlet-name>
+		<url-pattern>/registerdevice</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>Login</servlet-name>
+		<url-pattern>/login</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>WebSignOut</servlet-name>
-		<url-pattern>/websignout</url-pattern>
+		<servlet-name>SignOut</servlet-name>
+		<url-pattern>/signout</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>index</servlet-name>
@@ -104,11 +114,19 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	    <servlet-name>loginform</servlet-name>
 	    <url-pattern>/loginform</url-pattern>
 	</servlet-mapping>
-		<servlet-mapping>
+	<servlet-mapping>
 	    <servlet-name>userhome</servlet-name>
 	    <url-pattern>/userhome</url-pattern>
 	</servlet-mapping>
-		<servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>devices</servlet-name>
+	    <url-pattern>/devices</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>profile</servlet-name>
+	    <url-pattern>/profile</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
 	    <servlet-name>post</servlet-name>
 	    <url-pattern>/post</url-pattern>
 	</servlet-mapping>

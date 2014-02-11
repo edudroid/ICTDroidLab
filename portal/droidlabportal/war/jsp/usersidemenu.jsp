@@ -10,11 +10,30 @@
 	String email = (String)session.getAttribute(Constants.EMAIL);
 %>
 <div style="float: right; margin-top: -40px; margin-right: 60px;">
-<%= email %>, <a href="/websignout">sign out</a>
+<%= email %>, <a href="/signout?<%= Constants.WEB %>=true">sign out</a>
 </div>
 	<div>
 		<ul id="userbox">
-		<li><a>Devices</a></li>
-		<li><a>Profile</a></li>
+<% if (request.getParameter("selected").equals(Constants.USER_ROOT)) { %>
+				<li class="active">
+<% } else { %>
+				<li>
+<% } %>
+			<a href="/userhome">Dashboard</a>
+		</li>
+<% if (request.getParameter("selected").equals(Constants.DEVICES)) { %>
+				<li class="active">
+<% } else { %>
+				<li>
+<% } %>
+			<a href="/devices">Devices</a>
+		</li>
+<% if (request.getParameter("selected").equals(Constants.PROFILE)) { %>
+				<li class="active">
+<% } else { %>
+				<li>
+<% } %>
+			<a href="/profile">Profile</a>
+		</li>
 		</ul>
 	</div>
