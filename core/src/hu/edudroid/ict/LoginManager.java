@@ -3,26 +3,27 @@ package hu.edudroid.ict;
 import android.content.Context;
 
 public class LoginManager {
-	public LoginManager(Context context) {
+	
+	private LoginManager() {
 		
 	}
 	
-	public String getUserName() {
+	public static String getUserName(Context context) {
 		return null;
 	}
 	
-	public void setUserName(String string) {
+	public static void setUserName(Context context, String string) {
 		
 	}
 	
-	public boolean isUserLoggedIn() {
+	public static boolean isUserLoggedIn(Context context) {
 		return false;
 	}
 	
-	public String getLoginCookie() {
+	public static String getLoginCookie(Context context) {
 		return null;
 	}
 	
-	public void updateLoginCookie(String string) {
+	public static void updateLoginCookie(Context context, String string) {
 	}
 }

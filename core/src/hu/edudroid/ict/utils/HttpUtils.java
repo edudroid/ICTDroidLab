@@ -1,22 +1,22 @@
 package hu.edudroid.ict.utils;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.FormBodyPart;
 import org.apache.http.entity.mime.MultipartEntity;
@@ -33,8 +33,8 @@ import android.util.Log;
 
 public class HttpUtils {
 
-	private static final int CONNECTION_TIMEOUT = 30000;
-	private static final int SOCKET_TIMEOUT = 30000;
+	private static final int CONNECTION_TIMEOUT = 15000;
+	private static final int SOCKET_TIMEOUT = 15000;
 
 	public static String postMultipartWithFile(String url,
 			LinkedList<BasicNameValuePair> postParameters, File pictureFile) {
@@ -225,45 +225,74 @@ public class HttpUtils {
 			}
 		}
 	}
-
-	/**
-	 * Simple get method to download the contents of an URL. 
-	 * @param urlString The String representation of the requested URL. Can contain properly encoded parameters.
-	 * @return The content of the requested URL.
-	 */
-	public static String get(String urlString) {
-		try {
-			URL url = new URL(urlString);
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
-			return readStream(con.getInputStream());
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+	
+	public static String post(String url, Map<String, String> params)
+			throws IOException {
+		return post(url, params, null, null);
 	}
 
-	private static String readStream(InputStream in) {
-		BufferedReader reader = null;
-		StringBuilder buffer = new StringBuilder();
+	public static String post(String url,
+			Map<String, String> postParameters, String loginCookie,
+			String passportCookie) {
+		Log.d("HTTP POST", "To url " + url);
+		HttpClient httpClient = null;
 		try {
-			reader = new BufferedReader(new InputStreamReader(in));
-			String line = "";
-			while ((line = reader.readLine()) != null) {
-				buffer.append(line);
-				buffer.append("\n");
+			HttpParams parameters = new BasicHttpParams();
+			HttpConnectionParams.setConnectionTimeout(parameters,
+					CONNECTION_TIMEOUT);
+			HttpConnectionParams.setSoTimeout(parameters, SOCKET_TIMEOUT);
+			httpClient = new DefaultHttpClient(parameters);
+			HttpPost httpPost = new HttpPost(url);
+			LinkedList<BasicNameValuePair> nameValuePairs = new LinkedList<BasicNameValuePair>();
+			Iterator<Entry<String, String>> iterator = postParameters.entrySet()
+					.iterator();
+			while (iterator.hasNext()) {
+				Entry<String, String> param = iterator.next();
+				nameValuePairs.add(new BasicNameValuePair(param.getKey(), param.getValue()));
 			}
-			return buffer.toString();
+
+			httpPost.addHeader("Cookie", "login=" + loginCookie + ";"
+					+ "passport=" + passportCookie);
+			HttpResponse response = httpClient.execute(httpPost);
+
+			HttpEntity responseEntity = response.getEntity();
+
+			String downloadedXml = EntityUtils
+					.toString(responseEntity, "UTF-8");
+			return downloadedXml;
+		} catch (UnsupportedEncodingException e) {
+			return null;
+		} catch (MalformedURLException e) {
+			return null;
 		} catch (IOException e) {
-			e.printStackTrace();
 			return null;
 		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			if (httpClient != null) {
+				httpClient.getConnectionManager().closeIdleConnections(
+						CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS);
 			}
+		}
+	}
+	
+	public static String get(String endpoint) {
+		return get(endpoint, null, null);
+	}
+	
+	public static String get(String endpoint, String loginCookie,
+			String passportCookie) {
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpConnectionParams.setConnectionTimeout(httpclient.getParams(), SOCKET_TIMEOUT);
+		HttpGet httpGet = new HttpGet(endpoint);
+		try {
+			HttpResponse response = httpclient.execute(httpGet);
+			HttpEntity ent = response.getEntity();
+			return EntityUtils.toString(ent);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+		e.printStackTrace();
+			return null;
 		}
 	}
 }

@@ -3,7 +3,6 @@ package hu.edudroid.ict;
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginDescriptor;
 import hu.edudroid.ict.plugins.PluginIntentReceiver;
-import hu.edudroid.ict.utils.HttpUtils;
 import hu.edudroid.ict.utils.ServerUtilities;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
@@ -15,8 +14,6 @@ import hu.edudroid.module.ModuleState;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -86,16 +83,7 @@ public class CoreService extends Service implements PluginListener {
 				
 				@Override
 				public void run() {
-					// TODO get URL for this get
-					String availablePluginsString = HttpUtils.get(ServerUtilities.SERVER_URL + "/jsp/ListRegisteredPlugins.jsp");
-					Log.e(TAG, "Plugin string " + availablePluginsString);
-					// TODO parse available plugin list
-					availablePlugins = new ArrayList<PluginDescriptor>();
-					PluginDescriptor wifi = new PluginDescriptor("WiFi plugin", "hu.edudroid.ictpluginwifi", "A plugin for WiFi.");
-					PluginDescriptor social = new PluginDescriptor("Social plugin", "hu.edudroid.ictpluginsocial", "A plugin for social stuff.");
-					availablePlugins.add(wifi);
-					availablePlugins.add(social);
-					availablePlugins = Collections.unmodifiableList(availablePlugins);
+					availablePlugins = ServerUtilities.getAvailablePlugins(this);
 				}
 			}).start();			
 			mBroadcast = new PluginIntentReceiver();
@@ -313,4 +301,18 @@ public class CoreService extends Service implements PluginListener {
         	ModuleLoader.downloadModule(mContext, mUrl);
         }
     }
+
+	/**
+	 * @param userName
+	 * @param password
+	 * @return
+	 */
+	public boolean logIn(String userName, String password) {
+		try {
+			Thread.sleep(1500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
 }

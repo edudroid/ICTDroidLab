@@ -1,5 +1,6 @@
 package hu.edudroid.ict.logs;
 
+import hu.edudroid.ict.utils.HttpUtils;
 import hu.edudroid.ict.utils.ServerUtilities;
 
 import java.io.IOException;
@@ -60,7 +61,7 @@ public class UploadService extends IntentService {
 			params.put(i + " " + LogRecord.COLUMN_NAME_MESSAGE, record.getMessage());
 		}
 		try {
-			ServerUtilities.post(ServerUtilities.SERVER_URL + "save_data", params);
+			HttpUtils.post(ServerUtilities.SERVER_URL + "save_data", params);
 		} catch (IOException e) {
 			Log.e(TAG, "Unable to upload logs.", e);
 			e.printStackTrace();			

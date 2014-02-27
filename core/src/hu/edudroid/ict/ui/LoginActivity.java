@@ -3,6 +3,7 @@ package hu.edudroid.ict.ui;
 import hu.edudroid.ict.LoginManager;
 import hu.edudroid.ict.R;
 
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,11 +13,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class LoginActivity extends ActivityBase implements OnClickListener {
 
 	private static final String TAG = LoginActivity.class.getName();
-	private LoginManager loginManager;
 	private Button loginButton;
 	private Button registerButton;
 	private EditText userEdit;
@@ -27,7 +28,6 @@ public class LoginActivity extends ActivityBase implements OnClickListener {
 		Log.e(TAG, "Created");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		loginManager = new LoginManager(this);
 		loginButton = (Button) findViewById(R.id.loginButton);
 		loginButton.setOnClickListener(this);
 		registerButton = (Button) findViewById(R.id.registerButton);
@@ -39,12 +39,12 @@ public class LoginActivity extends ActivityBase implements OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (loginManager.isUserLoggedIn()) {
+		if (LoginManager.isUserLoggedIn(this)) {
 			Intent intent = new Intent(this, MainActivity.class);
 			startActivity(intent);
 			finish();
 		} else {
-			String userName = loginManager.getUserName();
+			String userName = LoginManager.getUserName(this);
 			if (userName != null) {
 				userEdit.setText(userName);
 			} else {
@@ -70,7 +70,31 @@ public class LoginActivity extends ActivityBase implements OnClickListener {
 				startActivity(new Intent(this, RegisterActivity.class));
 				break;
 			case R.id.loginButton:
-				// TODO log user in: show progress dialog, start background task...
+				if (service != null) {
+					final ProgressDialog progressDialog = new ProgressDialog(this);
+					progressDialog.setTitle(R.string.loggingInTitle);
+					progressDialog.show();
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							final boolean loginResult = service.logIn(userEdit.getText().toString(), passwordEdit.getText().toString());
+							runOnUiThread(new Runnable() {								
+								@Override
+								public void run() {
+									progressDialog.cancel();
+									if (loginResult) {
+										Toast.makeText(LoginActivity.this, R.string.loginSuccess, Toast.LENGTH_LONG).show();
+										startActivity(new Intent(LoginActivity.this, MainActivity.class));
+									} else {
+										Toast.makeText(LoginActivity.this, R.string.loginFailed, Toast.LENGTH_LONG).show();
+									}
+								}
+							});
+						}
+					}).start();
+				} else {
+					Toast.makeText(this, R.string.serviceUnavailable, Toast.LENGTH_LONG).show();
+				}
 				break;
 		}
 	}
