@@ -47,6 +47,7 @@
     <string name="options_unregister">Unregister</string>
     <string name="options_clear">Clear</string>
     <string name="options_exit">Exit</string>
+    
     <string name="remove">Remove</string>
     <string name="pluginTitle">Plugin title</string>
     <string name="pluginDescription">Plugin description</string>
@@ -61,6 +62,7 @@
     <string name="moduleEndedString">Finished on %1$s</string>
     <string name="moduleAuthorString">By %1$s</string>
     <string name="moduleIdString">#%1$s</string>
+    
     <string name="placeholderModuleDescription">This is a great module, you should definitly install it! Thank you for your help!</string>
     <string name="placeholderWebsite">http://tmit.bme.hu</string>
     <string name="placeholderPlugins">WiFi, Battery, Bluetooth</string>
@@ -72,10 +74,15 @@
     <string name="startModule">Start module</string>
     <string name="deleteModule">Delete module</string>
     <string name="deleteLogs">Delete logs</string>
-    <string name="placeholderDataVolume">Calculating used space...</string>
+    <string name="placeholderDataVolume">Calculating used space&#8230;</string>
     <string name="dataStoreTotalLogSize">Total size of log files: %1$.2f MB</string>
     <string name="dataStoreTotalZipSize">Total size of zips files: %1$.2f MB</string>
     <string name="dataStoreModuleCount"> %1$d module(s) stored on the system.</string>
+    
+    <string name="serviceUnavailable">Service not initialized yet.</string>
+    <string name="loggingInTitle">Logging in to your account</string>
+    <string name="loginSuccess">Logged in successfully</string>
+    <string name="loginFailed">Login failed</string>
     
     <string name="moduleStateAvailable">Available</string>
     <string name="moduleStateInstalled">Installed</string>
