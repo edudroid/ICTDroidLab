@@ -24,14 +24,11 @@
             <intent-filter>
                 <action android:name="hu.edudroid.ict.plugin.callmethod" />
             </intent-filter>
-        </receiver>
-        
-		<receiver android:name="hu.edudroid.ict_plugin_battery.BatteryBroadcastReceiver">
   			<intent-filter>
   			    <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
     			<action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
   			</intent-filter>
-		</receiver>
+            </receiver>
         
         <activity
             android:name="hu.edudroid.ict_plugin_battery.MainActivity"

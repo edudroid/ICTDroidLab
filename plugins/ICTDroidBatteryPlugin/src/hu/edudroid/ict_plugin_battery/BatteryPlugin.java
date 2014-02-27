@@ -60,6 +60,17 @@ public class BatteryPlugin extends PluginCommunicationInterface {
 		methods = Collections.unmodifiableList(tmpMethods);
 		events = Collections.unmodifiableList(tmpEvents);
 	}
+	
+	@Override
+	public void onReceive(Context context, Intent intent) {
+		if (intent.getAction().equals(Intent.ACTION_POWER_CONNECTED)) {
+			BatteryPlugin batteryPlugin = BatteryPlugin.getInstance();
+			Map<String, Object> values = BatteryPlugin.processIntent(intent);
+			batteryPlugin.event(BatteryPlugin.BATTERY_LEVEL_CHANGED, values, context);
+		} else {
+			super.onReceive(context, intent);
+		}
+	}
 
 	@Override
 	public String getVersionCode() {
