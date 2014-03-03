@@ -53,8 +53,8 @@
     <string name="pluginDescription">Plugin description</string>
     <string name="pluginAuthor">Plugin author</string>
     <string name="installPlugin">Install plugin</string>
-    <string name="defaultDate">2013-11-19</string>
-    <string name="defaultShortTime">11-19 12:10:11</string>
+    <string name="defaultDate">2013&#8211;11&#8211;19</string>
+    <string name="defaultShortTime">11&#8211;19 12:10:11</string>
     <string name="defaultNumber">42</string>
     <string name="placeholderModuleName">Sample module</string>
     <string name="placeholderModuleState">Installed</string>
@@ -63,7 +63,7 @@
     <string name="moduleAuthorString">By %1$s</string>
     <string name="moduleIdString">#%1$s</string>
     
-    <string name="placeholderModuleDescription">This is a great module, you should definitly install it! Thank you for your help!</string>
+    <string name="placeholderModuleDescription">This is a great module, you should definitely install it! Thank you for your help!</string>
     <string name="placeholderWebsite">http://tmit.bme.hu</string>
     <string name="placeholderPlugins">WiFi, Battery, Bluetooth</string>
     <string name="placeholderPermissions">WiFi.NETWORK_STATE, WiFi.INTERNET, Battery.READ, Battery.ALERT, Bluetooth.SCAN</string>
