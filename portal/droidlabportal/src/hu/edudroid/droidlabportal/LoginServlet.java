@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,16 +35,21 @@ public class LoginServlet extends HttpServlet {
 		Query query = new Query(Constants.USER_TABLE_NAME, userRootKey).setFilter(emailFilter);
 		List<Entity> users = datastore.prepare(query).asList(Builder.withLimit(1));
 		if (users.size() < 1) {
-			req.setAttribute(Constants.ERROR, "Unknown user, please check your email address.");
-			RequestDispatcher dispatcher = req.getRequestDispatcher("/loginform");
-			try {
-				dispatcher.forward(req, resp);
-				return;
-			} catch (ServletException e) {
-				resp.sendError(503);
-				return;
-			} finally {
-				return;
+			if (req.getParameterMap().containsKey(Constants.WEB)) {
+				req.setAttribute(Constants.ERROR, "Unknown user, please check your email address.");
+				RequestDispatcher dispatcher = req.getRequestDispatcher("/loginform");
+				try {
+					dispatcher.forward(req, resp);
+					return;
+				} catch (ServletException e) {
+					resp.sendError(503);
+					return;
+				} finally {
+					return;
+				}
+			} else {
+				resp.setContentType("text/plain");
+				resp.getWriter().println("ERROR");
 			}
 		}
 		// Check password
@@ -51,17 +57,35 @@ public class LoginServlet extends HttpServlet {
 		String storedPassword = (String) user.getProperty(Constants.USER_PASS_COLUMN);
 		if ((password == null) || (!password.equals(storedPassword))) {
 			req.setAttribute(Constants.ERROR, "Incorrect password, please try again.");
-			RequestDispatcher dispatcher = req.getRequestDispatcher("/loginform");
-			try {
-				dispatcher.forward(req, resp);
-				return;
-			} catch (ServletException e) {
-				resp.sendError(503);
-				return;
-			} finally {
-				return;
+			if (req.getParameterMap().containsKey(Constants.WEB)) {
+				RequestDispatcher dispatcher = req.getRequestDispatcher("/loginform");
+				try {
+					dispatcher.forward(req, resp);
+					return;
+				} catch (ServletException e) {
+					resp.sendError(503);
+					return;
+				} finally {
+					return;
+				}
+			} else {
+				resp.setContentType("text/plain");
+				resp.getWriter().println("ERROR");
 			}
 		}
+		// Add cookie to response
+		String loginCookie = (String)user.getProperty(Constants.USER_LOGIN_COOKIE_COLUMN);
+		if (loginCookie == null) {
+			loginCookie = "LOGIN_COOKIE_" + System.currentTimeMillis() + "_" + (int)(Math.random() * 100000);
+			user.setProperty(Constants.USER_LOGIN_COOKIE_COLUMN, loginCookie);
+		}
+		Cookie cookie = new Cookie(Constants.DROID_LAB_LOGIN_COOKIE, loginCookie);
+		cookie.setMaxAge((int)Constants.COOKIE_EXPIRATION);
+		resp.addCookie(cookie);
+		System.out.println("Cookie added to response.");
+		// Save last login date
+		user.setProperty(Constants.USER_LAST_LOGIN, System.currentTimeMillis());
+		datastore.put(user);
 		// Log in user
         req.getSession().setAttribute(Constants.USER_KEY, user.getKey());
         req.getSession().setAttribute(Constants.EMAIL, email);

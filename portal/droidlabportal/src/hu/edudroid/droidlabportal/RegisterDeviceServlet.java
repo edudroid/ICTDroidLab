@@ -1,5 +1,8 @@
 package hu.edudroid.droidlabportal;
 
+import hu.edudroid.droidlabportal.user.User;
+import hu.edudroid.droidlabportal.user.UserManager;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -22,19 +25,16 @@ public class RegisterDeviceServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		// Can register device only in session
+		User user = UserManager.checkUser(req.getSession(), req, resp);
 		Key userKey = null;
-		try {
-			userKey = (Key)req.getSession().getAttribute(Constants.USER_KEY);
-		} catch (Exception e) {
+		if (user != null) {
+			userKey = user.getKey();
+		}
+		if (userKey==null) {
 			resp.setContentType("text/plain");
 			resp.getWriter().println(Constants.ERROR_NOT_LOGGED_IN);
 			return;
-		}
-		if (userKey == null) {
-			resp.setContentType("text/plain");
-			resp.getWriter().println(Constants.ERROR_NOT_LOGGED_IN);
-			return;
-		}
+		} 
 		String imei = req.getParameter(Constants.IMEI);
 		if (imei == null) {
 			resp.setContentType("text/plain");

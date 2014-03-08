@@ -29,6 +29,8 @@ public class Constants {
 	public static final String USER_EMAIL_COLUMN = "email";
 	public static final String USER_PASS_COLUMN = "password";
 	public static final String USER_REGISTRATION_DATE_COLUMN = "reg_date";
+	public static final String USER_LOGIN_COOKIE_COLUMN = "login_cookie";
+	public static final String USER_LAST_LOGIN = "last_login";
 	
 	public static final String DEVICE_TABLE_NAME = "devices";
 	public static final String DEVICE_IMEI_COLUMN = "IMEI";
@@ -41,6 +43,10 @@ public class Constants {
 	public static final String ERROR_MISSING_IMEI = ERROR + "[3]: Missing IMEI.";
 	
 	// Other stuff
+	public static final String DROID_LAB_LOGIN_COOKIE = "DROID_LAB_LOGIN_COOKIE";
+	public static final int COOKIE_EXPIRATION = 14 * 24 * 3600;
+	public static final String DOMAIN = "localhost";
+	
 	public static boolean isValidPassword(String password) {
 		if (password==null) {
 			return false;
