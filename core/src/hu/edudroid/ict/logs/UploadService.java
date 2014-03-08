@@ -3,7 +3,6 @@ package hu.edudroid.ict.logs;
 import hu.edudroid.ict.utils.HttpUtils;
 import hu.edudroid.ict.utils.ServerUtilities;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,12 +59,8 @@ public class UploadService extends IntentService {
 			params.put(i + " " + LogRecord.COLUMN_NAME_DATE, Long.toString(record.getDate()));
 			params.put(i + " " + LogRecord.COLUMN_NAME_MESSAGE, record.getMessage());
 		}
-		try {
-			HttpUtils.post(ServerUtilities.SERVER_URL + "save_data", params);
-		} catch (IOException e) {
-			Log.e(TAG, "Unable to upload logs.", e);
-			e.printStackTrace();			
-		}
+		HttpUtils.post(ServerUtilities.SERVER_URL + "save_data", params);
+		// TODO check response
 		return false;
 	}
 

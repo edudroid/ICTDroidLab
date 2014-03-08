@@ -1,10 +1,11 @@
 package hu.edudroid.ict.ui;
 
-import hu.edudroid.ict.LoginManager;
 import hu.edudroid.ict.R;
+import hu.edudroid.ict.utils.ServerUtilities;
 
 import android.app.ProgressDialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -18,6 +19,8 @@ import android.widget.Toast;
 public class LoginActivity extends ActivityBase implements OnClickListener {
 
 	private static final String TAG = LoginActivity.class.getName();
+	public static final String PREFS_NAME = "preferences";
+	public static final String USER_NAME = "user_name";
 	private Button loginButton;
 	private Button registerButton;
 	private EditText userEdit;
@@ -39,12 +42,12 @@ public class LoginActivity extends ActivityBase implements OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (LoginManager.isUserLoggedIn(this)) {
+		if (ServerUtilities.hasUserLoginCookie(this)) {
 			Intent intent = new Intent(this, MainActivity.class);
 			startActivity(intent);
 			finish();
 		} else {
-			String userName = LoginManager.getUserName(this);
+			String userName = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).getString(USER_NAME, null);
 			if (userName != null) {
 				userEdit.setText(userName);
 			} else {
@@ -74,10 +77,11 @@ public class LoginActivity extends ActivityBase implements OnClickListener {
 					final ProgressDialog progressDialog = new ProgressDialog(this);
 					progressDialog.setTitle(R.string.loggingInTitle);
 					progressDialog.show();
+					getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().putString(USER_NAME, userEdit.getText().toString());
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
-							final boolean loginResult = service.logIn(userEdit.getText().toString(), passwordEdit.getText().toString());
+							final boolean loginResult = ServerUtilities.login(userEdit.getText().toString(), passwordEdit.getText().toString());
 							runOnUiThread(new Runnable() {								
 								@Override
 								public void run() {

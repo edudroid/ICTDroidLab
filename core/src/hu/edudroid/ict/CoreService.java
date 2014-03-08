@@ -301,18 +301,4 @@ public class CoreService extends Service implements PluginListener {
         	ModuleLoader.downloadModule(mContext, mUrl);
         }
     }
-
-	/**
-	 * @param userName
-	 * @param password
-	 * @return
-	 */
-	public boolean logIn(String userName, String password) {
-		try {
-			Thread.sleep(1500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		return true;
-	}
 }
