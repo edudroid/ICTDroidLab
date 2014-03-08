@@ -26,12 +26,12 @@ public final class ServerUtilities {
 	private static final String USER_NAME = "email";
 	private static final String PASSWORD = "pass";
 	
-	private static final String LOGIN_COOKIE = "";
+	private static final String LOGIN_COOKIE = "DROID_LAB_LOGIN_COOKIE";
 	
 	public static boolean hasUserLoginCookie(Context context) {
 		PersistantCookieStore cookieStore = new PersistantCookieStore(context);
-		cookieStore.getCookie(PORTAL_URL, LOGIN_COOKIE);
-		return false;
+		String loginCookie = cookieStore.getCookie(PORTAL_URL, LOGIN_COOKIE);
+		return loginCookie != null;
 	}
 	
 	/**
@@ -40,12 +40,12 @@ public final class ServerUtilities {
 	 * @param password The user's password
 	 * @return True if login was successful, false otherwise
 	 */
-	public static boolean login(String userName, String password) {
+	public static boolean login(String userName, String password, Context context) {
 		Log.d(TAG, "Logging in to server");
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(USER_NAME, userName);
 		params.put(PASSWORD, password);
-		String result = HttpUtils.post(PORTAL_URL, params);
+		String result = HttpUtils.post(PORTAL_URL, params, context);
 		Log.d(TAG, "Login result " + result);
 		return (result.equals("LOGGED_IN"));
 	}

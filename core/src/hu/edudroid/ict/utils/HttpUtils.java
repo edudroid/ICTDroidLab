@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -21,6 +20,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.util.EntityUtils;
 
+import android.content.Context;
 import android.util.Log;
 
 public class HttpUtils {
@@ -36,9 +36,9 @@ public class HttpUtils {
 	}
 	
 	public static String post(String url,
-			Map<String, String> postParameters, CookieStore cookieStore) {
+			Map<String, String> postParameters, Context context) {
 		Log.d(TAG, "Post to url " + url);
-		HttpClient httpClient = getClient(url, cookieStore);
+		HttpClient httpClient = getClient(url, context);
 		try {
 			HttpPost httpPost = new HttpPost(url);
 			LinkedList<BasicNameValuePair> nameValuePairs = new LinkedList<BasicNameValuePair>();
@@ -71,9 +71,9 @@ public class HttpUtils {
 		return get(url, null);
 	}
 	
-	public static String get(String url, CookieStore cookieStore) {
+	public static String get(String url, Context context) {
 		Log.d(TAG, "Get from url " + url);
-		HttpClient httpClient = getClient(url, cookieStore);
+		HttpClient httpClient = getClient(url, context);
 		HttpGet httpGet = new HttpGet(url);
 		try {
 			HttpResponse response = httpClient.execute(httpGet);
@@ -93,10 +93,10 @@ public class HttpUtils {
 		}
 	}
 	
-	private static HttpClient getClient(String url, CookieStore cookieStore) {
+	private static HttpClient getClient(String url, Context context) {
 		DefaultHttpClient httpclient = new DefaultHttpClient();
-		if (cookieStore != null) {
-			httpclient.setCookieStore(cookieStore);
+		if (context != null) {
+			httpclient.setCookieStore(new PersistantCookieStore(context));
 		}
 		HttpConnectionParams.setConnectionTimeout(httpclient.getParams(), SOCKET_TIMEOUT);
 		HttpConnectionParams.setSoTimeout(httpclient.getParams(), SOCKET_TIMEOUT);

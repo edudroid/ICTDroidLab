@@ -25,6 +25,7 @@ public class PersistantCookieStore implements CookieStore {
 
 	@Override
 	public void addCookie(Cookie cookie) {
+		Log.i(TAG, "Adding cookie " + cookie.toString());
 		try {
 			PersistedCookie persistedCookie = new PersistedCookie(cookie);
 			String key = getKey(cookie.getDomain(), cookie.getPath(), cookie.getName());
@@ -43,11 +44,13 @@ public class PersistantCookieStore implements CookieStore {
 
 	@Override
 	public boolean clearExpired(Date date) {
+		Log.i(TAG, "Clear expired cookies.");
 		return false;
 	}
 
 	@Override
 	public List<Cookie> getCookies() {
+		Log.i(TAG, "Cookies requested");
 		Map<String, ?> entries = prefs.getAll();
 		List<Cookie> cookies = new ArrayList<Cookie>();
 		for (Object value : entries.values()) {
@@ -58,14 +61,20 @@ public class PersistantCookieStore implements CookieStore {
 				e.printStackTrace();
 			}
 		}
+		Log.i(TAG, "Returning " + cookies.size() + " cookies.");
 		return cookies;
 	}
 
-	public void getCookie(String domain, String path, String name) {
+	public String getCookie(String domain, String path, String name) {
 		String key = getKey(domain, path, name);
-		
+		return prefs.getString(key, null);
 	}
 	
+	public String getCookie(String domain, String name) {
+		String key = getKey(domain, null, name);
+		return prefs.getString(key, null);
+	}
+
 	private String getKey(String domain, String path, String name) {
 		String key = domain;
 		if (path != null) {
