@@ -28,7 +28,6 @@ public class LoginActivity extends ActivityBase implements OnClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		Log.e(TAG, "Created");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		loginButton = (Button) findViewById(R.id.loginButton);
@@ -42,7 +41,9 @@ public class LoginActivity extends ActivityBase implements OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Log.d(TAG, "Resuming login activity.");
 		if (ServerUtilities.hasUserLoginCookie(this)) {
+			Toast.makeText(LoginActivity.this, R.string.loginSuccess, Toast.LENGTH_LONG).show();
 			Intent intent = new Intent(this, MainActivity.class);
 			startActivity(intent);
 			finish();

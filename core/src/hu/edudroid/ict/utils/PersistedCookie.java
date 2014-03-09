@@ -36,7 +36,11 @@ public class PersistedCookie implements Cookie {
 		this.name = cookie.getName();
 		this.domain = cookie.getDomain();
 		this.path = cookie.getPath();
-		this.expiration = cookie.getExpiryDate().getTime();
+		if (cookie.getExpiryDate() != null) {
+			this.expiration = cookie.getExpiryDate().getTime();
+		} else {
+			this.expiration = -1;
+		}
 		this.value = cookie.getValue();
 		this.isSecure = cookie.isSecure();
 	}

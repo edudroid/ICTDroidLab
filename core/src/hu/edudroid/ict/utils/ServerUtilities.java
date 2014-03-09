@@ -20,17 +20,19 @@ public final class ServerUtilities {
 	private static final int BACKOFF_MILLI_SECONDS = 2000;
 	private static final Random random = new Random();
 	
+	public static final String PORTAL_DOMAIN = "droidlabportal.appspot.com";
 	public static final String PORTAL_URL = "http://droidlabportal.appspot.com/";
 	public static final String SERVER_URL = "http://ictdroidlab.appspot.com/";
-	public static final String TAG = "Server Utilities";
+	public static final String TAG = ServerUtilities.class.getName();
 	private static final String USER_NAME = "email";
 	private static final String PASSWORD = "pass";
 	
 	private static final String LOGIN_COOKIE = "DROID_LAB_LOGIN_COOKIE";
 	
 	public static boolean hasUserLoginCookie(Context context) {
+		Log.i(TAG, "Checking login cookie");
 		PersistantCookieStore cookieStore = new PersistantCookieStore(context);
-		String loginCookie = cookieStore.getCookie(PORTAL_URL, LOGIN_COOKIE);
+		String loginCookie = cookieStore.getCookie(PORTAL_DOMAIN, "/",LOGIN_COOKIE);
 		return loginCookie != null;
 	}
 	
@@ -41,13 +43,13 @@ public final class ServerUtilities {
 	 * @return True if login was successful, false otherwise
 	 */
 	public static boolean login(String userName, String password, Context context) {
-		Log.d(TAG, "Logging in to server");
+		Log.d(TAG, "Logging in to server " + userName + " " + password);
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(USER_NAME, userName);
 		params.put(PASSWORD, password);
-		String result = HttpUtils.post(PORTAL_URL, params, context);
-		Log.d(TAG, "Login result " + result);
-		return (result.equals("LOGGED_IN"));
+		String result = HttpUtils.post(PORTAL_URL + "login", params, context);
+		Log.d(TAG, "Login result >" + result + "<");
+		return (result.trim().equals("LOGGED_IN"));
 	}
 
 	/**
@@ -107,8 +109,8 @@ public final class ServerUtilities {
 
 	public static List<PluginDescriptor> getAvailablePlugins(Runnable runnable) {
 		// Get URL for this
-		String availablePluginsString = HttpUtils.get(ServerUtilities.SERVER_URL + "/jsp/ListRegisteredPlugins.jsp");
-		Log.e(TAG, "Plugin string " + availablePluginsString);
+		//String availablePluginsString = HttpUtils.get(ServerUtilities.SERVER_URL + "/jsp/ListRegisteredPlugins.jsp");
+		//Log.e(TAG, "Plugin string " + availablePluginsString);
 		// TODO parse available plugin list
 		List<PluginDescriptor> availablePlugins = new ArrayList<PluginDescriptor>();
 		PluginDescriptor wifi = new PluginDescriptor("WiFi plugin", "hu.edudroid.ictpluginwifi", "A plugin for WiFi.");

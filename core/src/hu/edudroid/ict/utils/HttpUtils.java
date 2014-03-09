@@ -13,6 +13,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -37,7 +38,7 @@ public class HttpUtils {
 	
 	public static String post(String url,
 			Map<String, String> postParameters, Context context) {
-		Log.d(TAG, "Post to url " + url);
+		Log.d(TAG, "Post to url " + url + " with context.");
 		HttpClient httpClient = getClient(url, context);
 		try {
 			HttpPost httpPost = new HttpPost(url);
@@ -48,7 +49,11 @@ public class HttpUtils {
 				Entry<String, String> param = iterator.next();
 				nameValuePairs.add(new BasicNameValuePair(param.getKey(), param.getValue()));
 			}
+			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 			HttpResponse response = httpClient.execute(httpPost);
+			for (org.apache.http.Header header : response.getAllHeaders()) {
+				Log.d(TAG,header.getName() + " : " + header.getValue());
+			}
 			HttpEntity responseEntity = response.getEntity();
 			String downloadedXml = EntityUtils
 					.toString(responseEntity, "UTF-8");

@@ -50,6 +50,7 @@ public class LoginServlet extends HttpServlet {
 			} else {
 				resp.setContentType("text/plain");
 				resp.getWriter().println("ERROR");
+				return;
 			}
 		}
 		// Check password

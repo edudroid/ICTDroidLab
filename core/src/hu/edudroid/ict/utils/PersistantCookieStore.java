@@ -29,6 +29,7 @@ public class PersistantCookieStore implements CookieStore {
 		try {
 			PersistedCookie persistedCookie = new PersistedCookie(cookie);
 			String key = getKey(cookie.getDomain(), cookie.getPath(), cookie.getName());
+			Log.i(TAG, "Cookies key " + key);
 			prefs.edit().putString(key, persistedCookie.toJSON()).commit();
 		} catch (JSONException e) {
 			Log.e(TAG, "Error persisting cookie.");
@@ -71,6 +72,7 @@ public class PersistantCookieStore implements CookieStore {
 	}
 	
 	public String getCookie(String domain, String name) {
+		Log.i(TAG, "Looking for cookie " + name + " for domain " + domain);
 		String key = getKey(domain, null, name);
 		return prefs.getString(key, null);
 	}
