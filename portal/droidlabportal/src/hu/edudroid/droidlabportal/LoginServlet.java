@@ -77,10 +77,9 @@ public class LoginServlet extends HttpServlet {
         } catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			} else {
-				resp.setContentType("text/plain");
-				resp.getWriter().println("ERROR");
-			}
+			resp.setContentType("text/plain");
+			resp.getWriter().println("ERROR");
+			return;
 		}
 
 		Entity user = users.get(0);
@@ -124,7 +123,6 @@ public class LoginServlet extends HttpServlet {
 		} else {
 			resp.setContentType("text/plain");
 			resp.getWriter().println("LOGGED_IN");
->>>>>>> master
 		}
 	}
 }

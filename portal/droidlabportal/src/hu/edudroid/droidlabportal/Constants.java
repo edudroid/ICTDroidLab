@@ -57,8 +57,8 @@ public class Constants {
 	public static final String DEVICE_IMEI_COLUMN = "IMEI";
 	public static final String DEVICE_NAME_COLUMN = "device_name";
 	public static final String DEVICE_GCM_ID_COLUMN = "gcm_id";
-	public static final String DEVICE_SDK_VERSION_COLUMN = "sdk_version";
-		
+	public static final String DEVICE_SDK_VERSION_COLUMN = "sdk_version";		
+	public static final String DEVICE_DATE_COLUMN = "date";
 	
 	// Error message
 	public static final String ERROR = "ERROR";

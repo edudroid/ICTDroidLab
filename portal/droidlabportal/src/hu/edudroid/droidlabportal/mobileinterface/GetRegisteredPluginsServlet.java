@@ -39,7 +39,7 @@ public class GetRegisteredPluginsServlet extends HttpServlet{
 		        pluginObject.put("version", plugin.getProperty("version"));
 		        pluginRespArray.put(pluginObject);
 	    	}
-	        pluginRespArray.write(resp.getWriter());
+	        resp.getWriter().write(pluginRespArray.toString());
 	    } catch (JSONException e) {
 	        System.err
 	        .println("Failed to create JSON response: " + e.getMessage());

@@ -86,7 +86,7 @@ public class RegisterDeviceServlet extends HttpServlet {
         device.setProperty(Constants.DEVICE_NAME_COLUMN, name);
         device.setProperty(Constants.DEVICE_GCM_ID_COLUMN, gcmId);
         device.setProperty(Constants.DEVICE_SDK_VERSION_COLUMN, sdkVersion);
-        device.setProperty(Constants.DEVICES_DATE_COLUMN, new Date());
+        device.setProperty(Constants.DEVICE_DATE_COLUMN, new Date());
         // TODO save plugin versions
         datastore.put(device);
 		resp.setContentType("text/plain");
