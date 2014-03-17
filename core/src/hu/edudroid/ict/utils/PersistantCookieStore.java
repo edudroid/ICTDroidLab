@@ -35,7 +35,6 @@ public class PersistantCookieStore implements CookieStore {
 			Log.e(TAG, "Error persisting cookie.");
 			e.printStackTrace();
 		}
-		
 	}
 
 	@Override

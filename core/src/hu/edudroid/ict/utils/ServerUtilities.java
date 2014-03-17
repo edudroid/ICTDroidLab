@@ -28,6 +28,10 @@ public final class ServerUtilities {
 	private static final String PASSWORD = "pass";
 	
 	private static final String LOGIN_COOKIE = "DROID_LAB_LOGIN_COOKIE";
+	private static final String IMEI = "IMEI";
+	private static final String DEVICE_NAME = "device_name";
+	private static final String GCM_ID = "gcm_id";
+	private static final String SDK_VERSION = "sdk_version";
 	
 	public static boolean hasUserLoginCookie(Context context) {
 		Log.i(TAG, "Checking login cookie");
@@ -56,11 +60,13 @@ public final class ServerUtilities {
 	 * Register this account/device pair within the server.
 	 * 
 	 */
-	public static void register(final Context context, String imei, String gcmId, String androidVersion, Map<String, Integer> pluginVersions) {
+	public static boolean registerDevice(final Context context, String imei, String deviceName, String gcmId, String androidVersion, Map<String, Integer> pluginVersions) {
+		Log.d(TAG, "Attempting to register device");
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("imei", imei);
-		params.put("gcm_id", gcmId);
-		params.put("androidVersion", androidVersion);
+		params.put(IMEI, imei);
+		params.put(DEVICE_NAME, deviceName);
+		params.put(GCM_ID, gcmId);
+		params.put(SDK_VERSION, androidVersion);
 		if (pluginVersions != null) {
 			for (Entry<String, Integer> pluginVersion : pluginVersions.entrySet()) {
 				params.put(pluginVersion.getKey(), pluginVersion.getValue().toString());
@@ -69,12 +75,15 @@ public final class ServerUtilities {
 
 		long backoff = BACKOFF_MILLI_SECONDS + random.nextInt(1000);
 
+		
 		for (int i = 1; i <= MAX_ATTEMPTS; i++) {
 			Log.d(TAG, "Attempt #" + i + " to register");
-			String result = HttpUtils.post(SERVER_URL + "registerdevice", params);
-			if (result != null && result.equals("OK")) { // TODO check if register went well
+			String result = HttpUtils.post(PORTAL_URL + "registerdevice", params, context);
+			if (result != null && (result.trim().equals("DEVICE_UPDATED")||result.trim().equals("DEVICE_REGISTERED"))) {
+				Log.e(TAG,"Registration successful " + result.trim());
 				GCMRegistrar.setRegisteredOnServer(context, true);
-				return;
+				return true;
+				
 			} else {
 				Log.e(TAG, "Failed to register on attempt " + i );
 				if (i == MAX_ATTEMPTS) {
@@ -86,11 +95,12 @@ public final class ServerUtilities {
 				} catch (InterruptedException e1) {
 					Log.d(TAG, "Thread interrupted: abort remaining retries!");
 					Thread.currentThread().interrupt();
-					return;
+					return false;
 				}
 				backoff *= 2;
 			}
 		}
+		return false;
 	}
 
 	/**

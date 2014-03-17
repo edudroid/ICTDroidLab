@@ -51,9 +51,6 @@ public class HttpUtils {
 			}
 			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 			HttpResponse response = httpClient.execute(httpPost);
-			for (org.apache.http.Header header : response.getAllHeaders()) {
-				Log.d(TAG,header.getName() + " : " + header.getValue());
-			}
 			HttpEntity responseEntity = response.getEntity();
 			String downloadedXml = EntityUtils
 					.toString(responseEntity, "UTF-8");

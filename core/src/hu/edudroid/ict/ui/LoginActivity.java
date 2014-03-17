@@ -83,6 +83,9 @@ public class LoginActivity extends ActivityBase implements OnClickListener {
 						@Override
 						public void run() {
 							final boolean loginResult = ServerUtilities.login(userEdit.getText().toString(), passwordEdit.getText().toString(), getApplicationContext());
+							if (loginResult) {
+								service.registerWithBackend();
+							}
 							runOnUiThread(new Runnable() {								
 								@Override
 								public void run() {

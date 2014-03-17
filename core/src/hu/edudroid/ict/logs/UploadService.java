@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -38,7 +39,7 @@ public class UploadService extends IntentService {
 					intent.getStringExtra(LogRecord.COLUMN_NAME_MESSAGE));
 			List<LogRecord> recordsToUpload = databaseManager.getRecords(UPLOAD_BATCH_SIZE - 1);
 			recordsToUpload.add(logRecord);
-			boolean result = uploadLogs(recordsToUpload);
+			boolean result = uploadLogs(recordsToUpload, this.getApplicationContext());
 			if (result) {
 				for (LogRecord record : recordsToUpload) {
 					databaseManager.purgeRecord(record.getId());
@@ -49,17 +50,18 @@ public class UploadService extends IntentService {
 		}
 	}
 	
-	public static boolean uploadLogs(List<LogRecord> recordsToUpload) {
+	public static boolean uploadLogs(List<LogRecord> recordsToUpload, Context context) {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(LOG_COUNT, Integer.toString(recordsToUpload.size()));
 		for (int i = 0; i < recordsToUpload.size(); i++) {
 			LogRecord record = recordsToUpload.get(i);
+			// TODO device later on identify device not just the user
 			params.put(i + " " + LogRecord.COLUMN_NAME_MODULE, record.getModule());
 			params.put(i + " " + LogRecord.COLUMN_NAME_LOG_LEVEL, record.getLogLevel());
 			params.put(i + " " + LogRecord.COLUMN_NAME_DATE, Long.toString(record.getDate()));
 			params.put(i + " " + LogRecord.COLUMN_NAME_MESSAGE, record.getMessage());
 		}
-		HttpUtils.post(ServerUtilities.SERVER_URL + "save_data", params);
+		HttpUtils.post(ServerUtilities.SERVER_URL + "save_data", params, context);
 		// TODO check response
 		return false;
 	}
