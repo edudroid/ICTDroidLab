@@ -1,6 +1,7 @@
 package hu.edudroid.droidlabportal;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServlet;
@@ -35,16 +36,16 @@ public class RegisterDeviceServlet extends HttpServlet {
 			resp.getWriter().println(Constants.ERROR_NOT_LOGGED_IN);
 			return;
 		}
-		String imei = req.getParameter(Constants.IMEI);
+		String imei = req.getParameter(Constants.DEVICES_IMEI_COLUMN);
 		if (imei == null) {
 			resp.setContentType("text/plain");
 			resp.getWriter().println(Constants.ERROR_MISSING_IMEI);
 			return;
 		}
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-	    Filter imeiFilter = new FilterPredicate(Constants.DEVICE_IMEI_COLUMN, FilterOperator.EQUAL, imei);
+	    Filter imeiFilter = new FilterPredicate(Constants.DEVICES_TABLE_NAME, FilterOperator.EQUAL, imei);
 	    
-		Query query = new Query(Constants.DEVICE_TABLE_NAME, userKey).setFilter(imeiFilter);
+		Query query = new Query(Constants.DEVICES_TABLE_NAME, userKey).setFilter(imeiFilter);
 		List<Entity> devices = datastore.prepare(query).asList(Builder.withLimit(1));
 		if (devices.size() > 0) {
 			resp.setContentType("text/plain");
@@ -52,8 +53,16 @@ public class RegisterDeviceServlet extends HttpServlet {
 			return;
 		}
 		// Add device
-        Entity device = new Entity(Constants.DEVICE_TABLE_NAME, userKey);
-        device.setProperty(Constants.DEVICE_IMEI_COLUMN, imei);
+        Entity device = new Entity(Constants.MYDEVICE_TABLE_NAME, userKey);
+        device.setProperty(Constants.DEVICES_IMEI_COLUMN, imei);
+        /*
+        device.setProperty(Constants.DEVICES_SDK_COLUMN, req.getParameter(Constants.DEVICES_SDK_COLUMN));
+        device.setProperty(Constants.DEVICES_CELLULAR_COLUMN, req.getParameter(Constants.DEVICES_CELLULAR_COLUMN));
+        device.setProperty(Constants.DEVICES_WIFI_COLUMN, req.getParameter(Constants.DEVICES_WIFI_COLUMN));
+        device.setProperty(Constants.DEVICES_GPS_COLUMN, req.getParameter(Constants.DEVICES_GPS_COLUMN));
+        device.setProperty(Constants.DEVICES_BLUETOOTH_COLUMN, req.getParameter(Constants.DEVICES_BLUETOOTH_COLUMN));
+        */
+        device.setProperty(Constants.DEVICES_DATE_COLUMN, new Date());
         datastore.put(device);
 		if (req.getParameterMap().containsKey(Constants.WEB)) {
 			resp.sendRedirect("/jsp/device.jsp?" + Constants.IMEI + "=" + imei);

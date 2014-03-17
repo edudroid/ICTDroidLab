@@ -46,9 +46,9 @@
 	// Find device by imei
 	// Check for password in datastore
 	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-	Query.Filter imeiFilter = new FilterPredicate(Constants.DEVICE_IMEI_COLUMN, FilterOperator.EQUAL, imei);
-	Query query = new Query(Constants.DEVICE_TABLE_NAME, userKey).setFilter(imeiFilter);
-	List<Entity> devices = datastore.prepare(query).asList(Builder.withLimit(1));
+	Query.Filter imeiFilter = new FilterPredicate(Constants.DEVICES_IMEI_COLUMN, FilterOperator.EQUAL, imei);
+	Query query = new Query(Constants.DEVICES_TABLE_NAME, userKey).setFilter(imeiFilter);
+	List<Entity> devices = datastore.prepare(query).asList(Builder.withDefaults());
 	if (devices.size() == 1) {
 		log.info("Device found");
 		selectedDevice = devices.get(0);
@@ -65,8 +65,32 @@
 </jsp:include>
 		<div>
 			<h1>
-				Device <%= selectedDevice.getProperty(Constants.DEVICE_IMEI_COLUMN) %>
+				Device <%= selectedDevice.getProperty(Constants.DEVICES_IMEI_COLUMN) %>
 			</h1>
+			
+	<table>
+		<tr>
+			<td>IMEI: <%= devices.get(0).getProperty(Constants.DEVICES_IMEI_COLUMN) %></td>
+		</tr>
+		<tr>
+			<td>SDK version: <%= devices.get(0).getProperty(Constants.DEVICES_SDK_COLUMN) %></td>
+		</tr>
+		<tr>
+			<td>CELLULAR: <%= devices.get(0).getProperty(Constants.DEVICES_CELLULAR_COLUMN) %></td>
+		</tr>
+		<tr>
+			<td>WIFI: <%= devices.get(0).getProperty(Constants.DEVICES_WIFI_COLUMN) %></td>
+		</tr>
+		<tr>
+			<td>GPS: <%= devices.get(0).getProperty(Constants.DEVICES_GPS_COLUMN) %></td>
+		</tr>
+		<tr>
+			<td>BLUETOOTH: <%= devices.get(0).getProperty(Constants.DEVICES_BLUETOOTH_COLUMN) %></td>
+		</tr>
+		<tr>
+			<td>Registration: <%= devices.get(0).getProperty(Constants.DEVICES_DATE_COLUMN) %></td>
+		</tr>
+    </table>
 		</div>
 	</div>
 </div>

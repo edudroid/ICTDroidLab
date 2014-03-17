@@ -35,5 +35,33 @@
 <% } %>
 			<a href="/profile">Profile</a>
 		</li>
+<% if (request.getParameter("selected").equals(Constants.MODULES)) { %>
+				<li class="active">
+<% } else { %>
+				<li>
+<% } %>
+			<a href="modules">Modules</a>
+		</li>
+<% if (request.getParameter("selected").equals(Constants.UPLOADMODULE)) { %>
+				<li class="active">
+<% } else { %>
+				<li>
+<% } %>
+			<a href="/uploadmodule">Upload Module</a>
+		</li>
+<% if (request.getParameter("selected").equals(Constants.RESULTS)) { %>
+				<li class="active">
+<% } else { %>
+				<li>
+<% } %>
+			<a href="/results">Results</a>
+		</li>
+<% if (request.getParameter("selected").equals(Constants.MEASUREMENT)) { %>
+				<li class="active">
+<% } else { %>
+				<li>
+<% } %>
+			<a href="/measurement">Measurement</a>
+		</li>		
 		</ul>
 	</div>
