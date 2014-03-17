@@ -2,9 +2,8 @@ package hu.edudroid.droidlabportal.user;
 
 import hu.edudroid.droidlabportal.Constants;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +21,8 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 public class UserManager {
-	
+	private static final Logger log = Logger.getLogger(UserManager.class.getName());
+
 	/**
 	 * Gets logged in user, and adds user's login cookie to the response
 	 * @param session
@@ -31,16 +31,19 @@ public class UserManager {
 	 * @return
 	 */
 	public static User checkUser(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
-		String email = (String)session.getAttribute(Constants.EMAIL);
+		String email = (String)session.getAttribute(Constants.EMAIL);		
 		Key userKey = (Key)request.getSession().getAttribute(Constants.USER_KEY);
 		// If user's session is not logged in yet, check for DroidLabLogin cookie
 		if (email != null) {
+			log.info("Email available in session " + email);
 			User user = new User(null, null, email, userKey);
 			return user;
 		}
 		Cookie[] cookies = request.getCookies();
 		if (cookies != null) {
+			log.info("Request has " + cookies.length + " cookies.");
 			for (Cookie cookie:cookies) {
+				log.info("Checking cookie " + cookie.getName());
 				if (cookie.getName().equals(Constants.DROID_LAB_LOGIN_COOKIE)) {
 					// Get user from datastore for cookie
 					DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -58,8 +61,10 @@ public class UserManager {
 							session.setAttribute(Constants.EMAIL, email);
 							session.setAttribute(Constants.USER_KEY, userKey);
 							User ret = new User(null, null, email, userKey);
+							log.info("Valid login cookie found for user " + email);
 							return ret;
 						} else {
+							log.warning("Cookie expired");
 							// Remove the cookie from the session
 							cookie.setMaxAge(0);
 							session.removeAttribute(Constants.EMAIL);
@@ -71,10 +76,17 @@ public class UserManager {
 							datastore.put(user);
 							return null;
 						}
+					} else {
+						log.severe("No user found for cookie.");
+						return null;
 					}
 				}
 			}
+			log.warning("Login cookie not present.");
+			return null;
+		} else {
+			log.warning("No cookies or email present.");
+			return null;
 		}
-		return null;
 	}
 }

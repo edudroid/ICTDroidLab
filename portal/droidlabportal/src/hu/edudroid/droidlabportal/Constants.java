@@ -19,6 +19,9 @@ public class Constants {
 	public static final String PASSWORD = "pass";
 	public static final String PASSWORDCHECK = "passagain";
 	public static final String IMEI = "IMEI";
+	public static final String DEVICE_NAME = "device_name";
+	public static final String GCM_ID = "gcm_id";
+	public static final String SDK_VERSION = "sdk_version";
 
 	// Session parameters
 	public static final String USER_KEY = "user key";
@@ -34,6 +37,9 @@ public class Constants {
 	
 	public static final String DEVICE_TABLE_NAME = "devices";
 	public static final String DEVICE_IMEI_COLUMN = "IMEI";
+	public static final String DEVICE_NAME_COLUMN = "device_name";
+	public static final String DEVICE_GCM_ID_COLUMN = "gcm_id";
+	public static final String DEVICE_SDK_VERSION_COLUMN = "sdk_version";
 		
 	
 	// Error message
@@ -41,6 +47,9 @@ public class Constants {
 	public static final String ERROR_NOT_LOGGED_IN = ERROR + "[1]: Not logged in.";
 	public static final String ERROR_DEVICE_ALREADY_EXISTS = ERROR + "[2]: Device already registered.";
 	public static final String ERROR_MISSING_IMEI = ERROR + "[3]: Missing IMEI.";
+	public static final String ERROR_MISSING_DEVICE_NAME = ERROR + "[3]: Missing device name.";
+	public static final String ERROR_MISSING_GCM_ID = ERROR + "[3]: Missing gcm id.";
+	public static final String ERROR_MISSING_SDK_VERSION = ERROR + "[3]: Missing sdk version.";
 	
 	// Other stuff
 	public static final String DROID_LAB_LOGIN_COOKIE = "DROID_LAB_LOGIN_COOKIE";
