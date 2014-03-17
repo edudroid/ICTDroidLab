@@ -18,6 +18,10 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 
 public class UploadLogServlet extends HttpServlet {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8045001540854103637L;
 	private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 	
     @Override

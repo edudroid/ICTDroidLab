@@ -12,6 +12,10 @@ import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 
 public class GetLogUrlServlet extends HttpServlet{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8602087197512812848L;
 	private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 	
 	@Override

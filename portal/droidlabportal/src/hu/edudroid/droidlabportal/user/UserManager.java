@@ -53,7 +53,7 @@ public class UserManager {
 					List<Entity> users = datastore.prepare(query).asList(Builder.withLimit(1));
 					if (users.size() == 1) {
 						Entity user = users.get(0);
-						long expirationDate = Constants.COOKIE_EXPIRATION * 1000l + (long)user.getProperty(Constants.USER_LAST_LOGIN);
+						long expirationDate = Constants.COOKIE_EXPIRATION * 1000l + (Long)user.getProperty(Constants.USER_LAST_LOGIN);
 						if (expirationDate > System.currentTimeMillis()) {
 							email = (String)user.getProperty(Constants.USER_EMAIL_COLUMN);
 							userKey = user.getKey();

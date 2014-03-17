@@ -21,6 +21,11 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 
 public class GetRegisteredPluginsServlet extends HttpServlet{
 		
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 134445733702007333L;
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
