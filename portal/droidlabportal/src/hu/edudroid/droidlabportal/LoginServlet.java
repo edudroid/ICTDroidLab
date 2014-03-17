@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,20 +38,25 @@ public class LoginServlet extends HttpServlet {
 		List<Entity> users = datastore.prepare(query).asList(Builder.withLimit(1));
 		
 		if (users.size() < 1) {
-			req.setAttribute(Constants.ERROR, "Unknown user, please check your email address.");
-			RequestDispatcher dispatcher = req.getRequestDispatcher("/loginform");
-			try {
-				dispatcher.forward(req, resp);
-				return;
-			} catch (ServletException e) {
-				resp.sendError(503);
-				return;
-			} finally {
+			if (req.getParameterMap().containsKey(Constants.WEB)) {
+				req.setAttribute(Constants.ERROR, "Unknown user, please check your email address.");
+				RequestDispatcher dispatcher = req.getRequestDispatcher("/loginform");
+				try {
+					dispatcher.forward(req, resp);
+					return;
+				} catch (ServletException e) {
+					resp.sendError(503);
+					return;
+				} finally {
+					return;
+				}
+			} else {
+				resp.setContentType("text/plain");
+				resp.getWriter().println("ERROR");
 				return;
 			}
 		}
-		
-		// Create MessageDigest instance for MD5
+		// Check password
         MessageDigest md;
         String generatedPassword;
         try {
@@ -68,13 +74,20 @@ public class LoginServlet extends HttpServlet {
 	        }
 	        //Get complete hashed password in hex format
 	        generatedPassword = sb.toString();
-		
-		
-			// Check password
-			Entity user = users.get(0);
-			String storedPassword = (String) user.getProperty(Constants.USER_PASS_COLUMN);
-			if ((password == null) || (!generatedPassword.equals(storedPassword))) {
-				req.setAttribute(Constants.ERROR, "Incorrect password, please try again.");
+        } catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			} else {
+				resp.setContentType("text/plain");
+				resp.getWriter().println("ERROR");
+			}
+		}
+
+		Entity user = users.get(0);
+		String storedPassword = (String) user.getProperty(Constants.USER_PASS_COLUMN);
+		if ((generatedPassword == null) || (!generatedPassword.equals(storedPassword))) {
+			req.setAttribute(Constants.ERROR, "Incorrect password, please try again.");
+			if (req.getParameterMap().containsKey(Constants.WEB)) {
 				RequestDispatcher dispatcher = req.getRequestDispatcher("/loginform");
 				try {
 					dispatcher.forward(req, resp);
@@ -85,19 +98,33 @@ public class LoginServlet extends HttpServlet {
 				} finally {
 					return;
 				}
-			}
-			// Log in user
-	        req.getSession().setAttribute(Constants.USER_KEY, user.getKey());
-	        req.getSession().setAttribute(Constants.EMAIL, email);
-			if (req.getParameterMap().containsKey(Constants.WEB)) {
-				resp.sendRedirect("/userhome");
 			} else {
 				resp.setContentType("text/plain");
-				resp.getWriter().println("LOGGED_IN");
+				resp.getWriter().println("ERROR");
 			}
-        } catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}
+		// Add cookie to response
+		String loginCookie = (String)user.getProperty(Constants.USER_LOGIN_COOKIE_COLUMN);
+		if (loginCookie == null) {
+			loginCookie = "LOGIN_COOKIE_" + System.currentTimeMillis() + "_" + (int)(Math.random() * 100000);
+			user.setProperty(Constants.USER_LOGIN_COOKIE_COLUMN, loginCookie);
+		}
+		Cookie cookie = new Cookie(Constants.DROID_LAB_LOGIN_COOKIE, loginCookie);
+		cookie.setMaxAge((int)Constants.COOKIE_EXPIRATION);
+		resp.addCookie(cookie);
+		System.out.println("Cookie added to response.");
+		// Save last login date
+		user.setProperty(Constants.USER_LAST_LOGIN, System.currentTimeMillis());
+		datastore.put(user);
+		// Log in user
+        req.getSession().setAttribute(Constants.USER_KEY, user.getKey());
+        req.getSession().setAttribute(Constants.EMAIL, email);
+		if (req.getParameterMap().containsKey(Constants.WEB)) {
+			resp.sendRedirect("/userhome");
+		} else {
+			resp.setContentType("text/plain");
+			resp.getWriter().println("LOGGED_IN");
+>>>>>>> master
 		}
 	}
 }

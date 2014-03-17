@@ -22,7 +22,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
@@ -100,7 +99,20 @@ public class CoreService extends Service implements PluginListener {
 	
 			mBroadcast.registerPluginDetailsListener(this);
 			
-			registeringGCM();
+			// Register GCM
+	        GCMRegistrar.checkDevice(this);
+	        GCMRegistrar.checkManifest(this);
+
+	        registration_ID = GCMRegistrar.getRegistrationId(this);
+	 
+	        if (registration_ID.equals("")) {
+	            Log.i("GCM registration","Registration is not present, register now with GCM!");          
+	            GCMRegistrar.register(this, SENDER_ID);
+	        } else {
+	        	Log.i("GCM registration","Device is already registered on GCM: " +registration_ID);
+            	registerWithBackend();
+	        }
+			
 			
 			Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
 			sendBroadcast(mIntent);
@@ -226,93 +238,13 @@ public class CoreService extends Service implements PluginListener {
 		return availablePlugins;
 	}
 	
-	public void registeringGCM(){
-        GCMRegistrar.checkDevice(this);
-        GCMRegistrar.checkManifest(this);
-
-        registration_ID = GCMRegistrar.getRegistrationId(this);
- 
-        if (registration_ID.equals("")) {
-            Log.i("GCM registration","Registration is not present, register now with GCM!");          
-            GCMRegistrar.register(this, SENDER_ID);
-        } else {
-        	Log.i("GCM registration","Device is already registered on GCM: " +registration_ID);
-            if (!GCMRegistrar.isRegisteredOnServer(this)) {
-            	registeringGCMonServer();
-            }
-        }
-	}
-	
-	public void registeringGCMonServer(){
+	public void registerWithBackend() {
+    	// Register device with server
 		TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
-        String imei=mngr.getDeviceId(); 
-        String sdk_version=String.valueOf(android.os.Build.VERSION.SDK_INT);
-		PackageManager pm = this.getPackageManager();
-		
-		boolean cellular = pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
-		boolean wifi = pm.hasSystemFeature(PackageManager.FEATURE_WIFI);
-		boolean bluetooth = pm.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH);
-		boolean gps = pm.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
-    	
-        RegisterToServer regTask = new RegisterToServer(this,imei,registration_ID,sdk_version,cellular,wifi,bluetooth,gps);
-        Thread thread = new Thread(regTask, "RegisterToServer");
-        thread.start();
-	}
-	
-	public class RegisterToServer implements Runnable {
-
-		Context mContext;
-		String mIMEI;
-		String mGcmId;
-		String mSdk_version;
-		boolean mCellular;
-		boolean mWifi;
-		boolean mBluetooth;
-		boolean mGps;
-		
-        public RegisterToServer(Context context,String imei, String gcmId, String sdk_version, boolean cellular, boolean wifi, boolean bluetooth, boolean gps) {
-            mContext=context;
-            mIMEI=imei;
-            mGcmId=gcmId;
-            mSdk_version=sdk_version;
-            mCellular=cellular;
-            mWifi=wifi;
-            mBluetooth=bluetooth;
-            mGps=gps;
-        }
-
-        public void run() {
-        	ServerUtilities.register(mContext, mIMEI, mGcmId, mSdk_version, null);
-        }
-    }	
-	
-	public class downloadFile implements Runnable {
-
-		Context mContext;
-		String mUrl;
-		String mFilename;
-		
-        public downloadFile(Context context, String url) {
-            mContext=context;
-            mUrl=url;
-        }
-
-        public void run() {
-        	ModuleLoader.downloadModule(mContext, mUrl);
-        }
-    }
-
-	/**
-	 * @param userName
-	 * @param password
-	 * @return
-	 */
-	public boolean logIn(String userName, String password) {
-		try {
-			Thread.sleep(1500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		return true;
-	}
+        String imei = mngr.getDeviceId(); 
+        String sdkVersion=String.valueOf(android.os.Build.VERSION.SDK_INT);
+		String deviceName = "default"; // TODO add edit for device name
+    	boolean registered = ServerUtilities.registerDevice(this, imei, deviceName, registration_ID, sdkVersion, null);
+		Log.e("Device registered", "Success: " + registered);
+	}	
 }
