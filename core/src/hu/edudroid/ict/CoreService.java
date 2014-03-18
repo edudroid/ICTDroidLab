@@ -3,6 +3,7 @@ package hu.edudroid.ict;
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginDescriptor;
 import hu.edudroid.ict.plugins.PluginIntentReceiver;
+import hu.edudroid.ict.utils.CoreConstants;
 import hu.edudroid.ict.utils.ServerUtilities;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
@@ -35,10 +36,10 @@ public class CoreService extends Service implements PluginListener {
 	public static final String DESCRIPTOR_FOLDER = "descriptors"; 
 	public static final String JAR_FOLDER = "jars";
 	
+	public static final String REGISTER_DEVICE_COMMAND = "register device";
+	
 	// Google project id
     public static final String SENDER_ID = "1017069233076";
-    public static String registration_ID = "";
-
 	private static final String TAG = "CoreService";
 
 	private PluginIntentReceiver mBroadcast;
@@ -103,7 +104,7 @@ public class CoreService extends Service implements PluginListener {
 	        GCMRegistrar.checkDevice(this);
 	        GCMRegistrar.checkManifest(this);
 
-	        registration_ID = GCMRegistrar.getRegistrationId(this);
+	        String registration_ID = GCMRegistrar.getRegistrationId(this);
 	 
 	        if (registration_ID.equals("")) {
 	            Log.i("GCM registration","Registration is not present, register now with GCM!");          
@@ -133,6 +134,14 @@ public class CoreService extends Service implements PluginListener {
 				}
 			}
 		}		
+	}
+	
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		if (intent.getAction().equals(REGISTER_DEVICE_COMMAND)) {
+			registerWithBackend();
+		}
+		return Service.START_STICKY;
 	}
 	
 	public void registerPluginDetailsListener(PluginListener listener) {
@@ -247,8 +256,8 @@ public class CoreService extends Service implements PluginListener {
 		TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
         String imei = mngr.getDeviceId(); 
         String sdkVersion=String.valueOf(android.os.Build.VERSION.SDK_INT);
-		String deviceName = "default"; // TODO Let the user change the devices name!
-    	boolean registered = ServerUtilities.registerDevice(this, imei, deviceName, registration_ID, sdkVersion, null);
+		String deviceName = CoreConstants.getString(CoreConstants.DEVICE_NAME_KEY, CoreConstants.DEFAULT_DEVICE_NAME, this);
+    	boolean registered = ServerUtilities.registerDevice(this, imei, deviceName, GCMRegistrar.getRegistrationId(this), sdkVersion, null);
 		Log.e("Device registered", "Success: " + registered);
 	}	
 }
