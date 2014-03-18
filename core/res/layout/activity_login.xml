@@ -3,24 +3,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+	<TextView
+        android:id="@+id/title"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/username"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:drawableRight="@drawable/ic_launcher"
+        android:gravity="center_vertical|right"
+        android:text="@string/loginText"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+
     <EditText
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/title"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="@string/userNameHint">
-
-        <requestFocus />
-    </EditText>
+	        <requestFocus />
+	    </EditText>
+        
 
     <EditText
         android:id="@+id/password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/username"
+        android:layout_alignRight="@+id/username"
         android:layout_below="@+id/username"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="@string/passwordHint"
@@ -32,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/username"
         android:layout_alignRight="@+id/username"
-        android:layout_below="@+id/password"
+        android:layout_above="@+id/registerButton"
         android:layout_marginTop="22dp"
         android:text="@string/loginText" />
 
@@ -40,8 +58,8 @@
         android:id="@+id/registerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/loginButton"
-        android:layout_below="@+id/loginButton"
         android:layout_marginTop="18dp"
         android:text="@string/registerText" />
 

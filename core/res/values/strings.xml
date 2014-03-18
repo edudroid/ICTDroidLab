@@ -83,6 +83,8 @@
     <string name="loggingInTitle">Logging in to your account</string>
     <string name="loginSuccess">Logged in successfully</string>
     <string name="loginFailed">Login failed</string>
+    <string name="registrationSuccess">User has been registered successfully</string>
+    <string name="registrationFailed">User registration failed</string>
     
     <string name="moduleStateAvailable">Available</string>
     <string name="moduleStateInstalled">Installed</string>
@@ -95,7 +97,9 @@
     <string name="userNameHint">Username</string>
     <string name="loginText">Login</string>
     <string name="registerText">Register</string>
+    <string name="passwordsDontMatch">Passwords don\'t match!</string>
     <string name="confirmPassword">Confirm password</string>
     <string name="welcome">Welcome to DroidLab!</string>
+    <string name="loginTitle">Log in to DroidLab!</string>
     <string name="registerTitle">Register to DroidLab!</string>
 </resources>

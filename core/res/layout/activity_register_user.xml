@@ -26,8 +26,11 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:ems="10"
-        android:hint="@string/userNameHint" />
+        android:hint="@string/userNameHint">
 
+        <requestFocus />
+    </EditText>
+    
     <EditText
         android:id="@+id/password"
         android:layout_width="wrap_content"
@@ -39,8 +42,6 @@
         android:ems="10"
         android:hint="@string/passwordHint"
         android:inputType="textPassword" >
-
-        <requestFocus />
     </EditText>
 
     <EditText
@@ -59,10 +60,22 @@
         android:id="@+id/confirmRegistrationButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/confirmPassword"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="10dp"
         android:layout_marginRight="10dp"
         android:text="@string/registerText" />
+
+    <TextView
+        android:id="@+id/passwordDontMatch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/confirmPassword"
+        android:layout_below="@+id/confirmPassword"
+        android:layout_marginTop="23dp"
+        android:text="@string/passwordsDontMatch"
+        android:textColor="@color/red"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>
