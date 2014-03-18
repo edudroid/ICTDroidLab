@@ -86,7 +86,7 @@ public class CoreService extends Service implements PluginListener {
 				public void run() {
 					availablePlugins = ServerUtilities.getAvailablePlugins(this);
 				}
-			}).start();	
+			}).start();
 			
 			
 			mBroadcast = new PluginIntentReceiver();
@@ -103,7 +103,7 @@ public class CoreService extends Service implements PluginListener {
 	
 			mBroadcast.registerPluginDetailsListener(this);
 			
-			// Register GCM
+			// Register GCM 
 	        GCMRegistrar.checkDevice(this);
 	        GCMRegistrar.checkManifest(this);
 

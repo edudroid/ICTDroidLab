@@ -61,7 +61,7 @@ public class UploadService extends IntentService {
 			params.put(i + " " + LogRecord.COLUMN_NAME_DATE, Long.toString(record.getDate()));
 			params.put(i + " " + LogRecord.COLUMN_NAME_MESSAGE, record.getMessage());
 		}
-		HttpUtils.post(ServerUtilities.SERVER_URL + "save_data", params, context);
+		HttpUtils.post(ServerUtilities.SERVER_URL + "uploadLog", params, context);
 		// TODO check response
 		return false;
 	}
