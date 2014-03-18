@@ -21,6 +21,7 @@ public class LoginActivity extends ActivityBase implements OnClickListener {
 	private static final String TAG = LoginActivity.class.getName();
 	public static final String PREFS_NAME = "preferences";
 	public static final String USER_NAME = "user_name";
+	public static final String PASSWORD = "password";
 	private Button loginButton;
 	private Button registerButton;
 	private EditText userEdit;
@@ -71,7 +72,10 @@ public class LoginActivity extends ActivityBase implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.registerButton:
-				startActivity(new Intent(this, RegisterActivity.class));
+				Intent registerIntent = new Intent(this, RegisterActivity.class);
+				registerIntent.putExtra(USER_NAME, userEdit.getText().toString());
+				registerIntent.putExtra(PASSWORD, passwordEdit.getText().toString());
+				startActivity(registerIntent);
 				break;
 			case R.id.loginButton:
 				if (service != null) {
