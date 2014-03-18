@@ -32,4 +32,15 @@ public class Constants {
 	public static final String ERROR_MESSAGE_KEY = "Error message";
 	public static final String INTENT_EXTRA_KEY_RECEIVER_CLASS_NAME = "receiver class name";
 	public static final String INTENT_EXTRA_KEY_PACKAGE_NAME = "package name";
+	
+	
+	public static boolean isValidPassword(String password) {
+		if (password==null) {
+			return false;
+		}
+		if (password.length() < 6) {
+			return false;
+		}
+		return true;
+	}
 }

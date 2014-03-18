@@ -17,6 +17,7 @@ public abstract class ActivityBase extends Activity implements ServiceConnection
 	protected CoreService service;
 	
 	@Override
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		startService(new Intent(this, CoreService.class));

@@ -129,4 +129,9 @@ public final class ServerUtilities {
 		availablePlugins.add(social);
 		return availablePlugins;
 	}
+
+	public static boolean register(String userName, String password, Context applicationContext) {
+		// TODO register user
+		return false;
+	}
 }
