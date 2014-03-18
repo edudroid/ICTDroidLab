@@ -4,7 +4,6 @@ import hu.edudroid.ict.utils.ServerUtilities;
 import hu.edudroid.module.ModuleLoader;
 import android.content.Context;
 import android.content.Intent;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
@@ -22,17 +21,10 @@ public class GCMIntentService extends GCMBaseIntentService {
      **/
     @Override
     protected void onRegistered(Context context, final String gcmId) {
-    	TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
-        final String imei=mngr.getDeviceId(); 
-        final String sdkVersion=String.valueOf(android.os.Build.VERSION.SDK_INT);
-        final String deviceName = "default"; // TODO get a device name
-        new Thread(new Runnable() {
-			@Override
-			public void run() {
-		    	boolean registered = ServerUtilities.registerDevice(GCMIntentService.this, imei, deviceName, gcmId, sdkVersion, null);
-				Log.e("Device registered", "Success: " + registered);
-			}
-		}).start();
+		Log.e(TAG, "GCM registration successful");
+    	Intent registerIntent = new Intent(context, CoreService.class);
+    	registerIntent.setAction(CoreService.REGISTER_DEVICE_COMMAND);
+    	context.startService(registerIntent);
     }
  
     /**
