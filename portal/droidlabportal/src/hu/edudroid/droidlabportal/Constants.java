@@ -39,19 +39,22 @@ public class Constants {
 	public static final String USER_LOGIN_COOKIE_COLUMN = "login_cookie";
 	public static final String USER_LAST_LOGIN = "last_login";
 	
-	public static final String MYDEVICE_TABLE_NAME = "mydevices";
-	public static final String MYDEVICE_IMEI_COLUMN = "imei";
-	
 	public static final String MODULES_TABLE_NAME = "modules";
+	public static final String MODULES_MODULE_ID_COLUMN = "module_id";
+	public static final String MODULES_MODULE_NAME_COLUMN = "module_name";
 	public static final String MODULES_AUTHOR_COLUMN = "author";
-	public static final String MODULES_CLASS_COLUMN = "class_name";
-	public static final String MODULES_DATE_COLUMN = "date";
+	public static final String MODULES_DESCRIPTION_COLUMN = "description";
+	public static final String MODULES_WEBSITE_COLUMN = "website";
+	public static final String MODULES_MEASUREMENT_LENGTH_COLUMN = "measurement_length";
+	public static final String MODULES_USED_PLUGINS_COLUMN = "used_plugins";
+	public static final String MODULES_PERMISSIONS_COLUMN = "permissions";
+	public static final String MODULES_QUOTAS_COLUMN = "quotas";
 	public static final String MODULES_DESC_FILE_KEY_COLUMN = "descFileBlobKey";
 	public static final String MODULES_JAR_FILE_KEY_COLUMN = "jarFileBlobKey";
 	public static final String MODULES_JAR_FILE_COLUMN = "jar_file";
-	public static final String MODULES_DESC_FILE_COLUMN = "desc_file";
+	public static final String MODULES_CLASS_NAME_COLUMN = "class_name";
 	public static final String MODULES_EMAIL_COLUMN = "email";
-	public static final String MODULES_NAME_COLUMN = "module_name";
+	public static final String MODULES_DATE_COLUMN = "date";
 	
 	public static final String DEVICE_TABLE_NAME = "devices";
 	public static final String DEVICE_IMEI_COLUMN = "IMEI";
@@ -59,6 +62,11 @@ public class Constants {
 	public static final String DEVICE_GCM_ID_COLUMN = "gcm_id";
 	public static final String DEVICE_SDK_VERSION_COLUMN = "sdk_version";		
 	public static final String DEVICE_DATE_COLUMN = "date";
+	public static final String DEVICE_OWNER_COLUMN = "owner";
+	public static final String DEVICE_CELLULAR_COLUMN = "cellular";
+	public static final String DEVICE_WIFI_COLUMN = "wifi";
+	public static final String DEVICE_BLUETOOTH_COLUMN = "bluetooth";
+	public static final String DEVICE_GPS_COLUMN = "gps";
 	
 	// Error message
 	public static final String ERROR = "ERROR";

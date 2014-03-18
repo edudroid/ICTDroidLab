@@ -1,5 +1,6 @@
 package hu.edudroid.ict;
 
+import hu.edudroid.ict.logs.UploadService;
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginDescriptor;
 import hu.edudroid.ict.plugins.PluginIntentReceiver;
@@ -85,7 +86,9 @@ public class CoreService extends Service implements PluginListener {
 				public void run() {
 					availablePlugins = ServerUtilities.getAvailablePlugins(this);
 				}
-			}).start();			
+			}).start();	
+			
+			
 			mBroadcast = new PluginIntentReceiver();
 			pluginCollection = new AndroidPluginCollection();
 			moduleManager = new ModuleManager(this);

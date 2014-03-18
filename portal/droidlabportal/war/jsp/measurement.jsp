@@ -53,7 +53,7 @@
 	Query.Filter emailFilter=new FilterPredicate(Constants.EMAIL, Query.FilterOperator.EQUAL,email);
 	query.setFilter(emailFilter);
 	List<Entity> modules = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-    query = new Query(Constants.MYDEVICE_TABLE_NAME);
+    query = new Query(Constants.DEVICE_TABLE_NAME);
     List<Entity> devices = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 %>
 	<table>

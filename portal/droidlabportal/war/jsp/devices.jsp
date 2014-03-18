@@ -44,30 +44,15 @@
 			<h1>
 				Devices
 			</h1>
-			<table>
-<%
-	// List user's devices
-	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-	Query query = new Query(Constants.MYDEVICE_TABLE_NAME, userKey);
-	List<Entity> devices = datastore.prepare(query).asList(Builder.withLimit(10));
-	for (Entity entity : devices) {
-%>
-				<tr>
-					<td>
-						<a href="/jsp/device.jsp?<%= Constants.IMEI %>=<%= entity.getProperty(Constants.MYDEVICE_IMEI_COLUMN) %>"><%= entity.getProperty(Constants.MYDEVICE_IMEI_COLUMN) %></a>
-					</td>
-				</tr>
-<%
-	}
-%>
+
 			</table>
 			<form action="/registerdevice" method="post" class="register">
-				<input type="number" name="<%= Constants.DEVICES_IMEI_COLUMN %>" id="<%= Constants.DEVICES_IMEI_COLUMN %>" placeholder="IMEI" onFocus="this.select();" onMouseOut="javascript:return false;"/>
-				<input type="number" name="<%= Constants.DEVICES_SDK_COLUMN %>" id="<%= Constants.DEVICES_SDK_COLUMN %>" placeholder="SDK" onFocus="this.select();" onMouseOut="javascript:return false;"/>
-				<input type="number" name="<%= Constants.DEVICES_CELLULAR_COLUMN %>" id="<%= Constants.DEVICES_CELLULAR_COLUMN %>" placeholder="CELLULAR" onFocus="this.select();" onMouseOut="javascript:return false;"/>
-				<input type="number" name="<%= Constants.DEVICES_WIFI_COLUMN %>" id="<%= Constants.DEVICES_WIFI_COLUMN %>" placeholder="WIFI" onFocus="this.select();" onMouseOut="javascript:return false;"/>
-				<input type="number" name="<%= Constants.DEVICES_GPS_COLUMN %>" id="<%= Constants.DEVICES_GPS_COLUMN %>" placeholder="GPS" onFocus="this.select();" onMouseOut="javascript:return false;"/>
-				<input type="number" name="<%= Constants.DEVICES_BLUETOOTH_COLUMN %>" id="<%= Constants.DEVICES_BLUETOOTH_COLUMN %>" placeholder="BLUETOOTH" onFocus="this.select();" onMouseOut="javascript:return false;"/>
+				<input type="number" name="<%= Constants.DEVICE_IMEI_COLUMN %>" id="<%= Constants.DEVICE_IMEI_COLUMN %>" placeholder="IMEI" onFocus="this.select();" onMouseOut="javascript:return false;"/>
+				<input type="number" name="<%= Constants.DEVICE_SDK_VERSION_COLUMN %>" id="<%= Constants.DEVICE_SDK_VERSION_COLUMN %>" placeholder="SDK" onFocus="this.select();" onMouseOut="javascript:return false;"/>
+				<input type="number" name="<%= Constants.DEVICE_CELLULAR_COLUMN %>" id="<%= Constants.DEVICE_CELLULAR_COLUMN %>" placeholder="CELLULAR" onFocus="this.select();" onMouseOut="javascript:return false;"/>
+				<input type="number" name="<%= Constants.DEVICE_WIFI_COLUMN %>" id="<%= Constants.DEVICE_WIFI_COLUMN %>" placeholder="WIFI" onFocus="this.select();" onMouseOut="javascript:return false;"/>
+				<input type="number" name="<%= Constants.DEVICE_GPS_COLUMN %>" id="<%= Constants.DEVICE_GPS_COLUMN %>" placeholder="GPS" onFocus="this.select();" onMouseOut="javascript:return false;"/>
+				<input type="number" name="<%= Constants.DEVICE_BLUETOOTH_COLUMN %>" id="<%= Constants.DEVICE_BLUETOOTH_COLUMN %>" placeholder="BLUETOOTH" onFocus="this.select();" onMouseOut="javascript:return false;"/>
 				<input type="hidden" name="<%= Constants.WEB %>" id="<%= Constants.WEB %>" value="true">
 				<input type="submit" value="Add device"/>
 			</form>
