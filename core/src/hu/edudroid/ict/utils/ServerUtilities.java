@@ -131,7 +131,12 @@ public final class ServerUtilities {
 	}
 
 	public static boolean register(String userName, String password, Context applicationContext) {
-		// TODO register user
-		return false;
+		Log.d(TAG, "Logging in to server " + userName + " " + password);
+		Map<String, String> params = new HashMap<String, String>();
+		params.put(USER_NAME, userName);
+		params.put(PASSWORD, password);
+		String result = HttpUtils.post(PORTAL_URL + "registeruser", params, applicationContext);
+		Log.d(TAG, "User registration result >" + result + "<");
+		return (result.trim().equals("REGISTERED"));
 	}
 }
