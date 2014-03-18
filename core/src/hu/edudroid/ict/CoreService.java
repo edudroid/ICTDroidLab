@@ -238,12 +238,16 @@ public class CoreService extends Service implements PluginListener {
 		return availablePlugins;
 	}
 	
+	/**
+	 * Register device to the server, this registration must be done every time the device comes online,
+	 * or the user credentials become available, or the device capabilities or GCM ID changes.
+	 */
 	public void registerWithBackend() {
     	// Register device with server
 		TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
         String imei = mngr.getDeviceId(); 
         String sdkVersion=String.valueOf(android.os.Build.VERSION.SDK_INT);
-		String deviceName = "default"; // TODO add edit for device name
+		String deviceName = "default"; // TODO Let the user change the devices name!
     	boolean registered = ServerUtilities.registerDevice(this, imei, deviceName, registration_ID, sdkVersion, null);
 		Log.e("Device registered", "Success: " + registered);
 	}	
