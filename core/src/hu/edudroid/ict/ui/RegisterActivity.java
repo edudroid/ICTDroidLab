@@ -1,12 +1,12 @@
 package hu.edudroid.ict.ui;
 
 import hu.edudroid.ict.R;
+import hu.edudroid.ict.utils.CoreConstants;
 import hu.edudroid.ict.utils.ServerUtilities;
 import hu.edudroid.interfaces.Constants;
 
 import android.app.ProgressDialog;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -23,8 +23,6 @@ import android.widget.Toast;
 public class RegisterActivity extends ActivityBase implements OnClickListener, OnEditorActionListener {
 
 	private static final String TAG = RegisterActivity.class.getName();
-	public static final String PREFS_NAME = "preferences";
-	public static final String USER_NAME = "user_name";
 	private Button registerButton;
 	private EditText userEdit;
 	private EditText passwordEdit;
@@ -44,8 +42,8 @@ public class RegisterActivity extends ActivityBase implements OnClickListener, O
 		passwordEdit.setOnEditorActionListener(this);
 		passwordAgainEdit.setOnEditorActionListener(this);
 		
-		String userName = getIntent().getExtras().getString(LoginActivity.USER_NAME);
-		String password = getIntent().getExtras().getString(LoginActivity.PASSWORD);
+		String userName = getIntent().getExtras().getString(CoreConstants.USER_NAME_KEY);
+		String password = getIntent().getExtras().getString(CoreConstants.PASSWORD_KEY);
 		if (userName != null) {
 			userEdit.setText(userName);
 		} else {
@@ -77,7 +75,6 @@ public class RegisterActivity extends ActivityBase implements OnClickListener, O
 					final ProgressDialog progressDialog = new ProgressDialog(this);
 					progressDialog.setTitle(R.string.loggingInTitle);
 					progressDialog.show();
-					getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().putString(USER_NAME, userEdit.getText().toString());
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
