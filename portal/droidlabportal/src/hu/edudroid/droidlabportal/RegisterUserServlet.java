@@ -30,21 +30,9 @@ public class RegisterUserServlet extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		String email = req.getParameter(Constants.EMAIL);
 		String password = req.getParameter(Constants.PASSWORD);
-		String passcheck = req.getParameter(Constants.PASSWORDCHECK);
 		
 		if(!Utils.validateEmail(email)){
 			req.setAttribute(Constants.ERROR, "Not valid e-mail address!");
-			RequestDispatcher dispatcher = req.getRequestDispatcher("/regform");
-			try {
-				dispatcher.forward(req, resp);
-				return;
-			} catch (ServletException e) {
-				resp.sendError(503);
-				return;
-			}
-		}
-		else if (password == null || !password.equals(passcheck)) {
-			req.setAttribute(Constants.ERROR, "Password and check doesn't match.");
 			RequestDispatcher dispatcher = req.getRequestDispatcher("/regform");
 			try {
 				dispatcher.forward(req, resp);
