@@ -10,6 +10,8 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -20,7 +22,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-public class RegisterActivity extends ActivityBase implements OnClickListener, OnEditorActionListener {
+public class RegisterActivity extends ActivityBase implements OnClickListener, TextWatcher {
 
 	private static final String TAG = RegisterActivity.class.getName();
 	private Button registerButton;
@@ -33,23 +35,29 @@ public class RegisterActivity extends ActivityBase implements OnClickListener, O
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register_user);
-		registerButton = (Button) findViewById(R.id.registerButton);
+		registerButton = (Button) findViewById(R.id.confirmRegistrationButton);
 		registerButton.setOnClickListener(this);
 		userEdit = (EditText) findViewById(R.id.username);
 		passwordDontMatch = findViewById(R.id.passwordDontMatch);
 		passwordEdit = (EditText) findViewById(R.id.password);
 		passwordAgainEdit = (EditText) findViewById(R.id.confirmPassword);
-		passwordEdit.setOnEditorActionListener(this);
-		passwordAgainEdit.setOnEditorActionListener(this);
-		
+		passwordEdit.addTextChangedListener(this);
+		passwordAgainEdit.addTextChangedListener(this);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
 		String userName = getIntent().getExtras().getString(CoreConstants.USER_NAME_KEY);
 		String password = getIntent().getExtras().getString(CoreConstants.PASSWORD_KEY);
 		if (userName != null) {
+			Log.d(TAG, "Setting user name " + userName);
 			userEdit.setText(userName);
 		} else {
 			userEdit.setText("");
 		}
 		if (password != null) {
+			Log.d(TAG, "Setting password " + password);
 			passwordEdit.setText(password);
 		} else {
 			passwordEdit.setText("");
@@ -70,7 +78,7 @@ public class RegisterActivity extends ActivityBase implements OnClickListener, O
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-			case R.id.registerButton:
+			case R.id.confirmRegistrationButton:
 				if (service != null) {
 					final ProgressDialog progressDialog = new ProgressDialog(this);
 					progressDialog.setTitle(R.string.loggingInTitle);
@@ -108,23 +116,34 @@ public class RegisterActivity extends ActivityBase implements OnClickListener, O
 		}
 	}
 
-	@Override
-	public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
-		checkFields();
-		return false;
-	}
-
 	private void checkFields() {
 		if (passwordAgainEdit.getText().toString().equals(passwordEdit.getText().toString())) {
-			passwordDontMatch.setVisibility(View.GONE);
+			Log.d(TAG, "Passwords match.");			
+			passwordDontMatch.setVisibility(View.INVISIBLE);
 			if (Constants.isValidPassword(passwordEdit.getText().toString())) {
+				Log.d(TAG, "Valid password.");			
 				registerButton.setEnabled(true);
 			} else {
+				Log.d(TAG, "Invalid password.");			
 				registerButton.setEnabled(false);
 			}
 		} else {
+			Log.d(TAG, "Passwords don't match.");			
 			passwordDontMatch.setVisibility(View.VISIBLE);
 			registerButton.setEnabled(false);
 		}
+	}
+
+	@Override
+	public void afterTextChanged(Editable s) {
+		checkFields();
+	}
+
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+	}
+
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
 	}
 }
