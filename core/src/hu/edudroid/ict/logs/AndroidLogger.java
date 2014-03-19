@@ -25,19 +25,19 @@ public class AndroidLogger implements Logger {
 	@Override
 	public void e(String tag, String message) {
 		Log.e(TAG+":"+tag, message);
-		log(ERROR, System.currentTimeMillis(), "error: "+ message);
+		log(ERROR, System.currentTimeMillis(),  message);
 	}
 
 	@Override
 	public void d(String tag, String message) {
 		Log.d(TAG+":"+tag, message);
-		log(DEBUG, System.currentTimeMillis(), "debug: "+ message);
+		log(DEBUG, System.currentTimeMillis(), message);
 	}
 
 	@Override
 	public void i(String tag, String message) {
 		Log.i(TAG+":"+tag, message);
-		log(INFO, System.currentTimeMillis(), "info: "+ message);
+		log(INFO, System.currentTimeMillis(), message);
 	}
 	
 	private void log(String level, long timestamp, String message) {
@@ -46,6 +46,6 @@ public class AndroidLogger implements Logger {
 		intent.putExtra(LogRecord.COLUMN_NAME_LOG_LEVEL, level);
 		intent.putExtra(LogRecord.COLUMN_NAME_DATE, timestamp);
 		intent.putExtra(LogRecord.COLUMN_NAME_MESSAGE, message);
-		context.startService(intent);	
+		context.startService(intent);
 	}
 }
