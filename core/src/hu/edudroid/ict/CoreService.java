@@ -138,7 +138,7 @@ public class CoreService extends Service implements PluginListener {
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent.getAction().equals(REGISTER_DEVICE_COMMAND)) {
+		if (intent.getAction() != null && intent.getAction().equals(REGISTER_DEVICE_COMMAND)) {
 			registerWithBackend();
 		}
 		return Service.START_STICKY;
