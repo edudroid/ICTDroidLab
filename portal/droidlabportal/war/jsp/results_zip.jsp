@@ -50,30 +50,24 @@
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     // Run an ancestor query to ensure we see the most up-to-date
     // view of the Greetings belonging to the selected Guestbook.
-    Query query = new Query(Constants.RESULTS_TABLE_NAME);
-    query.addSort(Constants.RESULTS_DATE_COLUMN,SortDirection.DESCENDING);
-    List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-
-    for(Entity result : results){
-    	%>
-    	<table>
-	    	<tr>
-		    	<td>Module name: <%= result.getProperty(Constants.RESULTS_MODULE_NAME_COLUMN) %></td>
-		    </tr>
-		    <tr>
-		    	<td>Log level: <%= result.getProperty(Constants.RESULTS_LOG_LEVEL_COLUMN) %></td>
-		    </tr>
-		    <tr>
-		    	<td>Date: <%= result.getProperty(Constants.RESULTS_DATE_COLUMN) %></td>
-	    	</tr>
-		    <tr>
-		    	<td>Message: <%= result.getProperty(Constants.RESULTS_MESSAGE_COLUMN) %></td>
-	    	</tr>
-    	 </table>
-    	 <hr>
-    	<%
-    }
-    %>
+    Query query = new Query("Logs");
+    query.addSort("date",SortDirection.DESCENDING);
+    List<Entity> logs = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+%>
+	<table>
+    	<th>IMEI</th><th>Date</th><th>-></th>
+			    <%
+			    for(Entity log : logs){
+			    	%>
+			    	<tr>
+			    	<td><%= log.getProperty("imei") %></td>
+			    	<td><%= log.getProperty("date") %></td>
+			    	<td><a href='http://ictdroidlab.appspot.com/serveLog?blob-key=<%= log.getProperty("logFileBlobKey") %>'>Download</a></td>
+			    	</tr>
+			    	<%
+			    }
+			    %>
+    </table>
 			
 		</div>
 	</div>

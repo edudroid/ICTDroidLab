@@ -6,7 +6,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,17 +73,26 @@ public class UploadModuleServlet extends HttpServlet {
 		
 		try {
 			JSONObject json=new JSONObject(responseStrBuilder.toString());
-			Entity module = new Entity(Constants.MODULES_TABLE_NAME);
+			Entity module = new Entity(Constants.MODULES_TABLE_NAME,userKey);
 
-			module.setProperty(Constants.MODULES_EMAIL_COLUMN,email);
 			module.setProperty(Constants.MODULES_MODULE_ID_COLUMN,json.get("module_id"));
 			module.setProperty(Constants.MODULES_AUTHOR_COLUMN, json.get("author"));
 			module.setProperty(Constants.MODULES_DESCRIPTION_COLUMN, json.get("description"));
 			module.setProperty(Constants.MODULES_WEBSITE_COLUMN, json.get("website"));
 			module.setProperty(Constants.MODULES_MEASUREMENT_LENGTH_COLUMN, json.get("measurement_length"));
-			module.setProperty(Constants.MODULES_USED_PLUGINS_COLUMN, json.get("used_plugins").toString());
+			JSONArray jsonarray=json.getJSONArray("used_plugins");
+			List<String> list=new ArrayList<String>();
+			for(int i=0;i<jsonarray.length();i++){
+				list.add(jsonarray.getString(i));
+			}
+			module.setProperty(Constants.MODULES_USED_PLUGINS_COLUMN, list);
 			module.setProperty(Constants.MODULES_QUOTAS_COLUMN, json.get("quotas").toString());
-			module.setProperty(Constants.MODULES_PERMISSIONS_COLUMN, json.get("permissions").toString());
+			jsonarray=json.getJSONArray("permissions");
+			list=new ArrayList<String>();
+			for(int i=0;i<jsonarray.length();i++){
+				list.add(jsonarray.getString(i));
+			}
+			module.setProperty(Constants.MODULES_PERMISSIONS_COLUMN, list);
 			module.setProperty(Constants.MODULES_JAR_FILE_COLUMN, json.get("jar_file"));
 			module.setProperty(Constants.MODULES_MODULE_NAME_COLUMN, json.get("module_name"));
 			module.setProperty(Constants.MODULES_CLASS_NAME_COLUMN, json.get("class_name"));

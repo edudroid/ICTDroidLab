@@ -1,5 +1,7 @@
 package hu.edudroid.droidlabportal.mobileinterface;
 
+import hu.edudroid.droidlabportal.Constants;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
@@ -16,6 +18,7 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Key;
 
 public class UploadLogServlet extends HttpServlet {
 	/**
@@ -27,6 +30,26 @@ public class UploadLogServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
         throws ServletException, IOException {
+    	
+    	String email = (String)req.getSession().getAttribute(Constants.EMAIL);
+    	if (email == null) {
+    		resp.sendRedirect("/loginform");
+    		return;
+    	}
+    	Key userKey = null;
+		try {
+			userKey = (Key)req.getSession().getAttribute(Constants.USER_KEY);
+		} catch (Exception e) {
+			resp.setContentType("text/plain");
+			resp.getWriter().println(Constants.ERROR_NOT_LOGGED_IN);
+			return;
+		}
+		if (userKey == null) {
+			resp.setContentType("text/plain");
+			resp.getWriter().println(Constants.ERROR_NOT_LOGGED_IN);
+			return;
+		}
+    	
     	/*** 
     	 * THIS IS FOR UPLOADING ZIP LOGS
     	 * 
@@ -41,15 +64,15 @@ public class UploadLogServlet extends HttpServlet {
 		
 		***/
     	try{
-	    	int records=Integer.parseInt(req.getParameter("log_count"));
+	    	int records=Integer.parseInt(req.getParameter(Constants.LOG_COUNT));
 	    	
 	    	for(int i=0;i<records;i++){
 	    	
-		    	Entity results = new Entity("results");
-		    	results.setProperty("module name", req.getParameter(i+" "+"module"));
-		    	results.setProperty("log level", req.getParameter(i+" "+"log_level"));
-		    	results.setProperty("date", req.getParameter(i+" "+"date"));
-		    	results.setProperty("message", req.getParameter(i+" "+"message"));
+		    	Entity results = new Entity(Constants.RESULTS_TABLE_NAME,userKey);
+		    	results.setProperty(Constants.RESULTS_MODULE_NAME_COLUMN, req.getParameter(i+" "+"module"));
+		    	results.setProperty(Constants.RESULTS_LOG_LEVEL_COLUMN, req.getParameter(i+" "+"log_level"));
+		    	results.setProperty(Constants.RESULTS_DATE_COLUMN, req.getParameter(i+" "+"date"));
+		    	results.setProperty(Constants.RESULTS_MESSAGE_COLUMN, req.getParameter(i+" "+"message"));
 		        
 		        DatastoreService datastore =
 		                DatastoreServiceFactory.getDatastoreService();

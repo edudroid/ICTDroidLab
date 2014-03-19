@@ -68,6 +68,12 @@ public class Constants {
 	public static final String DEVICE_BLUETOOTH_COLUMN = "bluetooth";
 	public static final String DEVICE_GPS_COLUMN = "gps";
 	
+	public static final String RESULTS_TABLE_NAME = "devices";
+	public static final String RESULTS_MODULE_NAME_COLUMN = "module_name";
+	public static final String RESULTS_LOG_LEVEL_COLUMN = "log_level";
+	public static final String RESULTS_DATE_COLUMN = "date";		
+	public static final String RESULTS_MESSAGE_COLUMN = "message";
+	
 	// Error message
 	public static final String ERROR = "ERROR";
 	public static final String ERROR_NOT_LOGGED_IN = ERROR + "[1]: Not logged in.";
@@ -81,6 +87,7 @@ public class Constants {
 	public static final String DROID_LAB_LOGIN_COOKIE = "DROID_LAB_LOGIN_COOKIE";
 	public static final int COOKIE_EXPIRATION = 14 * 24 * 3600;
 	public static final String DOMAIN = "localhost";
+	public static final String LOG_COUNT = "log_count";
 	
 	public static boolean isValidPassword(String password) {
 		if (password==null) {

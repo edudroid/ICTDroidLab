@@ -51,9 +51,7 @@
 	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 	// Run an ancestor query to ensure we see the most up-to-date
 	// view of the Greetings belonging to the selected Guestbook.
-	Query query = new Query(Constants.MODULES_TABLE_NAME);
-	Query.Filter emailFilter=new FilterPredicate(Constants.EMAIL, Query.FilterOperator.EQUAL,email);
-	query.setFilter(emailFilter);
+	Query query = new Query(Constants.MODULES_TABLE_NAME,userKey);
 	List<Entity> modules = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 %>
 	
@@ -61,6 +59,9 @@
     for(Entity module : modules){
     	%>
     	<table>
+	    	<tr>
+		    	<td>ID: <%= module.getProperty(Constants.MODULES_MODULE_ID_COLUMN) %></td>
+	    	</tr>
 	    	<tr>
 		    	<td>Module name: <%= module.getProperty(Constants.MODULES_MODULE_NAME_COLUMN) %></td>
 		    </tr>
@@ -72,6 +73,37 @@
 	    	</tr>
 		    <tr>
 		    	<td>Date: <%= module.getProperty(Constants.MODULES_DATE_COLUMN) %></td>
+	    	</tr>
+	    	<tr>
+		    	<td>Measurement length: <%= module.getProperty(Constants.MODULES_MEASUREMENT_LENGTH_COLUMN) %></td>
+	    	</tr>
+	    	<tr>
+		    	<td>Permissions: <ul>
+	    	<%
+	    	List<String> list=(List<String>)module.getProperty(Constants.MODULES_PERMISSIONS_COLUMN); 
+	    	for(int i=0;i<list.size();i++){
+	    		%> <li><%= list.get(i) %></li> <%
+	    	}
+	    	%>
+	    			</ul>
+	    		</td>
+	    	</tr>
+	    	<tr>
+		    	<td>Used plugins: <ul>
+	    	<%
+	    	list=(List<String>)module.getProperty(Constants.MODULES_USED_PLUGINS_COLUMN); 
+	    	for(int i=0;i<list.size();i++){
+	    		%> <li><%= list.get(i) %></li> <%
+	    	}
+	    	%>
+	    			</ul>
+	    		</td>
+	    	</tr>
+	    	<tr>
+		    	<td>Quotas: <%= module.getProperty(Constants.MODULES_QUOTAS_COLUMN) %></td>
+	    	</tr>
+	    	<tr>
+		    	<td>Website: <%= module.getProperty(Constants.MODULES_WEBSITE_COLUMN) %></td>
 	    	</tr>
     	 </table>
     	 <hr>
