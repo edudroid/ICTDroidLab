@@ -62,10 +62,10 @@
     	%>
     	<table>
 	    	<tr>
-		    	<td>Module name: <%= module.getProperty(Constants.MODULES_NAME_COLUMN) %></td>
+		    	<td>Module name: <%= module.getProperty(Constants.MODULES_MODULE_NAME_COLUMN) %></td>
 		    </tr>
 		    <tr>
-		    	<td><%= module.getProperty(Constants.MODULES_CLASS_COLUMN) %></td>
+		    	<td><%= module.getProperty(Constants.MODULES_CLASS_NAME_COLUMN) %></td>
 		    </tr>
 		    <tr>
 		    	<td>Author: <%= module.getProperty(Constants.MODULES_AUTHOR_COLUMN) %></td>

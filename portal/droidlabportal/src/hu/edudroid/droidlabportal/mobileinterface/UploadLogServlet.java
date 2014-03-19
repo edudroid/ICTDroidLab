@@ -27,6 +27,9 @@ public class UploadLogServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
         throws ServletException, IOException {
+    	/*** 
+    	 * THIS IS FOR UPLOADING ZIP LOGS
+    	 * 
     	Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);
     	resp.setStatus(HttpServletResponse.SC_OK);
 		resp.setContentType("text/plain");
@@ -35,6 +38,29 @@ public class UploadLogServlet extends HttpServlet {
 		out.print(blobs.get("logFile").getKeyString());
 		out.flush();
 		out.close();
+		
+		***/
+    	try{
+	    	int records=Integer.parseInt(req.getParameter("log_count"));
+	    	
+	    	for(int i=0;i<records;i++){
+	    	
+		    	Entity results = new Entity("results");
+		    	results.setProperty("module name", req.getParameter(i+" "+"module"));
+		    	results.setProperty("log level", req.getParameter(i+" "+"log_level"));
+		    	results.setProperty("date", req.getParameter(i+" "+"date"));
+		    	results.setProperty("message", req.getParameter(i+" "+"message"));
+		        
+		        DatastoreService datastore =
+		                DatastoreServiceFactory.getDatastoreService();
+		        datastore.put(results);
+		        
+		        resp.getWriter().printf(i+". record uploaded succesfully!");
+	    	}
+    	} catch (Exception e){
+    		e.printStackTrace();
+    		resp.getWriter().printf("Failed to upload logs!");
+    	}
     }
     
     @Override

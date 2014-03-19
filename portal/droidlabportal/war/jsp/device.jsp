@@ -45,6 +45,7 @@
 	}
 	// Find device by imei
 	// Check for password in datastore
+	/*
 	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 	Query.Filter imeiFilter = new FilterPredicate(Constants.DEVICES_IMEI_COLUMN, FilterOperator.EQUAL, imei);
 	Query query = new Query(Constants.DEVICES_TABLE_NAME, userKey).setFilter(imeiFilter);
@@ -57,6 +58,7 @@
 		response.sendRedirect("/devices");
 		return;
 	}
+	*/
 %>
 <div id="contents">
 	<div id="tagline" class="clearfix">
@@ -65,32 +67,33 @@
 </jsp:include>
 		<div>
 			<h1>
-				Device <%= selectedDevice.getProperty(Constants.DEVICES_IMEI_COLUMN) %>
+				Device <%= selectedDevice.getProperty(Constants.DEVICE_IMEI_COLUMN) %>
 			</h1>
-			
+	<% /*		
 	<table>
 		<tr>
-			<td>IMEI: <%= devices.get(0).getProperty(Constants.DEVICES_IMEI_COLUMN) %></td>
+			<td>IMEI: <%= devices.get(0).getProperty(Constants.DEVICE_IMEI_COLUMN) </td>
 		</tr>
 		<tr>
-			<td>SDK version: <%= devices.get(0).getProperty(Constants.DEVICES_SDK_COLUMN) %></td>
+			<td>SDK version: <%= devices.get(0).getProperty(Constants.DEVICE_SDK_VERSION_COLUMN) </td>
 		</tr>
 		<tr>
-			<td>CELLULAR: <%= devices.get(0).getProperty(Constants.DEVICES_CELLULAR_COLUMN) %></td>
+			<td>CELLULAR: <%= devices.get(0).getProperty(Constants.DEVICE_CELLULAR_COLUMN) </td>
 		</tr>
 		<tr>
-			<td>WIFI: <%= devices.get(0).getProperty(Constants.DEVICES_WIFI_COLUMN) %></td>
+			<td>WIFI: <%= devices.get(0).getProperty(Constants.DEVICE_WIFI_COLUMN) </td>
 		</tr>
 		<tr>
-			<td>GPS: <%= devices.get(0).getProperty(Constants.DEVICES_GPS_COLUMN) %></td>
+			<td>GPS: <%= devices.get(0).getProperty(Constants.DEVICE_GPS_COLUMN) </td>
 		</tr>
 		<tr>
-			<td>BLUETOOTH: <%= devices.get(0).getProperty(Constants.DEVICES_BLUETOOTH_COLUMN) %></td>
+			<td>BLUETOOTH: <%= devices.get(0).getProperty(Constants.DEVICE_BLUETOOTH_COLUMN) </td>
 		</tr>
 		<tr>
-			<td>Registration: <%= devices.get(0).getProperty(Constants.DEVICES_DATE_COLUMN) %></td>
+			<td>Registration: <%= devices.get(0).getProperty(Constants.DEVICE_DATE_COLUMN) </td>
 		</tr>
     </table>
+    */ %>
 		</div>
 	</div>
 </div>

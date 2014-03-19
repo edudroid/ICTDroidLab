@@ -73,11 +73,17 @@ public class UploadModuleServlet extends HttpServlet {
 			Entity module = new Entity(Constants.MODULES_TABLE_NAME);
 
 			module.setProperty(Constants.MODULES_EMAIL_COLUMN,email);
+			module.setProperty(Constants.MODULES_MODULE_ID_COLUMN,json.get("module_id"));
 			module.setProperty(Constants.MODULES_AUTHOR_COLUMN, json.get("author"));
-			module.setProperty(Constants.MODULES_DESC_FILE_COLUMN, json.get("desc_file"));
+			module.setProperty(Constants.MODULES_DESCRIPTION_COLUMN, json.get("description"));
+			module.setProperty(Constants.MODULES_WEBSITE_COLUMN, json.get("website"));
+			module.setProperty(Constants.MODULES_MEASUREMENT_LENGTH_COLUMN, json.get("measurement_length"));
+			module.setProperty(Constants.MODULES_USED_PLUGINS_COLUMN, json.get("used_plugins").toString());
+			module.setProperty(Constants.MODULES_QUOTAS_COLUMN, json.get("quotas").toString());
+			module.setProperty(Constants.MODULES_PERMISSIONS_COLUMN, json.get("permissions").toString());
 			module.setProperty(Constants.MODULES_JAR_FILE_COLUMN, json.get("jar_file"));
-			module.setProperty(Constants.MODULES_NAME_COLUMN, json.get("module_name"));
-			module.setProperty(Constants.MODULES_CLASS_COLUMN, json.get("class_name"));
+			module.setProperty(Constants.MODULES_MODULE_NAME_COLUMN, json.get("module_name"));
+			module.setProperty(Constants.MODULES_CLASS_NAME_COLUMN, json.get("class_name"));
 			module.setProperty(Constants.MODULES_JAR_FILE_KEY_COLUMN, blobs.get("jarFile").getKeyString());
 			module.setProperty(Constants.MODULES_DESC_FILE_KEY_COLUMN, blobs.get("descFile").getKeyString());
 			module.setProperty(Constants.MODULES_DATE_COLUMN, new Date());
