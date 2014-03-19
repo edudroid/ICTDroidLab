@@ -10,11 +10,6 @@ import junit.framework.TestCase;
 
 public class PluginManagerTest extends TestCase {
 	
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-	
 	/**
 	 * Tests if manager is capable of merging disjunct lists
 	 */
@@ -100,10 +95,4 @@ public class PluginManagerTest extends TestCase {
 		List<PluginDescriptor> result = PluginManager.getAvailablePlugins(availablePlugins, downloadedPlugins);
 		assertEquals(0, result.size());
 	}
-
-
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}	
 }
