@@ -1,3 +1,5 @@
+<%@page import="java.text.DateFormat"%>
+<%@page import="java.util.Date"%>
 <%@page import="com.google.appengine.api.datastore.FetchOptions"%>
 <%@page import="com.google.appengine.api.datastore.FetchOptions.Builder"%>
 <%@page import="com.google.appengine.api.datastore.Entity"%>
@@ -38,13 +40,13 @@
 %>
 <div id="contents">
 	<div id="tagline" class="clearfix">
+
 <jsp:include page="/jsp/usersidemenu.jsp">
 	<jsp:param name="selected" value="<%=Constants.DEVICES %>" />
 </jsp:include>
+
 		<div>
-			<h1>
-				My Devices
-			</h1>
+			<h1> My Devices </h1>
 
 <%
 	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -53,35 +55,16 @@
 	Query query = new Query(Constants.DEVICE_TABLE_NAME,userKey);
 	List<Entity> devices = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 %>
-	
     <%
     for(Entity device : devices){
     	%>
-    	<table>
-	    	<tr>
-		    	<td>IMEI: <%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %></td>
-	    	</tr>
-	    	<tr>
-		    	<td>Device name: <%= device.getProperty(Constants.DEVICE_NAME_COLUMN) %></td>
-		    </tr>
-		    <tr>
-		    	<td>GCM ID: <%= device.getProperty(Constants.DEVICE_GCM_ID_COLUMN) %></td>
-		    </tr>
-		    <tr>
-		    	<td>SDK version: <%= device.getProperty(Constants.DEVICE_SDK_VERSION_COLUMN) %></td>
-	    	</tr>
-		    <tr>
-		    	<td>Date: <%= device.getProperty(Constants.DEVICE_DATE_COLUMN) %></td>
-	    	</tr>
-    	 </table>
-    	 <hr>
+	    	<a href="/device?IMEI=<%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %>">
+	    		<%= device.getProperty(Constants.DEVICE_NAME_COLUMN) %> (<%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %>)
+	    	</a>
     	<%
     }
     %>
-    
-    		<h1>
-				All Devices
-			</h1>
+	<h1> All Devices </h1>
 
 <%
 	// Run an ancestor query to ensure we see the most up-to-date
@@ -93,36 +76,16 @@
     <%
     for(Entity device : devices){
     	%>
-    	<table>
-	    	<tr>
-		    	<td>IMEI: <%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %></td>
-	    	</tr>
-	    	<tr>
-		    	<td>Device name: <%= device.getProperty(Constants.DEVICE_NAME_COLUMN) %></td>
-		    </tr>
-		    <tr>
-		    	<td>GCM ID: <%= device.getProperty(Constants.DEVICE_GCM_ID_COLUMN) %></td>
-		    </tr>
-		    <tr>
-		    	<td>SDK version: <%= device.getProperty(Constants.DEVICE_SDK_VERSION_COLUMN) %></td>
-	    	</tr>
-		    <tr>
-		    	<td>Date: <%= device.getProperty(Constants.DEVICE_DATE_COLUMN) %></td>
-	    	</tr>
-    	 </table>
-    	 <hr>
+	    	<a href="<%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %>">
+	    		<%= device.getProperty(Constants.DEVICE_NAME_COLUMN) %> (<%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %>)
+	    	</a>
     	<%
     }
     %>
-
-			<h1>
-				Register own device
-			</h1>
-
-			</table>
+	<h1> Register own device </h1>
 			<form action="/registerdevice" method="post" class="register">
-				<input type="number" name="<%= Constants.IMEI %>" id="<%= Constants.IMEI %>" placeholder="IMEI" onFocus="this.select();" onMouseOut="javascript:return false;"/>
 				<input type="text" name="<%= Constants.DEVICE_NAME %>" id="<%= Constants.DEVICE_NAME %>" placeholder="DEVICE NAME" onFocus="this.select();" onMouseOut="javascript:return false;"/>
+				<input type="number" name="<%= Constants.IMEI %>" id="<%= Constants.IMEI %>" placeholder="IMEI" onFocus="this.select();" onMouseOut="javascript:return false;"/>
 				<input type="text" name="<%= Constants.GCM_ID %>" id="<%= Constants.GCM_ID %>" placeholder="GCM ID" onFocus="this.select();" onMouseOut="javascript:return false;"/>
 				<input type="number" name="<%= Constants.SDK_VERSION %>" id="<%= Constants.SDK_VERSION %>" placeholder="SDK VERSION" onFocus="this.select();" onMouseOut="javascript:return false;"/>
 				<input type="hidden" name="<%= Constants.WEB %>" id="<%= Constants.WEB %>" value="true">

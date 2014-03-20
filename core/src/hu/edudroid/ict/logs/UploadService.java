@@ -55,7 +55,6 @@ public class UploadService extends IntentService {
 		params.put(LOG_COUNT, Integer.toString(recordsToUpload.size()));
 		for (int i = 0; i < recordsToUpload.size(); i++) {
 			LogRecord record = recordsToUpload.get(i);
-			// TODO device later on identify device not just the user
 			params.put(i + " " + LogRecord.COLUMN_NAME_MODULE, record.getModule());
 			params.put(i + " " + LogRecord.COLUMN_NAME_LOG_LEVEL, record.getLogLevel());
 			params.put(i + " " + LogRecord.COLUMN_NAME_DATE, Long.toString(record.getDate()));

@@ -354,7 +354,7 @@ p a {
 	color: #ff0000;
 }
 
-.register input[type='password'], .register input[type='text'], .register textarea {
+.register input[type='password'], .register input[type='text'],.register input[type='number'], .register textarea {
 	color: #aeaeae;
 	font-size: 13px;
 	height: 33px;
