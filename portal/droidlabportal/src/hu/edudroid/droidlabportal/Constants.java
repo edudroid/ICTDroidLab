@@ -29,6 +29,8 @@ public class Constants {
 
 	// Session parameters
 	public static final String USER_KEY = "user key";
+	public static final String DEVICE_KEY = "device key";
+	public static final String DEVICE_IMEI_KEY = "device key";
 
 	// Datastore names
 	public static final String USER_ROOT = "user_root";
@@ -81,6 +83,7 @@ public class Constants {
 	public static final String ERROR_MISSING_DEVICE_NAME = ERROR + "[3]: Missing device name.";
 	public static final String ERROR_MISSING_GCM_ID = ERROR + "[3]: Missing gcm id.";
 	public static final String ERROR_MISSING_SDK_VERSION = ERROR + "[3]: Missing sdk version.";
+	public static final String ERROR_NO_DEVICE_KEY = ERROR + "[3]: No device key in session.";
 	
 	// Other stuff
 	public static final String DROID_LAB_LOGIN_COOKIE = "DROID_LAB_LOGIN_COOKIE";

@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.FetchOptions.Builder;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query;
@@ -35,7 +36,8 @@ public class RegisterDeviceServlet extends HttpServlet {
 			resp.setContentType("text/plain");
 			resp.getWriter().println(Constants.ERROR_NOT_LOGGED_IN);
 			return;
-		} 
+		}
+		
 		String imei = req.getParameter(Constants.IMEI);
 		if (imei == null) {
 			log.warning("No " + Constants.IMEI + " present");
@@ -43,6 +45,29 @@ public class RegisterDeviceServlet extends HttpServlet {
 			resp.getWriter().println(Constants.ERROR_MISSING_IMEI);
 			return;
 		}
+		
+		
+		Key deviceKey = null;
+		try {
+			deviceKey = (Key)req.getSession().getAttribute(Constants.DEVICE_KEY);
+		} catch (Exception e) {
+			
+			DatastoreService datastore =
+	                DatastoreServiceFactory.getDatastoreService();
+			
+			Filter deviceFilter = new FilterPredicate(Constants.DEVICE_IMEI_COLUMN, FilterOperator.EQUAL, imei);
+			Query query = new Query(Constants.DEVICE_TABLE_NAME).setFilter(deviceFilter);
+			List<Entity> devices = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+			if(devices.size()>0){
+				deviceKey=devices.get(0).getKey();
+				req.getSession().setAttribute(Constants.DEVICE_KEY, deviceKey);
+				req.getSession().setAttribute(Constants.DEVICE_IMEI_KEY, imei);
+			} else {
+				resp.setContentType("text/plain");
+				resp.getWriter().println(Constants.ERROR_NO_DEVICE_KEY);
+			}
+		}
+		
 		String name = req.getParameter(Constants.DEVICE_NAME);
 		if (name == null) {
 			log.warning("No " + Constants.DEVICE_NAME + " present");

@@ -43,6 +43,13 @@
 			<table>
 			<form action="/uploadLog" method="post" class="register">
 				<input type="hidden" name="<%= Constants.LOG_COUNT %>" id="<%= Constants.LOG_COUNT %>" value="2"/>
+				
+				<tr>
+				<td>
+				<input type="text" name="<%= Constants.IMEI %>" id="<%= Constants.IMEI %>" placeholder="IMEI" onFocus="this.select();" onMouseOut="javascript:return false;"/>
+				</td>
+				</tr>
+				
 				<tr>
 				<td>
 				<input type="text" name="0 module" id="0 module" placeholder="Module" onFocus="this.select();" onMouseOut="javascript:return false;"/>
@@ -64,8 +71,7 @@
 				</td>
 				</tr>
 				
-				<tr>
-				<td>
+				
 				<tr>
 				<td>
 				<input type="text" name="1 module" id="1 module" placeholder="Module" onFocus="this.select();" onMouseOut="javascript:return false;"/>
