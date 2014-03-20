@@ -1,6 +1,5 @@
 package hu.edudroid.ict;
 
-import hu.edudroid.ict.logs.UploadService;
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginDescriptor;
 import hu.edudroid.ict.plugins.PluginIntentReceiver;
