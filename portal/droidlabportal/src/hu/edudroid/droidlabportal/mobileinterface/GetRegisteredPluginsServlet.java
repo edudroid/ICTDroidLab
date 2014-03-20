@@ -42,6 +42,7 @@ public class GetRegisteredPluginsServlet extends HttpServlet{
 		        pluginObject.put("name", plugin.getProperty("name"));
 		        pluginObject.put("class", plugin.getProperty("class"));
 		        pluginObject.put("version", plugin.getProperty("version"));
+		        pluginObject.put("description", plugin.getProperty("desc"));
 		        pluginRespArray.put(pluginObject);
 	    	}
 	        resp.getWriter().write(pluginRespArray.toString());

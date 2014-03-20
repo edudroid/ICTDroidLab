@@ -48,31 +48,37 @@
 			</h1>
 <%
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    // Run an ancestor query to ensure we see the most up-to-date
-    // view of the Greetings belonging to the selected Guestbook.
-    Query query = new Query(Constants.RESULTS_TABLE_NAME);
-    query.addSort(Constants.RESULTS_DATE_COLUMN,SortDirection.DESCENDING);
-    List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+    
+	Query query = new Query(Constants.DEVICE_TABLE_NAME,userKey);
+	List<Entity> devices = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+	
+	for(Entity device : devices){
+		query = new Query(Constants.RESULTS_TABLE_NAME,device.getKey());
+	    List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 
-    for(Entity result : results){
-    	%>
-    	<table>
-	    	<tr>
-		    	<td>Module name: <%= result.getProperty(Constants.RESULTS_MODULE_NAME_COLUMN) %></td>
-		    </tr>
-		    <tr>
-		    	<td>Log level: <%= result.getProperty(Constants.RESULTS_LOG_LEVEL_COLUMN) %></td>
-		    </tr>
-		    <tr>
-		    	<td>Date: <%= result.getProperty(Constants.RESULTS_DATE_COLUMN) %></td>
-	    	</tr>
-		    <tr>
-		    	<td>Message: <%= result.getProperty(Constants.RESULTS_MESSAGE_COLUMN) %></td>
-	    	</tr>
-    	 </table>
-    	 <hr>
-    	<%
-    }
+	    for(Entity result : results){
+	    	%>
+	    	<table>
+	    		<tr>
+	    			<td>Results for: <%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %></td>
+	    		</tr>
+		    	<tr>
+			    	<td>Module name: <%= result.getProperty(Constants.RESULTS_MODULE_NAME_COLUMN) %></td>
+			    </tr>
+			    <tr>
+			    	<td>Log level: <%= result.getProperty(Constants.RESULTS_LOG_LEVEL_COLUMN) %></td>
+			    </tr>
+			    <tr>
+			    	<td>Date: <%= result.getProperty(Constants.RESULTS_DATE_COLUMN) %></td>
+		    	</tr>
+			    <tr>
+			    	<td>Message: <%= result.getProperty(Constants.RESULTS_MESSAGE_COLUMN) %></td>
+		    	</tr>
+	    	 </table>
+	    	 <hr>
+	    	<%
+	    }	
+	}
     %>
 			
 		</div>
