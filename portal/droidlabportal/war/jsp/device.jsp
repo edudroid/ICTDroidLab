@@ -28,6 +28,7 @@
 		return;
 	}
 	String imei = (String)request.getParameter(Constants.IMEI);
+	// Check if there is a device
 	Entity selectedDevice = null;
 	if (imei == null) {
 		log.warning("No IMEI");
@@ -59,17 +60,11 @@
 			<h1>
 				<%= selectedDevice.getProperty(Constants.DEVICE_NAME_COLUMN) %>
 			</h1>
-			<table>
-				<tr>
-					<td>IMEI: <%= selectedDevice.getProperty(Constants.DEVICE_IMEI_COLUMN) %></td>
-				</tr>
-				<tr>
-					<td>SDK version: <%= selectedDevice.getProperty(Constants.DEVICE_SDK_VERSION_COLUMN) %> </td>
-				</tr>
-				<tr>
-					<td>Registration: <%= Constants.formatDate((Date)selectedDevice.getProperty(Constants.DEVICE_DATE_COLUMN)) %> </td>
-				</tr>
-		    </table>
+			<p>
+					<span>IMEI: <%= selectedDevice.getProperty(Constants.DEVICE_IMEI_COLUMN) %></span><br/>
+					<span>SDK version: <%= selectedDevice.getProperty(Constants.DEVICE_SDK_VERSION_COLUMN) %> </span><br/>
+					<span>Registration: <%= Constants.formatDate((Date)selectedDevice.getProperty(Constants.DEVICE_DATE_COLUMN)) %> </span>
+		    </p>
 		</div>
 	</div>
 </div>
