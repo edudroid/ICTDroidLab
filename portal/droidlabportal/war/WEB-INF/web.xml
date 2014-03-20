@@ -86,6 +86,16 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	    <jsp-file>/jsp/post.jsp</jsp-file>
 	</servlet>
 	
+	<servlet>
+	    <servlet-name>registerplugin</servlet-name>
+	    <jsp-file>/jsp/test/RegisterNewPlugin.jsp</jsp-file>
+	</servlet>
+	<servlet>
+	    <servlet-name>listregisteredplugins</servlet-name>
+	    <jsp-file>/jsp/test/ListRegisteredPlugins.jsp</jsp-file>
+	</servlet>
+	
+	
 	
 	
 	
@@ -136,6 +146,14 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	
 			<!--mapping-->
+	<servlet-mapping>
+		<servlet-name>registerplugin</servlet-name>
+		<url-pattern>/registernewplugin</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>listregisteredplugins</servlet-name>
+		<url-pattern>/listregisteredplugins</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>UnregisterDeviceServlet</servlet-name>
 		<url-pattern>/unregisterdevice</url-pattern>
