@@ -28,7 +28,7 @@ public class RegisterDeviceServlet extends HttpServlet {
 	private static final Logger log = Logger.getLogger(RegisterDeviceServlet.class.getName());
 
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		// Can register device only in session
+		// Can register device only if user is present
 		User user = UserManager.checkUser(req.getSession(), req, resp);
 		Key userKey = user!=null?user.getKey():null;
 		if (userKey==null) {
@@ -37,7 +37,7 @@ public class RegisterDeviceServlet extends HttpServlet {
 			resp.getWriter().println(Constants.ERROR_NOT_LOGGED_IN);
 			return;
 		}
-		
+		// Check if every field is present
 		String imei = req.getParameter(Constants.IMEI);
 		if (imei == null) {
 			log.warning("No " + Constants.IMEI + " present");
@@ -45,29 +45,6 @@ public class RegisterDeviceServlet extends HttpServlet {
 			resp.getWriter().println(Constants.ERROR_MISSING_IMEI);
 			return;
 		}
-		
-		
-		Key deviceKey = null;
-		try {
-			deviceKey = (Key)req.getSession().getAttribute(Constants.DEVICE_KEY);
-		} catch (Exception e) {
-			
-			DatastoreService datastore =
-	                DatastoreServiceFactory.getDatastoreService();
-			
-			Filter deviceFilter = new FilterPredicate(Constants.DEVICE_IMEI_COLUMN, FilterOperator.EQUAL, imei);
-			Query query = new Query(Constants.DEVICE_TABLE_NAME).setFilter(deviceFilter);
-			List<Entity> devices = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-			if(devices.size()>0){
-				deviceKey=devices.get(0).getKey();
-				req.getSession().setAttribute(Constants.DEVICE_KEY, deviceKey);
-				req.getSession().setAttribute(Constants.DEVICE_IMEI_KEY, imei);
-			} else {
-				resp.setContentType("text/plain");
-				resp.getWriter().println(Constants.ERROR_NO_DEVICE_KEY);
-			}
-		}
-		
 		String name = req.getParameter(Constants.DEVICE_NAME);
 		if (name == null) {
 			log.warning("No " + Constants.DEVICE_NAME + " present");
@@ -89,17 +66,17 @@ public class RegisterDeviceServlet extends HttpServlet {
 			resp.getWriter().println(Constants.ERROR_MISSING_SDK_VERSION);
 			return;
 		}
-		// Check if IMEI is present in the datastore for the user, if already registered, return error
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-	    Filter imeiFilter = new FilterPredicate(Constants.DEVICE_IMEI_COLUMN, FilterOperator.EQUAL, imei);
-		Query query = new Query(Constants.DEVICE_TABLE_NAME, userKey).setFilter(imeiFilter);
-		List<Entity> devices = datastore.prepare(query).asList(Builder.withLimit(1));
-		Entity device;
+		DatastoreService datastore =
+                DatastoreServiceFactory.getDatastoreService();
+		Filter deviceFilter = new FilterPredicate(Constants.DEVICE_IMEI_COLUMN, FilterOperator.EQUAL, imei);
+		Query query = new Query(Constants.DEVICE_TABLE_NAME).setFilter(deviceFilter);
+		List<Entity> devices = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+		Entity device = null;
 		String message;
 		if (devices.size() > 0) {
 			// Update device
-			log.info("Updating device.");
 	        device = devices.get(0);
+			log.info("Updating device.");
 	        message = "DEVICE_UPDATED";
 		} else {
 			// Add device
@@ -114,6 +91,9 @@ public class RegisterDeviceServlet extends HttpServlet {
         device.setProperty(Constants.DEVICE_DATE_COLUMN, new Date());
         // TODO save plugin versions
         datastore.put(device);
+        // Add device to session
+        req.getSession().setAttribute(Constants.DEVICE_KEY, device.getKey());
+        req.getSession().setAttribute(Constants.DEVICE_IMEI_KEY, imei);        
 		resp.setContentType("text/plain");
 		resp.getWriter().println(message);
 	}
