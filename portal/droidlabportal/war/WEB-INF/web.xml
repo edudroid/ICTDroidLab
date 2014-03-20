@@ -90,10 +90,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	
 	
-	<servlet>
-		<servlet-name>RegisterDeviceServlet</servlet-name>
-		<servlet-class>hu.edudroid.droidlabportal.mobileinterface.RegisterDeviceServlet</servlet-class>
-	</servlet>
+	
 	<servlet>
 		<servlet-name>UnregisterDeviceServlet</servlet-name>
 		<servlet-class>hu.edudroid.droidlabportal.mobileinterface.UnregisterDeviceServlet</servlet-class>
@@ -139,10 +136,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	
 			<!--mapping-->
-	<servlet-mapping>
-		<servlet-name>RegisterDeviceServlet</servlet-name>
-		<url-pattern>/registerdevice</url-pattern>
-	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>UnregisterDeviceServlet</servlet-name>
 		<url-pattern>/unregisterdevice</url-pattern>

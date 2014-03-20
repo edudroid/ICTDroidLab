@@ -49,11 +49,9 @@
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     // Run an ancestor query to ensure we see the most up-to-date
     // view of the Greetings belonging to the selected Guestbook.
-    Query query = new Query(Constants.MODULES_TABLE_NAME);
-	Query.Filter emailFilter=new FilterPredicate(Constants.EMAIL, Query.FilterOperator.EQUAL,email);
-	query.setFilter(emailFilter);
+    Query query = new Query(Constants.MODULES_TABLE_NAME,userKey);
 	List<Entity> modules = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-    query = new Query(Constants.DEVICE_TABLE_NAME);
+    query = new Query(Constants.DEVICE_TABLE_NAME,userKey);
     List<Entity> devices = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 %>
 	<table>
@@ -75,7 +73,7 @@
 				<select name="devices" onchange="deviceSelected(this.selectedIndex);">
 					<option value="0">--Please Select--</option>
 					<% for(Entity device : devices){ %>
-					<option value="<%=device.getProperty("gcm_id")%>"><%=device.getKey().getName()%></option>
+					<option value="<%=device.getProperty("gcm_id")%>"><%=device.getProperty("device_name")%></option>
 						<%
 						}
 					%>

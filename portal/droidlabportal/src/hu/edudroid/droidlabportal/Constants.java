@@ -62,13 +62,12 @@ public class Constants {
 	public static final String DEVICE_GCM_ID_COLUMN = "gcm_id";
 	public static final String DEVICE_SDK_VERSION_COLUMN = "sdk_version";		
 	public static final String DEVICE_DATE_COLUMN = "date";
-	public static final String DEVICE_OWNER_COLUMN = "owner";
 	public static final String DEVICE_CELLULAR_COLUMN = "cellular";
 	public static final String DEVICE_WIFI_COLUMN = "wifi";
 	public static final String DEVICE_BLUETOOTH_COLUMN = "bluetooth";
 	public static final String DEVICE_GPS_COLUMN = "gps";
 	
-	public static final String RESULTS_TABLE_NAME = "devices";
+	public static final String RESULTS_TABLE_NAME = "results";
 	public static final String RESULTS_MODULE_NAME_COLUMN = "module_name";
 	public static final String RESULTS_LOG_LEVEL_COLUMN = "log_level";
 	public static final String RESULTS_DATE_COLUMN = "date";		

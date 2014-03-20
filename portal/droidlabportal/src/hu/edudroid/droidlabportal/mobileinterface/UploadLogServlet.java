@@ -64,6 +64,9 @@ public class UploadLogServlet extends HttpServlet {
 		
 		***/
     	try{
+    		DatastoreService datastore =
+	                DatastoreServiceFactory.getDatastoreService();
+    		
 	    	int records=Integer.parseInt(req.getParameter(Constants.LOG_COUNT));
 	    	
 	    	for(int i=0;i<records;i++){
@@ -73,13 +76,10 @@ public class UploadLogServlet extends HttpServlet {
 		    	results.setProperty(Constants.RESULTS_LOG_LEVEL_COLUMN, req.getParameter(i+" "+"log_level"));
 		    	results.setProperty(Constants.RESULTS_DATE_COLUMN, req.getParameter(i+" "+"date"));
 		    	results.setProperty(Constants.RESULTS_MESSAGE_COLUMN, req.getParameter(i+" "+"message"));
-		        
-		        DatastoreService datastore =
-		                DatastoreServiceFactory.getDatastoreService();
+		    
 		        datastore.put(results);
-		        
-		        resp.getWriter().printf(i+". record uploaded succesfully!");
 	    	}
+	    	resp.getWriter().printf(records + " logs were uploaded succesfully");
     	} catch (Exception e){
     		e.printStackTrace();
     		resp.getWriter().printf("Failed to upload logs!");
