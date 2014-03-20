@@ -45,13 +45,12 @@
 	for(Entity device : devices){
 		query = new Query(Constants.RESULTS_TABLE_NAME,device.getKey());
 	    List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-
+	    
+	    %><p>Results for: <%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %></p><%
+	    
 	    for(Entity result : results){
 	    	%>
 	    	<table>
-	    		<tr>
-	    			<td>Results for: <%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %></td>
-	    		</tr>
 		    	<tr>
 			    	<td>Module name: <%= result.getProperty(Constants.RESULTS_MODULE_NAME_COLUMN) %></td>
 			    </tr>
@@ -65,7 +64,7 @@
 			    	<td>Message: <%= result.getProperty(Constants.RESULTS_MESSAGE_COLUMN) %></td>
 		    	</tr>
 	    	 </table>
-	    	 <hr>
+	    	 <p></p>
 	    	<%
 	    }	
 	}

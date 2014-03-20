@@ -46,9 +46,13 @@
 				Measurement
 			</h1>
 <%
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    // Run an ancestor query to ensure we see the most up-to-date
-    // view of the Greetings belonging to the selected Guestbook.
+    
+	if(request.getParameter("succes")!=null && request.getParameter("succes").equals("true")){
+		%><p>GCM has been sent successfully!</p> <%
+	}
+	
+	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    
     Query query = new Query(Constants.MODULES_TABLE_NAME,userKey);
 	List<Entity> modules = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     query = new Query(Constants.DEVICE_TABLE_NAME,userKey);
