@@ -43,13 +43,11 @@ public class GCMBroadcast extends HttpServlet {
         if (result.getResults() != null) {
         	log(result.getResults().toString());
             int canonicalRegId = result.getCanonicalIds();
-            if (canonicalRegId != 0) {
-
-            }
-            log("GCM sent succesfully");
+            
+            resp.sendRedirect("/measurement?succes=true");
         } else {
             int error = result.getFailure();
-            System.out.println("Broadcast failure: " + error);
+            resp.getWriter().printf("ERROR: ["+error+"]! GCM broadcast not sent...");
         }
         
     }

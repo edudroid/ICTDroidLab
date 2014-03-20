@@ -25,6 +25,27 @@
 			<h1>
 				Welcome to your lab!
 			</h1>
+			
+			<table>
+				<tr>
+					<td><a href="/devices">Devices</a></td>
+				</tr>
+				<tr>
+					<td><a href="/profile">Profile</a></td>
+				</tr>
+				<tr>
+					<td><a href="/modules">Modules</a></td>
+				</tr>
+				<tr>
+					<td><a href="/uploadmodule">Upload Module</a></td>
+				</tr>
+				<tr>
+					<td><a href="/results">Results</a></td>
+				</tr>
+				<tr>
+					<td><a href="/measurement">Measurement</a></td>
+				</tr>
+			</table>
 		</div>
 	</div>
 </div>
