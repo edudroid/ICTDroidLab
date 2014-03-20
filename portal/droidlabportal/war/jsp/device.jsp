@@ -1,3 +1,4 @@
+<%@page import="java.util.Date"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@page import="java.util.logging.Logger"%>
 <%@page import="com.google.appengine.api.datastore.FetchOptions.Builder"%>
@@ -10,6 +11,7 @@
 <%@page import="com.google.appengine.api.datastore.Key"%>
 <%@page import="hu.edudroid.droidlabportal.Constants"%>
 <%@page import="hu.edudroid.droidlabportal.user.User"%>
+<%@page import="hu.edudroid.droidlabportal.user.UserManager"%>
 <%@page import="java.util.List" %>
 <%@page import="com.google.appengine.api.users.UserService" %>
 <%@page import="com.google.appengine.api.users.UserServiceFactory" %>
@@ -20,7 +22,7 @@
 </jsp:include>
 <%
 	Logger log = Logger.getLogger("device.jsp");
-	User user = UserManager.checkUser(session, request, response)
+	User user = UserManager.checkUser(session, request, response);
 	if (user == null) {
 		response.sendRedirect("/loginform");
 		return;
@@ -31,11 +33,13 @@
 		log.warning("No IMEI");
 		response.sendRedirect("/loginform");
 		return;
+	} else {
+		log.info("IMEI available");
 	}
 	// Find device by imei
 	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-	Query.Filter imeiFilter = new FilterPredicate(Constants.DEVICES_IMEI_COLUMN, FilterOperator.EQUAL, imei);
-	Query query = new Query(Constants.DEVICES_TABLE_NAME, user.getK).setFilter(imeiFilter);
+	Query.Filter imeiFilter = new FilterPredicate(Constants.DEVICE_IMEI_COLUMN, FilterOperator.EQUAL, imei);
+	Query query = new Query(Constants.DEVICE_TABLE_NAME).setFilter(imeiFilter); // TODO later on add ancestor to restrict user to own devices
 	List<Entity> devices = datastore.prepare(query).asList(Builder.withDefaults());
 	if (devices.size() == 1) {
 		log.info("Device found");
@@ -53,7 +57,7 @@
 </jsp:include>
 		<div>
 			<h1>
-				Device <%= selectedDevice.getProperty(Constants.DEVICE_IMEI_COLUMN) %>
+				<%= selectedDevice.getProperty(Constants.DEVICE_NAME_COLUMN) %>
 			</h1>
 			<table>
 				<tr>
@@ -63,7 +67,7 @@
 					<td>SDK version: <%= selectedDevice.getProperty(Constants.DEVICE_SDK_VERSION_COLUMN) %> </td>
 				</tr>
 				<tr>
-					<td>Registration: <%= selectedDevice.getProperty(Constants.DEVICE_DATE_COLUMN) %> </td>
+					<td>Registration: <%= Constants.formatDate((Date)selectedDevice.getProperty(Constants.DEVICE_DATE_COLUMN)) %> </td>
 				</tr>
 		    </table>
 		</div>

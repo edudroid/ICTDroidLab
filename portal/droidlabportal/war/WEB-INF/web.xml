@@ -62,6 +62,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	    <jsp-file>/jsp/devices.jsp</jsp-file>
 	</servlet>
 	<servlet>
+	    <servlet-name>device</servlet-name>
+	    <jsp-file>/jsp/device.jsp</jsp-file>
+	</servlet>
+		<servlet>
 	    <servlet-name>profile</servlet-name>
 	    <jsp-file>/jsp/profile.jsp</jsp-file>
 	</servlet>
@@ -245,6 +249,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	    <url-pattern>/devices</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
+	    <servlet-name>device</servlet-name>
+	    <url-pattern>/device</url-pattern>
+	</servlet-mapping>
+		<servlet-mapping>
 	    <servlet-name>profile</servlet-name>
 	    <url-pattern>/profile</url-pattern>
 	</servlet-mapping>

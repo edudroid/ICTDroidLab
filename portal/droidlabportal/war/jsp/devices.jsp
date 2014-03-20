@@ -55,22 +55,15 @@
 	Query query = new Query(Constants.DEVICE_TABLE_NAME,userKey);
 	List<Entity> devices = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 %>
-   	<table>
     <%
     for(Entity device : devices){
     	%>
-    		<tr><th>Name</th><th>IMEI</th><th>GCM ID</th><th>SDK</th><th>Reg, date</th></tr>
-	    	<tr>
-		    	<td><%= device.getProperty(Constants.DEVICE_NAME_COLUMN) %></td>
-		    	<td><%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %></td>
-		    	<td><%= device.getProperty(Constants.DEVICE_GCM_ID_COLUMN) %></td>
-		    	<td><%= device.getProperty(Constants.DEVICE_SDK_VERSION_COLUMN) %></td>
-		    	<td><%= Constants.formatDate((Date)device.getProperty(Constants.DEVICE_DATE_COLUMN)) %></td>
-	    	</tr>
+	    	<a href="/device?IMEI=<%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %>">
+	    		<%= device.getProperty(Constants.DEVICE_NAME_COLUMN) %> (<%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %>)
+	    	</a>
     	<%
     }
     %>
-	</table>
 	<h1> All Devices </h1>
 
 <%
@@ -80,22 +73,15 @@
 	devices = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 %>
 	
-   	<table>
     <%
     for(Entity device : devices){
     	%>
-    		<tr><th>Name</th><th>IMEI</th><th>GCM ID</th><th>SDK</th><th>Reg, date</th></tr>
-	    	<tr>
-		    	<td><%= device.getProperty(Constants.DEVICE_NAME_COLUMN) %></td>
-		    	<td><%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %></td>
-		    	<td><%= device.getProperty(Constants.DEVICE_GCM_ID_COLUMN) %></td>
-		    	<td><%= device.getProperty(Constants.DEVICE_SDK_VERSION_COLUMN) %></td>
-		    	<td><%= Constants.formatDate((Date)device.getProperty(Constants.DEVICE_DATE_COLUMN)) %></td>
-	    	</tr>
+	    	<a href="<%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %>">
+	    		<%= device.getProperty(Constants.DEVICE_NAME_COLUMN) %> (<%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %>)
+	    	</a>
     	<%
     }
     %>
-	</table>
 	<h1> Register own device </h1>
 			<form action="/registerdevice" method="post" class="register">
 				<input type="text" name="<%= Constants.DEVICE_NAME %>" id="<%= Constants.DEVICE_NAME %>" placeholder="DEVICE NAME" onFocus="this.select();" onMouseOut="javascript:return false;"/>
