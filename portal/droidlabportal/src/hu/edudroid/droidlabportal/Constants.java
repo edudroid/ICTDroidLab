@@ -1,5 +1,9 @@
 package hu.edudroid.droidlabportal;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class Constants {
 
 	// Page names
@@ -73,7 +77,7 @@ public class Constants {
 	public static final String RESULTS_MODULE_NAME_COLUMN = "module_name";
 	public static final String RESULTS_LOG_LEVEL_COLUMN = "log_level";
 	public static final String RESULTS_DATE_COLUMN = "date";		
-	public static final String RESULTS_MESSAGE_COLUMN = "message";
+	public static final String RESULTS_MESSAGE_COLUMN = "message";	
 	
 	// Error message
 	public static final String ERROR = "ERROR";
@@ -91,6 +95,8 @@ public class Constants {
 	public static final String DOMAIN = "localhost";
 	public static final String LOG_COUNT = "log_count";
 	
+	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("YYYY.MM.dd", Locale.getDefault());
+	
 	public static boolean isValidPassword(String password) {
 		if (password==null) {
 			return false;
@@ -99,5 +105,9 @@ public class Constants {
 			return false;
 		}
 		return true;
+	}
+	
+	public static String formatDate(Date date){
+		return dateFormatter.format(date);
 	}
 }

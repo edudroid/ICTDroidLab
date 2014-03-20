@@ -27,8 +27,8 @@ public final class ServerUtilities {
 	private static final String USER_NAME = "email";
 	private static final String PASSWORD = "pass";
 	
+	public static final String IMEI = "IMEI";
 	private static final String LOGIN_COOKIE = "DROID_LAB_LOGIN_COOKIE";
-	private static final String IMEI = "IMEI";
 	private static final String DEVICE_NAME = "device_name";
 	private static final String GCM_ID = "gcm_id";
 	private static final String SDK_VERSION = "sdk_version";
