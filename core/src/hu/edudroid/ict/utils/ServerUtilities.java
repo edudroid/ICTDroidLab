@@ -22,7 +22,6 @@ public final class ServerUtilities {
 	
 	public static final String PORTAL_DOMAIN = "droidlabportal.appspot.com";
 	public static final String PORTAL_URL = "http://droidlabportal.appspot.com/";
-	public static final String SERVER_URL = "http://ictdroidlab.appspot.com/";
 	public static final String TAG = ServerUtilities.class.getName();
 	private static final String USER_NAME = "email";
 	private static final String PASSWORD = "pass";
@@ -110,23 +109,18 @@ public final class ServerUtilities {
 		Log.i(TAG, "unregistering device (regId = " + regId + ")");
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("device_id", regId);
-		HttpUtils.post(SERVER_URL + "unregisterdevice", params);
+		// TODO Test unregister with portal
+		HttpUtils.post(PORTAL_URL + "unregisterdevice", params);
 		GCMRegistrar.setRegisteredOnServer(context, false);
 		String message = context.getString(R.string.server_unregistered);
-		// TODO check if unregister went well
 		Log.e(TAG, message);
 	}
 
 	public static List<PluginDescriptor> getAvailablePlugins(Runnable runnable) {
-		// Get URL for this
-		//String availablePluginsString = HttpUtils.get(ServerUtilities.SERVER_URL + "/jsp/ListRegisteredPlugins.jsp");
-		//Log.e(TAG, "Plugin string " + availablePluginsString);
-		// TODO parse available plugin list
 		List<PluginDescriptor> availablePlugins = new ArrayList<PluginDescriptor>();
-		PluginDescriptor wifi = new PluginDescriptor("WiFi plugin", "hu.edudroid.ictpluginwifi", "A plugin for WiFi.");
-		PluginDescriptor social = new PluginDescriptor("Social plugin", "hu.edudroid.ictpluginsocial", "A plugin for social stuff.");
-		availablePlugins.add(wifi);
-		availablePlugins.add(social);
+		String availablePluginsString = HttpUtils.get(ServerUtilities.PORTAL_URL + "/getRegisteredPlugins");
+		Log.e(TAG, "Plugin string " + availablePluginsString);
+		// TODO parse file
 		return availablePlugins;
 	}
 

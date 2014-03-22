@@ -107,7 +107,6 @@ public class UploadModuleServlet extends HttpServlet {
 	        res.sendRedirect("/uploadmodule?succes=true");
 			
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			log(e.getMessage());
 			res.sendRedirect("/uploadmodule?succes=false");
 		}

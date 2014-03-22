@@ -1,16 +1,13 @@
 package hu.edudroid.droidlabportal.mobileinterface;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -35,21 +32,21 @@ public class GetRegisteredPluginsServlet extends HttpServlet{
 	    query.addSort("date",SortDirection.DESCENDING);
 	    List<Entity> plugins = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 	    
-	    try {
-	    	JSONArray pluginRespArray = new JSONArray();
-	    	for(Entity plugin : plugins){
-	    		JSONObject pluginObject = new JSONObject();
-		        pluginObject.put("name", plugin.getProperty("name"));
-		        pluginObject.put("class", plugin.getProperty("class"));
-		        pluginObject.put("version", plugin.getProperty("version"));
-		        pluginObject.put("description", plugin.getProperty("desc"));
-		        pluginRespArray.put(pluginObject);
-	    	}
-	        resp.getWriter().write(pluginRespArray.toString());
-	    } catch (JSONException e) {
-	        System.err
-	        .println("Failed to create JSON response: " + e.getMessage());
-	    }
+    	PrintWriter writer = resp.getWriter();
+        writer.println("[");
+    	for(Entity plugin : plugins){
+    		writer.print("{");
+    		writer.print("\"name\":");
+    		writer.print("\"" + plugin.getProperty("name") + "\",");
+    		writer.print("\"class\":");
+    		writer.print("\"" + plugin.getProperty("class") + "\",");
+    		writer.print("\"version\":");
+    		writer.print(plugin.getProperty("version") + ",");
+    		writer.print("\"description\":");
+    		writer.print("\"" + plugin.getProperty("desc") + "\"");
+    		writer.println("},");
+    	}
+        writer.print("]");
 	}
 	
 }

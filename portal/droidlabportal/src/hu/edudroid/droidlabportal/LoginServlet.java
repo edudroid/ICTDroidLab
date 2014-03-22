@@ -75,7 +75,6 @@ public class LoginServlet extends HttpServlet {
 	        //Get complete hashed password in hex format
 	        generatedPassword = sb.toString();
         } catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			resp.setContentType("text/plain");
 			resp.getWriter().println("ERROR");

@@ -111,7 +111,6 @@ public class RegisterUserServlet extends HttpServlet {
 			}
 	        
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
