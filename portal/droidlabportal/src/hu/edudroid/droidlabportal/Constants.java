@@ -13,6 +13,7 @@ public class Constants {
 	public static final String NEWS = "news";
 	public static final String REG_FORM = "regform";
 	public static final String PROFILE = "profile";
+	public static final String MODULE = "module";
 	public static final String MODULES = "modules";
 	public static final String DEVICE = "device";
 	public static final String DEVICES = "devices";

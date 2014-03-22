@@ -76,9 +76,9 @@
     <%
     for(Entity device : devices){
     	%>
-	    	<a href="<%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %>">
+	    	<a href="/device?IMEI=<%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %>">
 	    		<%= device.getProperty(Constants.DEVICE_NAME_COLUMN) %> (<%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %>)
-	    	</a>
+	    	</a><br>
     	<%
     }
     %>
