@@ -12,6 +12,7 @@
 
     <target name="clean">
         <delete dir="${build.dir}"/>
+        <delete file="classes.dex"/>
     </target>
 
     <target name="compile">
@@ -32,6 +33,7 @@
     </target>
     
     <target name="createCoreAsset" depends="jar">
+        <echo message="Java version should be 1.5 or 1.6 if using 1.7 or newer, set project specific JRE!"/>
         <exec executable="cmd">
 	    	<arg value="/c"/>
 	    	<arg value="createdex.bat"/>
