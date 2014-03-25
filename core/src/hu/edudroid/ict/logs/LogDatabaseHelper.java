@@ -6,8 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class LogDatabaseHelper extends SQLiteOpenHelper {
 
-	private static final String NAME = "log_database";
-	private static final int VERSION = 0;
+	private static final String NAME = "log_database.db";
+	private static final int VERSION = 1;
 
 	public LogDatabaseHelper(Context context) {
 		super(context, NAME, null, VERSION);

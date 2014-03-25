@@ -14,7 +14,7 @@ public class LogDatabaseManager {
 	private SQLiteDatabase db;
 
 	public LogDatabaseManager(Context context) {
-		LogDatabaseHelper helper = new LogDatabaseHelper(context);
+		LogDatabaseHelper helper = new LogDatabaseHelper(context.getApplicationContext());
 		db = helper.getWritableDatabase();
 	}
 	
