@@ -35,7 +35,7 @@ public class ModuleExample extends Module {
 	public void onResult(long id, String plugin, String pluginVersion,
 			String methodName, Map<String, Object> result) {
 		if (result != null) {
-			mLogger.i(TAG, "Result received " + result.size() + " " + result.toString());
+			mLogger.i(TAG, "Result received " + result.size());
 		} else {
 			mLogger.i(TAG, "Null received " + result);
 		}
@@ -56,7 +56,7 @@ public class ModuleExample extends Module {
 	@Override
 	public void onTimerEvent() {
 		mLogger.d(TAG, "timer event");
-		mLogger.i(TAG, "Module example run at " + dateFormatter.format(new Date()));
+		mLogger.i(TAG, "New module example run at " + dateFormatter.format(new Date()));
 		Plugin plugin = mPluginCollection.getPluginByName(SAMPLE_PLUGIN_NAME);
 		if (plugin != null) {
 			plugin.callMethodAsync(FIRST_METHOD, null, this);
