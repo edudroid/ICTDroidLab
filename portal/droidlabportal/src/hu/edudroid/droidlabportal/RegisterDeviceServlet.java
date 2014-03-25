@@ -90,9 +90,6 @@ public class RegisterDeviceServlet extends HttpServlet {
         device.setProperty(Constants.DEVICE_DATE_COLUMN, new Date());
         // TODO save plugin versions
         datastore.put(device);
-        // Add device to session
-        req.getSession().setAttribute(Constants.DEVICE_KEY, device.getKey());
-        req.getSession().setAttribute(Constants.DEVICE_IMEI_KEY, imei);        
 		resp.setContentType("text/plain");
 		resp.getWriter().println(message);
 	}

@@ -7,6 +7,8 @@ import hu.edudroid.droidlabportal.user.UserManager;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,11 +26,10 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 public class UploadLogServlet extends HttpServlet {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8045001540854103637L;
-	
+
+	private static final Logger log = Logger.getLogger(UploadLogServlet.class.getName());
+
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
         throws ServletException, IOException {
@@ -48,44 +49,32 @@ public class UploadLogServlet extends HttpServlet {
 
 		// Finds device
 		String imei = req.getParameter(Constants.IMEI);
-		Key deviceKey = null;
-		if (imei == null) {
-			// Checks device registered to the active session
-			deviceKey = (Key)req.getSession().getAttribute(Constants.DEVICE_KEY);
-		}
-		
-		if (deviceKey == null) {
-			DatastoreService datastore =
-	                DatastoreServiceFactory.getDatastoreService();
-			
-			Filter deviceFilter = new FilterPredicate(Constants.DEVICE_IMEI_COLUMN, FilterOperator.EQUAL, imei);
-			Query query = new Query(Constants.DEVICE_TABLE_NAME, user.getKey()).setFilter(deviceFilter); // Use ancestor query to only query devices registered to the user
-			List<Entity> devices = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-			if(devices.size()>0){
-				// Found the device to use
-				deviceKey=devices.get(0).getKey();
-				req.getSession().setAttribute(Constants.DEVICE_KEY, deviceKey);
-				req.getSession().setAttribute(Constants.DEVICE_IMEI_KEY, imei);
-			} else {
-				resp.setContentType("text/plain");
-				resp.getWriter().println(Constants.ERROR_NO_DEVICE_KEY);
-				return;
-			}
+		Key deviceKey = null; // Always search for device key based on IMEI 
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		Filter deviceFilter = new FilterPredicate(Constants.DEVICE_IMEI_COLUMN, FilterOperator.EQUAL, imei);
+		Query query = new Query(Constants.DEVICE_TABLE_NAME, user.getKey()).setFilter(deviceFilter); // Use ancestor query to only query devices registered to the user
+		List<Entity> devices = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+		if(devices.size()>0){
+			// Found the device to use
+			deviceKey=devices.get(0).getKey();
+			req.getSession().setAttribute(Constants.DEVICE_KEY, deviceKey);
+			req.getSession().setAttribute(Constants.DEVICE_IMEI_KEY, imei);
+		} else {
+			resp.setContentType("text/plain");
+			resp.getWriter().println(Constants.ERROR_NO_DEVICE_KEY);
+			return;
 		}
     	
     	try{
-    		DatastoreService datastore =
-	                DatastoreServiceFactory.getDatastoreService();
-    		
 	    	int records = Integer.parseInt(req.getParameter(Constants.LOG_COUNT));
 	    	
 	    	// Logs are added on device level
 	    	for(int i=0; i<records; i++){
 		    	Entity record = new Entity(Constants.RESULTS_TABLE_NAME, deviceKey);
-		    	record.setProperty(Constants.RESULTS_MODULE_NAME_COLUMN, req.getParameter(i+" "+"module"));
-		    	record.setProperty(Constants.RESULTS_LOG_LEVEL_COLUMN, req.getParameter(i+" "+"log_level"));
-		    	record.setProperty(Constants.RESULTS_DATE_COLUMN, req.getParameter(i+" "+"date"));
-		    	record.setProperty(Constants.RESULTS_MESSAGE_COLUMN, req.getParameter(i+" "+"message"));
+		    	record.setProperty(Constants.RESULTS_MODULE_NAME_COLUMN, req.getParameter(i+" module"));
+		    	record.setProperty(Constants.RESULTS_LOG_LEVEL_COLUMN, req.getParameter(i+" log_level"));
+		    	record.setProperty(Constants.RESULTS_DATE_COLUMN, req.getParameter(i+" date"));
+		    	record.setProperty(Constants.RESULTS_MESSAGE_COLUMN, req.getParameter(i+" message"));
 		        datastore.put(record);
 	    	}
 	    	resp.getWriter().printf(records + " logs were uploaded succesfully");
