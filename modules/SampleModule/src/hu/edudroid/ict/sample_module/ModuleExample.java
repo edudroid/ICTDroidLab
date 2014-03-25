@@ -28,7 +28,7 @@ public class ModuleExample extends Module {
 	@Override
 	public void init(){
 		mLogger.e(TAG, "Module init...");
-		mTimeService.runPeriodic(1000, 5000, 0, this);
+		mTimeService.runPeriodic(1000, 60000, 0, this);
 	}
 	
 	@Override
@@ -55,7 +55,6 @@ public class ModuleExample extends Module {
 
 	@Override
 	public void onTimerEvent() {
-		mLogger.d(TAG, "timer event");
 		mLogger.i(TAG, "New module example run at " + dateFormatter.format(new Date()));
 		Plugin plugin = mPluginCollection.getPluginByName(SAMPLE_PLUGIN_NAME);
 		if (plugin != null) {
