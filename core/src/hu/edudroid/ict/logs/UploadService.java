@@ -10,6 +10,7 @@ import java.util.Map;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class UploadService extends IntentService {
@@ -26,13 +27,17 @@ public class UploadService extends IntentService {
 	
 	public UploadService() {
 		super(NAME);
+	}
+	
+	@Override
+	public void onCreate() {
+		super.onCreate();
 		Log.d(TAG, "Upload service created.");
-		databaseManager = new LogDatabaseManager(this); 
+		databaseManager = new LogDatabaseManager(this.getApplicationContext()); 
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Log.d(TAG, "Log received for upload.");
 		try {
 			LogRecord logRecord = new LogRecord(
 					intent.getStringExtra(LogRecord.COLUMN_NAME_MODULE),
@@ -43,6 +48,7 @@ public class UploadService extends IntentService {
 			recordsToUpload.add(logRecord);
 			boolean result = uploadLogs(recordsToUpload, this.getApplicationContext());
 			if (result) {
+				Log.d(TAG, "Log uploaded");
 				for (LogRecord record : recordsToUpload) {
 					databaseManager.purgeRecord(record.getId());
 				}
@@ -62,18 +68,26 @@ public class UploadService extends IntentService {
 			params.put(i + " " + LogRecord.COLUMN_NAME_DATE, Long.toString(record.getDate()));
 			params.put(i + " " + LogRecord.COLUMN_NAME_MESSAGE, record.getMessage());
 		}
+		// Add imei
+		TelephonyManager mngr = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE); 
+        String imei = mngr.getDeviceId(); 
+		params.put(ServerUtilities.IMEI, imei);
+		Log.e(TAG,"Uploading " + recordsToUpload.size() + " records.");
 		String response = HttpUtils.post(ServerUtilities.PORTAL_URL + "uploadLog", params, context);
-		// records + " logs were uploaded succesfully"
+		response = response.trim();
 		if (response.endsWith(" logs were uploaded succesfully")) {
 			int uploadedRecords = -1;
 			try {
-				uploadedRecords = Integer.parseInt(response.substring(0, " logs were uploaded succesfully".length()));
+				uploadedRecords = Integer.parseInt(response.substring(0, response.length() - " logs were uploaded succesfully".length()));
 			} catch (Exception e) {
 				Log.e(TAG,"Error parsing server response " + response, e);
 			}
 			if (uploadedRecords == recordsToUpload.size()) {
+				Log.d(TAG,"Uploaded " + uploadedRecords + " log lines.");
 				return true;
 			}
+		} else {
+			Log.e(TAG,"Unexpected server response " + response);
 		}
 		return false;
 	}
