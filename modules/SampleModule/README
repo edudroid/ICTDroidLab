@@ -7,3 +7,31 @@ project's root folder. You'll find detailed instructions in the template.
 
 Than you have to rename module.desc.template to module.desc and fill in the
 proper values. Build using ant and voilá, you have your module up and running.
+
+Steps for creating a new module project:
+
+1. Clone and rename the SampleModule folder in the modules directory
+
+2. Delete contents of build folder, delete classes.dex
+
+3. Edit the .project file
+   - give your project the same name as your base directory
+
+4. Edit the build.xml file
+   - in the first line, change the project name
+
+5. Edit the vars.bat file
+   - set the PROJECT_ROOT to point to the project's root folder
+   - set the MODULE_NAME to the project's name
+
+6. Edit the module.desc file
+   - change the module's identifier to a suitable value
+   - change the module's name to the module's human readable name
+   - change the jar file to MODULE_NAME.jar
+   - change the class name to the module classes name
+   
+7. If you are using 1.7 Java for your workspace, you have to change the project's used JRE to an older 1.6 JRE!
+Go to Preferences > Java Build Path > Libraries. Click Edit when JRE is selected, and edit it! If you don't
+do this, dx.bat will not be able to use the generated class files.
+
+Build using ant and voilá, you have your module up and running.
