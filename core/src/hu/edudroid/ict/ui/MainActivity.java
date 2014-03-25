@@ -1,11 +1,13 @@
 package hu.edudroid.ict.ui;
 
+import hu.edudroid.ict.CoreService;
 import hu.edudroid.ict.ModuleSetListener;
 import hu.edudroid.ict.R;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.module.ModuleDescriptor;
 import hu.edudroid.module.ModuleLoader;
 
+import java.io.File;
 import java.util.List;
 
 import android.content.ComponentName;
@@ -16,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends ActivityBase implements OnClickListener, ModuleSetListener {
@@ -25,6 +28,9 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 	private Button showPlugins;
 	private Button manageLocalStorage;
 	private Button stats;
+	private TextView messageField;
+	
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,7 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 		stats.setOnClickListener(this);
 		manageLocalStorage = (Button)findViewById(R.id.manageLocalStorageButton);
 		manageLocalStorage.setOnClickListener(this);
+		messageField = (TextView)findViewById(R.id.messageField);
 	}
 
 	@Override
@@ -82,6 +89,20 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 		} else {
 			showPlugins.setText(R.string.noPlugins);
 			showModules.setText(R.string.noModules);
+		}
+		String message = "";
+		if (service != null) {
+			message += "Service available; ";
+			File jarFolder = CoreService.getJarFolder(this);
+			String[] files = jarFolder.list();
+			if (files != null) {
+				message += files.length + " files in jar folder";
+			} else {
+				message += "No jar files present";
+			}
+			messageField.setText(message);
+		} else {
+			messageField.setText("No service");
 		}
 	}
 
