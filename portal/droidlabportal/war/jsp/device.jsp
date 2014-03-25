@@ -1,3 +1,4 @@
+<%@page import="com.google.appengine.api.datastore.Query.SortDirection"%>
 <%@page import="java.util.Date"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@page import="java.util.logging.Logger"%>
@@ -57,41 +58,40 @@
 			<jsp:param name="selected" value="<%=Constants.DEVICES %>" />
 		</jsp:include>
 		<div>
-			<h1>
-				<%= selectedDevice.getProperty(Constants.DEVICE_NAME_COLUMN) %>
-			</h1>
+			<h1> <%= selectedDevice.getProperty(Constants.DEVICE_NAME_COLUMN) %> </h1>
 			<p>
 				<span>IMEI: <%= selectedDevice.getProperty(Constants.DEVICE_IMEI_COLUMN) %></span><br/>
 				<span>SDK version: <%= selectedDevice.getProperty(Constants.DEVICE_SDK_VERSION_COLUMN) %> </span><br/>
 				<span>Registration: <%= Constants.formatDate((Date)selectedDevice.getProperty(Constants.DEVICE_DATE_COLUMN)) %> </span>
 		    </p>
-		</div>
-	</div>
-	<div>
-		<h1>
-			Results
-		</h1>
+			<h2> Results </h2>
 <%
-	query = new Query(Constants.RESULTS_TABLE_NAME, selectedDevice.getKey());
-	List<Entity> results = datastore.prepare(query).asList(Builder.withDefaults());
+	query = new Query(Constants.RESULTS_TABLE_NAME, selectedDevice.getKey()).addSort(Constants.RESULTS_DATE_COLUMN, SortDirection.DESCENDING);
+	List<Entity> results = datastore.prepare(query).asList(Builder.withLimit(10));
 %>
-   
-		<p>Results for:<%= selectedDevice.getProperty(Constants.DEVICE_IMEI_COLUMN) %></p>
-		<table>
-			<tr><th>Date</th><th>Level</th><th>Module</th><th>Message</th></tr>
+			<table>
+				<tr><th>Date</th><th>Level</th><th>Module</th><th>Message</th></tr>
 <%
 	for(Entity result : results){
+		String dateString = null;
+		try {
+			dateString = Constants.formatTime(new Date(Long.parseLong((String)result.getProperty(Constants.RESULTS_DATE_COLUMN))));
+		} catch (Exception e){
+			e.printStackTrace();
+			dateString = "N/A";
+		}
 %>
-			<tr>
-				<td><%= Constants.formatDate((Date)result.getProperty(Constants.RESULTS_DATE_COLUMN)) %></td>
-				<td><%= result.getProperty(Constants.RESULTS_LOG_LEVEL_COLUMN) %></td>
-				<td><%= result.getProperty(Constants.RESULTS_MODULE_NAME_COLUMN) %></td>
-				<td><%= result.getProperty(Constants.RESULTS_MESSAGE_COLUMN) %></td>
-			</tr>
+				<tr>
+					<td><%= dateString %></td>
+					<td><%= result.getProperty(Constants.RESULTS_LOG_LEVEL_COLUMN) %></td>
+					<td><%= result.getProperty(Constants.RESULTS_MODULE_NAME_COLUMN) %></td>
+					<td><%= result.getProperty(Constants.RESULTS_MESSAGE_COLUMN) %></td>
+				</tr>
 <%
 }	
 %>
-		</table>			
+			</table>			
+		</div>
 	</div>
 </div>
 <jsp:include page="/jsp/footer.jsp" />
