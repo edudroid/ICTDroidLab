@@ -100,6 +100,7 @@ public class ModuleLoader {
 			    outStream.write(buff,0,len);
 			}
 			//clean up
+			
 			outStream.flush();
 			outStream.close();
 			inStream.close();
@@ -110,9 +111,18 @@ public class ModuleLoader {
 		}
 	}
 	
+	/**
+	 * Delete all local module files.
+	 * @param context
+	 */
 	public static void deleteAllModules(Context context) {
 		File descriptorFolder = CoreService.getDescriptorFolder(context);
+		File jarFolder = CoreService.getJarFolder(context);
 		File[] files = descriptorFolder.listFiles();
+		for (File file : files) {
+			file.delete();
+		}
+		files = jarFolder.listFiles();
 		for (File file : files) {
 			file.delete();
 		}
@@ -127,8 +137,10 @@ public class ModuleLoader {
 				return filename.endsWith("desc");
 			}
 		});
-		Log.i(TAG, "Loading " + descriptorFiles.length + " module(s).");
-		if(descriptorFiles!=null){
+		if (descriptorFiles == null) {
+			Log.i(TAG, "No descriptors available.");
+		} else {
+			Log.i(TAG, "Loading " + descriptorFiles.length + " module(s).");
 			for (String fileName : descriptorFiles) {
 				ModuleDescriptor descriptor = ModuleLoader.parseModuleDescriptor(new File(descriptorFolder,fileName), context);
 				if (descriptor != null) {
