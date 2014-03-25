@@ -26,11 +26,13 @@ public class UploadService extends IntentService {
 	
 	public UploadService() {
 		super(NAME);
+		Log.d(TAG, "Upload service created.");
 		databaseManager = new LogDatabaseManager(this); 
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		Log.d(TAG, "Log received for upload.");
 		try {
 			LogRecord logRecord = new LogRecord(
 					intent.getStringExtra(LogRecord.COLUMN_NAME_MODULE),

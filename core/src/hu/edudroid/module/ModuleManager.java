@@ -163,7 +163,7 @@ public class ModuleManager implements ModuleStatsListener{
 			Log.w(TAG, "Module removed " + moduleId);
 			return true;
 		}
-		Log.e(TAG, "Couldn't remove module " + moduleId);		
+		Log.e(TAG, "Couldn't remove module " + moduleId);
 		return false;
 	}
 

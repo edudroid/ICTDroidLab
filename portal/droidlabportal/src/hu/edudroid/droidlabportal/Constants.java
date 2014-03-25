@@ -97,6 +97,7 @@ public class Constants {
 	public static final String LOG_COUNT = "log_count";
 	
 	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("YYYY.MM.dd", Locale.getDefault());
+	private static final SimpleDateFormat timeFormatter = new SimpleDateFormat("MM.dd HH:mm:ss.SSS", Locale.getDefault());
 	
 	public static boolean isValidPassword(String password) {
 		if (password==null) {
@@ -110,5 +111,9 @@ public class Constants {
 	
 	public static String formatDate(Date date){
 		return dateFormatter.format(date);
+	}
+
+	public static String formatTime(Date date){
+		return timeFormatter.format(date);
 	}
 }

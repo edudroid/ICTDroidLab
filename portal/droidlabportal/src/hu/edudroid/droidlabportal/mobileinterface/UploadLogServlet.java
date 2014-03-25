@@ -79,9 +79,9 @@ public class UploadLogServlet extends HttpServlet {
     		
 	    	int records = Integer.parseInt(req.getParameter(Constants.LOG_COUNT));
 	    	
-	    	for(int i=0;i<records;i++){
-	    	
-		    	Entity record = new Entity(Constants.RESULTS_TABLE_NAME,deviceKey);
+	    	// Logs are added on device level
+	    	for(int i=0; i<records; i++){
+		    	Entity record = new Entity(Constants.RESULTS_TABLE_NAME, deviceKey);
 		    	record.setProperty(Constants.RESULTS_MODULE_NAME_COLUMN, req.getParameter(i+" "+"module"));
 		    	record.setProperty(Constants.RESULTS_LOG_LEVEL_COLUMN, req.getParameter(i+" "+"log_level"));
 		    	record.setProperty(Constants.RESULTS_DATE_COLUMN, req.getParameter(i+" "+"date"));

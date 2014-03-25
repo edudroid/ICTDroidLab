@@ -41,6 +41,7 @@ public class AndroidLogger implements Logger {
 	}
 	
 	private void log(String level, long timestamp, String message) {
+		Log.d(TAG, "Uploading log \"" + message + "\"");
 		Intent intent = new Intent(context, UploadService.class);
 		intent.putExtra(LogRecord.COLUMN_NAME_MODULE, moduleName);
 		intent.putExtra(LogRecord.COLUMN_NAME_LOG_LEVEL, level);

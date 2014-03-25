@@ -53,13 +53,16 @@ public class CoreService extends Service implements PluginListener {
 	private List<PluginDescriptor> availablePlugins;
 	private ModuleManager moduleManager;
 	
+	
 	public static File getDescriptorFolder(Context context) {
 		return new File(context.getFilesDir(), CoreService.DESCRIPTOR_FOLDER);
 	}
 
 	
 	public static File getJarFolder(Context context) {
-		return new File(context.getFilesDir(), CoreService.JAR_FOLDER);
+		File ret = new File(context.getFilesDir(), CoreService.JAR_FOLDER);
+		Log.e(TAG, "JAR path : " + ret.getAbsolutePath());
+		return ret;
 	}
 	
 	public class CoreBinder extends Binder {
@@ -73,8 +76,7 @@ public class CoreService extends Service implements PluginListener {
 		return binder;
 	}
 
-	@Override
-	public void onStart(Intent intent, int startId) {
+	public void init() {
 		if (!started) {
 			Log.i(TAG, "Starting CoreService!");
 			started = true;
@@ -113,7 +115,13 @@ public class CoreService extends Service implements PluginListener {
 	            GCMRegistrar.register(this, SENDER_ID);
 	        } else {
 	        	Log.i("GCM registration","Device is already registered on GCM: " +registration_ID);
-            	registerWithBackend();
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						registerWithBackend();
+					}
+				}).start();
 	        }
 			
 			
@@ -140,8 +148,16 @@ public class CoreService extends Service implements PluginListener {
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		super.onStartCommand(intent, flags, startId);
+		init();
 		if (intent.getAction() != null && intent.getAction().equals(REGISTER_DEVICE_COMMAND)) {
-			registerWithBackend();
+			// Register on new thread
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					registerWithBackend();
+				}
+			}).start();
 		}
 		return Service.START_STICKY;
 	}
