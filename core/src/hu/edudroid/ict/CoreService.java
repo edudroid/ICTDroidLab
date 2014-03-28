@@ -25,6 +25,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -52,6 +54,7 @@ public class CoreService extends Service implements PluginListener {
 	private boolean started = false;
 	private List<PluginDescriptor> availablePlugins;
 	private ModuleManager moduleManager;
+	private WakeLock wl;
 	
 	
 	public static File getDescriptorFolder(Context context) {
@@ -77,9 +80,12 @@ public class CoreService extends Service implements PluginListener {
 	}
 
 	public void init() {
-		if (!started) {
+		if (!started) {			
 			Log.i(TAG, "Starting CoreService!");
 			started = true;
+			PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+			wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+			wl.acquire();
 			// Download available plugin list
 			new Thread(new Runnable() {
 				
@@ -122,12 +128,8 @@ public class CoreService extends Service implements PluginListener {
 						registerWithBackend();
 					}
 				}).start();
-	        }
-			
-			
-			Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
-			sendBroadcast(mIntent);
-			
+	        }			
+			pollPlugins();
 			// Process descriptor files
 			// Copy modules from assets at startup.
 			try {
@@ -237,7 +239,7 @@ public class CoreService extends Service implements PluginListener {
 	
 	@Override
 	public void onDestroy() {
-		
+		wl.release();			
 		Log.e(TAG, "Service destroyed");
 		super.onDestroy();
 	}
@@ -245,11 +247,13 @@ public class CoreService extends Service implements PluginListener {
 	@Override
 	public boolean newPlugin(Plugin plugin) {
 		Log.i(TAG,"newPlugin: "+plugin.getName());
-		pluginCollection.newPlugin(plugin);
-		for (PluginListener listener : pluginListeners) {
-			listener.newPlugin(plugin);
+		if (pluginCollection.newPlugin(plugin)) {
+			for (PluginListener listener : pluginListeners) {
+				listener.newPlugin(plugin);
+			}
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 
@@ -277,5 +281,12 @@ public class CoreService extends Service implements PluginListener {
 		String deviceName = CoreConstants.getString(CoreConstants.DEVICE_NAME_KEY, CoreConstants.DEFAULT_DEVICE_NAME, this);
     	boolean registered = ServerUtilities.registerDevice(this, imei, deviceName, GCMRegistrar.getRegistrationId(this), sdkVersion, null);
 		Log.e("Device registered", "Success: " + registered);
+	}
+
+
+	public void pollPlugins() {
+		Log.e(TAG, "Polling plugins");
+		Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
+		sendBroadcast(mIntent);
 	}	
 }
