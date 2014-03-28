@@ -45,7 +45,10 @@ public class PluginListActivity extends ActivityBase implements PluginListener,
 	@Override
 	protected void onResume() {
 		super.onResume();
-		refreshPluginlist();
+		if(service != null) {
+			service.pollPlugins();
+			refreshPluginlist();
+		}
 	}
 
 	private void refreshPluginlist() {
@@ -79,9 +82,6 @@ public class PluginListActivity extends ActivityBase implements PluginListener,
 		switch (view.getId()) {
 			case R.id.btn_refresh: {
 				refreshPluginlist();
-				Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
-				sendBroadcast(intent);
-				Log.d(TAG, "Sent broadcast intent " + intent);
 				break;
 			}
 			case R.id.installPluginButton: {
