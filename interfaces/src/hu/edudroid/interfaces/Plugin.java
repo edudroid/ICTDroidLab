@@ -3,10 +3,19 @@ package hu.edudroid.interfaces;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Interface that provides description of the plugin and makes it's methods available to both the communication interface both the plugin collection.
+ * @author lajthabalazs
+ *
+ */
 public interface Plugin {
 
 	String getName();
 	String getPackageName();
+	/**
+	 * Enables targeted messages to the receiver component. This means that only a single broadcast receiver class can handle the internal intents.
+	 * @return The fully qualified class name of the broadcast receiver.
+	 */
 	String getReceiverClassName();
 	String getAuthor();
 	String getDescription();
