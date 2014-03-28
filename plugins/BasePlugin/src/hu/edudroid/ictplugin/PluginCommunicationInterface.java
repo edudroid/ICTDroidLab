@@ -3,9 +3,7 @@ package hu.edudroid.ictplugin;
 import hu.edudroid.interfaces.AsyncMethodException;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
-import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginResult;
-import hu.edudroid.interfaces.PluginResultListener;
 import hu.edudroid.interfaces.Quota;
 import hu.edudroid.utils.Utils;
 
@@ -15,24 +13,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-public  abstract class PluginCommunicationInterface extends BroadcastReceiver implements Plugin {
+public class PluginCommunicationInterface {
 	
 	private static final String TAG = PluginCommunicationInterface.class.getName();
 	
-	@Override
+	private Plugin plugin;
+	
+	/**
+	 * @param plugin
+	 */
+	public PluginCommunicationInterface (Plugin plugin) {
+		this.plugin = plugin;
+	}
+	
 	public void onReceive(Context context, Intent intent) {
 		Log.d(TAG, "Intent received " + intent.getAction());
 		if (intent.getAction().equals(Constants.INTENT_ACTION_PLUGIN_QUOTAS)) {
 			Intent response = new Intent(Constants.INTENT_ACTION_QUOTA_DESCRIPTION);
-			response.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, getName());
+			response.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, plugin.getName());
 			
 			String quotaDescr = "";
-			final List<Quota> quotas = getQuotas();
+			final List<Quota> quotas = plugin.getQuotas();
 			for (int i = 0; i < quotas.size(); i++){
 				quotaDescr += Quota.codeQuota(quotas.get(i));
 				if (i != quotas.size() - 1)
@@ -47,16 +52,16 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver im
 			Intent response = new Intent();
 			response = new Intent(Constants.INTENT_ACTION_DESCRIBE);
 			response.putExtra(Constants.INTENT_EXTRA_KEY_DESCRIBE_TYPE, Constants.INTENT_EXTRA_VALUE_REPORT);
-			response.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, getName());
-			response.putExtra(Constants.INTENT_EXTRA_KEY_PACKAGE_NAME, getPackageName());
-			response.putExtra(Constants.INTENT_EXTRA_KEY_RECEIVER_CLASS_NAME, getReceiverClassName());
-			response.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_AUTHOR, getAuthor());
-			response.putExtra(Constants.INTENT_EXTRA_KEY_DESCRIPTION, getDescription());
-			response.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, getVersionCode());
+			response.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, plugin.getName());
+			response.putExtra(Constants.INTENT_EXTRA_KEY_PACKAGE_NAME, plugin.getPackageName());
+			response.putExtra(Constants.INTENT_EXTRA_KEY_RECEIVER_CLASS_NAME, plugin.getReceiverClassName());
+			response.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_AUTHOR, plugin.getAuthor());
+			response.putExtra(Constants.INTENT_EXTRA_KEY_DESCRIPTION, plugin.getDescription());
+			response.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, plugin.getVersionCode());
 			response.putStringArrayListExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_METHODS,
-					new ArrayList<String>(getMethodNames()));
+					new ArrayList<String>(plugin.getMethodNames()));
 			response.putStringArrayListExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_EVENTS,
-					new ArrayList<String>(getAllEvents()));
+					new ArrayList<String>(plugin.getAllEvents()));
 			context.sendBroadcast(response);
 		} 
 		
@@ -69,7 +74,7 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver im
 			try {
 				params = Utils.byteArrayToMap(bytes);
 				try {
-					PluginResult result = callMethodSync(callId, methodName, params, quotaLimits, context);
+					PluginResult result = plugin.callMethodSync(callId, methodName, params, quotaLimits, context);
 					reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, methodName, result, context);
 				} 
 				catch (AsyncMethodException a){
@@ -91,8 +96,8 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver im
 				
 		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER);
 		intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, callId);
-		intent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, getName());
-		intent.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, getVersionCode());
+		intent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, plugin.getName());
+		intent.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, plugin.getVersionCode());
 		intent.putExtra(Constants.INTENT_EXTRA_METHOD_NAME, method);
 		byte[] resultArray = Utils.mapToByteArray(results.getResult());
 		// TODO send back quota consumption
@@ -105,45 +110,13 @@ public  abstract class PluginCommunicationInterface extends BroadcastReceiver im
 
 	public void fireEvent(String eventName, Map<String, Object> result, Context context) {
 		Intent intent = new Intent(Constants.INTENT_ACTION_PLUGIN_EVENT);
-		intent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, getName());
-		intent.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, getVersionCode());
+		intent.putExtra(Constants.INTENT_EXTRA_KEY_PLUGIN_ID, plugin.getName());
+		intent.putExtra(Constants.INTENT_EXTRA_KEY_VERSION, plugin.getVersionCode());
 		intent.putExtra(Constants.INTENT_EXTRA_KEY_EVENT_NAME, eventName);
 		byte[] resultArray = Utils.mapToByteArray(result);
 		if (resultArray != null) {
 			intent.putExtra(Constants.INTENT_EXTRA_VALUE_RESULT, resultArray);
 		}
 		context.sendBroadcast(intent);
-	}
-
-	@Override
-	public long callMethodAsync(String method, Map<String, Object> parameters, PluginResultListener listener){
-		throw new UnsupportedOperationException("Can't call async method on plugin.");
-	}
-
-	@Override
-	public long callMethodAsync(String method, Map<String, Object> parameters, PluginResultListener listener, Map<Long, Double> quotaLimits) {
-		throw new UnsupportedOperationException("Can't call async method on plugin.");
-	}
-
-	@Override
-	public void registerEventListener(String eventName, PluginEventListener listener) {
-		throw new UnsupportedOperationException("You have to register the listener on PluginAdapter...");
-	}
-
-	@Override
-	public void unregisterEventListener(String eventName,
-			PluginEventListener listener) {
-		throw new UnsupportedOperationException("You have to register the listener on PluginAdapter.");
-		
-	}
-
-	@Override
-	public void unregisterEventListener(PluginEventListener listener) {
-		throw new UnsupportedOperationException("You have to unregister the listener on PluginAdapter.");
-	}
-
-	@Override
-	public void cancelCallsForListener(PluginResultListener listener) {
-		throw new UnsupportedOperationException("Can't cancel a call here.");
 	}
 }

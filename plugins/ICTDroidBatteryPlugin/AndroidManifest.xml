@@ -15,7 +15,24 @@
         android:allowBackup="false">
         
 		<receiver
-            android:name="hu.edudroid.ict_plugin_battery.BatteryPlugin"
+            android:name="BootListener"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+		<receiver
+            android:name="ScreenListener"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.SCREEN_ON"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SCREEN_OFF"/>
+            </intent-filter>
+            		</receiver>
+    		<receiver
+            android:name="BatteryListener"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -26,17 +43,21 @@
             </intent-filter>
   			<intent-filter>
   			    <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+  			</intent-filter>
+  			<intent-filter>
     			<action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
   			</intent-filter>
-            </receiver>
-        
-        <activity
-            android:name="hu.edudroid.ict_plugin_battery.MainActivity"
-            android:screenOrientation="portrait">
+  			<intent-filter>
+    			<action android:name="android.intent.action.BATTERY_CHANGED"/>
+  			</intent-filter>
+		</receiver>
+		
+		<activity android:name="BatteryPluginActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-    </application>
+		</activity>
+		<service android:name="BatteryService"></service>
+	</application>
 </manifest>

@@ -1,10 +1,5 @@
 package hu.edudroid.ict_plugin_battery;
 
-import hu.edudroid.ictplugin.PluginCommunicationInterface;
-import hu.edudroid.interfaces.AsyncMethodException;
-import hu.edudroid.interfaces.PluginResult;
-import hu.edudroid.interfaces.Quota;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,20 +10,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
+import hu.edudroid.interfaces.AsyncMethodException;
+import hu.edudroid.interfaces.BasePlugin;
+import hu.edudroid.interfaces.Plugin;
+import hu.edudroid.interfaces.PluginResult;
+import hu.edudroid.interfaces.Quota;
 
-public class BatteryPlugin extends PluginCommunicationInterface {
-
-	private static BatteryPlugin instance;
-
-	public static BatteryPlugin getInstance() {
+public class BatteryPlugin extends BasePlugin {
+	
+	private static Plugin instance;
+	public static Plugin getInstance() {
 		if (instance == null) {
 			instance = new BatteryPlugin();
 		}
 		return instance;
 	}
-	
+
+
 	private static final String PLUGIN_NAME = "Battery plugin";
 	private static final String PLUGIN_DESCRIPTION = "This plugin let's researchers access the battery status of the device.";
+	private static final String VERSION_CODE = "v1.0";
+	private static final String PLUGIN_AUTHOR = "Lajtha Balázs";
 
 	private static final String GET_BATTERY_STATUS = "Get battery status";
 
@@ -41,78 +43,38 @@ public class BatteryPlugin extends PluginCommunicationInterface {
 	protected static final String CHARGER_TYPE_USB = "USB";
 	protected static final String CHARGER_TYPE_AC = "AC";
 
-	private static final String VERSION_CODE = "v1.0";
-
+	protected static final String SCREEN_STATE_CHANGED = "Screen state changed";
+	
+	protected static final Object SCREEN_STATE_ON = "On";
+	protected static final String SCREEN_STATE = "Screen state";
+	protected static final Object SCREEN_STATE_OFF = "Off";
+	
 	private static final List<String> methods;
 	private static final List<String> events;
-	private static final String PLUGIN_AUTHOR = "Lajtha Balázs";
+	private static List<Quota> quotas;
+
 	@SuppressWarnings("unused")
 	private static final String TAG = BatteryPlugin.class.getName();
-
+	
 	static {
 		List<String> tmpMethods = new ArrayList<String>();
 		List<String> tmpEvents = new ArrayList<String>();
+		List<Quota> tmpQuotas = new ArrayList<Quota>();
 
 		tmpMethods.add(GET_BATTERY_STATUS);
 		tmpEvents.add(BATTERY_LEVEL_CHANGED);
 		tmpEvents.add(CHARGING_STATE_CHANGED);
+		tmpEvents.add(SCREEN_STATE_CHANGED);
 
+		quotas = Collections.unmodifiableList(tmpQuotas);
 		methods = Collections.unmodifiableList(tmpMethods);
 		events = Collections.unmodifiableList(tmpEvents);
 	}
 	
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		if (intent.getAction().equals(Intent.ACTION_POWER_CONNECTED)) {
-			BatteryPlugin batteryPlugin = BatteryPlugin.getInstance();
-			Map<String, Object> values = BatteryPlugin.processIntent(intent);
-			batteryPlugin.event(BatteryPlugin.BATTERY_LEVEL_CHANGED, values, context);
-		} else {
-			super.onReceive(context, intent);
-		}
+	public BatteryPlugin() {
+		super(PLUGIN_NAME, BatteryPlugin.class.getPackage().getName(), BatteryListener.class.getName(), PLUGIN_AUTHOR,
+				PLUGIN_DESCRIPTION, VERSION_CODE, events, methods, quotas);
 	}
-
-	@Override
-	public String getVersionCode() {
-		return VERSION_CODE;
-	}
-
-	@Override
-	public String getName() {
-		return PLUGIN_NAME;
-	}
-	
-	@Override
-	public String getPackageName() {
-		return BatteryPlugin.class.getPackage().getName();
-	}
-
-	
-	@Override
-	public String getReceiverClassName() {
-		return BatteryPlugin.class.getName();
-	}
-
-	@Override
-	public List<String> getMethodNames() {
-		return methods;
-	}
-
-	@Override
-	public String getDescription() {
-		return PLUGIN_DESCRIPTION;
-	}
-
-	@Override
-	public String getAuthor() {
-		return PLUGIN_AUTHOR;
-	}
-
-	@Override
-	public List<String> getAllEvents() {
-		return events;
-	}
-
 
 	@Override
 	public PluginResult callMethodSync(long callId, String method,
@@ -127,18 +89,7 @@ public class BatteryPlugin extends PluginCommunicationInterface {
 			return null;
 		}
 	}
-
-	protected void event(String eventName, Map<String, Object> result, Context context) {
-		super.fireEvent(eventName, result, context);
-	}
-
-	@Override
-	public List<Quota> getQuotas() {
-		List<Quota> quotas = new ArrayList<Quota>();
-		// TODO add quotas
-		return quotas;
-	}
-
+	
 	public static Map<String, Object> processIntent(Intent intent) {
 		Map<String, Object> values = new HashMap<String, Object>();
 		int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
