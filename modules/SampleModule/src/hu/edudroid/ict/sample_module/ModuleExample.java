@@ -50,7 +50,7 @@ public class ModuleExample extends Module {
 
 	@Override
 	public void onEvent(String plugin, String version, String eventName, Map<String, Object> extras) {
-		mLogger.i(TAG, "Event received");
+		mLogger.i(TAG, "Event received " + plugin + eventName);
 	}
 
 	@Override
