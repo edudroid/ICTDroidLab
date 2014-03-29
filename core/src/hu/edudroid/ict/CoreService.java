@@ -1,6 +1,7 @@
 package hu.edudroid.ict;
 
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
+import hu.edudroid.ict.plugins.PluginAdapter;
 import hu.edudroid.ict.plugins.PluginDescriptor;
 import hu.edudroid.ict.plugins.PluginIntentReceiver;
 import hu.edudroid.ict.utils.CoreConstants;
@@ -44,7 +45,7 @@ public class CoreService extends Service implements PluginListener {
     public static final String SENDER_ID = "1017069233076";
 	private static final String TAG = "CoreService";
 
-	private PluginIntentReceiver mBroadcast;
+	private PluginIntentReceiver pluginIntentReceiver;
 	
 	private CoreBinder binder = new CoreBinder();
 	
@@ -96,19 +97,18 @@ public class CoreService extends Service implements PluginListener {
 			}).start();
 			
 			
-			mBroadcast = new PluginIntentReceiver();
+			pluginIntentReceiver = new PluginIntentReceiver(this);
+			pluginIntentReceiver.registerPluginDetailsListener(this);
 			pluginCollection = new AndroidPluginCollection();
 			moduleManager = new ModuleManager(this);
 			Log.i(TAG, "Registering receivers...");
-			registerReceiver(mBroadcast, new IntentFilter(
+			registerReceiver(pluginIntentReceiver, new IntentFilter(
 					Constants.INTENT_ACTION_DESCRIBE));
-			registerReceiver(mBroadcast, new IntentFilter(
+			registerReceiver(pluginIntentReceiver, new IntentFilter(
 					Constants.INTENT_ACTION_PLUGIN_CALLMETHOD_ANSWER));
-			registerReceiver(mBroadcast, new IntentFilter(
+			registerReceiver(pluginIntentReceiver, new IntentFilter(
 					Constants.INTENT_ACTION_PLUGIN_EVENT));
 			Log.i(TAG, "Receivers are registered!");
-	
-			mBroadcast.registerPluginDetailsListener(this);
 			
 			// Register GCM 
 	        GCMRegistrar.checkDevice(this);

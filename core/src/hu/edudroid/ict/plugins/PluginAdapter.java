@@ -29,7 +29,7 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	private final String					mAuthor;
 	private final String					mDescription;
 	private final String					mVersionCode;
-	private final PluginIntentReceiver 		mBroadcast;
+	private final PluginIntentReceiver 		pluginIntentReceiver;
 
 	private Context							mContext;
 	private List<String>				mPluginMethods;
@@ -49,7 +49,7 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 					final String versionCode,
 					final List<String> pluginMethods,
 					final List<String> events,
-					PluginIntentReceiver broadcast,
+					PluginIntentReceiver pluginIntentReceiver,
 					final Context context) {
 		mName = name;
 		mPackage = packageName;
@@ -59,7 +59,7 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 		mVersionCode = versionCode;
 		mPluginMethods = pluginMethods;
 		mEvents = events;
-		mBroadcast = broadcast;
+		this.pluginIntentReceiver = pluginIntentReceiver;
 		
 		mCallBackIdentification = new HashMap<Long, PluginResultListener>();
 		mEventListeners = new HashMap<String,HashSet<PluginEventListener>>();
@@ -120,7 +120,7 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	@Override
 	public long callMethodAsync(String method, Map<String, Object> params, PluginResultListener listener, Map<Long, Double> quotaLimits){		
 		
-		mBroadcast.registerResultListener(this);
+		pluginIntentReceiver.registerResultListener(this);
 		
 		mCallBackIdentification.put(mCallMethodID, listener);
 
@@ -186,7 +186,7 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 		if (listeners == null) {
 			listeners = new HashSet<PluginEventListener>();
 			mEventListeners.put(eventName, listeners);
-			mBroadcast.registerEventListener(this);
+			pluginIntentReceiver.registerEventListener(this);
 		}
 		if (!listeners.contains(listener)) {
 			listeners.add(listener);

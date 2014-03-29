@@ -28,7 +28,7 @@ public class ModuleExample extends Module {
 	@Override
 	public void init(){
 		mLogger.e(TAG, "Module init...");
-		mTimeService.runPeriodic(1000, 60000, 0, this);
+		mTimeService.runPeriodic(1000, 600000, 0, this);		
 	}
 	
 	@Override
@@ -50,14 +50,17 @@ public class ModuleExample extends Module {
 
 	@Override
 	public void onEvent(String plugin, String version, String eventName, Map<String, Object> extras) {
-		mLogger.i(TAG, "Event received " + plugin + eventName);
+		mLogger.i(TAG, "Event received " + plugin + " " + eventName + " " + extras);
 	}
 
 	@Override
 	public void onTimerEvent() {
-		mLogger.i(TAG, "New module example run at " + dateFormatter.format(new Date()));
+		mLogger.i(TAG, "Module example 10m run at " + dateFormatter.format(new Date()));
 		Plugin plugin = mPluginCollection.getPluginByName(SAMPLE_PLUGIN_NAME);
 		if (plugin != null) {
+			plugin.registerEventListener("Screen state changed", this);
+			plugin.registerEventListener("Battery level changed", this);
+			plugin.registerEventListener("Charging state changed", this);
 			plugin.callMethodAsync(FIRST_METHOD, null, this);
 		}
 	}
