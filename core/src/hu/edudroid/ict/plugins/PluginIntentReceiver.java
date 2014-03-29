@@ -1,6 +1,8 @@
 package hu.edudroid.ict.plugins;
 
+import hu.edudroid.interfaces.BasePlugin;
 import hu.edudroid.interfaces.Constants;
+import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginListener;
 import hu.edudroid.interfaces.PluginResultListener;
@@ -18,10 +20,13 @@ import android.util.Log;
 public class PluginIntentReceiver extends BroadcastReceiver {
 	
 	private final String TAG = PluginIntentReceiver.class.getName();
-
 	private final HashSet<PluginListener> pluginListeners = new HashSet<PluginListener>();
 	private final HashSet<PluginResultListener> mResultListeners = new HashSet<PluginResultListener>();
 	private final HashSet<PluginEventListener> mPluginEventListeners = new HashSet<PluginEventListener>();
+
+	public PluginIntentReceiver() {
+	}
+
 
 	public void registerPluginDetailsListener(PluginListener listener){
 		pluginListeners.add(listener);
@@ -75,18 +80,18 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 		}
 		if(intent.getAction().equals(Constants.INTENT_ACTION_DESCRIBE)){
 			if(extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIBE_TYPE).equals(Constants.INTENT_EXTRA_VALUE_REPORT)) {
+				Plugin plugin = new BasePlugin(
+						extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_ID),
+						extras.getString(Constants.INTENT_EXTRA_KEY_PACKAGE_NAME),
+						extras.getString(Constants.INTENT_EXTRA_KEY_RECEIVER_CLASS_NAME),
+						extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_AUTHOR),
+						extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIPTION),
+						extras.getString(Constants.INTENT_EXTRA_KEY_VERSION),
+						extras.getStringArrayList(Constants.INTENT_EXTRA_KEY_PLUGIN_EVENTS),
+						extras.getStringArrayList(Constants.INTENT_EXTRA_KEY_PLUGIN_METHODS),
+						null);
 				for (PluginListener listener: pluginListeners) {
-				listener.newPlugin(new PluginAdapter(
-							extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_ID),
-							extras.getString(Constants.INTENT_EXTRA_KEY_PACKAGE_NAME),
-							extras.getString(Constants.INTENT_EXTRA_KEY_RECEIVER_CLASS_NAME),
-							extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_AUTHOR),
-							extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIPTION),
-							extras.getString(Constants.INTENT_EXTRA_KEY_VERSION),
-							extras.getStringArrayList(Constants.INTENT_EXTRA_KEY_PLUGIN_METHODS),
-							extras.getStringArrayList(Constants.INTENT_EXTRA_KEY_PLUGIN_EVENTS),
-							this,
-							context));
+					listener.newPlugin(plugin);
 				}
 			}
 			if(extras.getString(Constants.INTENT_EXTRA_KEY_DESCRIBE_TYPE).equals(Constants.INTENT_EXTRA_VALUE_ERROR)){
@@ -96,7 +101,7 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 				final String version = extras.getString(Constants.INTENT_EXTRA_KEY_VERSION);
 				final String errorMessage = extras.getString(Constants.INTENT_EXTRA_KEY_ERROR_MESSAGE);
 				for (PluginResultListener listener : mResultListeners) {
-				listener.onError(id, plugin, version, method, errorMessage);
+					listener.onError(id, plugin, version, method, errorMessage);
 				}
 			}
 		}
@@ -110,6 +115,7 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 				Map<String, Object> data = Utils.byteArrayToMap(bytes);
 				if (data != null) {
 					Log.i(TAG, "Plugin event received " + plugin + " " + eventName + " data: " + data.toString());
+					// TODO forward event to adapter
 				} else {
 					Log.i(TAG, "Plugin event received " + plugin + " " + eventName + " with no data.");
 				}

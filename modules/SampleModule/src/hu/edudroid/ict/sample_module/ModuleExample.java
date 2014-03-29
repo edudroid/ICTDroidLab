@@ -15,22 +15,33 @@ public class ModuleExample extends Module {
 	
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SSS");
 	
-	private static final String SAMPLE_PLUGIN_NAME = "Sample plugin";
+	private static final String BATTERY_PLUGIN_NAME = "Battery plugin";
 	
 	public ModuleExample(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice) {
 		super(prefs, logger, pluginCollection, timeservice);
 	}
 	
-	private static final String TAG = "ModuleExample";
+	private static final String TAG = ModuleExample.class.getName();
 
-	private static final String FIRST_METHOD = "First sample method";
-	
 	@Override
 	public void init(){
 		mLogger.e(TAG, "Module init...");
-		mTimeService.runPeriodic(1000, 600000, 0, this);		
+		mTimeService.runPeriodic(1000, 600000, 0, this);	
+		registerPluginListeners();
 	}
 	
+	private void registerPluginListeners() {
+		Plugin plugin = mPluginCollection.getPluginByName(BATTERY_PLUGIN_NAME);
+		if (plugin != null) {
+			mLogger.e(TAG, "Plugin available, registering for events.");
+			plugin.registerEventListener("Screen state changed", this);
+			plugin.registerEventListener("Battery level changed", this);
+			plugin.registerEventListener("Charging state changed", this);
+		} else {
+			mLogger.e(TAG, "Plugin not yet available.");			
+		}
+	}
+
 	@Override
 	public void onResult(long id, String plugin, String pluginVersion,
 			String methodName, Map<String, Object> result) {
@@ -56,12 +67,10 @@ public class ModuleExample extends Module {
 	@Override
 	public void onTimerEvent() {
 		mLogger.i(TAG, "Module example 10m run at " + dateFormatter.format(new Date()));
-		Plugin plugin = mPluginCollection.getPluginByName(SAMPLE_PLUGIN_NAME);
+		Plugin plugin = mPluginCollection.getPluginByName(BATTERY_PLUGIN_NAME);
 		if (plugin != null) {
-			plugin.registerEventListener("Screen state changed", this);
-			plugin.registerEventListener("Battery level changed", this);
-			plugin.registerEventListener("Charging state changed", this);
-			plugin.callMethodAsync(FIRST_METHOD, null, this);
+			registerPluginListeners();
+			plugin.callMethodAsync("Get battery status", null, this);
 		}
 	}
-} 
+}

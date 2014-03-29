@@ -1,7 +1,6 @@
 package hu.edudroid.ict;
 
 import hu.edudroid.ict.plugins.AndroidPluginCollection;
-import hu.edudroid.ict.plugins.PluginAdapter;
 import hu.edudroid.ict.plugins.PluginDescriptor;
 import hu.edudroid.ict.plugins.PluginIntentReceiver;
 import hu.edudroid.ict.utils.CoreConstants;
@@ -97,9 +96,9 @@ public class CoreService extends Service implements PluginListener {
 			}).start();
 			
 			
-			pluginIntentReceiver = new PluginIntentReceiver(this);
+			pluginIntentReceiver = new PluginIntentReceiver();
 			pluginIntentReceiver.registerPluginDetailsListener(this);
-			pluginCollection = new AndroidPluginCollection();
+			pluginCollection = new AndroidPluginCollection(this, pluginIntentReceiver);
 			moduleManager = new ModuleManager(this);
 			Log.i(TAG, "Registering receivers...");
 			registerReceiver(pluginIntentReceiver, new IntentFilter(

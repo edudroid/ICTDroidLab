@@ -21,12 +21,12 @@ public class ScreenListener extends BroadcastReceiver {
 		if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)){
 			Log.d(TAG, "Screen off");
 			Map<String, Object> values = new HashMap<String, Object>();
-			values.put(BatteryPlugin.SCREEN_STATE, BatteryPlugin.SCREEN_STATE_ON);
+			values.put(BatteryPlugin.SCREEN_STATE, BatteryPlugin.SCREEN_STATE_OFF);
 			communicationInterface.fireEvent(BatteryPlugin.SCREEN_STATE_CHANGED, values, context);
 		} else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)){
 			Log.d(TAG, "Screen on");
 			Map<String, Object> values = new HashMap<String, Object>();
-			values.put(BatteryPlugin.SCREEN_STATE, BatteryPlugin.SCREEN_STATE_OFF);
+			values.put(BatteryPlugin.SCREEN_STATE, BatteryPlugin.SCREEN_STATE_ON);
 			communicationInterface.fireEvent(BatteryPlugin.SCREEN_STATE_CHANGED, values, context);
 		}else {
 			Log.e(TAG, "Unknown event received: " + intent.getAction());

@@ -23,21 +23,21 @@ import android.util.Log;
 public class PluginAdapter implements Plugin, PluginResultListener, PluginEventListener {
 
 	private static final String TAG = PluginAdapter.class.getName();
-	private final String					mName;
-	private final String					mPackage;
-	private final String					mReceiverClassName;
-	private final String					mAuthor;
-	private final String					mDescription;
-	private final String					mVersionCode;
-	private final PluginIntentReceiver 		pluginIntentReceiver;
+	private final String name;
+	private final String packageName;
+	private final String receiverClassName;
+	private final String author;
+	private final String description;
+	private final String versionCode;
+	private final PluginIntentReceiver pluginIntentReceiver;
 
-	private Context							mContext;
-	private List<String>				mPluginMethods;
-	private List<String>					mEvents;
+	private Context context;
+	private List<String> pluginMethods;
+	private List<String> events;
 	
 	
-	private Map<Long, PluginResultListener> mCallBackIdentification;
-	private Map<String,HashSet<PluginEventListener>> mEventListeners;
+	private Map<Long, PluginResultListener> mCallBackIdentification = new HashMap<Long, PluginResultListener>();
+	private Map<String,HashSet<PluginEventListener>> mEventListeners = new HashMap<String,HashSet<PluginEventListener>>();
 	
 	private static long mCallMethodID = 0;
 
@@ -51,54 +51,73 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 					final List<String> events,
 					PluginIntentReceiver pluginIntentReceiver,
 					final Context context) {
-		mName = name;
-		mPackage = packageName;
-		mReceiverClassName = className;
-		mAuthor = author;
-		mDescription = description;
-		mVersionCode = versionCode;
-		mPluginMethods = pluginMethods;
-		mEvents = events;
+		this.name = name;
+		this.packageName = packageName;
+		this.receiverClassName = className;
+		this.author = author;
+		this.description = description;
+		this.versionCode = versionCode;
+		this.pluginMethods = pluginMethods;
+		this.events = events;
 		this.pluginIntentReceiver = pluginIntentReceiver;
+		this.context = context;
 		
-		mCallBackIdentification = new HashMap<Long, PluginResultListener>();
-		mEventListeners = new HashMap<String,HashSet<PluginEventListener>>();
-		mContext = context;
+		pluginIntentReceiver.registerEventListener(this);
+		pluginIntentReceiver.registerResultListener(this);
+	}
+	
+	public PluginAdapter(Plugin plugin,
+			PluginIntentReceiver pluginIntentReceiver,
+			final Context context) {
+		this(
+				plugin.getName(),
+				plugin.getPackageName(),
+				plugin.getReceiverClassName(),
+				plugin.getAuthor(),
+				plugin.getDescription(),
+				plugin.getVersionCode(),
+				plugin.getMethodNames(),
+				plugin.getAllEvents(),
+				pluginIntentReceiver,
+				context				
+				);
 	}
 
+
+	
 	@Override
 	public String getName() {
-		return mName;
+		return name;
 	}
 
 	@Override
 	public String getPackageName() {
-		return mPackage;
+		return packageName;
 	}
 
 	@Override
 	public String getReceiverClassName() {
-		return mReceiverClassName;
+		return receiverClassName;
 	};
 
 	@Override
 	public String getAuthor() {
-		return mAuthor;
+		return author;
 	}
 
 	@Override
 	public String getDescription() {
-		return mDescription;
+		return description;
 	}
 
 	@Override
 	public String getVersionCode() {
-		return mVersionCode;
+		return versionCode;
 	}
 	
 	@Override
 	public List<String> getMethodNames(){
-		return mPluginMethods;
+		return pluginMethods;
 	}
 	
 	@Override
@@ -110,7 +129,7 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	
 	@Override
 	public List<String> getAllEvents() {
-		return mEvents;
+		return events;
 	}
 	
 	public long callMethodAsync(String method, Map<String, Object> params, PluginResultListener listener){
@@ -128,14 +147,14 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 		// TODO if no limits are set, retrieve max limit from system
 		
 		Intent intent = new Intent(Constants.INTENT_ACTION_CALL_METHOD);
-		intent.setComponent(new ComponentName(mPackage, mReceiverClassName));
+		intent.setComponent(new ComponentName(packageName, receiverClassName));
 		intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, mCallMethodID);
 		intent.putExtra(Constants.INTENT_EXTRA_METHOD_NAME, method);
 		byte[] paramBytes = Utils.mapToByteArray(params);
 		if (paramBytes != null) {
 			intent.putExtra(Constants.INTENT_EXTRA_METHOD_PARAMETERS, paramBytes);
 		}
-		mContext.sendBroadcast(intent);
+		context.sendBroadcast(intent);
 
 		return mCallMethodID++;
 	}
@@ -143,7 +162,7 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	@Override
 	public void onResult(long id, String plugin, String pluginVersion,
 			String methodName, Map<String, Object> result) {
-		if (plugin.equals(mName)) {
+		if (plugin.equals(name)) {
 			Log.d(TAG, "Received result from " + plugin + " for the callId " + id);
 			try{
 				mCallBackIdentification.remove(id).onResult(id, plugin, pluginVersion, methodName, result);
@@ -166,10 +185,13 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 
 	@Override
 	public void onEvent(String plugin, String version, String eventName, Map<String, Object> extras) {
+		Log.d(TAG, "Plugin event received " + plugin + " " + eventName);
 		if (plugin.equals(getName())) {
+			Log.e(TAG, "This is the plugin");
 			HashSet<PluginEventListener> listeners = mEventListeners.get(eventName);
 			if (listeners != null) {
 				for (PluginEventListener listener : listeners) {
+					Log.e(TAG, "Broadcasting event");
 					try {
 						listener.onEvent(plugin, version, eventName, extras);
 					} catch (Exception e) {

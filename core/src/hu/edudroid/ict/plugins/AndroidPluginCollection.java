@@ -10,17 +10,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import android.content.Context;
 import android.util.Log;
 
 public class AndroidPluginCollection implements PluginCollection, PluginListener {
 
 	private static final String TAG = "AndroidPluginCollection";
-	private static HashMap<String,Plugin> mPlugins;
+	private static HashMap<String,Plugin> mPlugins = new HashMap<String,Plugin>();
+	private Context context;
+	private PluginIntentReceiver pluginIntentReceiver;
 
-	public AndroidPluginCollection() {
-		if(mPlugins==null){
-			mPlugins = new HashMap<String,Plugin>();
-		}
+	public AndroidPluginCollection(Context context, PluginIntentReceiver pluginIntentReceiver) {
+		this.context = context;
+		this.pluginIntentReceiver = pluginIntentReceiver;
 	}
 
 	
@@ -44,7 +46,8 @@ public class AndroidPluginCollection implements PluginCollection, PluginListener
 		} else{
 			Log.i(TAG, "Plugin discovered " + plugin.getName());
 			synchronized (mPlugins) {
-				mPlugins.put(plugin.getName(), plugin);
+				Plugin pluginAdapter  = new PluginAdapter(plugin, pluginIntentReceiver, context);
+				mPlugins.put(plugin.getName(), pluginAdapter);
 			}
 			return true;
 		}

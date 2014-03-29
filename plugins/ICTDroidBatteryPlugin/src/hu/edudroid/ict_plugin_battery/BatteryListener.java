@@ -2,7 +2,6 @@ package hu.edudroid.ict_plugin_battery;
 
 import hu.edudroid.ictplugin.PluginCommunicationInterface;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import android.content.BroadcastReceiver;
@@ -32,16 +31,6 @@ public class BatteryListener extends BroadcastReceiver {
 			Log.e(TAG, "Power disconnected");
 			Map<String, Object> values = BatteryPlugin.processIntent(intent);
 			communicationInterface.fireEvent(BatteryPlugin.CHARGING_STATE_CHANGED, values, context);
-		} else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)){
-			Log.e(TAG, "Screen on");
-			Map<String, Object> values = new HashMap<String, Object>();
-			values.put(BatteryPlugin.SCREEN_STATE, BatteryPlugin.SCREEN_STATE_ON);
-			communicationInterface.fireEvent(BatteryPlugin.SCREEN_STATE_CHANGED, values, context);
-		} else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)){
-			Log.e(TAG, "Screen off");
-			Map<String, Object> values = new HashMap<String, Object>();
-			values.put(BatteryPlugin.SCREEN_STATE, BatteryPlugin.SCREEN_STATE_OFF);
-			communicationInterface.fireEvent(BatteryPlugin.SCREEN_STATE_CHANGED, values, context);
 		}else {
 			communicationInterface.onReceive(context, intent);
 		}

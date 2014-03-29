@@ -1,9 +1,10 @@
 package hu.edudroid.interfaces;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BasePlugin implements Plugin {
+public class BasePlugin implements Plugin {
 
 	private final String name;
 	private final String packageName;
@@ -22,8 +23,17 @@ public abstract class BasePlugin implements Plugin {
 		this.author = author;
 		this.description = description;
 		this.versionCode = versionCode;
+		if (allEvents == null) {
+			allEvents = new ArrayList<String>();
+		}
 		this.allEvents = allEvents;
+		if (methodNames == null) {
+			methodNames = new ArrayList<String>();
+		}
 		this.methodNames = methodNames;
+		if (quotas == null) {
+			quotas = new ArrayList<Quota>();
+		}
 		this.quotas = quotas;
 	}
 
@@ -104,5 +114,19 @@ public abstract class BasePlugin implements Plugin {
 	@Override
 	public void cancelCallsForListener(PluginResultListener listener) {
 		throw new UnsupportedOperationException("No listeners available on real plugins.");
+	}
+
+	@Override
+	public Map<Long, Double> getCostOfMethod(String method,
+			Map<String, Object> parameters) {
+		throw new UnsupportedOperationException("Don't use it on a data plugin.");
+	}
+	
+	@Override
+	public PluginResult callMethodSync(long callId, String method,
+			Map<String, Object> parameters, Map<Long, Double> quotaLimits,
+			Object context) throws AsyncMethodException,
+			MethodNotSupportedException {
+		throw new AsyncMethodException();
 	}
 }
