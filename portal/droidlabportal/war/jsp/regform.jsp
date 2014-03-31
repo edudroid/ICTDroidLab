@@ -29,6 +29,11 @@ if (request.getAttribute(Constants.ERROR) != null){
 				<input type="text" name="<%= Constants.EMAIL %>" id="<%= Constants.EMAIL %>" placeholder="Email" onFocus="this.select();" onMouseOut="javascript:return false;"/>
 				<input type="password" name="<%= Constants.PASSWORD %>" id="<%= Constants.PASSWORD %>" placeholder="Password" onFocus="this.select();" onMouseOut="javascript:return false;"/>
 				<input type="password" name="<%= Constants.PASSWORDCHECK %>" id="<%= Constants.PASSWORDCHECK %>" placeholder="Password check" onFocus="this.select();" onMouseOut="javascript:return false;"/>
+				<select name="<%= Constants.ROLE %>" id="<%= Constants.ROLE %>">
+				  <option value="<%= Constants.ROLE_USER %>">User</option>
+				  <option value="<%= Constants.ROLE_RESEARCHER %>">Researcher</option>
+				  <option value="<%= Constants.ROLE_ADMIN %>">Admin</option>
+				</select>
 				<input type="hidden" name="<%= Constants.WEB %>" id="<%= Constants.WEB %>" value="true">
 				<input type="submit" value="Register"/>
 			</form>

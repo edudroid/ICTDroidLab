@@ -117,6 +117,7 @@ public class LoginServlet extends HttpServlet {
 		// Log in user
         req.getSession().setAttribute(Constants.USER_KEY, user.getKey());
         req.getSession().setAttribute(Constants.EMAIL, email);
+        req.getSession().setAttribute(Constants.ROLE, user.getProperty(Constants.USER_ROLE_COLUMN));
 		if (req.getParameterMap().containsKey(Constants.WEB)) {
 			resp.sendRedirect("/userhome");
 		} else {

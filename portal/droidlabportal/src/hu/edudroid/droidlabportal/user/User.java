@@ -7,12 +7,14 @@ public class User {
 	private String givenName;
 	private String email;
 	private Key key;
+	private String role;
 	
-	public User(String familyName, String givenName, String email, Key key) {
+	public User(String familyName, String givenName, String email, Key key, String role) {
 		this.familyName = familyName;
 		this.givenName = givenName;
 		this.email = email;
 		this.key = key;
+		this.role = role;
 	}
 	
 	public String getFamilyName() {
@@ -38,6 +40,12 @@ public class User {
 	}
 	public void setKey(Key key) {
 		this.key = key;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
 	}
 	
 	

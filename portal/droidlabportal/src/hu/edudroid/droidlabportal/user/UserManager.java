@@ -33,10 +33,12 @@ public class UserManager {
 	public static User checkUser(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 		String email = (String)session.getAttribute(Constants.EMAIL);		
 		Key userKey = (Key)request.getSession().getAttribute(Constants.USER_KEY);
+		String role = (String)session.getAttribute(Constants.ROLE);
+		
 		// If user's session is not logged in yet, check for DroidLabLogin cookie
 		if (email != null) {
 			log.info("Email available in session " + email);
-			User user = new User(null, null, email, userKey);
+			User user = new User(null, null, email, userKey, role);
 			return user;
 		}
 		Cookie[] cookies = request.getCookies();
@@ -57,10 +59,12 @@ public class UserManager {
 						if (expirationDate > System.currentTimeMillis()) {
 							email = (String)user.getProperty(Constants.USER_EMAIL_COLUMN);
 							userKey = user.getKey();
+							role=(String)user.getProperty(Constants.USER_ROLE_COLUMN);
 							// Add user params to session
 							session.setAttribute(Constants.EMAIL, email);
 							session.setAttribute(Constants.USER_KEY, userKey);
-							User ret = new User(null, null, email, userKey);
+							session.setAttribute(Constants.ROLE, role);
+							User ret = new User(null, null, email, userKey, role);
 							log.info("Valid login cookie found for user " + email);
 							return ret;
 						} else {
@@ -69,6 +73,7 @@ public class UserManager {
 							cookie.setMaxAge(0);
 							session.removeAttribute(Constants.EMAIL);
 							session.removeAttribute(Constants.USER_KEY);
+							session.removeAttribute(Constants.ROLE);
 							response.addCookie(cookie);
 							System.out.println("Cookie timed out and removed.");
 							// Remove the cookie from the datastore

@@ -1,3 +1,5 @@
+<%@page import="hu.edudroid.droidlabportal.user.UserManager"%>
+<%@page import="hu.edudroid.droidlabportal.user.User"%>
 <%@page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory"%>
 <%@page import="com.google.appengine.api.blobstore.BlobstoreService"%>
 <%@page import="com.google.appengine.api.datastore.FetchOptions.Builder"%>
@@ -11,31 +13,17 @@
 <%@page import="hu.edudroid.droidlabportal.Constants"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.google.appengine.api.users.User" %>
-<%@ page import="com.google.appengine.api.users.UserService" %>
-<%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <jsp:include page="/jsp/header.jsp">
 	<jsp:param name="selected" value="<%=Constants.UPLOADMODULE %>" />
 </jsp:include>
 <%
-	String email = (String)session.getAttribute(Constants.EMAIL);
-	if (email == null) {
-		response.sendRedirect("/loginform");
-		return;
-	}
-	Key userKey = null;
-	try {
-		userKey = (Key)session.getAttribute(Constants.USER_KEY);
-	} catch (Exception e) {
-		response.sendRedirect("/loginform");
-		return;
-	}
-	if (userKey == null) {
-		response.sendRedirect("/loginform");
-		return;
-	}
+User user = UserManager.checkUser(session, request, response);
+if (user == null) {
+	response.sendRedirect("/loginform");
+	return;
+}
 %>
 <div id="contents">
 	<div id="tagline" class="clearfix">
@@ -48,7 +36,7 @@
 			</h1>
 <%
     BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-	UserService userService = UserServiceFactory.getUserService();
+	//UserService userService = UserServiceFactory.getUserService();
 	
 	if(request.getParameter("succes")!=null && request.getParameter("succes").equals("true")){
 		%><p>Upload succesful!</p> <%
