@@ -45,7 +45,7 @@
 	<jsp:param name="selected" value="<%=Constants.DEVICES %>" />
 </jsp:include>
 
-		<div>
+		<div class="main_content">
 			<h1> My Devices </h1>
 
 <%

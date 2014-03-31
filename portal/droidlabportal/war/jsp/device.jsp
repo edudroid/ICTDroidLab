@@ -57,7 +57,7 @@
 		<jsp:include page="/jsp/usersidemenu.jsp">
 			<jsp:param name="selected" value="<%=Constants.DEVICES %>" />
 		</jsp:include>
-		<div>
+		<div class="main_content">
 			<h1> <%= selectedDevice.getProperty(Constants.DEVICE_NAME_COLUMN) %> </h1>
 			<p>
 				<span>IMEI: <%= selectedDevice.getProperty(Constants.DEVICE_IMEI_COLUMN) %></span><br/>

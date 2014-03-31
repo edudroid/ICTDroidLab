@@ -24,7 +24,7 @@
 			<li><a>Profile</a></li>
 			</ul>
 		</div>
-		<div>
+		<div class="main_content">
 			<h1>
 				Welcome to your lab!
 			</h1>

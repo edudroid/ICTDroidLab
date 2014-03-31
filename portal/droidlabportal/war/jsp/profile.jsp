@@ -28,7 +28,7 @@
 <jsp:include page="/jsp/usersidemenu.jsp">
 	<jsp:param name="selected" value="<%=Constants.PROFILE %>" />
 </jsp:include>
-		<div>
+		<div class="main_content">
 			<h1>
 				Profile
 			</h1>

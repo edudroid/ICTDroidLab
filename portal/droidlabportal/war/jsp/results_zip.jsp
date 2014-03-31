@@ -42,7 +42,7 @@
 <jsp:include page="/jsp/usersidemenu.jsp">
 	<jsp:param name="selected" value="<%=Constants.RESULTS %>" />
 </jsp:include>
-		<div>
+		<div class="main_content">
 			<h1>
 				Results
 			</h1>

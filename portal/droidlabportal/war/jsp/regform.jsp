@@ -12,15 +12,12 @@
 <div id="contents">
 	<div id="tagline" class="clearfix">
 		<h1>Be part of DroidLab!</h1>
-		<div>
-			<p>
-				Are you a researcher in need of a sensor network, a developer wanting to bootstrap a crowdsensing application, or a smartphone owner who wants to contribute, this is the place to start.
-			</p>
-			<p>
-				Register and be part of the DroidLab community!
-			</p>
-		</div>
-		<div>
+		<p>
+			Are you a researcher in need of a sensor network, a developer wanting to bootstrap a crowdsensing application, or a smartphone owner who wants to contribute, this is the place to start.
+		</p>
+		<p>
+			Register and be part of the DroidLab community!
+		</p>
 <%
 if (request.getAttribute(Constants.ERROR) != null){
 	%>
@@ -37,5 +34,4 @@ if (request.getAttribute(Constants.ERROR) != null){
 			</form>
 		</div>
 	</div>
-</div>
 <jsp:include page="/jsp/footer.jsp" />

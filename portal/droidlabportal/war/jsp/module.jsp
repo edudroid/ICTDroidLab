@@ -55,7 +55,7 @@
 <jsp:include page="/jsp/usersidemenu.jsp">
 	<jsp:param name="selected" value="<%=Constants.MODULES %>" />
 </jsp:include>
-		<div>
+		<div class="main_content">
 			<h1>
 				<%= selectedModule.getProperty(Constants.MODULES_MODULE_NAME_COLUMN) %>
 			</h1>

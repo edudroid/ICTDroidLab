@@ -41,7 +41,7 @@
 <jsp:include page="/jsp/usersidemenu.jsp">
 	<jsp:param name="selected" value="<%=Constants.MEASUREMENT %>" />
 </jsp:include>
-		<div>
+		<div class="main_content">
 			<h1>
 				Measurement
 			</h1>

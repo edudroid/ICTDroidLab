@@ -12,7 +12,7 @@
 <div id="contents">
 	<div id="tagline" class="clearfix">
 		<h1>Welcome back!</h1>
-		<div>
+		<div class="main_content">
 		<p>
 			Sign in, and start measuring.
 		</p>
