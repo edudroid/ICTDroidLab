@@ -21,6 +21,7 @@ public class Constants {
 	public static final String RESULTS = "results";
 	public static final String MEASUREMENT = "measurement";
 	public static final String LOGIN = "login";
+	public static final String USERS = "users";
 	
 	// Form parameters 
 	public static final String WEB = "web";

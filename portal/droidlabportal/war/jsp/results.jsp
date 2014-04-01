@@ -1,5 +1,6 @@
 <%@page import="hu.edudroid.droidlabportal.user.UserManager"%>
 <%@page import="hu.edudroid.droidlabportal.user.User"%>
+<%@page import="java.util.Date"%>
 <%@page import="com.google.appengine.api.datastore.FetchOptions"%>
 <%@page import="com.google.appengine.api.datastore.Query.SortDirection"%>
 <%@page import="com.google.appengine.api.datastore.FetchOptions.Builder"%>
@@ -41,33 +42,33 @@
 	List<Entity> devices = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 	
 	for(Entity device : devices){
-		query = new Query(Constants.RESULTS_TABLE_NAME,device.getKey());
-	    List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+		query = new Query(Constants.RESULTS_TABLE_NAME,device.getKey()).addSort(Constants.RESULTS_DATE_COLUMN, SortDirection.DESCENDING);
+	    List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(10));
 	    
-	    %><p>Results for: <%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %></p><%
+	    %><p>Results for: <%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %></p>
 	    
-	    for(Entity result : results){
-	    	%>
-	    	<table>
-		    	<tr>
-			    	<td>Module name: <%= result.getProperty(Constants.RESULTS_MODULE_NAME_COLUMN) %></td>
-			    </tr>
-			    <tr>
-			    	<td>Log level: <%= result.getProperty(Constants.RESULTS_LOG_LEVEL_COLUMN) %></td>
-			    </tr>
-			    <tr>
-			    	<td>Date: <%= result.getProperty(Constants.RESULTS_DATE_COLUMN) %></td>
-		    	</tr>
-			    <tr>
-			    	<td>Message: <%= result.getProperty(Constants.RESULTS_MESSAGE_COLUMN) %></td>
-		    	</tr>
-	    	 </table>
-	    	 <p></p>
-	    	<%
-	    }	
-	}
-    %>
-			
+			<table>
+				<tr><th>Date</th><th>Level</th><th>Module</th><th>Message</th></tr>
+			<%
+			for(Entity result : results){
+				String dateString = null;
+				try {
+					dateString = Constants.formatTime(new Date(Long.parseLong((String)result.getProperty(Constants.RESULTS_DATE_COLUMN))));
+				} catch (Exception e){
+					e.printStackTrace();
+					dateString = "N/A";
+				}
+			%>
+				<tr>
+					<td><%= dateString %></td>
+					<td><%= result.getProperty(Constants.RESULTS_LOG_LEVEL_COLUMN) %></td>
+					<td><%= result.getProperty(Constants.RESULTS_MODULE_NAME_COLUMN) %></td>
+					<td><%= result.getProperty(Constants.RESULTS_MESSAGE_COLUMN) %></td>
+				</tr>
+			<%
+			}	
+			%></table><%
+	} %>
 		</div>
 	</div>
 </div>
