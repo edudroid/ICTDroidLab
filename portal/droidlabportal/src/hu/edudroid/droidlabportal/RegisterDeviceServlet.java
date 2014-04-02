@@ -4,6 +4,7 @@ import hu.edudroid.droidlabportal.user.User;
 import hu.edudroid.droidlabportal.user.UserManager;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -88,6 +89,9 @@ public class RegisterDeviceServlet extends HttpServlet {
         device.setProperty(Constants.DEVICE_GCM_ID_COLUMN, gcmId);
         device.setProperty(Constants.DEVICE_SDK_VERSION_COLUMN, sdkVersion);
         device.setProperty(Constants.DEVICE_DATE_COLUMN, new Date());
+        device.setProperty(Constants.DEVICE_MODULES_COUNT_COLUMN, 0);
+        device.setProperty(Constants.DEVICE_MODULES_ID_COLUMN, new ArrayList<String>());
+        device.setProperty(Constants.DEVICE_MODULES_EXPIRATION_COLUMN, new ArrayList<String>());
         // TODO save plugin versions
         datastore.put(device);
 		resp.setContentType("text/plain");

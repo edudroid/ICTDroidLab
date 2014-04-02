@@ -41,7 +41,7 @@ if (user == null) {
 	
 	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     
-    Query query = new Query(Constants.MODULES_TABLE_NAME,user.getKey());
+    Query query = new Query(Constants.MODULES_TABLE_NAME);
 	List<Entity> modules = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
     query = new Query(Constants.DEVICE_TABLE_NAME,user.getKey());
     List<Entity> devices = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
@@ -49,23 +49,23 @@ if (user == null) {
 	<table>
         <form action="/GCMBroadcast" method="post">
 		
-		<th>Module Name</th><th>IMEI</th>
+		<th>Module Name</th><th>Készülékszám</th>
 		<tr>
 			<td>
-				<select name="modules" onchange="moduleSelected(this.selectedIndex);">
+				<select name="module">
 					<option value="0">--Please Select--</option>
 					<% for(Entity module : modules){ %>
-					<option value="<%=module.getProperty("jarFileBlobKey")%>"><%=module.getProperty("module_name")%></option>
+					<option value="<%=module.getProperty(Constants.MODULES_MODULE_ID_COLUMN)%>"><%=module.getProperty(Constants.MODULES_MODULE_NAME_COLUMN)%></option>
 						<%
 						}
 					%>
 				</select>
 			</td>
 			<td>	
-				<select name="devices" onchange="deviceSelected(this.selectedIndex);">
+				<select name="device_count">
 					<option value="0">--Please Select--</option>
-					<% for(Entity device : devices){ %>
-					<option value="<%=device.getProperty("gcm_id")%>"><%=device.getProperty("device_name")%></option>
+					<% for(int i=1;i<11;i++){ %>
+					<option value="<%=i%>"><%=i%></option>
 						<%
 						}
 					%>

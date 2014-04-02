@@ -81,6 +81,9 @@ public class Constants {
 	public static final String DEVICE_WIFI_COLUMN = "wifi";
 	public static final String DEVICE_BLUETOOTH_COLUMN = "bluetooth";
 	public static final String DEVICE_GPS_COLUMN = "gps";
+	public static final String DEVICE_MODULES_COUNT_COLUMN = "modules_count";
+	public static final String DEVICE_MODULES_ID_COLUMN = "modules_id";
+	public static final String DEVICE_MODULES_EXPIRATION_COLUMN = "modules_expiration";
 	
 	public static final String RESULTS_TABLE_NAME = "results";
 	public static final String RESULTS_MODULE_NAME_COLUMN = "module_name";

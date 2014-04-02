@@ -38,8 +38,7 @@ if (user == null) {
 
 <%
 	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-	// Run an ancestor query to ensure we see the most up-to-date
-	// view of the Greetings belonging to the selected Guestbook.
+	
 	Query query = new Query(Constants.DEVICE_TABLE_NAME,user.getKey());
 	List<Entity> devices = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 %>
