@@ -51,33 +51,6 @@ if (user == null) {
     	<%
     }
     %>
-	<h1> All Devices </h1>
-
-<%
-	// Run an ancestor query to ensure we see the most up-to-date
-	// view of the Greetings belonging to the selected Guestbook.
-	query = new Query(Constants.DEVICE_TABLE_NAME);
-	devices = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-%>
-	
-    <%
-    for(Entity device : devices){
-    	%>
-	    	<a href="/device?IMEI=<%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %>">
-	    		<%= device.getProperty(Constants.DEVICE_NAME_COLUMN) %> (<%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %>)
-	    	</a><br>
-    	<%
-    }
-    %>
-	<h1> Register own device </h1>
-			<form action="/registerdevice" method="post" class="register">
-				<input type="text" name="<%= Constants.DEVICE_NAME %>" id="<%= Constants.DEVICE_NAME %>" placeholder="DEVICE NAME" onFocus="this.select();" onMouseOut="javascript:return false;"/>
-				<input type="number" name="<%= Constants.IMEI %>" id="<%= Constants.IMEI %>" placeholder="IMEI" onFocus="this.select();" onMouseOut="javascript:return false;"/>
-				<input type="text" name="<%= Constants.GCM_ID %>" id="<%= Constants.GCM_ID %>" placeholder="GCM ID" onFocus="this.select();" onMouseOut="javascript:return false;"/>
-				<input type="number" name="<%= Constants.SDK_VERSION %>" id="<%= Constants.SDK_VERSION %>" placeholder="SDK VERSION" onFocus="this.select();" onMouseOut="javascript:return false;"/>
-				<input type="hidden" name="<%= Constants.WEB %>" id="<%= Constants.WEB %>" value="true">
-				<input type="submit" value="Add device"/>
-			</form>
 			
 		</div>
 	</div>

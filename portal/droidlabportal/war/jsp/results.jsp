@@ -38,13 +38,14 @@
 <%
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     
-	Query query = new Query(Constants.DEVICE_TABLE_NAME,user.getKey());
+	Query query = new Query(Constants.DEVICE_TABLE_NAME);
 	List<Entity> devices = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 	
 	for(Entity device : devices){
 		query = new Query(Constants.RESULTS_TABLE_NAME,device.getKey()).addSort(Constants.RESULTS_DATE_COLUMN, SortDirection.DESCENDING);
 	    List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(10));
 	    
+	    if(results.size()>0){
 	    %><p>Results for: <%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %></p>
 	    
 			<table>
@@ -68,6 +69,10 @@
 			<%
 			}	
 			%></table><%
+	    }
+	    else{
+	    	%><p>No results found for IMEI: <%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %></p><%
+	    }
 	} %>
 		</div>
 	</div>
