@@ -108,14 +108,13 @@ public class ModuleLoader {
 		// uses 3KB download buffer
 		InputStream is = ucon.getInputStream();
 		BufferedInputStream inStream = new BufferedInputStream(is, 1024 * 5);
-		String[] splitString=moduleUrl.split("/");
-		String filename=splitString[splitString.length-1];
+
 		File file=null;
 		if(part.equals("jar")){
-			file=new File(CoreService.getJarFolder(context),filename);
+			file=new File(CoreService.getJarFolder(context),"module.jar");
 		}
 		else if(part.equals("desc")){
-			file=new File(CoreService.getDescriptorFolder(context),filename);
+			file=new File(CoreService.getDescriptorFolder(context),"module.desc");
 		}
 		
 		FileOutputStream outStream = new FileOutputStream(file);

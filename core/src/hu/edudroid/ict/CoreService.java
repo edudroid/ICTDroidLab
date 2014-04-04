@@ -58,12 +58,16 @@ public class CoreService extends Service implements PluginListener {
 	
 	
 	public static File getDescriptorFolder(Context context) {
-		return new File(context.getFilesDir(), CoreService.DESCRIPTOR_FOLDER);
+		File ret = new File(context.getFilesDir(), CoreService.DESCRIPTOR_FOLDER);
+		ret.mkdirs();
+		Log.e(TAG, "DESC path : " + ret.getAbsolutePath());
+		return ret;
 	}
 
 	
 	public static File getJarFolder(Context context) {
 		File ret = new File(context.getFilesDir(), CoreService.JAR_FOLDER);
+		ret.mkdirs();
 		Log.e(TAG, "JAR path : " + ret.getAbsolutePath());
 		return ret;
 	}
