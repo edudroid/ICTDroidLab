@@ -204,6 +204,7 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 
 	@Override
 	public void registerEventListener(String eventName, PluginEventListener listener) {
+		Log.e(TAG, "Registering listener " + listener + " to event " + eventName);
 		HashSet<PluginEventListener> listeners = mEventListeners.get(eventName);
 		if (listeners == null) {
 			listeners = new HashSet<PluginEventListener>();

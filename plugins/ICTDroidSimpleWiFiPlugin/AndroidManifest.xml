@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="hu.edudroid.ict_plugin_wifi"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="19" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>    
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>    
+    
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme"
+        android:allowBackup="false">
+        
+   		<receiver
+            android:name="WiFiListener"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="hu.edudroid.ict.plugin_polling_question"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="hu.edudroid.ict.plugin.callmethod" />
+            </intent-filter>
+  			<intent-filter>
+  			    <action android:name="android.net.wifi.SCAN_RESULTS"/>
+  			</intent-filter>
+            			<intent-filter>
+  			    <action android:name="android.net.wifi.RSSI_CHANGED"/>
+  			</intent-filter>
+  			<intent-filter>
+    			<action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
+  			</intent-filter>
+  			<intent-filter>
+    			<action android:name="android.net.wifi.STATE_CHANGE"/>
+  			</intent-filter>
+		</receiver>
+		
+		<activity android:name="WiFiPluginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+		</activity>
+	</application>
+</manifest>

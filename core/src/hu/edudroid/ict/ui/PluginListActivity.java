@@ -2,7 +2,6 @@ package hu.edudroid.ict.ui;
 
 import hu.edudroid.ict.CoreService;
 import hu.edudroid.ict.R;
-import hu.edudroid.ict.plugins.AndroidPluginCollection;
 import hu.edudroid.ict.plugins.PluginDescriptor;
 import hu.edudroid.ict.plugins.PluginManager;
 import hu.edudroid.interfaces.Constants;
@@ -38,7 +37,6 @@ public class PluginListActivity extends ActivityBase implements PluginListener,
 		listview.setAdapter(mAdapter);
 		listview.setOnItemClickListener(this);
 		startService(new Intent(this, CoreService.class));
-		startService(new Intent(this, AndroidPluginCollection.class));
 		findViewById(R.id.btn_refresh).setOnClickListener(this);
 	}
 
@@ -54,9 +52,9 @@ public class PluginListActivity extends ActivityBase implements PluginListener,
 	private void refreshPluginlist() {
 		if (service != null) {
 			List<Plugin> plugins = service.getPlugins();
-			Log.d(TAG, "Loaded plugins from service " + plugins.toString());
+			Log.d(TAG, "Loaded plugins from service " + plugins);
 			List<PluginDescriptor> availablePlugins = service.getAvailablePlugins();
-			Log.d(TAG, "Available plugins from service " + availablePlugins.toString());
+			Log.d(TAG, "Available plugins from service " + availablePlugins);
 			List<PluginDescriptor> descriptors = PluginManager.getAvailablePlugins(availablePlugins, plugins);
 			if (descriptors != null && descriptors.size() > 0) {
 				mAdapter.setPlugins(descriptors);

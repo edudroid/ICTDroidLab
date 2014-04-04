@@ -50,7 +50,7 @@ public class LoginActivity extends ActivityBase implements OnClickListener {
 			if (userName != null) {
 				userEdit.setText(userName);
 			} else {
-				userEdit.setText("lajtha.balazs@tmit.bme.hu");
+				userEdit.setText("lajthabalazs@yahoo.com");
 				passwordEdit.setText("margaret");
 			}
 		}

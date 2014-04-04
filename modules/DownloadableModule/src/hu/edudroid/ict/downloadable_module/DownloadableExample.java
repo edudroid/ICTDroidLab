@@ -1,4 +1,4 @@
-package hu.edudroid.ict.sample_module;
+package hu.edudroid.ict.downloadable_module;
 
 import hu.edudroid.interfaces.BatteryConstants;
 import hu.edudroid.interfaces.Logger;
@@ -12,19 +12,19 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
-public class ModuleExample extends Module {
+public class DownloadableExample extends Module {
 	
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SSS");
 	
-	public ModuleExample(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice) {
+	public DownloadableExample(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice) {
 		super(prefs, logger, pluginCollection, timeservice);
 	}
 	
-	private static final String TAG = ModuleExample.class.getName();
+	private static final String TAG = DownloadableExample.class.getName();
 
 	@Override
 	public void init(){
-		mLogger.e(TAG, "Module init...");
+		mLogger.e(TAG, "Downloadable module init...");
 		mTimeService.runPeriodic(1000, 600000, 0, this);	
 		registerPluginListeners();
 	}

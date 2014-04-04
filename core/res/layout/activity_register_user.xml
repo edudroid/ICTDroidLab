@@ -21,12 +21,13 @@
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_above="@+id/password"
+        android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:ems="10"
-        android:hint="@string/userNameHint">
+        android:hint="@string/userNameHint"
+        android:singleLine="true" >
 
         <requestFocus />
     </EditText>
@@ -35,26 +36,29 @@
         android:id="@+id/password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/confirmPassword"
         android:layout_alignLeft="@+id/username"
         android:layout_alignRight="@+id/username"
-        android:layout_above="@+id/confirmPassword"
         android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="@string/passwordHint"
-        android:inputType="textPassword" >
+        android:inputType="textPassword"
+        android:singleLine="true" >
+
     </EditText>
 
     <EditText
         android:id="@+id/confirmPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/passwordDontMatch"
         android:layout_alignLeft="@+id/password"
         android:layout_alignRight="@+id/password"
-        android:layout_above="@+id/passwordDontMatch"
         android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="@string/confirmPassword"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:singleLine="true" />
 
     <Button
         android:id="@+id/confirmRegistrationButton"

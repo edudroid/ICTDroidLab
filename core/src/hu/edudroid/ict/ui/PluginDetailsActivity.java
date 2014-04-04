@@ -3,6 +3,7 @@ package hu.edudroid.ict.ui;
 import hu.edudroid.ict.R;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.Plugin;
+import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginListener;
 import hu.edudroid.interfaces.PluginResultListener;
 
@@ -20,7 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class PluginDetailsActivity extends ActivityBase implements PluginListener, OnItemClickListener, PluginResultListener {
+public class PluginDetailsActivity extends ActivityBase implements PluginListener, OnItemClickListener, PluginResultListener, PluginEventListener {
 
 	private ListView methodList;
 	private String pluginName;
@@ -38,16 +39,27 @@ public class PluginDetailsActivity extends ActivityBase implements PluginListene
 	@Override
 	protected void onResume() {
 		super.onResume();
+		refreshPlugin();
 		refreshUI();
+	}
+	
+	@Override
+	protected void onPause() {
+		if (plugin != null) {
+			plugin.unregisterEventListener(this);
+			plugin.cancelCallsForListener(this);
+		}
+		super.onPause();
 	}
 	
 	@Override
 	public void onServiceConnected(ComponentName arg0, IBinder arg1) {
 		super.onServiceConnected(arg0, arg1);
+		refreshPlugin();
 		refreshUI();
 	}
 
-	private void refreshUI() {
+	private void refreshPlugin() {
 		if (service != null) {
 			this.plugin = null;
 			List<Plugin> plugins = service.getPlugins();
@@ -57,16 +69,27 @@ public class PluginDetailsActivity extends ActivityBase implements PluginListene
 					break;
 				}
 			}
-			if (this.plugin != null) {
-				methodList.setVisibility(View.VISIBLE);
-				final ArrayAdapter<String> methodAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, this.plugin.getMethodNames());
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						methodList.setAdapter(methodAdapter);
-					}
-				});
+			// Register to events of the displayed plugin
+			if (plugin != null) {
+				for (String eventName : plugin.getAllEvents()) {
+					plugin.registerEventListener(eventName, this);
+				}
 			}
+		} else {
+			methodList.setVisibility(View.GONE);
+		}
+	}
+
+	private void refreshUI() {
+		if (this.plugin != null) {
+			methodList.setVisibility(View.VISIBLE);
+			final ArrayAdapter<String> methodAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, this.plugin.getMethodNames());
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					methodList.setAdapter(methodAdapter);
+				}
+			});
 		} else {
 			methodList.setVisibility(View.GONE);
 		}
@@ -74,6 +97,7 @@ public class PluginDetailsActivity extends ActivityBase implements PluginListene
 
 	@Override
 	public boolean newPlugin(Plugin plugin) {
+		refreshPlugin();
 		refreshUI();
 		return true;
 	}
@@ -109,6 +133,18 @@ public class PluginDetailsActivity extends ActivityBase implements PluginListene
 			@Override
 			public void run() {
 				Toast.makeText(PluginDetailsActivity.this, message, Toast.LENGTH_LONG).show();
+			}
+		});
+	}
+
+	@Override
+	public void onEvent(String plugin, String version, String eventName, Map<String, Object> result) {
+		final String message = "Event " + eventName + " params: " + result.toString();
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Toast.makeText(PluginDetailsActivity.this, message, Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
