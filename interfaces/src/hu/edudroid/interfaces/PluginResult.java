@@ -11,8 +11,8 @@ public class PluginResult {
 	private Map<String, Object> result;
 	private Map<Long, Double> consumedQuota;
 	
-	public PluginResult(Map<String, Object> error, Map<Long, Double> consumedQuota) {
-		this.result = error;
+	public PluginResult(Map<String, Object> result, Map<Long, Double> consumedQuota) {
+		this.result = result;
 		this.consumedQuota = consumedQuota;
 	}
 
