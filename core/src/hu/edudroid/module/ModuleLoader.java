@@ -13,6 +13,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -29,6 +30,7 @@ public class ModuleLoader {
 	private static final String JAR_ASSET_FOLDER = "jars";
 	private static final int TIMEOUT_CONNECTION = 5000;//5sec
 	private static final int TIMEOUT_SOCKET = 30000;//30sec
+	private static final String FILE_PREFIX = "attachment; filename=\"";
 
 	/**
 	 * Parse a module descriptor.
@@ -71,7 +73,7 @@ public class ModuleLoader {
 	 * @param context The application context to be used
 	 * @param fileUrl URL of the file on the web
 	 */
-	public static void downloadModule(Context context,String fileUrl){
+	public static void downloadModule(Context context, String fileUrl){
 		
 		try{
 			
@@ -98,6 +100,20 @@ public class ModuleLoader {
 		
 		//Open a connection to that URL.
 		URLConnection ucon = url.openConnection();
+		Map<String, List<String>> headers = ucon.getHeaderFields();
+		Log.e(TAG, "Headers");
+		for (String key : headers.keySet()) {
+			Log.e(TAG, key + " : " + headers.get(key));
+		}
+		List<String> contentDispositionValues = headers.get("Content-Disposition");
+		String fileName = null;
+		for (String value : contentDispositionValues) {
+			Log.e(TAG, "Value: " + value);
+			if (value.startsWith(FILE_PREFIX)) {
+				fileName = value.substring(FILE_PREFIX.length(), value.length() -1);
+			}
+		}
+		 
 
 		//this timeout affects how long it takes for the app to realize there's a connection problem
 		ucon.setReadTimeout(TIMEOUT_CONNECTION);
@@ -111,10 +127,16 @@ public class ModuleLoader {
 
 		File file=null;
 		if(part.equals("jar")){
-			file=new File(CoreService.getJarFolder(context),"module.jar");
+			if (fileName == null) {
+				fileName = "module.jar";
+			}
+			file=new File(CoreService.getJarFolder(context), fileName);
 		}
 		else if(part.equals("desc")){
-			file=new File(CoreService.getDescriptorFolder(context),"module.desc");
+			if (fileName == null) {
+				fileName = "module.desc";
+			}
+			file=new File(CoreService.getDescriptorFolder(context), fileName);
 		}
 		
 		FileOutputStream outStream = new FileOutputStream(file);
@@ -164,9 +186,12 @@ public class ModuleLoader {
 		} else {
 			Log.i(TAG, "Loading " + descriptorFiles.length + " module(s).");
 			for (String fileName : descriptorFiles) {
+				Log.e(TAG, "Loading module " + fileName);
 				ModuleDescriptor descriptor = ModuleLoader.parseModuleDescriptor(new File(descriptorFolder,fileName), context);
 				if (descriptor != null) {
 					ret.add(descriptor);
+				} else {
+					Log.e(TAG, "Module " + fileName + " not valid.");
 				}
 			}
 		}
