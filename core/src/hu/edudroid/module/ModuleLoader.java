@@ -27,6 +27,8 @@ public class ModuleLoader {
 	private static final String TAG = "ModuleLoader";
 	private static final String DESCRIPTOR_ASSET_FOLDER = "descriptors";
 	private static final String JAR_ASSET_FOLDER = "jars";
+	private static final int TIMEOUT_CONNECTION = 5000;//5sec
+	private static final int TIMEOUT_SOCKET = 30000;//30sec
 
 	/**
 	 * Parse a module descriptor.
@@ -70,45 +72,65 @@ public class ModuleLoader {
 	 * @param fileUrl URL of the file on the web
 	 */
 	public static void downloadModule(Context context,String fileUrl){
-		final int TIMEOUT_CONNECTION = 5000;//5sec
-		final int TIMEOUT_SOCKET = 30000;//30sec
+		
 		try{
-			URL url = new URL(fileUrl);
-	
-			//Open a connection to that URL.
-			URLConnection ucon = url.openConnection();
-	
-			//this timeout affects how long it takes for the app to realize there's a connection problem
-			ucon.setReadTimeout(TIMEOUT_CONNECTION);
-			ucon.setConnectTimeout(TIMEOUT_SOCKET);
-	
-	
-			//Define InputStreams to read from the URLConnection.
-			// uses 3KB download buffer
-			InputStream is = ucon.getInputStream();
-			BufferedInputStream inStream = new BufferedInputStream(is, 1024 * 5);
-			String[] splitString=fileUrl.split("/");
-			String filename=splitString[splitString.length-1];
-			File file=new File(CoreService.getJarFolder(context),filename);
-			FileOutputStream outStream = new FileOutputStream(file);
-			byte[] buff = new byte[5 * 1024];
-	
-			 //Read bytes (and store them) until there is nothing more to read(-1)
-			int len;
-			while ((len = inStream.read(buff)) != -1)
-			{
-			    outStream.write(buff,0,len);
+			
+			String[] splitUrl=fileUrl.split(" ");
+			String jarUrl,descUrl;
+			if(splitUrl.length==2){
+				jarUrl=splitUrl[0];
+				descUrl=splitUrl[1];
+				
+				downloadModulePart(context, jarUrl, "jar");
+				downloadModulePart(context, descUrl, "desc");
+				
+				Log.i(TAG,"Module has been downloaded succesfully from: " + fileUrl);
 			}
-			//clean up
 			
-			outStream.flush();
-			outStream.close();
-			inStream.close();
-			
-			Log.i(TAG,"Module has been downloaded succesfully from: " + fileUrl);
 		}catch(Exception e){
+			Log.i(TAG,"Could not download module: " + e.getMessage());
 			e.printStackTrace();
 		}
+	}
+	
+	public static void downloadModulePart(Context context, String moduleUrl, String part) throws Exception{
+		URL url = new URL(moduleUrl);
+		
+		//Open a connection to that URL.
+		URLConnection ucon = url.openConnection();
+
+		//this timeout affects how long it takes for the app to realize there's a connection problem
+		ucon.setReadTimeout(TIMEOUT_CONNECTION);
+		ucon.setConnectTimeout(TIMEOUT_SOCKET);
+
+
+		//Define InputStreams to read from the URLConnection.
+		// uses 3KB download buffer
+		InputStream is = ucon.getInputStream();
+		BufferedInputStream inStream = new BufferedInputStream(is, 1024 * 5);
+
+		File file=null;
+		if(part.equals("jar")){
+			file=new File(CoreService.getJarFolder(context),"module.jar");
+		}
+		else if(part.equals("desc")){
+			file=new File(CoreService.getDescriptorFolder(context),"module.desc");
+		}
+		
+		FileOutputStream outStream = new FileOutputStream(file);
+		byte[] buff = new byte[5 * 1024];
+
+		 //Read bytes (and store them) until there is nothing more to read(-1)
+		int len;
+		while ((len = inStream.read(buff)) != -1)
+		{
+		    outStream.write(buff,0,len);
+		}
+		//clean up
+		
+		outStream.flush();
+		outStream.close();
+		inStream.close();
 	}
 	
 	/**
