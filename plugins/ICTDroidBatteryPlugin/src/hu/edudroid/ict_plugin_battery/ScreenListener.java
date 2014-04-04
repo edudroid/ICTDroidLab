@@ -1,6 +1,7 @@
 package hu.edudroid.ict_plugin_battery;
 
 import hu.edudroid.ictplugin.PluginCommunicationInterface;
+import hu.edudroid.interfaces.BatteryConstants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,13 +22,13 @@ public class ScreenListener extends BroadcastReceiver {
 		if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)){
 			Log.d(TAG, "Screen off");
 			Map<String, Object> values = new HashMap<String, Object>();
-			values.put(BatteryPlugin.SCREEN_STATE, BatteryPlugin.SCREEN_STATE_OFF);
-			communicationInterface.fireEvent(BatteryPlugin.SCREEN_STATE_CHANGED, values, context);
+			values.put(BatteryConstants.SCREEN_STATE, BatteryConstants.SCREEN_STATE_OFF);
+			communicationInterface.fireEvent(BatteryConstants.SCREEN_STATE_CHANGED, values, context);
 		} else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)){
 			Log.d(TAG, "Screen on");
 			Map<String, Object> values = new HashMap<String, Object>();
-			values.put(BatteryPlugin.SCREEN_STATE, BatteryPlugin.SCREEN_STATE_ON);
-			communicationInterface.fireEvent(BatteryPlugin.SCREEN_STATE_CHANGED, values, context);
+			values.put(BatteryConstants.SCREEN_STATE, BatteryConstants.SCREEN_STATE_ON);
+			communicationInterface.fireEvent(BatteryConstants.SCREEN_STATE_CHANGED, values, context);
 		}else {
 			Log.e(TAG, "Unknown event received: " + intent.getAction());
 		}

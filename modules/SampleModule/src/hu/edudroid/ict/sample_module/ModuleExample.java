@@ -1,5 +1,6 @@
 package hu.edudroid.ict.sample_module;
 
+import hu.edudroid.interfaces.BatteryConstants;
 import hu.edudroid.interfaces.Logger;
 import hu.edudroid.interfaces.Module;
 import hu.edudroid.interfaces.Plugin;
@@ -15,8 +16,6 @@ public class ModuleExample extends Module {
 	
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SSS");
 	
-	private static final String BATTERY_PLUGIN_NAME = "Battery plugin";
-	
 	public ModuleExample(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice) {
 		super(prefs, logger, pluginCollection, timeservice);
 	}
@@ -31,12 +30,12 @@ public class ModuleExample extends Module {
 	}
 	
 	private void registerPluginListeners() {
-		Plugin plugin = mPluginCollection.getPluginByName(BATTERY_PLUGIN_NAME);
+		Plugin plugin = mPluginCollection.getPluginByName(BatteryConstants.PLUGIN_NAME);
 		if (plugin != null) {
 			mLogger.e(TAG, "Plugin available, registering for events.");
-			plugin.registerEventListener("Screen state changed", this);
-			plugin.registerEventListener("Battery level changed", this);
-			plugin.registerEventListener("Charging state changed", this);
+			plugin.registerEventListener(BatteryConstants.SCREEN_STATE_CHANGED, this);
+			plugin.registerEventListener(BatteryConstants.BATTERY_LEVEL_CHANGED, this);
+			plugin.registerEventListener(BatteryConstants.CHARGING_STATE_CHANGED, this);
 		} else {
 			mLogger.e(TAG, "Plugin not yet available.");			
 		}
@@ -46,7 +45,7 @@ public class ModuleExample extends Module {
 	public void onResult(long id, String plugin, String pluginVersion,
 			String methodName, Map<String, Object> result) {
 		if (result != null) {
-			mLogger.i(TAG, "Result received " + result.size());
+			mLogger.i(TAG, "Result received " + result);
 		} else {
 			mLogger.i(TAG, "Null received " + result);
 		}
@@ -66,11 +65,14 @@ public class ModuleExample extends Module {
 
 	@Override
 	public void onTimerEvent() {
+		Plugin plugin = mPluginCollection.getPluginByName(BatteryConstants.PLUGIN_NAME);
 		mLogger.i(TAG, "Module example 10m run at " + dateFormatter.format(new Date()));
-		Plugin plugin = mPluginCollection.getPluginByName(BATTERY_PLUGIN_NAME);
 		if (plugin != null) {
+			mLogger.i(TAG, "Requesting battery status");
 			registerPluginListeners();
 			plugin.callMethodAsync("Get battery status", null, this);
+		} else {
+			mLogger.i(TAG, "Battery plugin not available.");
 		}
 	}
 }
