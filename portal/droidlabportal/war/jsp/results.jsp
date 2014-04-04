@@ -1,5 +1,6 @@
 <%@page import="hu.edudroid.droidlabportal.user.UserManager"%>
 <%@page import="hu.edudroid.droidlabportal.user.User"%>
+<%@page import="java.util.Date"%>
 <%@page import="com.google.appengine.api.datastore.FetchOptions"%>
 <%@page import="com.google.appengine.api.datastore.Query.SortDirection"%>
 <%@page import="com.google.appengine.api.datastore.FetchOptions.Builder"%>
@@ -13,8 +14,6 @@
 <%@page import="hu.edudroid.droidlabportal.Constants"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.google.appengine.api.users.UserService" %>
-<%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <jsp:include page="/jsp/header.jsp">
@@ -39,37 +38,42 @@
 <%
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     
-	Query query = new Query(Constants.DEVICE_TABLE_NAME,user.getKey());
+	Query query = new Query(Constants.DEVICE_TABLE_NAME);
 	List<Entity> devices = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 	
 	for(Entity device : devices){
-		query = new Query(Constants.RESULTS_TABLE_NAME,device.getKey());
-	    List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+		query = new Query(Constants.RESULTS_TABLE_NAME,device.getKey()).addSort(Constants.RESULTS_DATE_COLUMN, SortDirection.DESCENDING);
+	    List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(10));
 	    
-	    %><p>Results for: <%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %></p><%
+	    if(results.size()>0){
+	    %><p>Results for: <%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %></p>
 	    
-	    for(Entity result : results){
-	    	%>
-	    	<table>
-		    	<tr>
-			    	<td>Module name: <%= result.getProperty(Constants.RESULTS_MODULE_NAME_COLUMN) %></td>
-			    </tr>
-			    <tr>
-			    	<td>Log level: <%= result.getProperty(Constants.RESULTS_LOG_LEVEL_COLUMN) %></td>
-			    </tr>
-			    <tr>
-			    	<td>Date: <%= result.getProperty(Constants.RESULTS_DATE_COLUMN) %></td>
-		    	</tr>
-			    <tr>
-			    	<td>Message: <%= result.getProperty(Constants.RESULTS_MESSAGE_COLUMN) %></td>
-		    	</tr>
-	    	 </table>
-	    	 <p></p>
-	    	<%
-	    }	
-	}
-    %>
-			
+			<table>
+				<tr><th>Date</th><th>Level</th><th>Module</th><th>Message</th></tr>
+			<%
+			for(Entity result : results){
+				String dateString = null;
+				try {
+					dateString = Constants.formatTime(new Date(Long.parseLong((String)result.getProperty(Constants.RESULTS_DATE_COLUMN))));
+				} catch (Exception e){
+					e.printStackTrace();
+					dateString = "N/A";
+				}
+			%>
+				<tr>
+					<td><%= dateString %></td>
+					<td><%= result.getProperty(Constants.RESULTS_LOG_LEVEL_COLUMN) %></td>
+					<td><%= result.getProperty(Constants.RESULTS_MODULE_NAME_COLUMN) %></td>
+					<td><%= result.getProperty(Constants.RESULTS_MESSAGE_COLUMN) %></td>
+				</tr>
+			<%
+			}	
+			%></table><%
+	    }
+	    else{
+	    	%><p>No results found for IMEI: <%= device.getProperty(Constants.DEVICE_IMEI_COLUMN) %></p><%
+	    }
+	} %>
 		</div>
 	</div>
 </div>

@@ -99,10 +99,12 @@ public class RegisterUserServlet extends HttpServlet {
 	        Entity user = new Entity(Constants.USER_TABLE_NAME, userRootKey);
 	        user.setProperty(Constants.USER_EMAIL_COLUMN, email);
 	        user.setProperty(Constants.USER_PASS_COLUMN, generatedPassword);
+	        user.setProperty(Constants.USER_ROLE_COLUMN, Constants.ROLE_USER);
 	        user.setProperty(Constants.USER_REGISTRATION_DATE_COLUMN, new Date());	        
 	        Key userKey = datastore.put(user);
 	        req.getSession().setAttribute(Constants.USER_KEY, userKey);
 	        req.getSession().setAttribute(Constants.EMAIL, email);
+	        req.getSession().setAttribute(Constants.ROLE, Constants.ROLE_USER);
 			if (req.getParameterMap().containsKey(Constants.WEB)) {
 				resp.sendRedirect("/userhome");
 			} else {

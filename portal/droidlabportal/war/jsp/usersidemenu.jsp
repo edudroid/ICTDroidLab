@@ -1,16 +1,19 @@
+<%@page import="hu.edudroid.droidlabportal.user.UserManager"%>
+<%@page import="hu.edudroid.droidlabportal.user.User"%>
 <%@page import="hu.edudroid.droidlabportal.Constants"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.google.appengine.api.users.User" %>
-<%@ page import="com.google.appengine.api.users.UserService" %>
-<%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%
-	String email = (String)session.getAttribute(Constants.EMAIL);
+User user = UserManager.checkUser(session, request, response);
+if (user == null) {
+	response.sendRedirect("/loginform");
+	return;
+}
 %>
 <div style="float: right; margin-top: -40px; margin-right: 60px;">
-<%= email %>, <a href="/signout?<%= Constants.WEB %>=true">sign out</a>
+<%= user.getEmail() %>, <a href="/signout?<%= Constants.WEB %>=true">sign out</a>
 </div>
 	<div>
 		<ul id="userbox">
@@ -21,47 +24,80 @@
 <% } %>
 			<a href="/userhome">Dashboard</a>
 		</li>
-<% if (request.getParameter("selected").equals(Constants.DEVICES)) { %>
-				<li class="active">
-<% } else { %>
-				<li>
+
+<!-- USERS -->
+<% if (user.getRole().equals(Constants.ROLE_ADMIN)){ %>
+	<% if (request.getParameter("selected").equals(Constants.USERS)) { %>
+					<li class="active">
+	<% } else { %>
+					<li>
+	<% } %>
+				<a href="/users">Users</a>
+			</li>
 <% } %>
-			<a href="/devices">Devices</a>
-		</li>
-<% if (request.getParameter("selected").equals(Constants.PROFILE)) { %>
-				<li class="active">
-<% } else { %>
-				<li>
+
+<!-- DEVICES -->
+<% if (user.getRole().equals(Constants.ROLE_USER)){ %>
+	<% if (request.getParameter("selected").equals(Constants.DEVICES)) { %>
+					<li class="active">
+	<% } else { %>
+					<li>
+	<% } %>
+				<a href="/devices">Devices</a>
+			</li>
 <% } %>
-			<a href="/profile">Profile</a>
-		</li>
-<% if (request.getParameter("selected").equals(Constants.MODULES)) { %>
-				<li class="active">
-<% } else { %>
-				<li>
+
+<!-- PROFILE -->
+	<% if (request.getParameter("selected").equals(Constants.PROFILE)) { %>
+					<li class="active">
+	<% } else { %>
+					<li>
+	<% } %>
+				<a href="/profile">Profile</a>
+			</li>		
+
+<!-- MODULES -->
+<% if (user.getRole().equals(Constants.ROLE_RESEARCHER)){ %>
+	<% if (request.getParameter("selected").equals(Constants.MODULES)) { %>
+					<li class="active">
+	<% } else { %>
+					<li>
+	<% } %>
+				<a href="modules">Modules</a>
+			</li>
 <% } %>
-			<a href="modules">Modules</a>
-		</li>
-<% if (request.getParameter("selected").equals(Constants.UPLOADMODULE)) { %>
-				<li class="active">
-<% } else { %>
-				<li>
+
+<!-- UPLOAD MODULE -->
+<% if (user.getRole().equals(Constants.ROLE_RESEARCHER)){ %>
+	<% if (request.getParameter("selected").equals(Constants.UPLOADMODULE)) { %>
+					<li class="active">
+	<% } else { %>
+					<li>
+	<% } %>
+				<a href="/uploadmodule">Upload Module</a>
+			</li>
 <% } %>
-			<a href="/uploadmodule">Upload Module</a>
-		</li>
-<% if (request.getParameter("selected").equals(Constants.RESULTS)) { %>
-				<li class="active">
-<% } else { %>
-				<li>
+
+<!-- RESULTS -->
+<% if (user.getRole().equals(Constants.ROLE_RESEARCHER)){ %>
+	<% if (request.getParameter("selected").equals(Constants.RESULTS)) { %>
+					<li class="active">
+	<% } else { %>
+					<li>
+	<% } %>
+				<a href="/results">Results</a>
+			</li>
 <% } %>
-			<a href="/results">Results</a>
-		</li>
-<% if (request.getParameter("selected").equals(Constants.MEASUREMENT)) { %>
-				<li class="active">
-<% } else { %>
-				<li>
-<% } %>
-			<a href="/measurement">Measurement</a>
-		</li>		
+
+<!-- MEASUREMENTS -->
+<% if (user.getRole().equals(Constants.ROLE_RESEARCHER)){ %>
+	<% if (request.getParameter("selected").equals(Constants.MEASUREMENT)) { %>
+					<li class="active">
+	<% } else { %>
+					<li>
+	<% } %>
+				<a href="/measurement">Measurement</a>
+			</li>
+<% } %>	
 		</ul>
 	</div>

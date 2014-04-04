@@ -21,16 +21,23 @@ public class Constants {
 	public static final String RESULTS = "results";
 	public static final String MEASUREMENT = "measurement";
 	public static final String LOGIN = "login";
+	public static final String USERS = "users";
 	
 	// Form parameters 
 	public static final String WEB = "web";
 	public static final String EMAIL = "email";
+	public static final String ROLE = "role";
 	public static final String PASSWORD = "pass";
 	public static final String PASSWORDCHECK = "passagain";
 	public static final String IMEI = "IMEI";
 	public static final String DEVICE_NAME = "device_name";
 	public static final String GCM_ID = "gcm_id";
 	public static final String SDK_VERSION = "sdk_version";
+	
+	//Role parameters
+	public static final String ROLE_USER = "user";
+	public static final String ROLE_RESEARCHER = "researcher";
+	public static final String ROLE_ADMIN = "admin";
 
 	// Session parameters
 	public static final String USER_KEY = "user key";
@@ -42,6 +49,7 @@ public class Constants {
 	public static final String USER_TABLE_NAME = "users";
 	public static final String USER_EMAIL_COLUMN = "email";
 	public static final String USER_PASS_COLUMN = "password";
+	public static final String USER_ROLE_COLUMN = "role";
 	public static final String USER_REGISTRATION_DATE_COLUMN = "reg_date";
 	public static final String USER_LOGIN_COOKIE_COLUMN = "login_cookie";
 	public static final String USER_LAST_LOGIN = "last_login";
@@ -73,6 +81,9 @@ public class Constants {
 	public static final String DEVICE_WIFI_COLUMN = "wifi";
 	public static final String DEVICE_BLUETOOTH_COLUMN = "bluetooth";
 	public static final String DEVICE_GPS_COLUMN = "gps";
+	public static final String DEVICE_MODULES_COUNT_COLUMN = "modules_count";
+	public static final String DEVICE_MODULES_ID_COLUMN = "modules_id";
+	public static final String DEVICE_MODULES_EXPIRATION_COLUMN = "modules_expiration";
 	
 	public static final String RESULTS_TABLE_NAME = "results";
 	public static final String RESULTS_MODULE_NAME_COLUMN = "module_name";

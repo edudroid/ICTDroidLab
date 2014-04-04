@@ -27,7 +27,10 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 
 public class UploadModuleServlet extends HttpServlet {
 	/**
@@ -71,11 +74,22 @@ public class UploadModuleServlet extends HttpServlet {
 	        responseStrBuilder.append(inputStr);
 		br.close();
 		
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    	
+    	Query query = new Query(Constants.MODULES_TABLE_NAME);
+    	query.addSort(Constants.MODULES_MODULE_ID_COLUMN, SortDirection.DESCENDING);
+    	List<Entity> modules = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(1));
+    	int module_id=0;
+    	if(modules.size()>0) {
+			module_id=Integer.parseInt(modules.get(0).getProperty(Constants.MODULES_MODULE_ID_COLUMN).toString());
+    		module_id++;
+    	}
+    		
 		try {
 			JSONObject json=new JSONObject(responseStrBuilder.toString());
 			Entity module = new Entity(Constants.MODULES_TABLE_NAME,userKey);
 
-			module.setProperty(Constants.MODULES_MODULE_ID_COLUMN,json.get("module_id"));
+			module.setProperty(Constants.MODULES_MODULE_ID_COLUMN,String.valueOf(module_id));
 			module.setProperty(Constants.MODULES_AUTHOR_COLUMN, json.get("author"));
 			module.setProperty(Constants.MODULES_DESCRIPTION_COLUMN, json.get("description"));
 			module.setProperty(Constants.MODULES_WEBSITE_COLUMN, json.get("website"));
@@ -100,8 +114,6 @@ public class UploadModuleServlet extends HttpServlet {
 			module.setProperty(Constants.MODULES_DESC_FILE_KEY_COLUMN, blobs.get("descFile").getKeyString());
 			module.setProperty(Constants.MODULES_DATE_COLUMN, new Date());
 			
-			DatastoreService datastore =
-	                DatastoreServiceFactory.getDatastoreService();
 	        datastore.put(module);
 	        
 	        res.sendRedirect("/uploadmodule?succes=true");
