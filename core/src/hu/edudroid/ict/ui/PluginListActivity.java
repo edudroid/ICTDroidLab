@@ -52,9 +52,9 @@ public class PluginListActivity extends ActivityBase implements PluginListener,
 	private void refreshPluginlist() {
 		if (service != null) {
 			List<Plugin> plugins = service.getPlugins();
-			Log.d(TAG, "Loaded plugins from service " + plugins.toString());
+			Log.d(TAG, "Loaded plugins from service " + plugins);
 			List<PluginDescriptor> availablePlugins = service.getAvailablePlugins();
-			Log.d(TAG, "Available plugins from service " + availablePlugins.toString());
+			Log.d(TAG, "Available plugins from service " + availablePlugins);
 			List<PluginDescriptor> descriptors = PluginManager.getAvailablePlugins(availablePlugins, plugins);
 			if (descriptors != null && descriptors.size() > 0) {
 				mAdapter.setPlugins(descriptors);

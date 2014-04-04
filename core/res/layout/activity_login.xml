@@ -17,16 +17,17 @@
         android:text="@string/loginText"
         android:textAppearance="?android:attr/textAppearanceLarge" />
     
-
     <EditText
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_above="@+id/password"
+        android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
         android:ems="10"
-        android:hint="@string/userNameHint">
+        android:hint="@string/userNameHint"
+        android:singleLine="true" >
+
 	        <requestFocus />
 	    </EditText>
 
@@ -52,12 +53,13 @@
         android:id="@+id/password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/username"
         android:layout_above="@+id/loginButton"
-        android:layout_marginTop="10dp"
+        android:layout_alignLeft="@+id/username"
         android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="@string/passwordHint"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:singleLine="true" />
 
 </RelativeLayout>
