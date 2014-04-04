@@ -3,7 +3,6 @@ package hu.edudroid.ictdroidlocationplugin;
 import hu.edudroid.interfaces.AsyncMethodException;
 import hu.edudroid.interfaces.BasePlugin;
 import hu.edudroid.interfaces.MethodNotSupportedException;
-import hu.edudroid.interfaces.PluginListener;
 import hu.edudroid.interfaces.PluginResult;
 import hu.edudroid.interfaces.PluginResultListener;
 import hu.edudroid.interfaces.Quota;
@@ -16,9 +15,7 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 
 public class LocationPlugin extends BasePlugin implements LocationListener {
 
@@ -31,22 +28,23 @@ public class LocationPlugin extends BasePlugin implements LocationListener {
 		return instance;
 	}
 
-	private static final String			PLUGIN_NAME						= "Location plugin";
-	private static final String			PLUGIN_DESCRIPTION				= "Location plugin returns the actual location of the the device asynchronously";
+	private static final String			PLUGIN_NAME								= "Location plugin";
+	private static final String			PLUGIN_DESCRIPTION						= "Location plugin returns the actual location of the the device asynchronously";
 
-	private static final String			METHOD_NAME_REQUEST_LOCATION	= "Request locattion";
+	private static final String			METHOD_NAME_REQUEST_LOCATION			= "Request locattion";
+	private static final String			METHOD_NAME_DISABLE_LOCATION_REQUEST	= "Disable location request";
 
-	protected static final String		FIRST_SAMPLE_EVENT_NAME			= "First sample event";
-	protected static final String		SECOND_SAMPLE_EVENT_NAME		= "Second sample event";
+	protected static final String		FIRST_SAMPLE_EVENT_NAME					= "First sample event";
+	protected static final String		SECOND_SAMPLE_EVENT_NAME				= "Second sample event";
 
-	private static final String			VERSION_CODE					= "v1.0";
+	private static final String			VERSION_CODE							= "v1.0";
 
 	private static final List<String>	mMethods;
 	private static final List<String>	mEvents;
 	private static List<Quota>			mQuotas;
 
-	private static final String			PLUGIN_AUTHOR					= "Nagy László";
-	private static final String			TAG								= LocationPlugin.class.getName();
+	private static final String			PLUGIN_AUTHOR							= "Nagy László";
+	private static final String			TAG										= LocationPlugin.class.getName();
 
 	private PluginResultListener		mListener;
 
@@ -151,6 +149,12 @@ public class LocationPlugin extends BasePlugin implements LocationListener {
 										Map quotaLimits,
 										Object context)	throws AsyncMethodException,
 														MethodNotSupportedException{
+		if (method.equals(METHOD_NAME_DISABLE_LOCATION_REQUEST)){
+			LocationManager manager = (LocationManager) ((Context) context).getSystemService(Context.LOCATION_SERVICE);
+			manager.removeUpdates(this);
+			Map<String, Object> answer = new HashMap<String, Object>();
+			return new PluginResult(answer, null);
+		}
 		return null;
 	}
 
