@@ -36,6 +36,7 @@ public class WiFiPlugin extends BasePlugin {
 		tmpMethods.add(SimpleWiFiConstants.METHOD_SCAN_WIFI);
 		tmpEvents.add(SimpleWiFiConstants.EVENT_WIFI_SIGNAL_STRENGTH_CHANGED);
 		tmpEvents.add(SimpleWiFiConstants.EVENT_WIFI_STATE_CHANGED);
+		tmpEvents.add(SimpleWiFiConstants.EVENT_WIFI_SCAN_RESULT_RECEIVED);
 
 		quotas = Collections.unmodifiableList(tmpQuotas);
 		methods = Collections.unmodifiableList(tmpMethods);

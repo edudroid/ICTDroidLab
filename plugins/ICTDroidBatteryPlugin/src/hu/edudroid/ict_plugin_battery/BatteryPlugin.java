@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
-import android.util.Log;
 import hu.edudroid.interfaces.AsyncMethodException;
 import hu.edudroid.interfaces.BasePlugin;
 import hu.edudroid.interfaces.BatteryConstants;
@@ -85,8 +84,7 @@ public class BatteryPlugin extends BasePlugin {
 		int chargePlug = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
 		if(chargePlug == BatteryManager.BATTERY_PLUGGED_USB) {
 			values.put(BatteryConstants.CHARGER_TYPE, BatteryConstants.CHARGER_TYPE_USB);
-		}
-		if (chargePlug == BatteryManager.BATTERY_PLUGGED_AC) {
+		} else if (chargePlug == BatteryManager.BATTERY_PLUGGED_AC) {
 			values.put(BatteryConstants.CHARGER_TYPE, BatteryConstants.CHARGER_TYPE_AC);
 		} else {
 			values.put(BatteryConstants.CHARGER_TYPE, "Unknown charger");
