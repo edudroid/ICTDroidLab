@@ -64,7 +64,8 @@ public class GCMBroadcast extends HttpServlet {
 			return;
     	}
     	
-    	String userMessage = "http://droidlabportal.appspot.com/serveModule?blob-key="+module.get(0).getProperty(Constants.MODULES_JAR_FILE_KEY_COLUMN);
+    	String userMessage = "http://droidlabportal.appspot.com/serveJar?blob-key="+module.get(0).getProperty(Constants.MODULES_JAR_FILE_KEY_COLUMN)
+    			+" http://droidlabportal.appspot.com/serveDescriptor?blob-key="+module.get(0).getProperty(Constants.MODULES_DESC_FILE_KEY_COLUMN);
     	
         for(Entity device : devices){
         	int modules_count=Integer.parseInt(device.getProperty(Constants.DEVICE_MODULES_COUNT_COLUMN).toString());

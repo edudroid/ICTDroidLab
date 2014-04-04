@@ -126,8 +126,12 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
     	<servlet-class>hu.edudroid.droidlabportal.mobileinterface.UploadLogServlet</servlet-class>
   	</servlet>
   	<servlet>
-    	<servlet-name>ServeModuleServlet</servlet-name>
-    	<servlet-class>hu.edudroid.droidlabportal.mobileinterface.ServeModuleServlet</servlet-class>
+    	<servlet-name>ServeJarServlet</servlet-name>
+    	<servlet-class>hu.edudroid.droidlabportal.mobileinterface.ServeJarServlet</servlet-class>
+  	</servlet>
+  	<servlet>
+    	<servlet-name>ServeDescriptorServlet</servlet-name>
+    	<servlet-class>hu.edudroid.droidlabportal.mobileinterface.ServeDescriptorServlet</servlet-class>
   	</servlet>
   	<servlet>
     	<servlet-name>GCMBroadcast</servlet-name>
@@ -191,8 +195,12 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
     	<url-pattern>/uploadModule</url-pattern>
   	</servlet-mapping>
   	<servlet-mapping>
-    	<servlet-name>ServeModuleServlet</servlet-name>
-    	<url-pattern>/serveModule</url-pattern>
+    	<servlet-name>ServeJarServlet</servlet-name>
+    	<url-pattern>/serveJar</url-pattern>
+  	</servlet-mapping>
+  	<servlet-mapping>
+    	<servlet-name>ServeDescriptorServlet</servlet-name>
+    	<url-pattern>/serveDescriptor</url-pattern>
   	</servlet-mapping>	
   	<servlet-mapping>
     	<servlet-name>GCMBroadcast</servlet-name>
