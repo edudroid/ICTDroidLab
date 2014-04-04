@@ -31,8 +31,19 @@ public class LocationPlugin extends BasePlugin implements LocationListener {
 	private static final String			PLUGIN_NAME								= "Location plugin";
 	private static final String			PLUGIN_DESCRIPTION						= "Location plugin returns the actual location of the the device asynchronously";
 
+	public static final String			LAT										= "latitude";
+	public static final String			LNG										= "longitude";
+	public static final String			ACCURACY								= "accuracy";
+	public static final String			ALTITUDE								= "altitude";
+	public static final String			BEARING									= "bearing";
+	public static final String			SPEED									= "speed";
+	public static final String			TIME									= "time";
+
 	private static final String			METHOD_NAME_REQUEST_LOCATION			= "Request locattion";
 	private static final String			METHOD_NAME_DISABLE_LOCATION_REQUEST	= "Disable location request";
+
+	private static final long			ERROR_ID_PROVIDER_DISABLED				= 10101L;
+	private static final long			RESULT_ID_LOCATION_CHANGED				= 10102L;
 
 	protected static final String		FIRST_SAMPLE_EVENT_NAME					= "First sample event";
 	protected static final String		SECOND_SAMPLE_EVENT_NAME				= "Second sample event";
@@ -185,12 +196,32 @@ public class LocationPlugin extends BasePlugin implements LocationListener {
 
 	@Override
 	public void onLocationChanged(Location location){
-
+		if (mListener != null && location != null){
+			Map<String, Object> answer = new HashMap<String, Object>();
+			answer.put(ACCURACY, location.getAccuracy());
+			answer.put(ALTITUDE, location.getAltitude());
+			answer.put(BEARING, location.getBearing());
+			answer.put(LAT, location.getLatitude());
+			answer.put(LNG, location.getLongitude());
+			answer.put(SPEED, location.getSpeed());
+			answer.put(TIME, location.getTime());
+			mListener.onResult(	RESULT_ID_LOCATION_CHANGED,
+								PLUGIN_NAME,
+								VERSION_CODE,
+								METHOD_NAME_REQUEST_LOCATION,
+								answer);
+		}
 	}
 
 	@Override
 	public void onProviderDisabled(String provider){
-		// TODO Auto-generated method stub
+		if (mListener != null){
+			mListener.onError(	ERROR_ID_PROVIDER_DISABLED,
+								PLUGIN_NAME,
+								VERSION_CODE,
+								METHOD_NAME_REQUEST_LOCATION,
+								"Provider is disabled");
+		}
 
 	}
 
