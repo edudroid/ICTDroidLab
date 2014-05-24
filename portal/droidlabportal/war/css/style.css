@@ -62,7 +62,7 @@ img {
 
 #header .logo {
 	float: left;
-	margin-right: 20px;
+	margin-right: 10px;
 }
 #header .logo a {
 	background: url(../images/logo.png) no-repeat center top;
@@ -85,15 +85,9 @@ img {
 	margin: 0;
 	padding: 0;
 }
-#navigation ul {
-	display: inline-block;
-	list-style: none;
-	margin: 0;
-	padding: 0;
-}
 #navigation li {
 	float: left;
-	width: 160px;
+	width:120px;
 	text-align: center;
 }
 #navigation li a {
@@ -140,20 +134,20 @@ img {
 #userbox li.active a {
 	color: #f99600;
 }
-#adbox {
+#mainImage {
 	background: url(../images/bg-adbox.jpg) repeat-x left top;
 	padding: 60px 0px 0px 0px;
 }
-#adbox > div {
+#mainImage > div {
 	max-width: 800px;
 	margin: 0 auto;
 	padding: 0 80px;
 }
-#adbox > div img {
+#mainImage > div img {
 	float: right;
 	margin-left: 60px;
 }
-#adbox h1, #adbox h2 {
+#mainImage h1, #mainImage h2 {
 	font-family: 'Strong';
 	color: #2c2c2c;
 	font-size: 40px;
@@ -161,25 +155,25 @@ img {
 	margin: 0;
 	text-transform: uppercase;
 }
-#adbox h2 {
+#mainImage h2 {
 	font-family: 'Strong';
 	font-size: 30px;
 	line-height: 36px;
 	text-transform: none;
 }
-#adbox p {
+#mainImage p {
 	font-size: 16px;
 	line-height: 24px;
 	margin: 0;
 }
-#adbox p span {
+#mainImage p span {
 	display: block;
 	font-size: 12px;
 	width: 360px;
 	padding: 24px 0;
 	text-align: center;
 }
-#adbox p span b {
+#mainImage p span b {
 	font-weight: normal;
 	display: block;
 	width: 256px;

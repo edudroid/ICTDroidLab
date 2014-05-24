@@ -79,6 +79,8 @@ public class PluginListActivity extends ActivityBase implements PluginListener,
 	public void onClick(View view) {
 		switch (view.getId()) {
 			case R.id.btn_refresh: {
+				Log.e(TAG, "Refreshing plugin list.");
+				service.pollPlugins();
 				refreshPluginlist();
 				break;
 			}

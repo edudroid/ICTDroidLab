@@ -40,7 +40,7 @@ if (loggedIn) {
 	<div id="header">
 		<div>
 			<div class="logo">
-				<a href="">DroidLab</a>
+				<a href=""></a>
 			</div>
 			<ul id="navigation">
 <% if (request.getParameter("selected").equals(Constants.INDEX)) { %>
@@ -48,7 +48,7 @@ if (loggedIn) {
 <% } else { %>
 				<li>
 <% } %>
- 					<a href="/">Home</a>
+ 					<a href="/">DroidLab</a>
 				</li>
 <% if (request.getParameter("selected").equals(Constants.FEATURES)) { %>
 				<li class="active">

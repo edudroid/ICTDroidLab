@@ -5,10 +5,5 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/android.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gcm-server.jar"/>
-	<classpathentry kind="lib" path="C:/AndroidDeveloper/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.1/appengine-java-sdk-1.9.1/lib/user/appengine-api-1.0-sdk-1.9.1.jar" sourcepath="C:/AndroidDeveloper/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.1/appengine-java-sdk-1.9.1/src/user/appengine-api-1.0-sdk-1.9.1-src.zip">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/AndroidDeveloper/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.1/appengine-java-sdk-1.9.1/docs/javadoc/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
