@@ -20,12 +20,19 @@
 {% endif %}
  					<a href="/">DroidLab</a>
 				</li>
+{% if selected == "CROWDSENSING" %}
+				<li class="active">
+{% else %}
+				<li>
+{% endif %}
+					<a href="/crowdsensing">Crowdsensing</a>
+				</li>
 {% if selected == "DETAILS" %}
 				<li class="active">
 {% else %}
 				<li>
 {% endif %}
-					<a href="/details">Szolgáltatások</a>
+					<a href="/details">Részletek</a>
 				</li>
 {% if  selected == "TEAM" %}
 				<li class="active">
@@ -41,13 +48,14 @@
 {% endif %}
 					<a href="/downloads">Letöltések</a>
 				</li>
-{% if  selected == "PUBLICATIONS" %}
+<!--{% if  selected == "PUBLICATIONS" %}
 				<li class="active">
 {% else %}
 				<li>
 {% endif %}
 					<a href="/publications">Publikációk</a>
 				</li>
+-->
 {% if  selected == "NEWS" %}
 				<li class="active">
 {% else %}

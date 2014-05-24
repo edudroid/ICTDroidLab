@@ -8,6 +8,13 @@ def index(request):
     body = loader.get_template('droidlab/index.html').render(context)
     return HttpResponse(header + body + footer)
 
+def crowdsensing(request):
+    context = RequestContext(request)
+    header = loader.get_template('droidlab/header.html').render(context)
+    footer = loader.get_template('droidlab/footer.html').render(context)
+    body = loader.get_template('droidlab/crowdsensing.html').render(context)
+    return HttpResponse(header + body + footer)
+
 def details(request):
     context = RequestContext(request)
     header = loader.get_template('droidlab/header.html').render(context)
