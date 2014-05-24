@@ -1,0 +1,60 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />	
+	<title>DroidLab portal</title>
+	<link rel="stylesheet" href="/static/css/style.css" type="text/css">
+	<link rel="icon" type="/static/image/png" href="/icon.png">
+</head>
+<body>
+	<div id="header">
+		<div>
+			<div class="logo">
+				<a href=""></a>
+			</div>
+			<ul id="navigation">
+{% if selected == "INDEX"%}
+				<li class="active">
+{% else %}
+				<li>
+{% endif %}
+ 					<a href="/">DroidLab</a>
+				</li>
+{% if selected == "DETAILS" %}
+				<li class="active">
+{% else %}
+				<li>
+{% endif %}
+					<a href="/details">Szolgáltatások</a>
+				</li>
+{% if  selected == "TEAM" %}
+				<li class="active">
+{% else %}
+				<li>
+{% endif %}
+					<a href="/team">Csapat</a>
+				</li>
+{% if  selected == "DOWNLOADS" %}
+				<li class="active">
+{% else %}
+				<li>
+{% endif %}
+					<a href="/downloads">Letöltések</a>
+				</li>
+{% if  selected == "PUBLICATIONS" %}
+				<li class="active">
+{% else %}
+				<li>
+{% endif %}
+					<a href="/publications">Publikációk</a>
+				</li>
+{% if  selected == "NEWS" %}
+				<li class="active">
+{% else %}
+				<li>
+{% endif %}
+					<a href="/news">Hírek</a>
+				</li>
+			</ul>
+		</div>
+	</div>
