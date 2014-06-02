@@ -1,0 +1,21 @@
+{
+	"module_id":"2014060202",
+	"module_name" : "Location Services module",
+	"author": "Lajtha Balázs",
+	"description": "This is a sample module, just demonstrating the structure. Keep on coding!",
+	"website":"http://google.hu",
+	"measurement_length": 43200,
+	"used_plugins": [
+		"Sample plugin"
+	],
+	"permissions": [
+		"READ_CHARGING_LEVEL",
+		"READ_CHARGER_TYPE",
+		"LISTEN_BATTERY_STATE"
+	],
+	"quotas": [
+		{"quota" : "BATTERY_DATA", "limit" : 720}
+	],
+	"jar_file" : "LocationServicesModule.jar",
+	"class_name" : "hu.edudroid.ict.location_services_module.LocationServicesModule"
+}
