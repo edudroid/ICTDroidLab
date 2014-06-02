@@ -6,12 +6,13 @@ public class CellConstants {
 	public static final String METHOD_GET_NEIGHBORING_CELL_INFO = "Get neighboring cell info";
 
 	public static final String EVENT_SIGNAL_STRENGTH_CHANGED = "Signal strength changed";
-	public static final String KEY_CELL_IDS = "Cell ids";
+	public static final String KEY_CELLS = "Cells";
 	public static final String KEY_SIGNAL_STRENGTH = "Signal strength";
 	public static final String KEY_NETWORK_TECHNOLOGY = "Network technology";
 	public static final String VALUE_GSM = "GSM";
 	public static final String VALUE_CDMA = "CDMA";
 	public static final String VALUE_OTHER = "Other";
+	public static final String KEY_CELL_ID = "Cell id";
 
 	public static final String EVENT_CELL_LOCATION_CHANGED = "Cell location changed";
 	public static final String KEY_GSM_CELL_ID = "Cell id";

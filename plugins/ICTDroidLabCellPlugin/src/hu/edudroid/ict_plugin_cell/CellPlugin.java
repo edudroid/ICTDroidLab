@@ -9,7 +9,6 @@ import java.util.Map;
 import android.content.Context;
 import android.telephony.NeighboringCellInfo;
 import android.telephony.TelephonyManager;
-import android.telephony.gsm.GsmCellLocation;
 
 import hu.edudroid.interfaces.AsyncMethodException;
 import hu.edudroid.interfaces.BasePlugin;
@@ -62,10 +61,11 @@ public class CellPlugin extends BasePlugin {
 			Map<String, Object> data = new HashMap<String, Object>();
 			List<HashMap<String, String>> cellsData = new ArrayList<HashMap<String,String>>();
 			for(NeighboringCellInfo info : cells) {
-				if (info.getNetworkType() == TelephonyManager.) {}
-				cellIds.add("" + info.getCid());
+				HashMap<String, String> cellData = new HashMap<String, String>();
+				cellData.put(CellConstants.KEY_CELL_ID, "" + info.getCid());
+				cellsData.add(cellData);
 			}
-			data.put(CellConstants.KEY_CELL_IDS, cellIds );
+			data.put(CellConstants.KEY_CELLS, cellsData );
 			PluginResult result = new PluginResult(data, new HashMap<Long, Double>());
 			return result;
 		} else {
