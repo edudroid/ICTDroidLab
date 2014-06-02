@@ -102,13 +102,16 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	    <servlet-name>registerplugin</servlet-name>
 	    <jsp-file>/jsp/test/RegisterNewPlugin.jsp</jsp-file>
 	</servlet>
+
 	<servlet>
 	    <servlet-name>listregisteredplugins</servlet-name>
 	    <jsp-file>/jsp/test/ListRegisteredPlugins.jsp</jsp-file>
 	</servlet>
 	
-	
-	
+	<servlet>
+	    <servlet-name>getmeasurementresult</servlet-name>
+	    <jsp-file>/jsp/api/getMeasurementResult.jsp</jsp-file>
+	</servlet>
 	
 	
 	
@@ -309,6 +312,12 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	    <url-pattern>/users</url-pattern>
 	</servlet-mapping>
 					
+	<servlet-mapping>
+	    <servlet-name>getmeasurementresult</servlet-name>
+	    <url-pattern>/getmeasurementresult</url-pattern>
+	</servlet-mapping>
+		
+	
 	<welcome-file-list>
 		<welcome-file>index</welcome-file>
 	</welcome-file-list>

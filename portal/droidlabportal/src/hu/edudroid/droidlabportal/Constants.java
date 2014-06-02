@@ -33,6 +33,7 @@ public class Constants {
 	public static final String DEVICE_NAME = "device_name";
 	public static final String GCM_ID = "gcm_id";
 	public static final String SDK_VERSION = "sdk_version";
+	public static final String MODULE_NAME = "module_name";
 	
 	//Role parameters
 	public static final String ROLE_USER = "user";
