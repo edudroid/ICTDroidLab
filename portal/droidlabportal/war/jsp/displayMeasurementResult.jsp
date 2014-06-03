@@ -15,7 +15,6 @@
 <%@page import="hu.edudroid.droidlabportal.user.UserManager"%>
 <%@page import="java.util.List" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
 <jsp:include page="/jsp/header.jsp">
 	<jsp:param name="selected" value="<%=Constants.DEVICE %>" />
 </jsp:include>
@@ -36,6 +35,15 @@
 	} else {
 		log.info("IMEI available");
 	}
+	String moduleName = (String)request.getParameter(Constants.MODULE_NAME);
+	if (moduleName == null) {
+		%>
+		{"error":"no module name specified"}
+		<%
+		return;
+	} else {
+		log.info("Module name available");
+	}
 	// Find device by imei
 	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 	Query.Filter imeiFilter = new FilterPredicate(Constants.DEVICE_IMEI_COLUMN, FilterOperator.EQUAL, imei);
@@ -49,7 +57,12 @@
 		response.sendRedirect("/devices");
 		return;
 	}
+	Query.Filter moduleFilter = new FilterPredicate(Constants.RESULTS_MODULE_NAME_COLUMN, FilterOperator.EQUAL, moduleName);
+	query = new Query(Constants.RESULTS_TABLE_NAME, selectedDevice.getKey()).setFilter(moduleFilter).addSort(Constants.RESULTS_DATE_COLUMN, SortDirection.DESCENDING);
+	List<Entity> results = datastore.prepare(query).asList(Builder.withLimit(10));
+	
 %>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <div id="contents">
 	<div id="tagline" class="clearfix">
 		<jsp:include page="/jsp/usersidemenu.jsp">
@@ -63,32 +76,55 @@
 				<span>Registration: <%= Constants.formatDate((Date)selectedDevice.getProperty(Constants.DEVICE_DATE_COLUMN)) %> </span>
 		    </p>
 			<h2> Results </h2>
-<%
-	query = new Query(Constants.RESULTS_TABLE_NAME, selectedDevice.getKey()).addSort(Constants.RESULTS_DATE_COLUMN, SortDirection.DESCENDING);
-	List<Entity> results = datastore.prepare(query).asList(Builder.withLimit(10));
-%>
-			<table>
-				<tr><th>Date</th><th>Level</th><th>Module</th><th>Message</th></tr>
-<%
-	for(Entity result : results){
-		String dateString = null;
-		try {
-			dateString = Constants.formatTime(new Date(Long.parseLong((String)result.getProperty(Constants.RESULTS_DATE_COLUMN))));
-		} catch (Exception e){
-			e.printStackTrace();
-			dateString = "N/A";
-		}
-%>
-				<tr>
-					<td><%= dateString %></td>
-					<td><%= result.getProperty(Constants.RESULTS_LOG_LEVEL_COLUMN) %></td>
-					<td><a href="/displaymeasurementresult?IMEI=<%= selectedDevice.getProperty(Constants.DEVICE_IMEI_COLUMN)%>&module_name=<%= result.getProperty(Constants.RESULTS_MODULE_NAME_COLUMN)%>"><%= result.getProperty(Constants.RESULTS_MODULE_NAME_COLUMN) %></a></td>
-					<td><%= result.getProperty(Constants.RESULTS_MESSAGE_COLUMN) %></td>
-				</tr>
-<%
-}	
-%>
-			</table>			
+			<div id="chart_div"></div>
+				<script type="text/javascript">
+				
+				      // Load the Visualization API and the piechart package.
+				      google.load('visualization', '1.0', {'packages':['corechart']});
+				
+				      // Set a callback to run when the Google Visualization API is loaded.
+				      google.setOnLoadCallback(drawChart);
+				
+				      // Callback that creates and populates a data table,
+				      // instantiates the pie chart, passes in the data and
+				      // draws it.
+				      function drawChart() {
+				
+				        // Create the data table.
+				        var data = new google.visualization.DataTable();
+				        data.addColumn('datetime', 'Time');
+				        data.addColumn('number', 'Value');
+				        data.addRows([
+							<%
+								boolean first = true;
+								for(Entity result : results){
+									long date = 0;
+									try {
+										date = Long.parseLong((String)result.getProperty(Constants.RESULTS_DATE_COLUMN));
+									} catch (Exception e){
+										e.printStackTrace();
+									}
+									if (!first) {
+										%>,<%
+									}
+									first = false;
+							%>
+								[new Date(<%= date %>),<%= result.getProperty(Constants.RESULTS_MESSAGE_COLUMN) %>]
+							<%
+							}
+							%>
+				        ]);
+				
+				        // Set chart options
+				        var options = {'title':'Measurements',
+				                       'width':400,
+				                       'height':300};
+				
+				        // Instantiate and draw our chart, passing in some options.
+				        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+				        chart.draw(data, options);
+				      }
+				    </script>
 		</div>
 	</div>
 </div>

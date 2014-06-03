@@ -113,7 +113,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	    <jsp-file>/jsp/api/getMeasurementResult.jsp</jsp-file>
 	</servlet>
 	
-	
+	<servlet>
+	    <servlet-name>displaymeasurementresult</servlet-name>
+	    <jsp-file>/jsp/displayMeasurementResult.jsp</jsp-file>
+	</servlet>
+		
 	
 	
 	<servlet>
@@ -317,7 +321,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	    <url-pattern>/getmeasurementresult</url-pattern>
 	</servlet-mapping>
 		
-	
+	<servlet-mapping>
+	    <servlet-name>displaymeasurementresult</servlet-name>
+	    <url-pattern>/displaymeasurementresult</url-pattern>
+	</servlet-mapping>
+		
 	<welcome-file-list>
 		<welcome-file>index</welcome-file>
 	</welcome-file-list>
