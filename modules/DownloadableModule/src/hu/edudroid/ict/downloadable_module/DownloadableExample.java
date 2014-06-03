@@ -25,7 +25,7 @@ public class DownloadableExample extends Module {
 	@Override
 	public void init(){
 		mLogger.e(TAG, "Downloadable module init...");
-		mTimeService.runPeriodic(1000, 600000, 0, this);	
+		mTimeService.runPeriodic(1000, 600000, 0, this);
 		registerPluginListeners();
 	}
 	

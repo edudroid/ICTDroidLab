@@ -23,7 +23,6 @@ public class LocationServicesModule extends Module {
 
 	@Override
 	public void init(){
-		mLogger.e(TAG, "Downloadable module init...");
 		mTimeService.runPeriodic(1000, 60000, 0, this);
 	}
 	

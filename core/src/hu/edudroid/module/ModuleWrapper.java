@@ -83,6 +83,10 @@ public class ModuleWrapper extends Module implements Preferences, Logger, Plugin
 	@Override
 	public void onEvent(String plugin, String version, String eventName,
 			Map<String, Object> extras) {
+		Editor editor = statPrefs.edit();
+		editor.putLong(ModuleStatsListener.STAT_KEY_LAST_TIMER_EVENT, System.currentTimeMillis());
+		editor.commit();
+		statsChangted();
 		module.onEvent(plugin, version, eventName, extras);
 	}
 
