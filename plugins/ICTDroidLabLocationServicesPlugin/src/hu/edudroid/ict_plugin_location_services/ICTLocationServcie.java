@@ -53,17 +53,23 @@ public class ICTLocationServcie extends Service implements ConnectionCallbacks, 
 		if (intent.hasExtra(LocationServicesPlugin.METHOD_NAME) && intent.getStringExtra(LocationServicesPlugin.METHOD_NAME).equals(LocationServicesConstants.METHOD_GET_LOCATION)) {
 			Log.e(TAG, "Requested location");
 			long callId = intent.getLongExtra(LocationServicesPlugin.CALL_ID, -1);
+			Log.e(TAG, "Connected : " + connected);
 			if (connected) {
-				Location mCurrentLocation = mLocationClient.getLastLocation();				
-				Map<String, Object> results = new HashMap<String, Object>();
-				results.put(LocationServicesConstants.KEY_LATITUDE, mCurrentLocation.getLatitude());
-				results.put(LocationServicesConstants.KEY_LONGITUDE, mCurrentLocation.getLongitude());
-				results.put(LocationServicesConstants.KEY_ACCURACY, mCurrentLocation.getAccuracy());
-				results.put(LocationServicesConstants.KEY_PROVIDER, mCurrentLocation.getProvider());
-				results.put(LocationServicesConstants.KEY_SPEED, mCurrentLocation.getSpeed());
-				// Build result
-				Map<Long, Double> quotas = new HashMap<Long, Double>();
-				communicationInterface.reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, LocationServicesConstants.METHOD_GET_LOCATION, new PluginResult(results, quotas), this);
+				Location mCurrentLocation = mLocationClient.getLastLocation();
+				Log.e(TAG, "Current location : " + mCurrentLocation);
+				if (mCurrentLocation != null) {
+					Map<String, Object> results = new HashMap<String, Object>();
+					results.put(LocationServicesConstants.KEY_LATITUDE, mCurrentLocation.getLatitude());
+					results.put(LocationServicesConstants.KEY_LONGITUDE, mCurrentLocation.getLongitude());
+					results.put(LocationServicesConstants.KEY_ACCURACY, mCurrentLocation.getAccuracy());
+					results.put(LocationServicesConstants.KEY_PROVIDER, mCurrentLocation.getProvider());
+					results.put(LocationServicesConstants.KEY_SPEED, mCurrentLocation.getSpeed());
+					// Build result
+					Map<Long, Double> quotas = new HashMap<Long, Double>();
+					communicationInterface.reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, LocationServicesConstants.METHOD_GET_LOCATION, new PluginResult(results, quotas), this);
+				} else {
+					communicationInterface.reportResult(callId, Constants.INTENT_EXTRA_VALUE_ERROR, LocationServicesConstants.METHOD_GET_LOCATION, new PluginResult(null, null), this);					
+				}
 			} else {
 				communicationInterface.reportResult(callId, Constants.INTENT_EXTRA_VALUE_ERROR, LocationServicesConstants.METHOD_GET_LOCATION, new PluginResult(null, null), this);
 			}
@@ -83,5 +89,6 @@ public class ICTLocationServcie extends Service implements ConnectionCallbacks, 
 
 	@Override
 	public void onConnectionFailed(ConnectionResult arg0) {
+		Log.e(TAG, "Connection failed " + arg0);
 	}
 }
