@@ -22,7 +22,7 @@ public class ICTPhoneStateListener extends PhoneStateListener {
     public ICTPhoneStateListener(CellService ictCellService) {
     	this.service = ictCellService;
 		telephonyManager = (TelephonyManager)service.getSystemService(Context.TELEPHONY_SERVICE);
-		int flags = PhoneStateListener.LISTEN_SIGNAL_STRENGTH | 
+		int flags = PhoneStateListener.LISTEN_SIGNAL_STRENGTHS | 
 				PhoneStateListener.LISTEN_CELL_LOCATION |
 				PhoneStateListener.LISTEN_DATA_CONNECTION_STATE |
 				PhoneStateListener.LISTEN_SERVICE_STATE;
