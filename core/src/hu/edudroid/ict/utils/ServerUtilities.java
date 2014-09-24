@@ -32,7 +32,7 @@ public final class ServerUtilities {
 	private static final String GCM_ID = "gcm_id";
 	private static final String SDK_VERSION = "sdk_version";
 	
-	public static boolean hasUserLoginCookie(Context context) {
+	public static boolean hasUserLoginCookie(final Context context) {
 		Log.i(TAG, "Checking login cookie");
 		PersistantCookieStore cookieStore = new PersistantCookieStore(context);
 		String loginCookie = cookieStore.getCookie(PORTAL_DOMAIN, "/",LOGIN_COOKIE);
@@ -45,7 +45,7 @@ public final class ServerUtilities {
 	 * @param password The user's password
 	 * @return True if login was successful, false otherwise
 	 */
-	public static boolean login(String userName, String password, Context context) {
+	public static boolean login(final String userName, final String password, final Context context) {
 		Log.d(TAG, "Logging in to server " + userName + " " + password);
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(USER_NAME, userName);
@@ -59,7 +59,7 @@ public final class ServerUtilities {
 	 * Register this account/device pair within the server.
 	 * 
 	 */
-	public static boolean registerDevice(final Context context, String imei, String deviceName, String gcmId, String androidVersion, Map<String, Integer> pluginVersions) {
+	public static boolean registerDevice(final Context context, final String imei, final String deviceName, final String gcmId, final String androidVersion, final Map<String, Integer> pluginVersions) {
 		Log.d(TAG, "Attempting to register device");
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(IMEI, imei);
@@ -116,7 +116,7 @@ public final class ServerUtilities {
 		Log.e(TAG, message);
 	}
 
-	public static List<PluginDescriptor> getAvailablePlugins(Runnable runnable) {
+	public static List<PluginDescriptor> getAvailablePlugins(final Runnable runnable) {
 		List<PluginDescriptor> availablePlugins = new ArrayList<PluginDescriptor>();
 		String availablePluginsString = HttpUtils.get(ServerUtilities.PORTAL_URL + "/getRegisteredPlugins");
 		Log.e(TAG, "Plugin string " + availablePluginsString);
@@ -124,7 +124,7 @@ public final class ServerUtilities {
 		return availablePlugins;
 	}
 
-	public static boolean register(String userName, String password, Context applicationContext) {
+	public static boolean register(final String userName, final String password, final Context applicationContext) {
 		Log.d(TAG, "Logging in to server " + userName + " " + password);
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(USER_NAME, userName);
