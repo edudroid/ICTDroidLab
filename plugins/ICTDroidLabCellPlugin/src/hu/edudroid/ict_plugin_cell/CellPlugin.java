@@ -62,8 +62,22 @@ public class CellPlugin extends BasePlugin {
 			List<HashMap<String, String>> cellsData = new ArrayList<HashMap<String,String>>();
 			for(NeighboringCellInfo info : cells) {
 				HashMap<String, String> cellData = new HashMap<String, String>();
-				cellData.put(CellConstants.KEY_CELL_ID, "" + info.getCid());
-				cellsData.add(cellData);
+				switch (info.getNetworkType()) {
+				case TelephonyManager.NETWORK_TYPE_EDGE:
+				case TelephonyManager.NETWORK_TYPE_GPRS:
+					cellData.put(CellConstants.KEY_CELL_ID, "" + info.getCid());
+					cellsData.add(cellData);
+					break;
+				case TelephonyManager.NETWORK_TYPE_UMTS:
+				case TelephonyManager.NETWORK_TYPE_HSPA:
+				case TelephonyManager.NETWORK_TYPE_HSDPA:
+				case TelephonyManager.NETWORK_TYPE_HSUPA:
+					cellData.put(CellConstants.KEY_CELL_ID, "" + info.getPsc());
+					cellsData.add(cellData);
+					break;
+				case TelephonyManager.NETWORK_TYPE_UNKNOWN:
+					// skip
+				}
 			}
 			data.put(CellConstants.KEY_CELLS, cellsData );
 			PluginResult result = new PluginResult(data, new HashMap<Long, Double>());
