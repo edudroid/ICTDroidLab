@@ -17,7 +17,7 @@ public class ScreenListener extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		PluginCommunicationInterface communicationInterface = new PluginCommunicationInterface(BatteryPlugin.getInstance());
+		PluginCommunicationInterface communicationInterface = new PluginCommunicationInterface(new BatteryPlugin());
 		// Subscribe to screen event when any broadcast is received
 		if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)){
 			Log.d(TAG, "Screen off");
