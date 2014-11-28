@@ -20,7 +20,7 @@ public class GCMIntentService extends GCMBaseIntentService {
      * Method called on device registered
      **/
     @Override
-    protected void onRegistered(Context context, final String gcmId) {
+    protected void onRegistered(final Context context, final String gcmId) {
 		Log.e(TAG, "GCM registration successful");
     	Intent registerIntent = new Intent(context, CoreService.class);
     	registerIntent.setAction(CoreService.REGISTER_DEVICE_COMMAND);
@@ -28,20 +28,23 @@ public class GCMIntentService extends GCMBaseIntentService {
     }
  
     /**
-     * Method called on device un registred
+     * Method called on device unregistered
      * */
     @Override
-    protected void onUnregistered(Context context, String registrationId) {
-        unRegisterToServer regTask = new unRegisterToServer(context,registrationId);
-        Thread thread = new Thread(regTask, "unRegisterToServer");
-        thread.start();
+    protected void onUnregistered(final Context context, final String registrationId) {
+     	new Thread(new Runnable() {
+    		@Override
+    		public void run() {
+    			ServerUtilities.unregister(context, registrationId);
+    		}
+    	}).start();
     }
  
     /**
      * Method called on Receiving a new message
      * */
     @Override
-    protected void onMessage(Context context, Intent intent) {
+    protected void onMessage(final Context context, final Intent intent) {
         String message = intent.getExtras().getString("message");
         if(message!=null){
         	Log.i(TAG, "Message has been received: "+message);
@@ -53,7 +56,7 @@ public class GCMIntentService extends GCMBaseIntentService {
      * Method called on receiving a deleted message
      * */
     @Override
-    protected void onDeletedMessages(Context context, int total) {
+    protected void onDeletedMessages(final Context context, final int total) {
         String message = getString(R.string.gcm_deleted, total);
         if(message!=null){
         	Log.d(TAG,message);
@@ -64,29 +67,14 @@ public class GCMIntentService extends GCMBaseIntentService {
      * Method called on Error
      * */
     @Override
-    public void onError(Context context, String errorId) {
+    public void onError(final Context context, final String errorId) {
         Log.e(TAG, "Received error: " + errorId);
     }
  
     @Override
-    protected boolean onRecoverableError(Context context, String errorId) {
+    protected boolean onRecoverableError(final Context context, final String errorId) {
         Log.i(TAG, "Received recoverable error: " + errorId);
         return super.onRecoverableError(context, errorId);
-    }
-    
-    public class unRegisterToServer implements Runnable {
-
-		Context mContext;
-		String mRegistrationID;
-		
-        public unRegisterToServer(Context context, String regId) {
-            mContext=context;
-            mRegistrationID=regId;
-        }
-
-        public void run() {
-        	ServerUtilities.unregister(mContext, mRegistrationID);
-        }
     }
  
 }

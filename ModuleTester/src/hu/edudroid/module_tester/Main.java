@@ -1,6 +1,5 @@
 package hu.edudroid.module_tester;
 
-import java.util.Date;
 import java.util.List;
 
 import hu.edudroid.ict.sample_module.ModuleExample;
