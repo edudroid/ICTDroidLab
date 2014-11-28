@@ -13,21 +13,11 @@ import android.os.BatteryManager;
 import hu.edudroid.interfaces.AsyncMethodException;
 import hu.edudroid.interfaces.BasePlugin;
 import hu.edudroid.interfaces.BatteryConstants;
-import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginResult;
 import hu.edudroid.interfaces.Quota;
 
 public class BatteryPlugin extends BasePlugin {
 	
-	private static Plugin instance;
-	public static Plugin getInstance() {
-		if (instance == null) {
-			instance = new BatteryPlugin();
-		}
-		return instance;
-	}
-
-
 	private static final String PLUGIN_DESCRIPTION = "This plugin let's researchers access the battery status of the device.";
 	private static final String VERSION_CODE = "v1.0";
 	private static final String PLUGIN_AUTHOR = "Lajtha Balázs";

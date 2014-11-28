@@ -19,7 +19,7 @@ public class BatteryListener extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		Log.e(TAG, "Something received.");
 		context.startService(new Intent(context, BatteryService.class));
-		PluginCommunicationInterface communicationInterface = new PluginCommunicationInterface(BatteryPlugin.getInstance());
+		PluginCommunicationInterface communicationInterface = new PluginCommunicationInterface(new BatteryPlugin());
 		IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
 		Intent batteryStatus = ((Context) context).registerReceiver(null, ifilter);
 		Map<String, Object> values = BatteryPlugin.processIntent(batteryStatus);
