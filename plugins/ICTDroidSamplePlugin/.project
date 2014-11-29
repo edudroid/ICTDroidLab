@@ -3,6 +3,7 @@
 	<name>ICTDroidLabSamplePlugin</name>
 	<comment></comment>
 	<projects>
+		<project>ICTDroidPlugin</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
