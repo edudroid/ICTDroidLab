@@ -24,7 +24,8 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 	private final HashSet<PluginResultListener> mResultListeners = new HashSet<PluginResultListener>();
 	private final HashSet<PluginEventListener> mPluginEventListeners = new HashSet<PluginEventListener>();
 
-	public PluginIntentReceiver() {
+	public PluginIntentReceiver(final PluginListener listener) {
+		pluginListeners.add(listener);
 	}
 
 

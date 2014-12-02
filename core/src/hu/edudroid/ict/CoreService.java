@@ -100,8 +100,9 @@ public class CoreService extends Service implements PluginListener {
 			}).start();
 			
 			
-			pluginIntentReceiver = new PluginIntentReceiver();
-			pluginIntentReceiver.registerPluginDetailsListener(this);
+
+
+			pluginIntentReceiver = new PluginIntentReceiver(this);
 			pluginCollection = new AndroidPluginCollection(this, pluginIntentReceiver);
 			moduleManager = new ModuleManager(this);
 			Log.i(TAG, "Registering receivers...");
