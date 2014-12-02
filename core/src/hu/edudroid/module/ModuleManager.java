@@ -93,11 +93,13 @@ public class ModuleManager implements ModuleStatsListener{
 				throw new NoSuchMethodException("Couldn't find proper consturctor.");
 			}
 			TimeServiceInterface timeService = new ModuleTimeService();
-			timers.put(moduleId, timeService);
+
 			moduleWrapper = new ModuleWrapper(moduleDescriptor, constructor, new SharedPrefs(coreService, moduleId),
 					new AndroidLogger(moduleId, context),
 					pluginCollection,
 					timeService, coreService);
+
+			timers.put(moduleId, timeService);
 			moduleWrapper.registerModuleStatsListener(this);
 			moduleWrappers.put(moduleDescriptor.moduleId, moduleWrapper);
 			Log.e(TAG, "Module added");
