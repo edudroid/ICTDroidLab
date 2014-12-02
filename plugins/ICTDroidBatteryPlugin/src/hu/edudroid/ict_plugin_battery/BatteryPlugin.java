@@ -53,8 +53,8 @@ public class BatteryPlugin extends BasePlugin {
 		methods = Collections.unmodifiableList(tmpMethods);
 		events = Collections.unmodifiableList(tmpEvents);
 	}
-	
-	public BatteryPlugin() {
+
+	private BatteryPlugin() {
 		super(BatteryConstants.PLUGIN_NAME, BatteryPlugin.class.getPackage().getName(), BatteryListener.class.getName(), PLUGIN_AUTHOR,
 				PLUGIN_DESCRIPTION, VERSION_CODE, events, methods, quotas);
 	}
