@@ -80,7 +80,7 @@ public class CellPlugin extends BasePlugin {
 				}
 			}
 			data.put(CellConstants.KEY_CELLS, cellsData );
-			PluginResult result = new PluginResult(data, new HashMap<Long, Double>());
+			PluginResult result = new PluginResult(data, null);
 			return result;
 		} else {
 			return null;

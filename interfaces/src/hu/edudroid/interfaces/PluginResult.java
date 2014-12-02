@@ -11,6 +11,7 @@ public class PluginResult {
 	private Map<String, Object> result;
 	private Map<Long, Double> consumedQuota;
 	
+	/** @param consumedQuota should be null if no quota was consumed */
 	public PluginResult(Map<String, Object> result, Map<Long, Double> consumedQuota) {
 		this.result = result;
 		this.consumedQuota = consumedQuota;
