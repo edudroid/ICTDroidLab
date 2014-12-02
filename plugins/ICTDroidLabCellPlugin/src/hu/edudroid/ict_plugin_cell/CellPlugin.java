@@ -19,11 +19,11 @@ import hu.edudroid.interfaces.PluginResult;
 import hu.edudroid.interfaces.Quota;
 
 public class CellPlugin extends BasePlugin {
-	
+
 	private static final String PLUGIN_DESCRIPTION = "Makes user location available to modules..";
 	private static final String VERSION_CODE = "v1.0";
-	private static final String PLUGIN_AUTHOR = "Lajtha Bal·zs";
-	
+	private static final String PLUGIN_AUTHOR = "Lajtha Bal√°zs";
+
 	private static final List<String> methods;
 	private static final List<String> events;
 	private static List<Quota> quotas;
@@ -32,7 +32,7 @@ public class CellPlugin extends BasePlugin {
 	private static final String TAG = CellPlugin.class.getName();
 	protected static final String METHOD_NAME = "METHOD_NAME";
 	protected static final String CALL_ID = "CALL_ID";
-	
+
 	static {
 		List<String> tmpMethods = new ArrayList<String>();
 		List<String> tmpEvents = new ArrayList<String>();
@@ -45,11 +45,12 @@ public class CellPlugin extends BasePlugin {
 		methods = Collections.unmodifiableList(tmpMethods);
 		events = Collections.unmodifiableList(tmpEvents);
 	}
-	
+
 	public CellPlugin() {
 		super(LocationServicesConstants.PLUGIN_NAME, CellPlugin.class.getPackage().getName(), CellListener.class.getName(), PLUGIN_AUTHOR,
 				PLUGIN_DESCRIPTION, VERSION_CODE, events, methods, quotas);
 	}
+
 
 	@Override
 	public PluginResult callMethodSync(long callId, String method,
@@ -86,7 +87,7 @@ public class CellPlugin extends BasePlugin {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public Map<Long, Double> getCostOfMethod(String method,
 			Map<String, Object> parameters) {

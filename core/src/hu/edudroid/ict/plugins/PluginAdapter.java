@@ -31,14 +31,14 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	private final String versionCode;
 	private final PluginIntentReceiver pluginIntentReceiver;
 
-	private Context context;
-	private List<String> pluginMethods;
-	private List<String> events;
-	
-	
-	private Map<Long, PluginResultListener> mCallBackIdentification = new HashMap<Long, PluginResultListener>();
-	private Map<String,HashSet<PluginEventListener>> mEventListeners = new HashMap<String,HashSet<PluginEventListener>>();
-	
+	private final Context context;
+	private final List<String> pluginMethods;
+	private final List<String> events;
+
+
+	private final Map<Long, PluginResultListener> mCallBackIdentification = new HashMap<Long, PluginResultListener>();
+	private final Map<String,HashSet<PluginEventListener>> mEventListeners = new HashMap<String,HashSet<PluginEventListener>>();
+
 	private static long mCallMethodID = 0;
 
 	public PluginAdapter(final Plugin plugin, final PluginIntentReceiver pluginIntentReceiver, final Context context) {
@@ -58,8 +58,6 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	    pluginIntentReceiver.registerResultListener(this);
 	}
 
-
-	
 	@Override
 	public String getName() {
 		return name;
@@ -89,38 +87,39 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	public String getVersionCode() {
 		return versionCode;
 	}
-	
+
 	@Override
 	public List<String> getMethodNames(){
 		return pluginMethods;
 	}
-	
+
 	@Override
 	public List<Quota> getQuotas(){
 		final ArrayList<Quota> quotas = new ArrayList<Quota>();
 		// TODO retrieve quotas
 		return quotas;
 	}
-	
+
 	@Override
 	public List<String> getAllEvents() {
 		return events;
 	}
-	
+
+	@Override
 	public long callMethodAsync(String method, Map<String, Object> params, PluginResultListener listener){
 		return callMethodAsync(method, params, listener, null);
 	}
-	
+
 	@Override
-	public long callMethodAsync(String method, Map<String, Object> params, PluginResultListener listener, Map<Long, Double> quotaLimits){		
-		
+	public long callMethodAsync(String method, Map<String, Object> params, PluginResultListener listener, Map<Long, Double> quotaLimits){
+
 		pluginIntentReceiver.registerResultListener(this);
-		
+
 		mCallBackIdentification.put(mCallMethodID, listener);
 
 		// TODO check quota limits
 		// TODO if no limits are set, retrieve max limit from system
-		
+
 		Intent intent = new Intent(Constants.INTENT_ACTION_CALL_METHOD);
 		intent.setComponent(new ComponentName(packageName, receiverClassName));
 		intent.putExtra(Constants.INTENT_EXTRA_CALL_ID, mCallMethodID);

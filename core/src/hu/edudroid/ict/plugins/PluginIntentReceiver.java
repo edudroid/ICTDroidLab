@@ -18,7 +18,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 public class PluginIntentReceiver extends BroadcastReceiver {
-	
+
 	private final String TAG = PluginIntentReceiver.class.getName();
 	private final HashSet<PluginListener> pluginListeners = new HashSet<PluginListener>();
 	private final HashSet<PluginResultListener> mResultListeners = new HashSet<PluginResultListener>();
@@ -36,7 +36,7 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 	public void registerResultListener(PluginResultListener listener){
 		mResultListeners.add(listener);
 	}
-	
+
 	public void registerEventListener(PluginEventListener listener){
 		mPluginEventListeners.add(listener);
 	}
@@ -55,9 +55,9 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent){
-		
+
 		Log.d(TAG, "onReceive: " + intent.getAction());
-		
+
 		final Bundle extras = intent.getExtras();
 
 		if (extras == null)
@@ -106,7 +106,7 @@ public class PluginIntentReceiver extends BroadcastReceiver {
 				}
 			}
 		}
-		
+
 		if(intent.getAction().equals(Constants.INTENT_ACTION_PLUGIN_EVENT)){
 			final String plugin = extras.getString(Constants.INTENT_EXTRA_KEY_PLUGIN_ID);
 			final String version = extras.getString(Constants.INTENT_EXTRA_KEY_VERSION);

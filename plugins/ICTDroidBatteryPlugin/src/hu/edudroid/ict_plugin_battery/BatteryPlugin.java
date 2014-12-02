@@ -18,7 +18,7 @@ import hu.edudroid.interfaces.PluginResult;
 import hu.edudroid.interfaces.Quota;
 
 public class BatteryPlugin extends BasePlugin {
-	
+
 	private static Plugin instance;
 	public static Plugin getInstance() {
 		if (instance == null) {
@@ -31,14 +31,14 @@ public class BatteryPlugin extends BasePlugin {
 	private static final String PLUGIN_DESCRIPTION = "This plugin let's researchers access the battery status of the device.";
 	private static final String VERSION_CODE = "v1.0";
 	private static final String PLUGIN_AUTHOR = "Lajtha Balázs";
-	
+
 	private static final List<String> methods;
 	private static final List<String> events;
 	private static List<Quota> quotas;
 
 	@SuppressWarnings("unused")
 	private static final String TAG = BatteryPlugin.class.getName();
-	
+
 	static {
 		List<String> tmpMethods = new ArrayList<String>();
 		List<String> tmpEvents = new ArrayList<String>();
@@ -72,7 +72,7 @@ public class BatteryPlugin extends BasePlugin {
 			return null;
 		}
 	}
-	
+
 	public static Map<String, Object> processIntent(Intent intent) {
 		Map<String, Object> values = new HashMap<String, Object>();
 		int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);

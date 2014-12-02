@@ -33,30 +33,30 @@ import android.util.Log;
 import com.google.android.gcm.GCMRegistrar;
 
 public class CoreService extends Service implements PluginListener {
-	
-	public static final String TEMP_DIR = "temp"; 
-	public static final String DESCRIPTOR_FOLDER = "descriptors"; 
+
+	public static final String TEMP_DIR = "temp";
+	public static final String DESCRIPTOR_FOLDER = "descriptors";
 	public static final String JAR_FOLDER = "jars";
-	
+
 	public static final String REGISTER_DEVICE_COMMAND = "register device";
-	
+
 	// Google project id
     public static final String SENDER_ID = "1017069233076";
 	private static final String TAG = "CoreService";
 
 	private PluginIntentReceiver pluginIntentReceiver;
-	
-	private CoreBinder binder = new CoreBinder();
-	
+
+	private final CoreBinder binder = new CoreBinder();
+
 	private AndroidPluginCollection pluginCollection;
 
-	private HashSet<PluginListener> pluginListeners = new HashSet<PluginListener>();
+	private final HashSet<PluginListener> pluginListeners = new HashSet<PluginListener>();
 	private boolean started = false;
 	private List<PluginDescriptor> availablePlugins;
 	private ModuleManager moduleManager;
 	private WakeLock wl;
-	
-	
+
+
 	public static File getDescriptorFolder(Context context) {
 		File ret = new File(context.getFilesDir(), CoreService.DESCRIPTOR_FOLDER);
 		ret.mkdirs();
@@ -64,14 +64,14 @@ public class CoreService extends Service implements PluginListener {
 		return ret;
 	}
 
-	
+
 	public static File getJarFolder(Context context) {
 		File ret = new File(context.getFilesDir(), CoreService.JAR_FOLDER);
 		ret.mkdirs();
 		Log.e(TAG, "JAR path : " + ret.getAbsolutePath());
 		return ret;
 	}
-	
+
 	public class CoreBinder extends Binder {
 		public CoreService getService() {
 			return CoreService.this;
@@ -84,7 +84,7 @@ public class CoreService extends Service implements PluginListener {
 	}
 
 	public void init() {
-		if (!started) {			
+		if (!started) {
 			Log.i(TAG, "Starting CoreService!");
 			started = true;
 			PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -92,14 +92,12 @@ public class CoreService extends Service implements PluginListener {
 			wl.acquire();
 			// Download available plugin list
 			new Thread(new Runnable() {
-				
+
 				@Override
 				public void run() {
 					availablePlugins = ServerUtilities.getAvailablePlugins(this);
 				}
 			}).start();
-			
-			
 
 
 			pluginIntentReceiver = new PluginIntentReceiver(this);
@@ -113,26 +111,26 @@ public class CoreService extends Service implements PluginListener {
 			registerReceiver(pluginIntentReceiver, new IntentFilter(
 					Constants.INTENT_ACTION_PLUGIN_EVENT));
 			Log.i(TAG, "Receivers are registered!");
-			
-			// Register GCM 
+
+			// Register GCM
 	        GCMRegistrar.checkDevice(this);
 	        GCMRegistrar.checkManifest(this);
 
 	        String registration_ID = GCMRegistrar.getRegistrationId(this);
-	 
+
 	        if (registration_ID.equals("")) {
-	            Log.i("GCM registration","Registration is not present, register now with GCM!");          
+	            Log.i("GCM registration","Registration is not present, register now with GCM!");
 	            GCMRegistrar.register(this, SENDER_ID);
 	        } else {
 	        	Log.i("GCM registration","Device is already registered on GCM: " +registration_ID);
 				new Thread(new Runnable() {
-					
+
 					@Override
 					public void run() {
 						registerWithBackend();
 					}
 				}).start();
-	        }			
+	        }
 			pollPlugins();
 			// Process descriptor files
 			// Copy modules from assets at startup.
@@ -149,9 +147,9 @@ public class CoreService extends Service implements PluginListener {
 					moduleManager.startModule(moduleDescriptor, pluginCollection, getApplicationContext());
 				}
 			}
-		}		
+		}
 	}
-	
+
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
@@ -167,7 +165,7 @@ public class CoreService extends Service implements PluginListener {
 		}
 		return Service.START_STICKY;
 	}
-	
+
 	public void registerPluginDetailsListener(PluginListener listener) {
 		pluginListeners.add(listener);
 	}
@@ -231,7 +229,7 @@ public class CoreService extends Service implements PluginListener {
 	public boolean installModule(ModuleDescriptor moduleDescriptor) {
 		return moduleManager.installModule(moduleDescriptor, pluginCollection, this);
 	}
-	
+
 	/**
 	 * Remove a module from the core, module will stop running.
 	 * @param moduleId The id of the module
@@ -240,10 +238,10 @@ public class CoreService extends Service implements PluginListener {
 	public boolean removeModule(String moduleId) {
 		return moduleManager.removeModule(moduleId, pluginCollection);
 	}
-	
+
 	@Override
 	public void onDestroy() {
-		wl.release();			
+		wl.release();
 		Log.e(TAG, "Service destroyed");
 		super.onDestroy();
 	}
@@ -264,7 +262,7 @@ public class CoreService extends Service implements PluginListener {
 	public List<Plugin> getPlugins() {
 		return pluginCollection.getAllPlugins();
 	}
-	
+
 	/**
 	 * Returns available plugins, including those already downloaded
 	 * @return
@@ -272,15 +270,15 @@ public class CoreService extends Service implements PluginListener {
 	public List<PluginDescriptor> getAvailablePlugins() {
 		return availablePlugins;
 	}
-	
+
 	/**
 	 * Register device to the server, this registration must be done every time the device comes online,
 	 * or the user credentials become available, or the device capabilities or GCM ID changes.
 	 */
 	public void registerWithBackend() {
     	// Register device with server
-		TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE); 
-        String imei = mngr.getDeviceId(); 
+		TelephonyManager mngr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+        String imei = mngr.getDeviceId();
         String sdkVersion=String.valueOf(android.os.Build.VERSION.SDK_INT);
 		String deviceName = CoreConstants.getString(CoreConstants.DEVICE_NAME_KEY, CoreConstants.DEFAULT_DEVICE_NAME, this);
     	boolean registered = ServerUtilities.registerDevice(this, imei, deviceName, GCMRegistrar.getRegistrationId(this), sdkVersion, null);
@@ -292,5 +290,5 @@ public class CoreService extends Service implements PluginListener {
 		Log.e(TAG, "Polling plugins");
 		Intent mIntent = new Intent(Constants.INTENT_ACTION_PLUGIN_POLL);
 		sendBroadcast(mIntent);
-	}	
+	}
 }
