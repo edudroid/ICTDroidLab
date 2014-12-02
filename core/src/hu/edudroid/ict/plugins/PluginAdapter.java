@@ -41,46 +41,21 @@ public class PluginAdapter implements Plugin, PluginResultListener, PluginEventL
 	
 	private static long mCallMethodID = 0;
 
-	public PluginAdapter(final String name,
-					final String packageName,
-					final String className,
-					final String author,
-					final String description,
-					final String versionCode,
-					final List<String> pluginMethods,
-					final List<String> events,
-					PluginIntentReceiver pluginIntentReceiver,
-					final Context context) {
-		this.name = name;
-		this.packageName = packageName;
-		this.receiverClassName = className;
-		this.author = author;
-		this.description = description;
-		this.versionCode = versionCode;
-		this.pluginMethods = pluginMethods;
-		this.events = events;
+	public PluginAdapter(final Plugin plugin, final PluginIntentReceiver pluginIntentReceiver, final Context context) {
+		this.name = plugin.getName();
+		this.packageName = plugin.getPackageName();
+		this.receiverClassName = plugin.getReceiverClassName();
+		this.author = plugin.getAuthor();
+		this.description = plugin.getDescription();
+		this.versionCode = plugin.getVersionCode();
+		this.pluginMethods = plugin.getMethodNames();
+		this.events = plugin.getAllEvents();
+
 		this.pluginIntentReceiver = pluginIntentReceiver;
 		this.context = context;
-		
+
 		pluginIntentReceiver.registerEventListener(this);
-		pluginIntentReceiver.registerResultListener(this);
-	}
-	
-	public PluginAdapter(Plugin plugin,
-			PluginIntentReceiver pluginIntentReceiver,
-			final Context context) {
-		this(
-				plugin.getName(),
-				plugin.getPackageName(),
-				plugin.getReceiverClassName(),
-				plugin.getAuthor(),
-				plugin.getDescription(),
-				plugin.getVersionCode(),
-				plugin.getMethodNames(),
-				plugin.getAllEvents(),
-				pluginIntentReceiver,
-				context				
-				);
+	    pluginIntentReceiver.registerResultListener(this);
 	}
 
 
