@@ -7,6 +7,5 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/interfaces"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ICTDroidPlugin"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/ICTDroidLabLocationServicesPlugin"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
