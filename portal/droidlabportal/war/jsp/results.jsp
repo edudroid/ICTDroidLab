@@ -63,7 +63,7 @@
 				<tr>
 					<td><%= dateString %></td>
 					<td><%= result.getProperty(Constants.RESULTS_LOG_LEVEL_COLUMN) %></td>
-					<td><%= result.getProperty(Constants.RESULTS_MODULE_NAME_COLUMN) %></td>
+					<td><a href="/displaymeasurementresult?IMEI=<%= device.getProperty(Constants.DEVICE_IMEI_COLUMN)%>&module_name=<%= result.getProperty(Constants.RESULTS_MODULE_NAME_COLUMN)%>"><%= result.getProperty(Constants.RESULTS_MODULE_NAME_COLUMN) %></a></td>
 					<td><%= result.getProperty(Constants.RESULTS_MESSAGE_COLUMN) %></td>
 				</tr>
 			<%

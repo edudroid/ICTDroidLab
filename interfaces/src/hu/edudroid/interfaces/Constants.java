@@ -10,6 +10,8 @@ public class Constants {
 	public static final String	INTENT_ACTION_PLUGIN_QUOTAS				= "hu.edudroid.ict.plugin_quotas";
 	public static final String	INTENT_ACTION_QUOTA_DESCRIPTION			= "hu.edudroid.ict.plugin_quota_description";
 
+	public static final String	INTENT_ACTION_PLUGIN_DETAILS_ACTIVITY	= "hu.edudroid.ict.plugin_details_activity";
+
 	public static final String	INTENT_EXTRA_KEY_DESCRIBE_TYPE			= "describe type";
 	public static final String	INTENT_EXTRA_KEY_PLUGIN_ID				= "plugin";
 	public static final String	INTENT_EXTRA_KEY_PLUGIN_AUTHOR			= "author";
