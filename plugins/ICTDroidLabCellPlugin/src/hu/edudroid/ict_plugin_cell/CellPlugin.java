@@ -1,5 +1,12 @@
 package hu.edudroid.ict_plugin_cell;
 
+import hu.edudroid.interfaces.AsyncMethodException;
+import hu.edudroid.interfaces.BasePlugin;
+import hu.edudroid.interfaces.CellConstants;
+import hu.edudroid.interfaces.MethodNotSupportedException;
+import hu.edudroid.interfaces.PluginResult;
+import hu.edudroid.interfaces.Quota;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,14 +16,6 @@ import java.util.Map;
 import android.content.Context;
 import android.telephony.NeighboringCellInfo;
 import android.telephony.TelephonyManager;
-
-import hu.edudroid.interfaces.AsyncMethodException;
-import hu.edudroid.interfaces.BasePlugin;
-import hu.edudroid.interfaces.CellConstants;
-import hu.edudroid.interfaces.LocationServicesConstants;
-import hu.edudroid.interfaces.MethodNotSupportedException;
-import hu.edudroid.interfaces.PluginResult;
-import hu.edudroid.interfaces.Quota;
 
 public class CellPlugin extends BasePlugin {
 
@@ -38,8 +37,8 @@ public class CellPlugin extends BasePlugin {
 		List<String> tmpEvents = new ArrayList<String>();
 		List<Quota> tmpQuotas = new ArrayList<Quota>();
 
-		tmpMethods.add(LocationServicesConstants.METHOD_GET_LOCATION);
-		tmpEvents.add(LocationServicesConstants.EVENT_LOCATION_CHANGED);
+		tmpMethods.add(CellConstants.METHOD_GET_LOCATION);
+		tmpEvents.add(CellConstants.EVENT_LOCATION_CHANGED);
 
 		quotas = Collections.unmodifiableList(tmpQuotas);
 		methods = Collections.unmodifiableList(tmpMethods);
@@ -47,7 +46,7 @@ public class CellPlugin extends BasePlugin {
 	}
 
 	public CellPlugin() {
-		super(LocationServicesConstants.PLUGIN_NAME, CellPlugin.class.getPackage().getName(), CellListener.class.getName(), PLUGIN_AUTHOR,
+		super(CellConstants.PLUGIN_NAME, CellPlugin.class.getPackage().getName(), CellListener.class.getName(), PLUGIN_AUTHOR,
 				PLUGIN_DESCRIPTION, VERSION_CODE, events, methods, quotas);
 	}
 

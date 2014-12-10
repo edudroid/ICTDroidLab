@@ -4,6 +4,8 @@ public class CellConstants {
 	public static final String PLUGIN_NAME = "Cell info plugin";
 
 	public static final String METHOD_GET_NEIGHBORING_CELL_INFO = "Get neighboring cell info";
+	public static final String METHOD_GET_LOCATION = "Get location";
+	public static final String EVENT_LOCATION_CHANGED = "Location changed";
 
 	public static final String EVENT_SIGNAL_STRENGTH_CHANGED = "Signal strength changed";
 	public static final String KEY_CELLS = "Cells";
