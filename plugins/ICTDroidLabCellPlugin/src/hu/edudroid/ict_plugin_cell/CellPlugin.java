@@ -37,8 +37,10 @@ public class CellPlugin extends BasePlugin {
 		List<String> tmpEvents = new ArrayList<String>();
 		List<Quota> tmpQuotas = new ArrayList<Quota>();
 
-		tmpMethods.add(CellConstants.METHOD_GET_LOCATION);
-		tmpEvents.add(CellConstants.EVENT_LOCATION_CHANGED);
+		tmpMethods.add(CellConstants.METHOD_GET_NEIGHBORING_CELL_INFO);
+		tmpEvents.add(CellConstants.EVENT_CELL_LOCATION_CHANGED);
+		tmpEvents.add(CellConstants.EVENT_DATA_STATE_CHANGED);
+		tmpEvents.add(CellConstants.EVENT_SERVICE_STATE_CHANGED);
 
 		quotas = Collections.unmodifiableList(tmpQuotas);
 		methods = Collections.unmodifiableList(tmpMethods);
