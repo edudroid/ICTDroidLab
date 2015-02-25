@@ -65,8 +65,7 @@ public class ICTLocationServcie extends Service implements ConnectionCallbacks, 
 					results.put(LocationServicesConstants.KEY_PROVIDER, mCurrentLocation.getProvider());
 					results.put(LocationServicesConstants.KEY_SPEED, mCurrentLocation.getSpeed());
 					// Build result
-					Map<Long, Double> quotas = new HashMap<Long, Double>();
-					communicationInterface.reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, LocationServicesConstants.METHOD_GET_LOCATION, new PluginResult(results, quotas), this);
+					communicationInterface.reportResult(callId, Constants.INTENT_EXTRA_VALUE_RESULT, LocationServicesConstants.METHOD_GET_LOCATION, new PluginResult(results, null), this);
 				} else {
 					communicationInterface.reportResult(callId, Constants.INTENT_EXTRA_VALUE_ERROR, LocationServicesConstants.METHOD_GET_LOCATION, new PluginResult(null, null), this);					
 				}

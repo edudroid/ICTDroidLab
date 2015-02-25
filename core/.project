@@ -3,6 +3,7 @@
 	<name>ICTDroid</name>
 	<comment></comment>
 	<projects>
+		<project>ICTDroid_tests</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

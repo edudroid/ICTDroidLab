@@ -34,6 +34,7 @@
     		<receiver
             android:name="BatteryListener"
             android:enabled="true"
+            android:permission="hu.edudroid.CALL_PLUGIN"
             android:exported="true">
             <intent-filter>
                 <action android:name="hu.edudroid.ict.plugin_polling_question"/>

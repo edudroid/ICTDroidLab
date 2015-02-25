@@ -3,5 +3,6 @@
 
     <string name="app_name">ICT Droidlab Location Services Plugin</string>
     <string name="hello_world">Hello, this is an ICT battery plugin!</string>
+    <string name="action_settings">TODO</string>
 
 </resources>

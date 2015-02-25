@@ -1,0 +1,21 @@
+﻿{
+	"module_id":"42",
+	"module_name" : "Vehicle ICT Module",
+	"author": "Máté Miklós",
+	"description": "This is a simple module that demonstrates how to use the Vehicle ICT plugin",
+	"website":"http://google.hu",
+	"measurement_length": 43200,
+	"used_plugins": [
+		"VehicleICT plugin"
+	],
+	"permissions": [
+		"READ_CHARGING_LEVEL",
+		"READ_CHARGER_TYPE",
+		"LISTEN_BATTERY_STATE"
+	],
+	"quotas": [
+		{"quota" : "BATTERY_DATA", "limit" : 720}
+	],
+	"jar_file" : "VehicleICTModule.jar",
+	"class_name" : "hu.edudroid.ict.vehicleict_module.VehicleICTModule"
+}

@@ -26,15 +26,15 @@ import dalvik.system.DexClassLoader;
 
 public class ModuleManager implements ModuleStatsListener{
 	private static final String TAG = ModuleManager.class.getName();
-	
-	private HashMap<String, ModuleWrapper> moduleWrappers = new HashMap<String, ModuleWrapper>(); // Modules by moduleId
-	private HashMap<String, TimeServiceInterface> timers = new HashMap<String, TimeServiceInterface>();
-	private HashSet<ModuleSetListener> moduleSetListeners = new HashSet<ModuleSetListener>();
-	private HashSet<ModuleStatsListener> moduleStatsListeners = new HashSet<ModuleStatsListener>();
-	
-	
-	private CoreService coreService;
-	
+
+	private final HashMap<String, ModuleWrapper> moduleWrappers = new HashMap<String, ModuleWrapper>(); // Modules by moduleId
+	private final HashMap<String, TimeServiceInterface> timers = new HashMap<String, TimeServiceInterface>();
+	private final HashSet<ModuleSetListener> moduleSetListeners = new HashSet<ModuleSetListener>();
+	private final HashSet<ModuleStatsListener> moduleStatsListeners = new HashSet<ModuleStatsListener>();
+
+
+	private final CoreService coreService;
+
 	public ModuleManager(CoreService coreService) {
 		this.coreService = coreService;
 	}
@@ -79,12 +79,12 @@ public class ModuleManager implements ModuleStatsListener{
 			String className = moduleDescriptor.className;
 			String moduleId = moduleDescriptor.moduleId;
 			Log.i(TAG, "Loading module " + className + " from file " + dexedJavaFile);
-			ModuleWrapper moduleWrapper = null; 
+			ModuleWrapper moduleWrapper = null;
 			File dexOptimizedFolder = new File(coreService.getFilesDir(), CoreService.TEMP_DIR);
 			dexOptimizedFolder.mkdirs();
-			DexClassLoader dexLoader = new DexClassLoader(dexedJavaFile, 
-															dexOptimizedFolder.getAbsolutePath(), 
-															null, 
+			DexClassLoader dexLoader = new DexClassLoader(dexedJavaFile,
+															dexOptimizedFolder.getAbsolutePath(),
+															null,
 															coreService.getClassLoader());
 			Class<?> dexLoadedClass = dexLoader.loadClass(className);
 			@SuppressWarnings("unchecked")
@@ -93,11 +93,13 @@ public class ModuleManager implements ModuleStatsListener{
 				throw new NoSuchMethodException("Couldn't find proper consturctor.");
 			}
 			TimeServiceInterface timeService = new ModuleTimeService();
-			timers.put(moduleId, timeService);
+
 			moduleWrapper = new ModuleWrapper(moduleDescriptor, constructor, new SharedPrefs(coreService, moduleId),
 					new AndroidLogger(moduleId, context),
 					pluginCollection,
 					timeService, coreService);
+
+			timers.put(moduleId, timeService);
 			moduleWrapper.registerModuleStatsListener(this);
 			moduleWrappers.put(moduleDescriptor.moduleId, moduleWrapper);
 			Log.e(TAG, "Module added");

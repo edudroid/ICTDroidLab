@@ -1,0 +1,50 @@
+<project name="VehicleICTModule" basedir="." default="createCoreAsset">
+
+    <property name="src.dir"     value="src:../../interfaces/src"/>
+
+    <property name="build.dir"   			value="build"/>
+    <property name="classes.dir" 			value="${build.dir}/classes"/>
+    <property name="jar.dir"				value="${build.dir}/jar"/>
+    <property name="core.asset.jar_dir"		value="../../core/assets/jars"/>
+    <property name="core.asset.desc_dir"	value="../../core/assets/descriptors"/>
+    
+
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete file="classes.dex"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac includeantruntime="false" srcdir="${src.dir}" destdir="${classes.dir}"/>
+    </target>
+
+    <target name="jar" depends="clean,compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${ant.project.name}.jar"
+            basedir="${classes.dir}"
+            excludes="**/interfaces/*,**/interfaces/,**/interfaces">
+        </jar>
+    </target>
+
+    <target name="run" depends="jar">
+        <java jar="${jar.dir}/${ant.project.name}.jar" fork="true"/>
+    </target>
+    
+    <target name="createCoreAsset" depends="jar">
+        <echo message="Java version should be 1.5 or 1.6 if using 1.7 or newer, set project specific JRE!"/>
+        <exec executable="cmd">
+	    	<arg value="/c"/>
+	    	<arg value="createdex.bat"/>
+		</exec>
+        <exec executable="cmd">
+	    	<arg value="/c"/>
+	    	<arg value="dextojar.bat"/>
+		</exec>
+        <copy file="${jar.dir}/${ant.project.name}.jar" todir="${core.asset.jar_dir}"/>
+        <copy file="module.desc" tofile="${core.asset.desc_dir}/${ant.project.name}.desc"/>
+        </target>
+
+    <target name="clean-build" depends="clean,jar"/>
+</project>

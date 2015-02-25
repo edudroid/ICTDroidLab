@@ -11,7 +11,7 @@ import java.util.Map;
 public class Utils {
 
 	/**
-	 * Create a byte array containing an integer for the length of the map and than the keys and values one pair after another
+	 * Create a byte array containing an integer for the length of the map and then the keys and values one pair after another
 	 * @param map
 	 * @return
 	 */
