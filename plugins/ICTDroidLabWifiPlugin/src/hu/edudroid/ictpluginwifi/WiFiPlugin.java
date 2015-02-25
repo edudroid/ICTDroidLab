@@ -4,6 +4,7 @@ import hu.edudroid.ictplugin.PluginCommunicationInterface;
 import hu.edudroid.interfaces.AsyncMethodException;
 import hu.edudroid.interfaces.Constants;
 import hu.edudroid.interfaces.MethodNotSupportedException;
+import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.interfaces.PluginEventListener;
 import hu.edudroid.interfaces.PluginResult;
 import hu.edudroid.interfaces.PluginResultListener;
@@ -22,6 +23,10 @@ import android.util.Log;
 
 public class WiFiPlugin extends PluginCommunicationInterface {
 	
+	public WiFiPlugin() {
+		super(null);
+	}
+
 	public static final String VALUE_KEY = "value";
 	
 	public static final String METHOD_NAME_GET_STATE = "getState";
