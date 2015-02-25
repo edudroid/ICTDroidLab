@@ -38,7 +38,7 @@ if (user == null) {
 <%
 	DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-	Query query = new Query(Constants.MODULES_TABLE_NAME,user.getKey());
+	Query query = new Query(Constants.MODULES_TABLE_NAME, user.getKey());
 	List<Entity> modules = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
 %>
 	
