@@ -155,7 +155,7 @@ public class CoreService extends Service implements PluginListener {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
 		init();
-		if (intent.getAction() != null && intent.getAction().equals(REGISTER_DEVICE_COMMAND)) {
+		if (intent != null && intent.getAction() != null && intent.getAction().equals(REGISTER_DEVICE_COMMAND)) {
 			// Register on new thread
 			new Thread(new Runnable() {
 				@Override
