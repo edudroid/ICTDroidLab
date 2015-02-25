@@ -1,6 +1,5 @@
-package hu.edudroid.ict.sample_module;
+package hu.edudroid.ict.vehicle_module;
 
-import hu.edudroid.interfaces.BatteryConstants;
 import hu.edudroid.interfaces.Logger;
 import hu.edudroid.interfaces.Module;
 import hu.edudroid.interfaces.Plugin;
@@ -10,37 +9,25 @@ import hu.edudroid.interfaces.TimeServiceInterface;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
-public class ModuleExample extends Module {
+public class VehicleModule extends Module {
 	
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SSS");
 	
-	public ModuleExample(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice) {
+	public VehicleModule(Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeservice) {
 		super(prefs, logger, pluginCollection, timeservice);
 	}
 	
-	private static final String TAG = ModuleExample.class.getName();
+	private static final String TAG = VehicleModule.class.getName();
 
 	@Override
 	public void init(){
 		mLogger.e(TAG, "Module init...");
-		mTimeService.runPeriodic(1000, 5000, 5, this);	
-		registerPluginListeners();
+		mTimeService.runPeriodic(1000, 50000, 20, this);	
 	}
 	
-	private void registerPluginListeners() {
-		Plugin plugin = mPluginCollection.getPluginByName(BatteryConstants.PLUGIN_NAME);
-		if (plugin != null) {
-			mLogger.e(TAG, "Plugin available, registering for events.");
-			plugin.registerEventListener(BatteryConstants.SCREEN_STATE_CHANGED, this);
-			plugin.registerEventListener(BatteryConstants.BATTERY_LEVEL_CHANGED, this);
-			plugin.registerEventListener(BatteryConstants.CHARGING_STATE_CHANGED, this);
-		} else {
-			mLogger.e(TAG, "Plugin not yet available.");			
-		}
-	}
-
 	@Override
 	public void onResult(long id, String plugin, String pluginVersion,
 			String methodName, Map<String, Object> result) {
@@ -65,7 +52,8 @@ public class ModuleExample extends Module {
 
 	@Override
 	public void onTimerEvent() {
-		Plugin plugin = mPluginCollection.getPluginByName(BatteryConstants.PLUGIN_NAME);
-		mLogger.i(TAG, "Module example 5s run at " + dateFormatter.format(new Date()));
+		Plugin plugin = mPluginCollection.getPluginByName("vehicle_plugin");
+		plugin.callMethodAsync("get_data", new HashMap<String, Object>(), this);
+		mLogger.i(TAG, "Module vehicle 50 sec run at " + dateFormatter.format(new Date()));
 	}
 }
