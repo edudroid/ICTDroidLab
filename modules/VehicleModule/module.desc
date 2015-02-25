@@ -1,0 +1,17 @@
+﻿{
+	"module_id":"12",
+	"module_name" : "Vehicle Module",
+	"author": "Lajtha Balázs",
+	"description": "This is a module demonstrating Vehicle ICT interface of DroidLab!",
+	"website":"http://google.hu",
+	"measurement_length": 43200,
+	"used_plugins": [
+		"vehicle_plugin"
+	],
+	"permissions": [
+	],
+	"quotas": [
+	],
+	"jar_file" : "VehicleModule.jar",
+	"class_name" : "hu.edudroid.ict.vehicle_module.VehicleModule"
+}
