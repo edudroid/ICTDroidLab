@@ -21,7 +21,6 @@ import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.module.ModuleDescriptor;
 import hu.edudroid.module.ModuleManager;
 import hu.edudroid.module.ModuleState;
-import hu.edudroid.module.ModuleWrapper;
 
 public class ModuleDetailsActivity extends ActivityBase implements OnClickListener, ModuleSetListener, ModuleStatsListener {
 	
