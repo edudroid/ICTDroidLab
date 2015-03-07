@@ -102,4 +102,5 @@
     <string name="welcome">Welcome to DroidLab!</string>
     <string name="loginTitle">Log in to DroidLab!</string>
     <string name="registerTitle">Register to DroidLab!</string>
+    <string name="restartModule">Restart Module</string>
 </resources>
