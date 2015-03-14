@@ -38,12 +38,13 @@ public class UploadService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		try {
-			LogRecord logRecord = new LogRecord(
-					intent.getStringExtra(LogRecord.COLUMN_NAME_MODULE),
-					intent.getStringExtra(LogRecord.COLUMN_NAME_LOG_LEVEL),
-					intent.getLongExtra(LogRecord.COLUMN_NAME_DATE, 0),
-					intent.getStringExtra(LogRecord.COLUMN_NAME_MESSAGE));
+		Log.d(TAG, "onHandleIntent");
+		LogRecord logRecord = new LogRecord(
+				intent.getStringExtra(LogRecord.COLUMN_NAME_MODULE),
+				intent.getStringExtra(LogRecord.COLUMN_NAME_LOG_LEVEL),
+				intent.getLongExtra(LogRecord.COLUMN_NAME_DATE, 0),
+				intent.getStringExtra(LogRecord.COLUMN_NAME_MESSAGE));
+		try {			
 			List<LogRecord> recordsToUpload = databaseManager.getRecords(UPLOAD_BATCH_SIZE - 1);
 			recordsToUpload.add(logRecord);
 			boolean result = uploadLogs(recordsToUpload, this.getApplicationContext());
@@ -54,7 +55,8 @@ public class UploadService extends IntentService {
 				}
 			}
 		} catch (Exception e) {
-			Log.e(TAG, "Couldn't upload log.");
+			Log.e(TAG, "Couldn't upload log, adding to database.");
+			databaseManager.saveRecord(logRecord);			
 		}
 	}
 	
@@ -94,6 +96,7 @@ public class UploadService extends IntentService {
 
 	@Override
 	public void onDestroy() {
+		Log.d(TAG, "Upload service destroyed.");
 		databaseManager.destroy();
 		super.onDestroy();
 	}
