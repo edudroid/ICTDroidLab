@@ -27,6 +27,7 @@
     <string name="uploadManual">Manual Upload</string>
     <string name="storageButtonLabel">Manage local storage</string>
     <string name="statisticsButtonLabel">Statistics</string>
+    <string name="manageLogsButtonLabel">Manage logs</string>
     
     <!-- Google Cloud Messaging -->
     <string name="title_activity_main">Push Notifications</string>
@@ -103,4 +104,17 @@
     <string name="loginTitle">Log in to DroidLab!</string>
     <string name="registerTitle">Register to DroidLab!</string>
     <string name="restartModule">Restart Module</string>
+    
+    <string name="logDetialsOverviewLogDatabaseSizeText">%1$d log(s) stored on the system.</string>
+    <string name="logDetialsOverviewWipeDatabaseText">Wipe database</string>
+    <string name="logDetialsOverviewLastUpdateDateText">Last log update: %s</string>
+    <string name="logDetialsOverviewUpdateModeText">Update mode:</string>
+    <string name="logDetialsOverviewUploadNowText">Upload now</string>
+    <string-array
+        name="logDetialsOverviewUpdateModes">
+        <item>Instant upload</item>
+        <item>After X log in ZIP</item>
+    </string-array>
+    <string name="listItemDelete">Delete</string>    
+    
 </resources>

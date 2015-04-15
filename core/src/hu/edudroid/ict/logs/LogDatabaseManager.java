@@ -54,6 +54,20 @@ public class LogDatabaseManager {
 			result.add(record);
 			cursor.moveToNext();
 		}
+		cursor.close();
 		return result;
+	}
+	
+	public int getDatabaseSize () {		
+		String[] column = {"COUNT(*)"};
+		Cursor cursor = db.query(LogRecord.TABLE_NAME, column, "", null, null, null, null, null);
+		cursor.moveToNext();
+		int size = cursor.getInt(0);
+		cursor.close();
+		return size;
+	}
+	
+	public void wipeDatabase() {
+		db.delete(LogRecord.TABLE_NAME, "", null);
 	}
 }

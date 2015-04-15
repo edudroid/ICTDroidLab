@@ -81,6 +81,7 @@
             android:label="@string/core_service_name" />
         <activity android:name=".ui.DataStoreDetailsActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".ui.ModuleDetailsActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".ui.LogDetailsActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".ui.LoginActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

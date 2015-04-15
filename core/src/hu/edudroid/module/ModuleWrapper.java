@@ -53,7 +53,6 @@ public class ModuleWrapper extends Module implements TimeServiceInterface, Logge
 	}
 
 	public Map<String, String> getStats() {
-		Log.d(TAG, "ModuleWrapper getStats");
 		int timerEventCount = statPrefs.getInt(ModuleStatsListener.STAT_KEY_TIMERS_FIRED, 0);
 		long lastTimerEvent = statPrefs.getLong(ModuleStatsListener.STAT_KEY_LAST_TIMER_EVENT, 0);
 		
@@ -64,7 +63,6 @@ public class ModuleWrapper extends Module implements TimeServiceInterface, Logge
 	}
 
 	private void statsChangted() {
-		Log.e(TAG, "ModuleWrapper stats changed");
 		Map<String, String> unmodifiableStats = Collections.unmodifiableMap(getStats());
 		for (ModuleStatsListener listener : moduleStatsListeners) {
 			listener.moduleStatsChanged(descriptor.moduleId, unmodifiableStats);
@@ -74,7 +72,6 @@ public class ModuleWrapper extends Module implements TimeServiceInterface, Logge
 	@Override
 	public void onResult(long id, String plugin, String pluginVersion,
 			String methodName, Map<String, Object> result) {
-		Log.d(TAG, "ModuleWrapper onResult");
 		module.onResult(id, plugin, pluginVersion, methodName, result);
 	}
 
@@ -87,7 +84,6 @@ public class ModuleWrapper extends Module implements TimeServiceInterface, Logge
 	@Override
 	public void onEvent(String plugin, String version, String eventName,
 			Map<String, Object> extras) {
-		Log.d(TAG, "ModuleWrapper onEvent");
 		Editor editor = statPrefs.edit();
 		editor.putLong(ModuleStatsListener.STAT_KEY_LAST_TIMER_EVENT, System.currentTimeMillis());
 		editor.commit();
@@ -97,7 +93,6 @@ public class ModuleWrapper extends Module implements TimeServiceInterface, Logge
 
 	@Override
 	public void onTimerEvent() {
-		Log.d(TAG, "ModuleWrapper onTimerEvent");
 		int timerEventCount = statPrefs.getInt(ModuleStatsListener.STAT_KEY_TIMERS_FIRED, 0);
 		timerEventCount ++;
 		Editor editor = statPrefs.edit();
@@ -115,22 +110,18 @@ public class ModuleWrapper extends Module implements TimeServiceInterface, Logge
 	
 	@Override
 	public void init() {
-		Log.d(TAG, "ModuleWrapper init");
 		module.init();
 	}
 	
 	public void registerModuleStatsListener(ModuleStatsListener listener) {
-		Log.d(TAG, "ModuleWrapper registerModuleStatsListener");
 		moduleStatsListeners.add(listener);
 	}
 
 	public void unregisterModuleStatsListenerListener(ModuleStatsListener listener) {
-		Log.d(TAG, "ModuleWrapper unregisterModuleStatsListenerListener");
 		moduleStatsListeners.remove(listener);
 	}
 
 	public ModuleDescriptor getDescriptor() {
-		Log.d(TAG, "ModuleWrapper getDescriptor");
 		return descriptor;
 	}
 

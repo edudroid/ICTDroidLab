@@ -28,6 +28,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/storageButtonLabel" />
+    
+    <Button
+        android:id="@+id/manageLogsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/manageLogsButtonLabel" />
 
     <TextView
         android:id="@+id/messageField"

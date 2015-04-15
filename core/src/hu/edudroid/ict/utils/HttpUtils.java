@@ -1,5 +1,7 @@
 package hu.edudroid.ict.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -16,6 +18,10 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.FileEntity;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
@@ -60,6 +66,34 @@ public class HttpUtils {
 		} catch (MalformedURLException e) {
 			return null;
 		} catch (IOException e) {
+			return null;
+		} finally {
+			if (httpClient != null) {
+				httpClient.getConnectionManager().closeIdleConnections(
+						CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS);
+			}
+		}
+	}
+	
+	public static String post(String url, File uploadFile, Context context) {
+		HttpClient httpClient = null;
+		
+		try {			
+			httpClient = getClient(url, context);
+			HttpPost httpPost = new HttpPost(url);
+			
+		    FileBody uploadFilePart = new FileBody(uploadFile);
+		    MultipartEntity reqEntity = new MultipartEntity();
+		    reqEntity.addPart("upload-file", uploadFilePart);
+		    httpPost.setEntity(reqEntity);
+		    HttpResponse response = httpClient.execute(httpPost); 
+		    HttpEntity responseEntity = response.getEntity();
+			String downloadedXml = EntityUtils.toString(responseEntity, "UTF-8");
+
+			return downloadedXml;			
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.e(TAG, "Something went wrong while http post",e);
 			return null;
 		} finally {
 			if (httpClient != null) {
