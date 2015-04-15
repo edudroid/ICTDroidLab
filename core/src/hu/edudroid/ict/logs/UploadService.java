@@ -130,7 +130,7 @@ public class UploadService extends IntentService {
 					}
 					Log.d(TAG,"Deleted ZIP: " + fileList.get(i).getName());
 				}
-			} else if (response.equals("ERROR[3]: No device key in session.")) {
+			} /*else if (response.equals("ERROR[3]: No device key in session.")) {
 		    	// Register device with server
 				TelephonyManager mngr = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 		        String imei = mngr.getDeviceId();
@@ -140,12 +140,12 @@ public class UploadService extends IntentService {
 				Log.i("Device registered", "Success: " + registered);
 				if (registered && runCounter>0) {
 					Log.d(TAG,"COUNTER: " + runCounter);
-					uploadZips(context, runCounter--);
+					uploadZips(context, runCounter-1);
 				}
 				else {
 					Log.e(TAG,"Unexpected server response " + response);
 				}
-			} else {
+			} */else {
 				Log.e(TAG,"Unexpected server response " + response);
 			}
 		}		
@@ -211,7 +211,7 @@ public class UploadService extends IntentService {
 				Log.d(TAG,"Uploaded " + uploadedRecords + " log lines.");
 				return true;
 			}
-		} else if (response.equals("ERROR[3]: No device key in session.")) {
+		} /*else if (response.equals("ERROR[3]: No device key in session.")) {
 	    	// Register device with server
 	        String sdkVersion=String.valueOf(android.os.Build.VERSION.SDK_INT);
 			String deviceName = CoreConstants.getString(CoreConstants.DEVICE_NAME_KEY, CoreConstants.DEFAULT_DEVICE_NAME, context);
@@ -219,12 +219,12 @@ public class UploadService extends IntentService {
 			Log.i("Device registered", "Success: " + registered);
 			if (registered && runCounter>0) {
 				Log.d(TAG,"COUNTER: " + runCounter);
-				uploadLogs(recordsToUpload,context, runCounter--);
+				uploadLogs(recordsToUpload,context, runCounter-1);
 			}
 			else {
 				Log.e(TAG,"Unexpected server response " + response);
 			}
-		} else {
+		}*/else {
 			Log.e(TAG,"Unexpected server response " + response);
 		}
 		return false;
