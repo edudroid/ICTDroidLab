@@ -133,6 +133,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
     	<servlet-class>hu.edudroid.droidlabportal.mobileinterface.UploadLogServlet</servlet-class>
   	</servlet>
   	<servlet>
+    	<servlet-name>ZippedUploadLogServlet</servlet-name>
+    	<servlet-class>hu.edudroid.droidlabportal.mobileinterface.ZippedUploadLogServlet</servlet-class>
+  	</servlet>
+  	<servlet>
     	<servlet-name>ServeJarServlet</servlet-name>
     	<servlet-class>hu.edudroid.droidlabportal.mobileinterface.ServeJarServlet</servlet-class>
   	</servlet>
@@ -189,6 +193,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
     	<servlet-name>UploadLogServlet</servlet-name>
     	<url-pattern>/uploadLog</url-pattern>
   	</servlet-mapping>
+  	<servlet-mapping>
+    	<servlet-name>ZippedUploadLogServlet</servlet-name>
+    	<url-pattern>/zippedUploadLog</url-pattern>
+  	</servlet-mapping>  	
   	<servlet-mapping>
    	 	<servlet-name>GetLogUrlServlet</servlet-name>
     	<url-pattern>/getLogUrl</url-pattern>

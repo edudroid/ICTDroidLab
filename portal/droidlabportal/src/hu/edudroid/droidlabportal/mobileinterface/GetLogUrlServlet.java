@@ -22,7 +22,7 @@ public class GetLogUrlServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		String blobUploadUrl = blobstoreService.createUploadUrl("/uploadLog");
+		String blobUploadUrl = blobstoreService.createUploadUrl("/zippedUploadLog");
 
 		resp.setStatus(HttpServletResponse.SC_OK);
 		resp.setContentType("text/plain");

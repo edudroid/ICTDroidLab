@@ -51,6 +51,10 @@ public final class ServerUtilities {
 		params.put(USER_NAME, userName);
 		params.put(PASSWORD, password);
 		String result = HttpUtils.post(PORTAL_URL + "login", params, context);
+		if (result==null) {
+			Log.i(TAG,"No response from the server");
+			return false;
+		}
 		Log.d(TAG, "Login result >" + result + "<");
 		return (result.trim().equals("LOGGED_IN"));
 	}

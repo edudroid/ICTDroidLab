@@ -28,6 +28,7 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 	private Button showPlugins;
 	private Button manageLocalStorage;
 	private Button stats;
+	private Button manageLogs;
 	private TextView messageField;
 	
 	
@@ -46,6 +47,8 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 		manageLocalStorage = (Button)findViewById(R.id.manageLocalStorageButton);
 		manageLocalStorage.setOnClickListener(this);
 		messageField = (TextView)findViewById(R.id.messageField);
+		manageLogs = (Button)findViewById(R.id.manageLogsButton);
+		manageLogs.setOnClickListener(this);
 	}
 
 	@Override
@@ -120,6 +123,9 @@ public class MainActivity extends ActivityBase implements OnClickListener, Modul
 				break;
 			case R.id.showModules:
 				startActivity(new Intent(this, ModuleOverviewActivity.class));
+				break;
+			case R.id.manageLogsButton:
+				startActivity(new Intent(this, LogDetailsActivity.class));
 				break;
 		}
 	}

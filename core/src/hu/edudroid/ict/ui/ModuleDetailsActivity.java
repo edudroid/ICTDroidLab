@@ -9,6 +9,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -18,10 +19,12 @@ import hu.edudroid.ict.ModuleStatsListener;
 import hu.edudroid.ict.R;
 import hu.edudroid.interfaces.Plugin;
 import hu.edudroid.module.ModuleDescriptor;
+import hu.edudroid.module.ModuleManager;
 import hu.edudroid.module.ModuleState;
 
 public class ModuleDetailsActivity extends ActivityBase implements OnClickListener, ModuleSetListener, ModuleStatsListener {
 	
+	private static final String TAG = ModuleManager.class.getName();
 	public static final String INTENT_EXTRA_MODULE_ID = "Module id";
 	private TextView moduleNameText;
 	private TextView moduleAuthorText;
@@ -39,6 +42,8 @@ public class ModuleDetailsActivity extends ActivityBase implements OnClickListen
 	private SimpleDateFormat dateFormatter = new SimpleDateFormat("MM'-'dd HH':'mm':'ss", Locale.getDefault());
 	private Button startButton;
 	private TextView moduleStateText;
+	
+	private Button restartButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +69,10 @@ public class ModuleDetailsActivity extends ActivityBase implements OnClickListen
 		startButton = (Button) findViewById(R.id.moduleStartButton);
 		startButton.setOnClickListener(this);
 		startButton.setEnabled(false);
+		
+		restartButton = (Button) findViewById(R.id.moduleRestartButton);
+		restartButton.setOnClickListener(this);
+		restartButton.setEnabled(false);
 	}
 	
 	@Override
@@ -106,11 +115,20 @@ public class ModuleDetailsActivity extends ActivityBase implements OnClickListen
 			deleteButton.setEnabled(true);
 			deleteButton.setVisibility(View.VISIBLE);
 			startButton.setVisibility(View.GONE);
+			restartButton.setVisibility(View.GONE);
 		} else if (moduleDescriptor.getState(this) == ModuleState.AVAILABLE) {		
 			startButton.setEnabled(true);
 			deleteButton.setVisibility(View.GONE);
 			startButton.setVisibility(View.VISIBLE);
-		} else if ((moduleDescriptor.getState(this) == ModuleState.TERMINATED)||(moduleDescriptor.getState(this) == ModuleState.BANNED)) {		
+			restartButton.setVisibility(View.GONE);
+		} else if (moduleDescriptor.getState(this) == ModuleState.TERMINATED) {		
+			restartButton.setEnabled(true);
+			restartButton.setVisibility(View.VISIBLE);
+			deleteButton.setVisibility(View.GONE);
+			startButton.setVisibility(View.GONE);
+		} else if (moduleDescriptor.getState(this) == ModuleState.BANNED) {
+			restartButton.setEnabled(true);
+			restartButton.setVisibility(View.VISIBLE);
 			deleteButton.setVisibility(View.GONE);
 			startButton.setVisibility(View.GONE);
 		}
@@ -149,6 +167,19 @@ public class ModuleDetailsActivity extends ActivityBase implements OnClickListen
 			case R.id.moduleDeleteButton : {
 				// TODO pop up dialog to confirm deletion
 				service.removeModule(moduleDescriptor.moduleId);
+				break;
+			}
+			//restart terminated or banned module
+			case R.id.moduleRestartButton : {
+				Log.e(TAG, "Restart pressed ");
+				
+				//remove if there is a module by that ID
+				service.removeModule(moduleDescriptor.moduleId);
+				
+				//to enable restarting module
+				moduleDescriptor.setSate(ModuleState.AVAILABLE, this);
+				service.installModule(moduleDescriptor);
+				Log.e(TAG, "After restart pressed ");
 				break;
 			}
 			}
