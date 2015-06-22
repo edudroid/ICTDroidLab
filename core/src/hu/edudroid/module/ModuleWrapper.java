@@ -25,7 +25,7 @@ import hu.edudroid.interfaces.TimeServiceInterface;
  * @author lajthabalazs
  *
  */
-public class ModuleWrapper extends Module {
+public class ModuleWrapper extends Module implements TimeServiceInterface {
 	
 	private static final String TAG = ModuleWrapper.class.getName();
 	private static final String SHARED_PREF_PREFIX = "STATS_";
@@ -37,7 +37,7 @@ public class ModuleWrapper extends Module {
 	public ModuleWrapper(ModuleDescriptor descriptor, Constructor<Module> constructor, Preferences prefs, Logger logger, PluginCollection pluginCollection, TimeServiceInterface timeService, Context context) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
 		super(prefs, logger, pluginCollection, timeService);
 		Log.i(TAG,"Calling module constructor");
-		module = constructor.newInstance(prefs, logger, pluginCollection, timeService);
+		module = constructor.newInstance(prefs, logger, pluginCollection, this);
 		statPrefs = context.getSharedPreferences(SHARED_PREF_PREFIX + descriptor.moduleId, Context.MODE_PRIVATE);
 		this.descriptor = descriptor;
 	}
