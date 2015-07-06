@@ -9,43 +9,32 @@
 <jsp:include page="/jsp/header.jsp"> 
 	<jsp:param name="selected" value="<%= Constants.INDEX %>" />
 </jsp:include>
-<div id="adbox">
+<div id="floatingbox">
 	<div class="clearfix">
 		<img src="/images/box.png" alt="Img" height="342" width="368">
 		<div>
-			<h1>It's easy</h1>
-			<h2>Create, deploy, evaluate.</h2>
+			<h1>DroidLab</h1>
+			<h2>Közösségi érzékelés egyszerűen.</h2>
 			<p>
-				DroidLab is an open crowdsourcing platform for mobile sensing. Create measurement tasks, deploy them on a large device pool, hang back and wait for the results! 
-				<span><a href="/regform" class="btn">Sign me up!</a>
-				<b>Don’t worry it’s for free</b></span>
+				A DroidLab keretrendszer segítségével mérő alkalmazások telepíthetőek a résztvevő készülékekre, nyomon követhető a futás, és elérhetőek a végeredmények.
+				Csatlakozzon kutatóként vagy résztvevőként a DroidLab-hoz! 
+				<span><a href="/regform" class="btn">Regisztráció</a>
+				<b>Nyílt béta</b></span>
 			</p>
 		</div>
 	</div>
 </div>	
 <div id="contents-under-adbox">
 	<div id="tagline" class="clearfix">
-		<h1>Crowdsourcing seamlessly</h1>
+		<h1>A DroidLab-ról dióhéjban</h1>
 		<div>
 			<p>
-				Crowdsourcing has never been that easy. You only have to write the business logic, everything else is taken care of.
+				A DroidLab keretrendszer olyan kutatóknak készül, akik Android eszközök szélesebb körén szeretnének méréseket végezni.
+				A keretrendszert úgy készítettük el, hogy azok számára is elérhetővé tegye az Android platform lehetőségeit, akik nem jártasak annak programozásában.
 			</p>
 			<p>
-				Write measurement code in plain Java. Start with a sample module and add calls to our plugin interfaces.
-			</p>
-			<p>
-				Upload the code to our portal, select the required resources, and you're set.
-			</p>
-		</div>
-		<div>
-			<p>
-				Devices are chosen for your measurement based on your resource needs.
-			</p>
-			<p>
-				Data is uploaded periodically, you don't have to wait till the end of the measurement to start processing.
-			</p>
-			<p>
-				Dozens of devices available to fulfill your curiosity.
+				A keretrendszer leveszi a kutatók válláról az Android alkalmazás fejlesztésének, terjesztésének terhét, így számukra az egyetlen feladat a mérő-alkalmazás elkészítése.
+				A keretrendszer gondoskodik a mérőkód terjesztéséről, futtatásáról és a generált kimenet összegyűjtéséről.
 			</p>
 		</div>
 	</div>

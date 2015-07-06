@@ -65,8 +65,8 @@ img {
 	color: #000;
 	display: block;
 	font: 15px/30px 'Play';
-	height: 20px;
-	width: 72px;
+	height: 80px;
+	width: 180px;
 	padding-top: 68px;
 	text-decoration: none;
 	text-transform: uppercase;
@@ -132,44 +132,44 @@ img {
 #userbox li.active a {
 	color: #f99600;
 }
-#adbox {
+#floatingbox {
 	background: url(../images/bg-adbox.jpg) repeat-x left top;
 	padding: 60px 0px 0px 0px;
 }
-#adbox > div {
+#floatingbox > div {
 	max-width: 800px;
 	margin: 0 auto;
 	padding: 0 80px;
 }
-#adbox > div img {
+#floatingbox > div img {
 	float: right;
 	margin-left: 60px;
 }
-#adbox h1, #adbox h2 {
+#floatingbox h1, #floatingbox h2 {
 	color: #2c2c2c;
 	font-size: 40px;
 	line-height: 40px;
 	margin: 0;
 	text-transform: uppercase;
 }
-#adbox h2 {
+#floatingbox h2 {
 	font-size: 30px;
 	line-height: 36px;
 	text-transform: none;
 }
-#adbox p {
+#floatingbox p {
 	font-size: 16px;
 	line-height: 24px;
 	margin: 0;
 }
-#adbox p span {
+#floatingbox p span {
 	display: block;
 	font-size: 12px;
 	width: 360px;
 	padding: 24px 0;
 	text-align: center;
 }
-#adbox p span b {
+#floatingbox p span b {
 	font-weight: normal;
 	display: block;
 	width: 256px;

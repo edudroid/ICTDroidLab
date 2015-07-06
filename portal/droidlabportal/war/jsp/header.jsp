@@ -55,21 +55,14 @@ if (loggedIn) {
 <% } else { %>
 				<li>
 <% } %>
-					<a href="/details">Features</a>
+					<a href="/details">Részletek</a>
 				</li>
 <% if (request.getParameter("selected").equals(Constants.TEAM)) { %>
 				<li class="active">
 <% } else { %>
 				<li>
 <% } %>
-					<a href="/team">Team</a>
-				</li>
-<% if (request.getParameter("selected").equals(Constants.NEWS)) { %>
-				<li class="active">
-<% } else { %>
-				<li>
-<% } %>
-					<a href="/news">News</a>
+					<a href="/team">Csapat</a>
 				</li>
 <% if (request.getParameter("selected").equals(Constants.REG_FORM)||
 		request.getParameter("selected").equals(Constants.PROFILE)||
@@ -87,7 +80,7 @@ if (loggedIn) {
 	<% 
 } else {
 	%>
-					<a href="/loginform">Log in</a>
+					<a href="/loginform">Belépés</a>
 	<%
 }
 %>

@@ -10,25 +10,41 @@
 	<jsp:param name="selected" value="<%=Constants.TEAM %>" />
 </jsp:include>
 	<div id="contents">
-		<div class="section">
-			<h1>Contact</h1>
+		<div class="features">
+			<h1>Csapat</h1>
 			<p>
-				You can replace all this text with your own text. Want an easier solution for a Free Website? Head straight to Wix and immediately start customizing your website! Wix is an online website builder with a simple drag & drop interface, meaning you do the work online and instantly publish to the web. All Wix templates are fully customizable and free to use. Just pick one you like, click Edit, and enter the online editor.
+				A projektben az oktatók és tanszéki alkalmazottak mellett több hallgató is részt vett, részt vesz.
 			</p>
-			<form action="index.html" method="post" class="message">
-				<input type="text" value="Name" onFocus="this.select();" onMouseOut="javascript:return false;"/>
-				<input type="text" value="Email" onFocus="this.select();" onMouseOut="javascript:return false;"/>
-				<input type="text" value="Subject" onFocus="this.select();" onMouseOut="javascript:return false;"/>
-				<textarea></textarea>
-				<input type="submit" value="Send"/>
-			</form>
-		</div>
-		<div class="section contact">
+			<div>
+				<img src="/images/team/vida.gif" alt="Img">
+				<h3>Vida Rolland</h3>
+				<p>
+					Projekt manager és vezető kutató, a szenzorhálózatok és elosztott rendszerek szakértője.
+				</p>
+			</div>			
+			<div>
+				<img src="/images/team/feher.gif" alt="Img">
+				<h3>Fehér Gábor</h3>
+				<p>
+					Fejlesztést vezető oktató
+				</p>
+			</div>			
+			<div>
+				<img src="/images/team/mate.gif" alt="Img">
+				<h3>Máté Miklós</h3>
+				<p>
+					Java fejlesztő, backend
+				</p>
+			</div>
+			<div>
+				<img src="/images/team/lajtha.gif" alt="Img">
+				<h3>Lajtha Balázs</h3>
+				<p>
+					Android fejlesztő, frontend
+				</p>
+			</div>			
 			<p>
-				For Inquiries Please Call: <span>877-433-8137</span>
-			</p>
-			<p>
-				Or you can visit us at: <span>ZeroType<br> 250 Business ParK Angel Green, Sunville 109935</span>
+				A témában Nagy Szabolcs és Nagy László készítettek diplomamunkát, Weisz Patrik védett szakdolgozatot, és Száray Bálint készít jelenleg szakdolgozatot. 
 			</p>
 		</div>
 	</div>

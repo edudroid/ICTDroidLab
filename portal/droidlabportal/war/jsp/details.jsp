@@ -10,30 +10,39 @@
 </jsp:include>
 <div id="contents">
 	<div class="features">
-		<h1>Features</h1>
-		<p>
-			Change, add, and remove items as you like. If you're having problems editing this website template, then don't hesitate to ask for help on the Forums.
-		</p>
 		<div>
-			<img src="images/recycle.png" alt="Img">
-			<h2>Customizable and Easy</h2>
+			A DroidLab keretrendszert azért hoztuk létre, mert az okostelefonokra irányuló kutatásaink során egyre gyakrabban szembesültünk azzal, hogy ugyanazokat a feladatokat implementáljuk újra és újra.<br/>
+			A mérőalkalmazások funkcionalitása, és ennek megfelelően az implementációk és az infrastruktúra nagymértékben átfedték egymást. 
+		</div>
+		<div>
+			<img src="/images/architecture.png" alt="Img">
+			<h2>A keretrendszer felépítése</h2>
 			<p>
-				You can replace all this text with your own text. Want an easier solution for a Free Website? Head straight to Wix and immediately start customizing your website!
+				A DroidLab két fő elemből áll, az AppEngine felhőben futó szerver komponenséből és a felhasználók eszközeire telepített kliensalkalmazásból.
 			</p>
-			<h2>Online in an Instant</h2>
+			<h3>DroidLab kliens</h3>
 			<p>
-				Wix is an online website builder with a simple drag & drop interface, meaning you do the work online and instantly publish to the web. All Wix templates are fully customizable and free to use. Just pick one you like, click Edit, and enter the online editor.
+				A DroidLab kliens több Android alkalmazásból áll. Ez a megközelítés teszi lehetővé, hogy a felhasználók a DroidLab telepítésüket saját preferenciáikhoz és az eszköz képességeihez szabhassák.<br/>
+				A felhasználók a DroidLab core Android alkalmazáson keresztül férhetnek hozzá a DroidLab-hoz, a többi alkalmazás csak háttér-szolgáltatásokat biztosít a mérésekhez.
+				A core alkalmazás lehetőséget biztosít a felhasználóknak a mérések engedélyezésére vagy visszautasítására, a mérések adatainak megtekintésére.
+				Itt állíthatják be a környezet számára rendelkezésére bocsájtott erőforrások is.
+			</p>
+			<h3>DroidLab portál</h3>
+			<p>
+				A rendszer használatához a felhasználónak regisztrálnia kell a <a href="droidlabportal.appspot.com" target="_blank">DroidLab portálon</a>.
+				A portál felhasználói át tudják tekinteni az eszközeik aktivitását, futtatott méréseket, feltöltött mérési adatokat.<br/>
+				A kutatói szerepkörrel rendelkező felhasználók ezen felül méréseket ütemezhetnek a többi felhasználó eszközeire, és megkapják a méréseik kimeneteit.
 			</p>
 		</div>
 		<div>
-			<img src="images/box-of-icons.png" alt="Img">
-			<h2>More Design Elements</h2>
+			<img src="/images/box-of-icons.png" alt="Img">
+			<h2>Modularitás</h2>
 			<p>
-				Wix also offers a ton of free design elements right inside the editor, like images, icons, galleries, videos and large selection of Add Ons and social feeds.
+				A Droidlab igazodik a felhasználói elvárásokhoz és a heterogén eszközpark lehetőségeihez: a különböző funkciókat külön letölthető egységek implementálják, így minden felhasználó testreszabhatja, hogy pontosan milyen adatokhoz enged hozzáférést.
 			</p>
-			<h2>Free to Use</h2>
+			<h2>Lokális feldolgozás</h2>
 			<p>
-				Publish your Free Website in minutes! You can remove any link to our website from this website template, you're free to use this website template without linking back to us.
+				Sok feladat lényegesen egyszerűbben valósítható meg a mérőeszközön, mint később, az összegyűjtött adatokon. Így nem csak bonyolult adatbányászati feladatok valósíthatóak meg egyszerű vezérlési szerkezetekkel a mérőeszközön, de a forgalmazott adatmennyiség is csökken. Például ha egy autósnak csak a napi maximális sebességére kiváncsi a kutató, utólagos feldolgozás esetén másodperces bontásban szüksége van a sebességadatra. A DroidLab használata esetén a 86.400 mérési adat helyett elég egyetlen egyet feltölteni.
 			</p>
 		</div>
 	</div>
