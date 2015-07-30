@@ -13,6 +13,14 @@
         android:layout_weight="1"
         android:gravity="start" />
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="1dp"
+        android:layout_marginRight="1dp"
+        android:gravity="end" />
+
     <Button
         android:id="@+id/listItemDelete"
         android:layout_width="wrap_content"

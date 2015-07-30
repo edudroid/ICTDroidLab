@@ -99,10 +99,6 @@ public class  LogZipper {
 		}
 	}
 	
-	public static void test(Map<String, String> map, Context context) {
-		mapToZip(context, map);		
-	}
-	
 	public static boolean mapToZip(Context context, Map<String, String> map) {	
 		File myDir = new File(context.getFilesDir(),"log");
 		if (!myDir.exists()) {			

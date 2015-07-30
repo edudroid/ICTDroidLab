@@ -107,13 +107,13 @@
     
     <string name="logDetialsOverviewLogDatabaseSizeText">%1$d log(s) stored on the system.</string>
     <string name="logDetialsOverviewWipeDatabaseText">Wipe database</string>
-    <string name="logDetialsOverviewLastUpdateDateText">Last log update: %s</string>
-    <string name="logDetialsOverviewUpdateModeText">Update mode:</string>
+    <string name="logDetialsOverviewLastUpdateDateText">Last successful log upload: %s</string>
+    <string name="logDetialsOverviewUpdateModeText">Upload mode:</string>
     <string name="logDetialsOverviewUploadNowText">Upload now</string>
     <string-array
         name="logDetialsOverviewUpdateModes">
-        <item>Instant upload</item>
-        <item>After X log in ZIP</item>
+        <item>Instant uploading</item>
+        <item>Batch uploading</item>
     </string-array>
     <string name="listItemDelete">Delete</string>    
     

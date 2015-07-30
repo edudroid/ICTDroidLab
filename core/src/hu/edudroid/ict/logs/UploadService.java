@@ -79,7 +79,7 @@ public class UploadService extends IntentService {
 			} else if (mode==1) {
 				Log.d(TAG, "Upload mode: zip");
 				//converting logs to zips
-				while(databaseManager.getDatabaseSize() > UPLOAD_SIZE_ZIP -1) {
+				while(databaseManager.getDatabaseRowCount() > UPLOAD_SIZE_ZIP -1) {
 					recordsToUpload = databaseManager.getRecords(UPLOAD_SIZE_ZIP);
 					if (makingZips(recordsToUpload, this.getApplicationContext())) {
 						for (LogRecord record : recordsToUpload) {

@@ -8,7 +8,7 @@
         android:id="@+id/logDetialsOverviewLogDatabaseSizeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
+        android:layout_marginLeft="3dp"
         android:layout_marginStart="3dp"
         android:text="@string/logDetialsOverviewLogDatabaseSizeText" />
 
@@ -16,7 +16,7 @@
         android:id="@+id/logDetialsOverviewLastUpdateDateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
+        android:layout_marginLeft="3dp"
         android:layout_marginStart="3dp"
         android:text="@string/logDetialsOverviewLastUpdateDateText" />
 
@@ -58,17 +58,24 @@
             android:layout_weight="1" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/logDetialsOverviewUploadNowButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:text="@string/logDetialsOverviewUploadNowText" />
+        android:orientation="horizontal" >
 
-    <Button
-        android:id="@+id/logDetialsOverviewRefreshButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/refresh" />
+        <Button
+            android:id="@+id/logDetialsOverviewRefreshButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/refresh" />
+
+        <Button
+            android:id="@+id/logDetialsOverviewUploadNowButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/logDetialsOverviewUploadNowText" />
+    </LinearLayout>
 
 </LinearLayout>

@@ -58,7 +58,7 @@ public class LogDatabaseManager {
 		return result;
 	}
 	
-	public int getDatabaseSize () {		
+	public int getDatabaseRowCount () {		
 		String[] column = {"COUNT(*)"};
 		Cursor cursor = db.query(LogRecord.TABLE_NAME, column, "", null, null, null, null, null);
 		cursor.moveToNext();

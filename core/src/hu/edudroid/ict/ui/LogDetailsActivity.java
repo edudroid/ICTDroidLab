@@ -117,10 +117,11 @@ public class LogDetailsActivity extends ActivityBase implements OnClickListener,
 		    	//database row count
 		 		int databaseRowCount = -1;
 		 		try {
-		 			databaseRowCount = databaseManager.getDatabaseSize();
+		 			databaseRowCount = databaseManager.getDatabaseRowCount();
 		 		} catch (Exception e) {
 		 			Log.e(TAG, "Error when getting database row count!", e);
 		 		}
+
 		 		logDatabaseSizeText.setText(getString(R.string.logDetialsOverviewLogDatabaseSizeText,databaseRowCount));
 		 		
 		 		//last log update time
@@ -194,6 +195,21 @@ public class LogDetailsActivity extends ActivityBase implements OnClickListener,
 		}	
 	}
 	
+	private String getLogFileSize (String fileName) {
+		File file = new File (getApplicationContext().getFilesDir()+"/log", fileName);
+		return fileSizeToString(file.length());
+	}
+	
+	private String fileSizeToString(long fileSize) {
+		if (fileSize<1024) {
+			return fileSize+" B";
+		} else if (fileSize<1048576) {
+			return fileSize/1024+" KB";
+		} else {
+			return fileSize/1048576+" MB";
+		}
+	}
+	
 	private class MyArrayAdapter extends ArrayAdapter<String>  {
 		
 		private final ActivityBase context;
@@ -215,8 +231,12 @@ public class LogDetailsActivity extends ActivityBase implements OnClickListener,
 	        
 	        deleteButton = (Button) convertView.findViewById(R.id.listItemDelete);
 	        deleteButton.setTag(position);
-	        TextView textView = (TextView) convertView.findViewById(R.id.textView1);
-	        textView.setText(logFileAdapterList.get(position));
+	        
+	        TextView zipFileSize = (TextView) convertView.findViewById(R.id.textView2);
+	        zipFileSize.setText(getLogFileSize(logFileAdapterList.get(position)));
+	        
+	        TextView zipFileName = (TextView) convertView.findViewById(R.id.textView1);
+	        zipFileName.setText(logFileAdapterList.get(position));
 	        deleteButton.setOnClickListener(new OnClickListener() {
 	            @Override
 	            public void onClick(View v) {
